@@ -20,7 +20,7 @@ if (typeof btoa !== 'function') {
 }
 
 
-export const initializing_data_element_id = 'initializing-data-f55c8878-87c8-11ec-b7c3-273bd5f809b1';
+export const initializing_data_element_id = 'initializing-data-ea53fbac-27d6-456d-8115-d0ddec94a49f';
 
 export function create_exported_logbook(contents_json, document_title, default_server_endpoint) {
     if (typeof contents_json !== 'string') {
