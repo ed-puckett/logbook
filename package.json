@@ -1,0 +1,28 @@
+{
+  "name": "logbook",
+  "version": "0.1.0",
+  "author": "Ed Puckett",
+  "description": "Interactive logbook based on JavaScript/EcmaScript",
+  "keywords": "JavaScript EcmaScript es5 es6 interactive notebook logbook",
+  "license": "ISC (see LICENSE)",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "http-server": "^14.1.0"
+  },
+  "dependencies": {
+    "chart.js": "^2.9.4",
+    "codemirror": "^5.64.0",
+    "d3": "^7.2.0",
+    "dagre-d3": "^0.6.4",
+    "dialog-polyfill": "^0.5.6",
+    "dompurify": "^2.3.4",
+    "js-sha256": "^0.9.0",
+    "marked": "^4.0.10",
+    "mathjax": "^2.7.7",
+    "nerdamer": "^1.1.6",
+    "plotly.js-dist": "^2.7.0",
+    "sprintf-js": "^1.1.2",
+    "uuid": "^8.3.2"
+  }
+}
