@@ -28,42 +28,42 @@ const {
 
 const default_menubar_spec = [
     { label: 'File', collection: [
-        { label: 'Recent notebooks', id: 'recents', collection: [
+        { label: 'Recent logbooks', id: 'recents', collection: [
             // ...
         ] },
         '---',
-        { label: 'Clear',         item: { command: 'clear_notebook',       } },
+        { label: 'Clear',         item: { command: 'clear_logbook',       } },
         '---',
-        { label: 'Open...',       item: { command: 'open_notebook',        } },
-        { label: 'Import...',     item: { command: 'import_notebook',      } },
-        { label: 'Reopen',        item: { command: 'reopen_notebook',      } },
+        { label: 'Open...',       item: { command: 'open_logbook',        } },
+        { label: 'Import...',     item: { command: 'import_logbook',      } },
+        { label: 'Reopen',        item: { command: 'reopen_logbook',      } },
         '---',
-        { label: 'Save',          item: { command: 'save_notebook',        }, id: 'save' },
-        { label: 'Save as...',    item: { command: 'save_as_notebook',     } },
-        { label: 'Export...',     item: { command: 'export_notebook',      } },
+        { label: 'Save',          item: { command: 'save_logbook',        }, id: 'save' },
+        { label: 'Save as...',    item: { command: 'save_as_logbook',     } },
+        { label: 'Export...',     item: { command: 'export_logbook',      } },
         '---',
-        { label: 'Settings...',   item: { command: 'settings',             } },
+        { label: 'Settings...',   item: { command: 'settings',            } },
     ] },
 
     { label: 'Edit', collection: [
-        { label: 'Undo',          item: { command: 'undo',                 }, id: 'undo' },
-        { label: 'Redo',          item: { command: 'redo',                 }, id: 'redo' },
+        { label: 'Undo',          item: { command: 'undo',                }, id: 'undo' },
+        { label: 'Redo',          item: { command: 'redo',                }, id: 'redo' },
     ] },
 
     { label: 'Element', collection: [
-        { label: 'Eval',          item: { command: 'eval_element',         }, id: 'eval_element' },
-        { label: 'Eval and stay', item: { command: 'eval_stay_element',    }, id: 'eval_stay_element' },
-        { label: 'Eval before',   item: { command: 'eval_notebook_before', }, id: 'eval_notebook_before' },
-        { label: 'Eval notebook', item: { command: 'eval_notebook',        }, id: 'eval_notebook' },
+        { label: 'Eval',          item: { command: 'eval_element',        }, id: 'eval_element' },
+        { label: 'Eval and stay', item: { command: 'eval_stay_element',   }, id: 'eval_stay_element' },
+        { label: 'Eval before',   item: { command: 'eval_logbook_before', }, id: 'eval_logbook_before' },
+        { label: 'Eval logbook',  item: { command: 'eval_logbook',        }, id: 'eval_logbook' },
         '---',
-        { label: 'Focus up',      item: { command: 'focus_up_element',     }, id: 'focus_up_element' },
-        { label: 'Focus down',    item: { command: 'focus_down_element',   }, id: 'focus_down_element' },
+        { label: 'Focus up',      item: { command: 'focus_up_element',    }, id: 'focus_up_element' },
+        { label: 'Focus down',    item: { command: 'focus_down_element',  }, id: 'focus_down_element' },
         '---',
-        { label: 'Move up',       item: { command: 'move_up_element',      }, id: 'move_up_element' },
-        { label: 'Move down',     item: { command: 'move_down_element',    }, id: 'move_down_element' },
-        { label: 'Add before',    item: { command: 'add_before_element',   } },
-        { label: 'Add after',     item: { command: 'add_after_element',    } },
-        { label: 'Delete',        item: { command: 'delete_element',       }, id: 'delete_element' },
+        { label: 'Move up',       item: { command: 'move_up_element',     }, id: 'move_up_element' },
+        { label: 'Move down',     item: { command: 'move_down_element',   }, id: 'move_down_element' },
+        { label: 'Add before',    item: { command: 'add_before_element',  } },
+        { label: 'Add after',     item: { command: 'add_after_element',   } },
+        { label: 'Delete',        item: { command: 'delete_element',      }, id: 'delete_element' },
     ] },
 
     { label: 'Help', collection: [

@@ -43,7 +43,7 @@ export function escape_unescaped_$(s) {
 // CREATING A NEW OUTPUT HANDLER
 // -----------------------------
 // 1. Define a new output handler class which extends OutputHandler,
-//    creating a new update_notebook() method, and if the new output
+//    creating a new update_logbook() method, and if the new output
 //    type is significantly different than its base class, new
 //    validate_output_data() and generate_static_element() methods.
 // 2. Add the new class to the expression which creates the
@@ -52,11 +52,11 @@ export function escape_unescaped_$(s) {
 // FUNCTIONS OF AN OUTPUT_HANDLER
 // ------------------------------
 // 1. During Eval: create new output elements through the use of the
-//    output_context (which is provided by the notebook and encapsulates
+//    output_context (which is provided by the logbook and encapsulates
 //    the ie and output_data_collection).  The output elements include
 //    both the UI elements and the output_data accumulated in the
 //    output_data_collection.
-//    Method: update_notebook()
+//    Method: update_logbook()
 // 2. Validate output_data received from a file.
 //    Method: validate_output_data()
 // 3. Display non-evaluated output_data received from a file.
@@ -76,7 +76,7 @@ class OutputHandler {
     // representation is appended to output_data_collection.
     // Must be defined by each extension.
     // May throw an error.
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         throw new Error('unimplemented');
     }
 
@@ -101,7 +101,7 @@ class TextOutputHandler extends OutputHandler {
     // is merged into it.
     // value: string | { text: string, is_tex?: boolean, inline_tex?: boolean }
     // output_data: { type: 'text', text: string }
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         if (typeof value === 'string') {
             value = { text: value };
         }
@@ -132,7 +132,7 @@ class ErrorOutputHandler extends OutputHandler {
     constructor() { super('error'); }
 
     // output_data: { type: 'error', text: string }
-    async update_notebook(output_context, error_object) {
+    async update_logbook(output_context, error_object) {
         const text_segments = [];
         if (error_object.stack) {
             text_segments.push(error_object.stack);
@@ -164,7 +164,7 @@ class HTMLOutputHandler extends OutputHandler {
 
     // output_data: { type: 'html', tag:string, attrs?:json_object, innerHTML?: string }
     // returns the new HTML element
-    async update_notebook(output_context, output_data) {
+    async update_logbook(output_context, output_data) {
         const output_element = output_context.create_output_element({ tag: 'div' });
         const output_child = await this.generate_static_element(output_data)
         output_element.appendChild(output_child);
@@ -270,7 +270,7 @@ class ChartOutputHandler extends _GraphicsOutputHandlerBase {
 
     // may throw an error
     // output_data: { type: 'chart', image_format: string, image_format_quality: number, image_uri: string }
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         const { Chart } = await import('./output-handlers/chart.js');
         const [ size_config, config ] = output_context.parse_graphics_args(value.args, 'usage: chart([size_config], config)');
         const canvas = output_context.create_output_element({
@@ -318,7 +318,7 @@ class DagreOutputHandler extends _GraphicsOutputHandlerBase {
 
     // may throw an error
     // output_data: { type: 'dagre', image_format: string, image_format_quality: number, image_uri: string }
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         const { d3, dagreD3, dagre_stylesheet_text  } = await import('./output-handlers/dagre-d3.js');
         const [ size_config, dagre_config ] = output_context.parse_graphics_args(value.args, 'usage: dagre([size_config], config)');
         // svg elements must be created with a special namespace
@@ -439,7 +439,7 @@ class ImageDataOutputHandler extends _GraphicsOutputHandlerBase {
 
     // may throw an error
     // output_data: { type: 'image_data', image_format: string, image_format_quality: number, image_uri: string }
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         const [ size_config, config ] = output_context.parse_graphics_args(value.args, 'usage: image_data([size_config], config)');
         const canvas = output_context.create_output_element({
             size_config,
@@ -462,7 +462,7 @@ class PlotlyOutputHandler extends _GraphicsOutputHandlerBase {
 
     // may throw an error
     // output_data: { type: 'plotly', image_format: string, image_format_quality: number, image_uri: string }
-    async update_notebook(output_context, value) {
+    async update_logbook(output_context, value) {
         const { Plotly } = await import('./output-handlers/plotly.js');
         const [ size_config, config ] = output_context.parse_graphics_args(value.args, 'usage: plotly([size_config], { data, layout?, config?, frames? })');
         const output_element = output_context.create_output_element({

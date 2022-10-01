@@ -24,8 +24,8 @@ try {  // catch and handle any errors during initialization
 
     // === LOAD CORE MODULES ===
 
-    const nb_url = new URL('./notebook.js', import.meta.url);
-    await import(nb_url);
+    const lb_url = new URL('./logbook.js', import.meta.url);
+    await import(lb_url);
 
 } catch (error) {
 

@@ -1,8 +1,8 @@
 // === CONSTANTS ===
 
-const NB_TYPE    = 'logbook';
-const NB_VERSION = '2.0.0';
-const COMPATIBLE_NB_VERSION_RES = [ /^[1-2][.][0-9]+[.][0-9]+$/ ]
+const LB_TYPE    = 'logbook';
+const LB_VERSION = '2.0.0';
+const COMPATIBLE_LB_VERSION_RES = [ /^[1-2][.][0-9]+[.][0-9]+$/ ]
 
 const DEFAULT_SAVE_PATH = 'Untitled.logbook';
 
@@ -38,31 +38,31 @@ const { beep } = await import('./beep.js');
 
 const { Dialog, AlertDialog, ConfirmDialog } = await import('./dialog.js');
 
-const { SettingsDialog } = await import('./notebook/settings-dialog.js');
+const { SettingsDialog } = await import('./logbook/settings-dialog.js');
 
 const {
     get_settings,
     SettingsUpdatedEvent,
     analyze_formatting_options,
-} = await import('./notebook/settings.js');
+} = await import('./logbook/settings.js');
 
 const {
     get_theme_settings,
     ThemeSettingsUpdatedEvent,
-} = await import('./notebook/theme-settings.js');
+} = await import('./logbook/theme-settings.js');
 
 const {
     KeyBindingCommandEvent,
-} = await import('./notebook/key-bindings.js');
+} = await import('./logbook/key-bindings.js');
 
 const {
     MenuCommandEvent,
     MenuBar,
-} = await import('./notebook/menu.js');
+} = await import('./logbook/menu.js');
 
 const {
     open_help_window,
-} = await import('./notebook/help-window.js');
+} = await import('./logbook/help-window.js');
 
 const {
     marked,
@@ -74,11 +74,11 @@ const {
     TEXT_ELEMENT_CLASS,
     clean_for_html,
     output_handlers,
-} = await import('./notebook/output-handlers.js');
+} = await import('./logbook/output-handlers.js');
 
 const {
     create_output_context,
-} = await import('./notebook/output-context.js');
+} = await import('./logbook/output-context.js');
 
 const {
     Change,
@@ -91,31 +91,31 @@ const {
     perform_delete_ie_change,
     perform_state_change,
     add_ie_output_change,
-} = await import('./notebook/change.js');
+} = await import('./logbook/change.js');
 
 const {
     get_recents,
     add_to_recents,
-} = await import('./notebook/recents.js');
+} = await import('./logbook/recents.js');
 
 const {
     TextuallyLocatedError,
     EvalAgent,
-} = await import('./notebook/eval-agent.js');
+} = await import('./logbook/eval-agent.js');
 
 const {
     EvalWorker,
-} = await import('./notebook/eval-worker.js');
+} = await import('./logbook/eval-worker.js');
 
 const {
     initializing_data_element_id,
-    create_exported_notebook,
-} = await import('./notebook/create-exported-notebook.mjs');
+    create_exported_logbook,
+} = await import('./logbook/create-exported-logbook.mjs');
 
 
-// === NOTEBOOK INSTANCE ===
+// === LOGBOOK INSTANCE ===
 
-let notebook;  // initialized by document_ready then clause below
+let logbook;  // initialized by document_ready then clause below
 
 
 // === SETTINGS ===
@@ -125,18 +125,18 @@ let theme_settings  = get_theme_settings();  // updated by ThemeSettingsUpdatedE
 
 SettingsUpdatedEvent.subscribe((event) => {
     settings = event.get_settings();
-    notebook?.update_from_settings();
+    logbook?.update_from_settings();
 });
 
 ThemeSettingsUpdatedEvent.subscribe((event) => {
     theme_settings = event.get_theme_settings();
-    notebook?.update_from_settings();
+    logbook?.update_from_settings();
 });
 
 
-// === NOTEBOOK LOAD BOOTSTRAP ===
+// === LOGBOOK LOAD BOOTSTRAP ===
 
-export const notebook_ready = new Promise((resolve, reject) => {
+export const logbook_ready = new Promise((resolve, reject) => {
     try {
 
         // We are using MathJax v2.7.x instead of v3.x.x because Plotly
@@ -162,20 +162,20 @@ export const notebook_ready = new Promise((resolve, reject) => {
         // only available in MathJax v3
         await MathJax.startup.promise;
     }
-    notebook = new Notebook();
-    await notebook.setup();
-    notebook.update_from_settings();  // in case settings update already received
+    logbook = new Logbook();
+    await logbook.setup();
+    logbook.update_from_settings();  // in case settings update already received
 
 });
 
 
-// === NOTEBOOK CLASS ===
+// === LOGBOOK CLASS ===
 
-class Notebook {
-    static nb_type    = NB_TYPE;
-    static nb_version = NB_VERSION;
+class Logbook {
+    static lb_type    = LB_TYPE;
+    static lb_version = LB_VERSION;
 
-    static compatible_nb_version_res = COMPATIBLE_NB_VERSION_RES;
+    static compatible_lb_version_res = COMPATIBLE_LB_VERSION_RES;
 
     static default_save_path = DEFAULT_SAVE_PATH;
 
@@ -218,24 +218,24 @@ class Notebook {
 
     // async setup/initialization (to be called immediately after construction)
     async setup() {
-        // Notebook source information.
+        // Logbook source information.
         // When FileSystemFileHandle and APIs not available (indicated by
-        // !fs_interface.fsaapi_available), then this.notebook_file_handle
-        // will always be undefined.  However, this.notebook_file_stats might
+        // !fs_interface.fsaapi_available), then this.logbook_file_handle
+        // will always be undefined.  However, this.logbook_file_stats might
         // be set to hold things like name (in the case of legacy fallback).
-        this.notebook_file_handle  = undefined;  // if set, a FileSystemFileHandle
-        this.notebook_file_stats   = undefined;  // stats from when last loaded/saved, or undefined
+        this.logbook_file_handle  = undefined;  // if set, a FileSystemFileHandle
+        this.logbook_file_stats   = undefined;  // stats from when last loaded/saved, or undefined
 
-        // notebook persistent state
-        this.nb_state              = undefined;  // persisted state; first initialized below when this.clear_notebook() is called
-        this.internal_nb_state     = undefined;  // not persisted;   first initialized below when this.clear_notebook() is called
+        // logbook persistent state
+        this.lb_state              = undefined;  // persisted state; first initialized below when this.clear_logbook() is called
+        this.internal_lb_state     = undefined;  // not persisted;   first initialized below when this.clear_logbook() is called
 
-        this._loaded_notebook_hash = undefined;  // used by this.set_notebook_unmodified() and this.notebook_modified()
+        this._loaded_logbook_hash = undefined;  // used by this.set_logbook_unmodified() and this.logbook_modified()
 
         this.controls              = undefined;  // will be set in this._setup_document()
         this.interaction_area      = undefined;  // will be set in this._setup_document()
 
-        // notebook focus
+        // logbook focus
         this.current_ie = undefined;  // initialized below
 
         try {
@@ -248,8 +248,8 @@ class Notebook {
 
             this.init_event_handlers();
 
-            // initialize empty notebook
-            await this.clear_notebook(true);
+            // initialize empty logbook
+            await this.clear_logbook(true);
 
             // initialize from embedded data contained in an element
             // with id = initializing_data_element_id, if any
@@ -264,29 +264,29 @@ class Notebook {
     async initialize_from_embedded_data() {
         const initializing_data_el = document.getElementById(initializing_data_element_id);
         if (initializing_data_el) {
-            let initializing_nb_state;
+            let initializing_lb_state;
             try {
                 const initializing_contents_json = atob(initializing_data_el.innerText.trim());
                 const initializing_contents = JSON.parse(initializing_contents_json);
-                initializing_nb_state = this.contents_to_nb_state(initializing_contents);
+                initializing_lb_state = this.contents_to_lb_state(initializing_contents);
             } catch (err) {
-                throw new Error(`corrupt initializing data contained in notebook; element id: ${initializing_data_element_id}`);
+                throw new Error(`corrupt initializing data contained in logbook; element id: ${initializing_data_element_id}`);
             }
             initializing_data_el.remove();  // remove the initializing element
-            await this.load_nb_state(initializing_nb_state);
-            Change.update_for_open(this);  // do this before this.set_notebook_unmodified()
-            this.set_notebook_unmodified();
-            // check if this notebook is "autoeval"
+            await this.load_lb_state(initializing_lb_state);
+            Change.update_for_open(this);  // do this before this.set_logbook_unmodified()
+            this.set_logbook_unmodified();
+            // check if this logbook is "autoeval"
             await this._handle_autoeval();
         }
     }
 
     async _initialize_document() {
         if (document.getElementById('content')) {
-            throw new Error('initial notebook must not contain an element with id "content"');
+            throw new Error('initial logbook must not contain an element with id "content"');
         }
 
-        // add initial notebook structure to document body:
+        // add initial logbook structure to document body:
         //
         //     <div id="content">
         //         <div id="controls">
@@ -312,12 +312,12 @@ class Notebook {
         this.running_indicator  = create_child_element(indicators_el, 'div', { id: 'running_indicator',  title: 'Running' });
         this.formatting_indicator  = create_child_element(indicators_el, 'div', { id: 'formatting_indicator',  title: 'Formatting' });
 
-        // add notebook stylesheet:
-        const stylesheet_url = new URL('notebook/notebook.css', import.meta.url);
+        // add logbook stylesheet:
+        const stylesheet_url = new URL('logbook/logbook.css', import.meta.url);
         create_stylesheet_link(document.head, stylesheet_url);
 
         // add menu stylesheet:
-        const menu_stylesheet_url = new URL('notebook/menu/menu.css', import.meta.url);
+        const menu_stylesheet_url = new URL('logbook/menu/menu.css', import.meta.url);
         create_stylesheet_link(document.head, menu_stylesheet_url);
 
         // load CodeMirror stylesheets:
@@ -351,7 +351,7 @@ class Notebook {
                 '../node_modules/codemirror/addon/edit/matchbrackets.js',
             ].map(load_cm_script)
         );
-        await load_cm_script('notebook/codemirror-mdmj-mode.js');
+        await load_cm_script('logbook/codemirror-mdmj-mode.js');
 
         this.menubar = await MenuBar.create(this.controls);
     }
@@ -361,7 +361,7 @@ class Notebook {
     }
 
     update_from_settings() {
-        for (const ie_id of this.nb_state.order) {
+        for (const ie_id of this.lb_state.order) {
             const cm = this.get_internal_state_for_ie_id(ie_id)?.cm;
             if (cm) {
                 const ie = document.getElementById(ie_id);
@@ -380,7 +380,7 @@ class Notebook {
             // On Chromium, don't try any of the typical things like event.preventDefault()
             // or setting event.returnValue, they won't work.  Simply return something truthy
             // to cause a user warning to be shown.
-            if (this.notebook_modified()) {
+            if (this.logbook_modified()) {
                 return true;
             }
         };
@@ -432,10 +432,10 @@ class Notebook {
     }
 
 
-    // Set a new notebook source information and update things accordingly.
-    async set_notebook_source(file_handle, stats=undefined) {
-        this.notebook_file_handle = undefined;
-        this.notebook_file_stats  = undefined;
+    // Set a new logbook source information and update things accordingly.
+    async set_logbook_source(file_handle, stats=undefined) {
+        this.logbook_file_handle = undefined;
+        this.logbook_file_stats  = undefined;
 
         if (file_handle) {
             if (!stats) {
@@ -445,8 +445,8 @@ class Notebook {
             await this.menubar.rebuild_recents();
         }
 
-        this.notebook_file_handle = file_handle;
-        this.notebook_file_stats  = stats;
+        this.logbook_file_handle = file_handle;
+        this.logbook_file_stats  = stats;
 
         let title = document.title || this.constructor.default_title;
         if (stats?.name) {
@@ -455,17 +455,17 @@ class Notebook {
         document.title = title;
     }
 
-    // Set a new empty state for the notebook (also calls reset_eval_state())
-    reset_notebook_state() {
-        this.nb_state = {
-            nb_type:    this.constructor.nb_type,
-            nb_version: this.constructor.nb_version,
-            order:    [],  // interaction_element ids, in order of appearance in notebook
+    // Set a new empty state for the logbook (also calls reset_eval_state())
+    reset_logbook_state() {
+        this.lb_state = {
+            lb_type:    this.constructor.lb_type,
+            lb_version: this.constructor.lb_version,
+            order:    [],  // interaction_element ids, in order of appearance in logbook
             elements: {},  // the actual interaction_element data, indexed by interaction_element id
         };
-        // internal_nb_state is internal state for each ie indexed by ie.id
+        // internal_lb_state is internal state for each ie indexed by ie.id
         // plus two more slots (at sym_eval_state and sym_eval_workers)
-        this.internal_nb_state = {};
+        this.internal_lb_state = {};
         this.reset_eval_state();
     }
 
@@ -474,14 +474,14 @@ class Notebook {
         if (complaint) {
             throw new Error(complaint);
         }
-        this.nb_state.elements[ie_id].formatting_options = JSON.parse(JSON.stringify(formatting_options));  // make a copy
+        this.lb_state.elements[ie_id].formatting_options = JSON.parse(JSON.stringify(formatting_options));  // make a copy
     }
     get_formatting_options_for_ie_id(ie_id) {
-        return this.nb_state.elements[ie_id].formatting_options;
+        return this.lb_state.elements[ie_id].formatting_options;
     }
 
     reset_eval_state() {
-        for (const eval_worker of this.internal_nb_state[this.constructor.sym_eval_workers] ?? []) {
+        for (const eval_worker of this.internal_lb_state[this.constructor.sym_eval_workers] ?? []) {
             try {
                 eval_worker.terminate();
             } catch (_) {
@@ -489,28 +489,28 @@ class Notebook {
             }
         }
 
-        this.internal_nb_state[this.constructor.sym_eval_state]   = {};  // eval_state for notebook
-        this.internal_nb_state[this.constructor.sym_eval_workers] = [];  // EvalWorker instances for notebook
+        this.internal_lb_state[this.constructor.sym_eval_state]   = {};  // eval_state for logbook
+        this.internal_lb_state[this.constructor.sym_eval_workers] = [];  // EvalWorker instances for logbook
     }
     get_eval_state() {
-        return this.internal_nb_state[this.constructor.sym_eval_state];
+        return this.internal_lb_state[this.constructor.sym_eval_state];
     }
 
     // Create a new empty internal state object for ie with id ie_id
     // or return the current internal state object if it already exists.
     establish_internal_state_for_ie_id(ie_id) {
-        const current_state = this.internal_nb_state[ie_id];
+        const current_state = this.internal_lb_state[ie_id];
         if (current_state) {
             return current_state;
         } else {
-            return (this.internal_nb_state[ie_id] = {});
+            return (this.internal_lb_state[ie_id] = {});
         }
     }
 
     // Remove the internal state object for ie with id ie_id.
     remove_internal_state_for_ie_id(ie_id) {
         this.remove_eval_agent_for_ie_id(ie_id);
-        delete this.internal_nb_state[ie_id];
+        delete this.internal_lb_state[ie_id];
     }
 
     remove_eval_agent_for_ie_id(ie_id) {
@@ -526,19 +526,19 @@ class Notebook {
         internal_state.eval_agent = eval_agent;
     }
 
-    // Remove ie with id ie_id from this.nb_state and this.internal_nb_state
+    // Remove ie with id ie_id from this.lb_state and this.internal_lb_state
     remove_state_for_ie_id(ie_id) {
-        const order_index = this.nb_state.order.indexOf(ie_id);
+        const order_index = this.lb_state.order.indexOf(ie_id);
         if (order_index !== -1) {
-            this.nb_state.order.splice(order_index, 1);
+            this.lb_state.order.splice(order_index, 1);
         }
-        delete this.nb_state.elements[ie_id];
+        delete this.lb_state.elements[ie_id];
         this.remove_internal_state_for_ie_id(ie_id);
     }
 
     // Return the internal state object associated with the ie with id ie_id.
     get_internal_state_for_ie_id(ie_id) {
-        return this.internal_nb_state[ie_id];
+        return this.internal_lb_state[ie_id];
     }
 
     get_input_text_for_ie_id(ie_id) {
@@ -595,42 +595,42 @@ class Notebook {
             Change.perform_redo(this);
             break;
         }
-        case 'clear_notebook': {
-            await this.clear_notebook();
+        case 'clear_logbook': {
+            await this.clear_logbook();
             break;
         }
-        case 'open_notebook': {
+        case 'open_logbook': {
             const do_import = false;
-            await this.open_notebook(do_import);
+            await this.open_logbook(do_import);
             break;
         }
-        case 'import_notebook': {
+        case 'import_logbook': {
             const do_import = true;
-            await this.open_notebook(do_import);
+            await this.open_logbook(do_import);
             break;
         }
-        case 'reopen_notebook': {
-            if (!this.notebook_file_handle) {
-                await this.clear_notebook();
+        case 'reopen_logbook': {
+            if (!this.logbook_file_handle) {
+                await this.clear_logbook();
             } else {
                 const do_import = false;
                 const force     = false;
-                await this.open_notebook_from_file_handle(this.notebook_file_handle, do_import, force);
+                await this.open_logbook_from_file_handle(this.logbook_file_handle, do_import, force);
             }
             break;
         }
-        case 'save_notebook': {
+        case 'save_logbook': {
             const interactive = false;
-            this.save_notebook(interactive);
+            this.save_logbook(interactive);
             break;
         }
-        case 'save_as_notebook': {
+        case 'save_as_logbook': {
             const interactive = true;
-            this.save_notebook(interactive);
+            this.save_logbook(interactive);
             break;
         }
-        case 'export_notebook': {
-            this.export_notebook();
+        case 'export_logbook': {
+            this.export_logbook();
             break;
         }
         case 'eval_element': {
@@ -649,19 +649,19 @@ class Notebook {
             }
             break;
         }
-        case 'eval_notebook': {
+        case 'eval_logbook': {
             if (!this.current_ie) {
                 beep();
             } else {
-                this.ie_ops_eval_notebook();
+                this.ie_ops_eval_logbook();
             }
             break;
         }
-        case 'eval_notebook_before': {
+        case 'eval_logbook_before': {
             if (!this.current_ie) {
                 beep();
             } else {
-                this.ie_ops_eval_notebook(this.current_ie, true);
+                this.ie_ops_eval_logbook(this.current_ie, true);
             }
             break;
         }
@@ -744,7 +744,7 @@ class Notebook {
                 if (index >= recents.length) {
                     beep();
                 } else {
-                    await this.open_notebook_from_file_handle(recents[index].file_handle);
+                    await this.open_logbook_from_file_handle(recents[index].file_handle);
                 }
             } else {
                 console.warn('** command not handled:', command);
@@ -758,15 +758,15 @@ class Notebook {
         if (this.get_input_text_for_ie_id(ie.id).trim()) {  // if there is anything to evaluate...
             await this.evaluate_ie(ie, stay);
         }
-        // update the modified status of the notebook in case an intermediate result
-        // set it to modified but, when done, the notebook was not modified overall
+        // update the modified status of the logbook in case an intermediate result
+        // set it to modified but, when done, the logbook was not modified overall
         // from its starting state.
-        this.notebook_modified();
+        this.logbook_modified();
     }
 
-    async ie_ops_eval_notebook(ie=undefined, only_before_current_element=false) {
+    async ie_ops_eval_logbook(ie=undefined, only_before_current_element=false) {
         this.reset_eval_state();
-        for (const ie_id of this.nb_state.order) {
+        for (const ie_id of this.lb_state.order) {
             if (only_before_current_element && ie_id === ie.id) {
                 this.set_current_ie(ie);
                 break;
@@ -779,10 +779,10 @@ class Notebook {
                 }
             }
         }
-        // update the modified status of the notebook in case an intermediate result
-        // set it to modified but, when done, the notebook was not modified overall
+        // update the modified status of the logbook in case an intermediate result
+        // set it to modified but, when done, the logbook was not modified overall
         // from its starting state.
-        this.notebook_modified();
+        this.logbook_modified();
     }
 
     update_global_view_properties() {
@@ -795,8 +795,8 @@ class Notebook {
         this.menubar.set_menu_enabled_state('redo',                 Change.can_perform_redo());
         this.menubar.set_menu_enabled_state('eval_element',         !!this.current_ie);
         this.menubar.set_menu_enabled_state('eval_stay_element',    !!this.current_ie);
-        this.menubar.set_menu_enabled_state('eval_notebook_before', !!this.current_ie);
-        this.menubar.set_menu_enabled_state('eval_notebook',        !!this.current_ie);
+        this.menubar.set_menu_enabled_state('eval_logbook_before', !!this.current_ie);
+        this.menubar.set_menu_enabled_state('eval_logbook',        !!this.current_ie);
         this.menubar.set_menu_enabled_state('focus_up_element',     this.current_ie && !is_on_first_element);
         this.menubar.set_menu_enabled_state('move_up_element',      this.current_ie && !is_on_first_element);
         this.menubar.set_menu_enabled_state('focus_down_element',   this.current_ie && !is_on_last_element);
@@ -804,30 +804,30 @@ class Notebook {
         this.menubar.set_menu_enabled_state('delete_element',       !!this.current_ie);
     }
 
-    set_notebook_unmodified() {
-        this._loaded_notebook_hash = this._current_notebook_hash();
+    set_logbook_unmodified() {
+        this._loaded_logbook_hash = this._current_logbook_hash();
         this.set_modified_status(false);
     }
-    notebook_modified() {
-        // once modified, the notebook stays that way until this.set_notebook_unmodified() is called
-        const current_hash = this._current_notebook_hash();
-        const modified_state = (current_hash !== this._loaded_notebook_hash);
+    logbook_modified() {
+        // once modified, the logbook stays that way until this.set_logbook_unmodified() is called
+        const current_hash = this._current_logbook_hash();
+        const modified_state = (current_hash !== this._loaded_logbook_hash);
         this.set_modified_status(modified_state);
         return modified_state;
     }
-    _current_notebook_hash() {
+    _current_logbook_hash() {
         const items = [
-            this.nb_state,
+            this.lb_state,
             [ ...this.interaction_area.querySelectorAll('.interaction_element') ]
                 .map(ie => this.get_input_text_for_ie_id(ie.id)),
         ];
         return this._object_hasher(items);
     }
 
-    // create a new empty notebook with a single interaction_element element
-    async clear_notebook(force=false) {
-        if (!force && this.notebook_modified()) {
-            if (! await ConfirmDialog.run('Warning: changes not saved, clear notebook anyway?')) {
+    // create a new empty logbook with a single interaction_element element
+    async clear_logbook(force=false) {
+        if (!force && this.logbook_modified()) {
+            if (! await ConfirmDialog.run('Warning: changes not saved, clear logbook anyway?')) {
                 return;
             }
         }
@@ -838,14 +838,14 @@ class Notebook {
         }
 
         // reset state
-        this.reset_notebook_state();
-        await this.set_notebook_source(undefined);
+        this.reset_logbook_state();
+        await this.set_logbook_source(undefined);
         this.current_ie = undefined;
         const ie = this.add_new_ie();  // add a single new interaction_element
         this.set_current_ie(ie);
         this.focus_to_current_ie();
         Change.update_for_clear(this);
-        this.set_notebook_unmodified();
+        this.set_logbook_unmodified();
 
         this.set_running_status(false);
         this.set_formatting_status(false);
@@ -853,15 +853,15 @@ class Notebook {
     }
 
     async _confirm_load() {
-        if (this.notebook_modified()) {
-            if (! await ConfirmDialog.run('Warning: changes not saved, load new notebook anyway?')) {
+        if (this.logbook_modified()) {
+            if (! await ConfirmDialog.run('Warning: changes not saved, load new logbook anyway?')) {
                 return false;
             }
         }
         return true;
     }
 
-    async open_notebook_from_file_handle(file_handle, do_import=false, force=false) {
+    async open_logbook_from_file_handle(file_handle, do_import=false, force=false) {
         if (!force && !(await this._confirm_load())) {
             return;
         }
@@ -869,39 +869,39 @@ class Notebook {
         try {
             const { text, stats } = await fs_interface.open({ file_handle });
             const force_for_finish = true;  // already checked above
-            await this.open_notebook_from_text(text, stats, do_import, force_for_finish);
+            await this.open_logbook_from_text(text, stats, do_import, force_for_finish);
             if (do_import) {
-                await this.set_notebook_source(undefined, stats);
+                await this.set_logbook_source(undefined, stats);
             } else {
-                await this.set_notebook_source(file_handle, stats);
+                await this.set_logbook_source(file_handle, stats);
             }
 
         } catch (error) {
             console.error('open failed', error.stack);
-            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty notebook)`);
-            await this.clear_notebook(true);  // initialize empty notebook
+            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty logbook)`);
+            await this.clear_logbook(true);  // initialize empty logbook
         }
     }
 
-    async open_notebook_from_text(text, stats, do_import=false, force=false) {
+    async open_logbook_from_text(text, stats, do_import=false, force=false) {
         if (!force && !(await this._confirm_load())) {
             return;
         }
 
         try {
             if (do_import) {
-                await this.import_nb_state(text);
+                await this.import_lb_state(text);
             } else {
                 const contents = JSON.parse(text);  // may throw an error
-                const new_nb_state = this.contents_to_nb_state(contents);
-                await this.load_nb_state(new_nb_state);
+                const new_lb_state = this.contents_to_lb_state(contents);
+                await this.load_lb_state(new_lb_state);
             }
 
             Change.update_for_open(this, do_import);
 
             if (!do_import) {
-                this.set_notebook_unmodified();
-                // check if this notebook is "autoeval"
+                this.set_logbook_unmodified();
+                // check if this logbook is "autoeval"
                 await this._handle_autoeval();
             }
 
@@ -909,15 +909,15 @@ class Notebook {
 
         } catch (error) {
             console.error('open failed', error.stack);
-            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty notebook)`);
-            await this.clear_notebook(true);  // initialize empty notebook
+            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty logbook)`);
+            await this.clear_logbook(true);  // initialize empty logbook
         }
     }
 
-    async open_notebook(do_import=false) {
+    async open_logbook(do_import=false) {
         try {
-            if (this.notebook_modified()) {
-                if (! await ConfirmDialog.run('Warning: changes not saved, load new notebook anyway?')) {
+            if (this.logbook_modified()) {
+                if (! await ConfirmDialog.run('Warning: changes not saved, load new logbook anyway?')) {
                     return;
                 }
             }
@@ -942,31 +942,31 @@ class Notebook {
                 },
             });
             if (!canceled) {
-                await this.open_notebook_from_text(text, stats, do_import, true);
+                await this.open_logbook_from_text(text, stats, do_import, true);
                 if (do_import) {
-                    await this.set_notebook_source(undefined, stats);
+                    await this.set_logbook_source(undefined, stats);
                 } else {
-                    await this.set_notebook_source(file_handle, stats);
+                    await this.set_logbook_source(file_handle, stats);
                 }
             }
 
         } catch (error) {
             console.error('open failed', error.stack);
-            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty notebook)`);
-            await this.clear_notebook(true);  // initialize empty notebook
+            await AlertDialog.run(`open failed: ${error.message}\n(initializing empty logbook)`);
+            await this.clear_logbook(true);  // initialize empty logbook
         }
     }
 
-    async save_notebook(interactive=false) {
+    async save_logbook(interactive=false) {
         let timestamp_mismatch;
         let mismatch_indeterminate;
         try {
-            const last_fs_timestamp = this.notebook_file_stats?.last_modified;
-            if (!this.notebook_file_handle || typeof last_fs_timestamp !== 'number') {
+            const last_fs_timestamp = this.logbook_file_stats?.last_modified;
+            if (!this.logbook_file_handle || typeof last_fs_timestamp !== 'number') {
                 timestamp_mismatch = false;  // the file might have been modified, but we cannot determine if so
                 mismatch_indeterminate = true;
             } else {
-                const stats = await fs_interface.get_fs_stats_for_file_handle(this.notebook_file_handle);
+                const stats = await fs_interface.get_fs_stats_for_file_handle(this.logbook_file_handle);
                 const current_fs_timestamp = stats.last_modified;
                 timestamp_mismatch = (current_fs_timestamp !== last_fs_timestamp);
                 mismatch_indeterminate = false;
@@ -977,21 +977,21 @@ class Notebook {
 
         try {
             if (timestamp_mismatch) {
-                const message = `Warning: notebook file ${mismatch_indeterminate ? 'may have been ' : ''}modified by another process, save anyway?`;
+                const message = `Warning: logbook file ${mismatch_indeterminate ? 'may have been ' : ''}modified by another process, save anyway?`;
                 if (! await ConfirmDialog.run(message)) {
                     return;
                 }
             }
             if (this.current_ie) {
-                this.update_nb_state(this.current_ie);  // make sure recent edits are present in this.nb_state
+                this.update_lb_state(this.current_ie);  // make sure recent edits are present in this.lb_state
             }
             const get_text = () => {
-                const contents = this.nb_state_to_contents(this.nb_state);
+                const contents = this.lb_state_to_contents(this.lb_state);
                 return JSON.stringify(contents, null, 4);
             };
             const { canceled, file_handle, stats } = await fs_interface.save(get_text, {
-                name: this.notebook_file_stats?.name ?? this.constructor.default_save_path,
-                file_handle: (interactive || !this.notebook_file_handle) ? undefined : this.notebook_file_handle,
+                name: this.logbook_file_stats?.name ?? this.constructor.default_save_path,
+                file_handle: (interactive || !this.logbook_file_handle) ? undefined : this.logbook_file_handle,
                 prompt_options: {
                     types: [{
                         description: 'logbook files',
@@ -1002,38 +1002,38 @@ class Notebook {
                 },
             });
             if (!canceled) {
-                await this.set_notebook_source(file_handle, stats);
+                await this.set_logbook_source(file_handle, stats);
 
                 this.focus_to_current_ie();
 
                 Change.update_for_save(this);
-                this.set_notebook_unmodified();
+                this.set_logbook_unmodified();
 
                 this.update_global_view_properties();
             }
 
         } catch (error) {
-//!!! necessary?            await this.set_notebook_source(undefined);  // reset potentially problematic source info
+//!!! necessary?            await this.set_logbook_source(undefined);  // reset potentially problematic source info
             console.error('save failed', error.stack);
             await AlertDialog.run(`save failed: ${error.message}`);
         }
     }
 
-    async export_notebook() {
+    async export_logbook() {
         try {
             if (this.current_ie) {
-                this.update_nb_state(this.current_ie);  // make sure recent edits are present in this.nb_state
+                this.update_lb_state(this.current_ie);  // make sure recent edits are present in this.lb_state
             }
 
             const get_text = () => {
-                const contents = this.nb_state_to_contents(this.nb_state);
+                const contents = this.lb_state_to_contents(this.lb_state);
                 const contents_json = JSON.stringify(contents);
                 const default_server_endpoint = new URL('..', current_script_url);
-                return create_exported_notebook(contents_json, document.title, default_server_endpoint);
+                return create_exported_logbook(contents_json, document.title, default_server_endpoint);
             };
 
             await fs_interface.save(get_text, {
-                name: this.notebook_file_stats?.name ?? this.constructor.default_save_path,
+                name: this.logbook_file_stats?.name ?? this.constructor.default_save_path,
                 prompt_options: {
                     types: [{
                         description: 'html files (export)',
@@ -1050,8 +1050,8 @@ class Notebook {
         }
     }
 
-    // convert in-memory notebook format to on-disk format
-    nb_state_to_contents(state) {
+    // convert in-memory logbook format to on-disk format
+    lb_state_to_contents(state) {
         const contents = {
             ...state,
             order: undefined,
@@ -1060,8 +1060,8 @@ class Notebook {
         return contents;
     }
 
-    // convert on-disk notebook format to in-memory format
-    contents_to_nb_state(contents) {
+    // convert on-disk logbook format to in-memory format
+    contents_to_lb_state(contents) {
         const state = {
             ...contents,
             order: contents.elements.map(e => e.id),
@@ -1074,26 +1074,26 @@ class Notebook {
     }
 
     // may throw an error
-    async load_nb_state(new_nb_state, for_error_recovery=false) {
+    async load_lb_state(new_lb_state, for_error_recovery=false) {
         // validation
-        if ( typeof new_nb_state !== 'object' ||
-             typeof new_nb_state.nb_type    !== 'string' ||
-             typeof new_nb_state.nb_version !== 'string' ||
-             new_nb_state.nb_type    !== this.constructor.nb_type ||
-             this.constructor.compatible_nb_version_res.every(re => !new_nb_state.nb_version.match(re)) ||
-             !Array.isArray(new_nb_state.order) ||
-             typeof new_nb_state.elements !== 'object' ||
-             new_nb_state.order.length < 0 ||
-             new_nb_state.order.length !== Object.keys(new_nb_state.elements).length ) {
-            throw new Error('unknown notebook state format');
+        if ( typeof new_lb_state !== 'object' ||
+             typeof new_lb_state.lb_type    !== 'string' ||
+             typeof new_lb_state.lb_version !== 'string' ||
+             new_lb_state.lb_type    !== this.constructor.lb_type ||
+             this.constructor.compatible_lb_version_res.every(re => !new_lb_state.lb_version.match(re)) ||
+             !Array.isArray(new_lb_state.order) ||
+             typeof new_lb_state.elements !== 'object' ||
+             new_lb_state.order.length < 0 ||
+             new_lb_state.order.length !== Object.keys(new_lb_state.elements).length ) {
+            throw new Error('unknown logbook state format');
         }
 
-        for (const id of new_nb_state.order) {
+        for (const id of new_lb_state.order) {
             if ( typeof id !== 'string' ||
-                 typeof new_nb_state.elements[id] !== 'object' ) {
-                throw new Error('illegal notebook state format');
+                 typeof new_lb_state.elements[id] !== 'object' ) {
+                throw new Error('illegal logbook state format');
             }
-            const e = new_nb_state.elements[id];
+            const e = new_lb_state.elements[id];
             if ( e.id !== id ||
                  typeof e.input !== 'string' ||
                  !Array.isArray(e.output) ||
@@ -1103,17 +1103,17 @@ class Notebook {
                               output_handlers[output_data?.type]?.validate_output_data(output_data) );
                  })
                ) {
-                throw new Error('notebook state has bad data');
+                throw new Error('logbook state has bad data');
             }
         }
 
         // validation passed; clear the current state and then load the new state
-        const prior_state = { current_ie: this.current_ie, nb_state: this.nb_state };  // save in order to restore if there is an error
+        const prior_state = { current_ie: this.current_ie, lb_state: this.lb_state };  // save in order to restore if there is an error
         this.current_ie = undefined;
-        this.reset_notebook_state();
-        // we accepted the notebook format in the validation above, so set current type and version:
-        this.nb_state.nb_type    = this.constructor.nb_type;
-        this.nb_state.nb_version = this.constructor.nb_version;
+        this.reset_logbook_state();
+        // we accepted the logbook format in the validation above, so set current type and version:
+        this.lb_state.lb_type    = this.constructor.lb_type;
+        this.lb_state.lb_version = this.constructor.lb_version;
 
         // load the new state
         try {
@@ -1123,24 +1123,24 @@ class Notebook {
                 this.interaction_area.removeChild(ie);
             }
 
-            for (const id of new_nb_state.order) {
+            for (const id of new_lb_state.order) {
                 const ie = this.add_new_ie(undefined, true, id);
                 this.set_current_ie(ie, true);
-                const new_nb_data = new_nb_state.elements[id];
-                const nb_data = this.init_nb_state_for_ie_id(ie.id);
+                const new_lb_data = new_lb_state.elements[id];
+                const lb_data = this.init_lb_state_for_ie_id(ie.id);
                 const output_element_collection = ie.querySelector('.output');
-                this.set_input_text_for_ie_id(ie.id, new_nb_data.input);
-                nb_data.input = new_nb_data.input;
+                this.set_input_text_for_ie_id(ie.id, new_lb_data.input);
+                lb_data.input = new_lb_data.input;
                 // load output elements
-                for (const output_data of new_nb_data.output) {
-                    nb_data.output.push(JSON.parse(JSON.stringify(output_data)));  // make a copy
+                for (const output_data of new_lb_data.output) {
+                    lb_data.output.push(JSON.parse(JSON.stringify(output_data)));  // make a copy
                     const handler = output_handlers[output_data.type];
                     const static_output_element = await handler.generate_static_element(output_data);
                     if (static_output_element) {
                         output_element_collection.appendChild(static_output_element);
                     }
                 }
-                nb_data.formatting_options = new_nb_data.formatting_options ?? settings.formatting_options;
+                lb_data.formatting_options = new_lb_data.formatting_options ?? settings.formatting_options;
             }
             const first_ie = this.interaction_area.querySelector('.interaction_element');
             this.set_current_ie(first_ie ?? undefined);
@@ -1149,7 +1149,7 @@ class Notebook {
                 this.set_ie_selection_state(this.current_ie, true);
             }
             // typeset
-            await this.typeset_notebook();
+            await this.typeset_logbook();
             // set focus
             this.focus_to_current_ie();
 
@@ -1157,7 +1157,7 @@ class Notebook {
 
             if (!for_error_recovery) {
                 try {
-                    await this.load_nb_state(prior_state.nb_state, true);
+                    await this.load_lb_state(prior_state.lb_state, true);
                     this.set_current_ie(prior_state.current_ie);
                 } catch (err2) {
                     // this should not happen, but if it does do nothing else
@@ -1170,27 +1170,27 @@ class Notebook {
     }
 
     // may throw an error
-    async import_nb_state(text) {
+    async import_lb_state(text) {
         // check if it is necessary to add initial javascript comment to trigger javascript mode
         const detected_modes = this.constructor.detect_ie_modes(text);
         if (!detected_modes.javascript) {
             text = '//\n' + text;
         }
-        // load the text into an empty notebook
-        await this.clear_notebook(true);
+        // load the text into an empty logbook
+        await this.clear_logbook(true);
         // this.current_ie will be set now
         this.set_input_text_for_ie_id(this.current_ie.id, text);
-        this.update_nb_state(this.current_ie);  // make sure new text is present in this.nb_state
+        this.update_lb_state(this.current_ie);  // make sure new text is present in this.lb_state
     }
 
     async _handle_autoeval() {
-        const first_ie_id = this.nb_state.order[0];
+        const first_ie_id = this.lb_state.order[0];
         if (first_ie_id) {
             const cm = this.get_internal_state_for_ie_id(first_ie_id).cm;
             const first_line = cm.getLine(0);
             const detected_modes = this.constructor.detect_ie_modes(first_line);
             if (detected_modes.autoeval) {
-                await this.ie_ops_eval_notebook();
+                await this.ie_ops_eval_logbook();
             }
         }
     }
@@ -1237,7 +1237,7 @@ class Notebook {
         }
 
         // reset the state of the new ie and initialize
-        this.init_nb_state_for_ie_id(ie.id);
+        this.init_lb_state_for_ie_id(ie.id);
         this.establish_internal_state_for_ie_id(ie.id);
         this.init_ie_event_handlers(ie);
 
@@ -1246,7 +1246,7 @@ class Notebook {
         const successor = append_to_end ? null : reference_ie;
         // if successor is null, the new ie will be appended to the end
         this.interaction_area.insertBefore(ie, successor);
-        this.update_nb_state_order();
+        this.update_lb_state_order();
 
         // set up CodeMirror editor
         // (this needs to be done after the new ie is part of the DOM)
@@ -1315,7 +1315,7 @@ class Notebook {
         if (!this.current_ie) {
             return false;
         } else {
-            const order = this.nb_state.order;
+            const order = this.lb_state.order;
             const ie_position = order.indexOf(this.current_ie.id);
             return (ie_position <= 0);
         }
@@ -1324,7 +1324,7 @@ class Notebook {
         if (!this.current_ie) {
             return false;
         } else {
-            const order = this.nb_state.order;
+            const order = this.lb_state.order;
             const ie_position = order.indexOf(this.current_ie.id);
             return (ie_position >= order.length-1);
         }
@@ -1334,12 +1334,12 @@ class Notebook {
     set_current_ie(ie, leave_focus_alone=false) {
         if (ie !== this.current_ie) {
             if (this.current_ie) {
-                this.update_nb_state(this.current_ie);
+                this.update_lb_state(this.current_ie);
                 this.set_ie_selection_state(this.current_ie, false);
             }
             this.current_ie = ie;  // ie may be null or undefined
             if (this.current_ie) {
-                this.update_nb_state(this.current_ie);
+                this.update_lb_state(this.current_ie);
                 this.set_ie_selection_state(this.current_ie, true);
             }
         }
@@ -1368,44 +1368,44 @@ class Notebook {
 
     // Called for newly created (or newly loaded from page HTML) interaction_element
     // elements.  The interaction_element ie must already have an id.
-    // Returns this.nb_state.elements[ie.id];
-    init_nb_state_for_ie_id(ie_id) {
-        this.nb_state.elements[ie_id] = {
+    // Returns this.lb_state.elements[ie.id];
+    init_lb_state_for_ie_id(ie_id) {
+        this.lb_state.elements[ie_id] = {
             id: ie_id,
             input: '',
             output: [],
         };
-        return this.nb_state.elements[ie_id];
+        return this.lb_state.elements[ie_id];
     }
 
-    // Resets output ui elements and this.nb_state output for ie.
+    // Resets output ui elements and this.lb_state output for ie.
     // Completely replaces the .output child.
-    // Returns the newly-set empty array for this.nb_state.elements[ie.id].output
-    // or undefined if ie.id does not exist in this.nb_state.elements.
+    // Returns the newly-set empty array for this.lb_state.elements[ie.id].output
+    // or undefined if ie.id does not exist in this.lb_state.elements.
     reset_output(ie) {
         const old = ie.querySelector('.output');
         const output_element_collection = document.createElement(old.tagName);
         output_element_collection.classList = old.classList;
         old.replaceWith(output_element_collection);
-        const nb_state_obj = this.nb_state.elements[ie.id];
-        if (!nb_state_obj) {
+        const lb_state_obj = this.lb_state.elements[ie.id];
+        if (!lb_state_obj) {
             return undefined;
         } else {
             const empty_output_data_collection = [];
-            nb_state_obj.output = empty_output_data_collection;
+            lb_state_obj.output = empty_output_data_collection;
             return empty_output_data_collection;
         }
     }
 
-    update_nb_state(ie) {
+    update_lb_state(ie) {
         // assume that every interaction element has a (uuid) id, and that it has
-        // a corresponding entry in this.nb_state.
-        const ie_data = this.nb_state.elements[ie.id];
+        // a corresponding entry in this.lb_state.
+        const ie_data = this.lb_state.elements[ie.id];
         ie_data.input = this.get_input_text_for_ie_id(ie.id);
     }
 
-    update_nb_state_order() {
-        this.nb_state.order = [ ...this.interaction_area.querySelectorAll('.interaction_element') ].map(e => e.id);
+    update_lb_state_order() {
+        this.lb_state.order = [ ...this.interaction_area.querySelectorAll('.interaction_element') ].map(e => e.id);
     }
 
 
@@ -1416,7 +1416,7 @@ class Notebook {
         this.set_running_status(true);
 
         try {
-            this.update_nb_state(ie);
+            this.update_lb_state(ie);
 
             const output_data_collection = this.reset_output(ie);
             const output_context = create_output_context(ie, output_data_collection);
@@ -1431,7 +1431,7 @@ class Notebook {
 
             } catch (err) {
 
-                await output_handlers.error.update_notebook(output_context, err);
+                await output_handlers.error.update_logbook(output_context, err);
                 if (err instanceof TextuallyLocatedError) {
                     this.set_input_selection_for_ie_id(ie.id, err.line_col);
                 }
@@ -1442,7 +1442,7 @@ class Notebook {
 
             add_ie_output_change(this, ie.id);
 
-            await this.typeset_notebook(ie);
+            await this.typeset_logbook(ie);
 
         } finally {
             this.set_running_status(false);
@@ -1503,7 +1503,7 @@ class Notebook {
 
             const create_worker = () => {
                 const eval_worker = new EvalWorker();
-                this.internal_nb_state[this.constructor.sym_eval_workers].push(eval_worker);
+                this.internal_lb_state[this.constructor.sym_eval_workers].push(eval_worker);
                 return eval_worker;
             };
 
@@ -1512,10 +1512,10 @@ class Notebook {
         }
     }
 
-    async typeset_notebook(single_ie=undefined) {
+    async typeset_logbook(single_ie=undefined) {
         try {
             this.set_formatting_status(true);
-            const ie_update_list = single_ie ? [single_ie] : this.nb_state.order.map(id => document.getElementById(id));
+            const ie_update_list = single_ie ? [single_ie] : this.lb_state.order.map(id => document.getElementById(id));
             if (is_MathJax_v2) {
                 for (const ie of ie_update_list) {
                     const formatting_options = this.get_formatting_options_for_ie_id(ie.id);

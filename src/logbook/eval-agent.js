@@ -1,7 +1,7 @@
 // EXPRESSION EVALUATION
 // ---------------------
 // Within an expression, the "this" object references the eval_state
-// object of the notebook.  This object persists until the notebook
+// object of the logbook.  This object persists until the logbook
 // is opened to a new file or is cleared, at which point it is reset
 // to {}.
 //
@@ -9,17 +9,17 @@
 // properties are available directly for evaluation within any
 // interaction element, without the need to prefix them with any parent
 // object.  In this sense, this.eval_context acts like a global
-// environment for the notebook without the need to modify globalThis.
+// environment for the logbook without the need to modify globalThis.
 //
 // vars(...objects) assigns new properties to this.eval_context.
 // Those properties then become available "globally".  Note that the
 // "global" objects are available from any interaction element, that
-// is until the notebook is opened to a new file or is cleared.
+// is until the logbook is opened to a new file or is cleared.
 // The return value is undefined; this makes ${vars(...)} in a
 // template literal (and in markup) not insert anything into the output.
 //
 // Other properties set on the "this" object, like the "global"
-// properties, persist until the notebook is opened to a new file or
+// properties, persist until the logbook is opened to a new file or
 // is cleared.  However, those properties must be prefixed by "this."
 // to reference them.
 //
@@ -233,7 +233,7 @@ export class EvalAgent {
                 throw new Error('error received after EvalAgent already stopped');
             } else {
                 try {
-                    return await self.output_context.output_handler_update_notebook(action.type, action);
+                    return await self.output_context.output_handler_update_logbook(action.type, action);
                 } catch (error) {
                     try {
                         await process_error(error);
@@ -248,7 +248,7 @@ export class EvalAgent {
             if (self._stopped) {
                 throw new Error('error received after EvalAgent already stopped');
             } else {
-                return self.output_context.output_handler_update_notebook('error', error);
+                return self.output_context.output_handler_update_logbook('error', error);
             }
         }
 

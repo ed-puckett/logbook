@@ -24,7 +24,7 @@ function _get_svg_string(svg_node, stylesheet_text) {
 }
 
 export function create_output_context(ie, output_data_collection) {
-    // Define instance this way to isolate references to notebook,
+    // Define instance this way to isolate references to logbook,
     // ie and output_data_collection.
 
     // Note that the output_data_collection is queried now so that
@@ -33,12 +33,12 @@ export function create_output_context(ie, output_data_collection) {
     const output_element_collection = ie.querySelector('.output');
 
     return {
-        async output_handler_update_notebook(type, value) {
+        async output_handler_update_logbook(type, value) {
             const handler = output_handlers[type];
             if (!handler) {
                 throw new Error(`unknown output type: ${type}`);
             } else {
-                return handler.update_notebook(this, value);
+                return handler.update_logbook(this, value);
             }
         },
 
@@ -189,7 +189,7 @@ export function create_output_context(ie, output_data_collection) {
                 if (previous_output_data?.type === 'text') {
                     // new data and the previous are both 'text'; merge new data into previous
                     previous_output_data.text += text;
-                    // connect output_data and output_element into notebook and ui
+                    // connect output_data and output_element into logbook and ui
                     const merged_output_element = await static_element_generator(previous_output_data);
                     merged_output_element.id = output_element_collection.lastChild.id;  // preserve id
                     output_element_collection.lastChild.replaceWith(merged_output_element);
@@ -203,7 +203,7 @@ export function create_output_context(ie, output_data_collection) {
                 text,
             };
             const output_element = await static_element_generator(output_data);
-            // connect output_data and output_element into notebook and ui
+            // connect output_data and output_element into logbook and ui
             output_element_collection.appendChild(output_element);
             output_data_collection.push(output_data);
             if (!leave_scroll_position_alone) {
@@ -239,7 +239,7 @@ export function create_output_context(ie, output_data_collection) {
                   ? [ 'generic', ...args ]
                   : args;
             // Save an image of the rendered canvas.  This will be used if this
-            // notebook is saved and then loaded again later.
+            // logbook is saved and then loaded again later.
             // Note: using image/png because image/jpeg fails on Firefox (as of writing)
             const image_format = 'image/png';
             const image_format_quality = 1.0;

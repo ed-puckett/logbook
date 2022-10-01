@@ -1,7 +1,7 @@
 // WHY IS THIS FILE SO MESSY?
 // --------------------------
 // This file has a ".mjs" extension because it is intended to be import-able
-// from nodejs as well as the notebook code.  This is to support building
+// from nodejs as well as the logbook code.  This is to support building
 // demos from the examples from the Makefile.
 //
 // Also: the definition of make_string_literal is repeated here to avoid
@@ -22,7 +22,7 @@ if (typeof btoa !== 'function') {
 
 export const initializing_data_element_id = 'initializing-data-f55c8878-87c8-11ec-b7c3-273bd5f809b1';
 
-export function create_exported_notebook(contents_json, document_title, default_server_endpoint) {
+export function create_exported_logbook(contents_json, document_title, default_server_endpoint) {
     if (typeof contents_json !== 'string') {
         throw new Error('contents_json must be a string');
     }
