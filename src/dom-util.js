@@ -67,12 +67,25 @@ function _attr_value(v) {
  *  @param {string} tag_name
  *  @param {Object|undefined|null} attrs
  *  @return {Element} the new element
+ *  If attrs contains an "id" entry, then the existing element with that id,
+ *  if such an element exists, will be returned instead of a new element.
+ *  In either case, the attributes specified in attrs are applied to the
+ *  element that is returned.
  */
 export function create_element(tag_name, attrs) {
     if (typeof tag_name !== 'string' || tag_name.length <= 0) {
         throw new Error('tag_name must be a non-empty string');
     }
-    const el = document.createElement(tag_name);
+    tag_name = tag_name.toUpperCase();  // normalize for HTML (not XML)
+
+    // check for pre-existing element
+    const id = attrs?.id;
+    const existing_el = id ? document.getElementById(id) : undefined;
+    if (existing_el && existing_el.tagName !== tag_name) {
+        throw new Error(`pre-existing element with id "${id}" has tagName "${existing_el.tagName}" but caller specified "${tag_name}"`);
+    }
+
+    const el = existing_el ?? document.createElement(tag_name);
     set_element_attributes(el, attrs);
     return el;
 }
@@ -83,6 +96,10 @@ export function create_element(tag_name, attrs) {
  *  @param {Object|undefined|null} attrs
  *  @param {boolean|undefined} prepend instead of append
  *  @return {Element} the new element
+ *  If attrs contains an "id" entry, then the existing element with that id,
+ *  if such an element exists, will be returned instead of a new element.
+ *  In either case, the attributes specified in attrs are applied to the
+ *  element that is returned.
  */
 export function create_child_element(parent, tag_name, attrs, prepend=false) {
     if (! (parent instanceof Element)) {

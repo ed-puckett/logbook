@@ -11,7 +11,7 @@ const {
 
 // === COMMAND BINDINGS ===
 
-export const initial_command_bindings = {  // command_string->key_bindings_array
+export const initial_command_bindings = {  // command_string->[ key_binding, ... ]
     'undo':                [ 'CmdOrCtrl+Z' ],
     'redo':                [ 'CmdOrCtrl+Shift+Z' ],
     'clear_logbook':       [ 'CmdOrCtrl+Shift+C' ],
@@ -49,12 +49,13 @@ function _copy_command_bindings(cb) {
     return _freeze_command_bindings(ccb);
 }
 function _command_binding_structure_valid(cb) {
-    return ( typeof cb === 'object' &&
+    return ( (typeof cb === 'object') &&
              Object.keys(cb).every(k => {
-                 return ( typeof k === 'string' &&
+                 return ( (typeof k === 'string') &&
                           Array.isArray(cb[k]) &&
                           cb[k].every(ks => (typeof ks === 'string')) );
-            }) );
+             })
+           );
 }
 
 _freeze_command_bindings(initial_command_bindings);
