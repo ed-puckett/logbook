@@ -1,6 +1,6 @@
 const {
-    OpenPromise,
-} = await import('./open-promise.js');
+    asyncify_event_source,
+} = await import('../lib/iterable-util.js');
 
 
 export class InteractionElement extends Element {
@@ -34,6 +34,7 @@ export class InteractionElement extends Element {
     // === STATE ===
 
     #apply_state_update(updater) {
+        //!!!
     }
 
     async update(updater=null) {
@@ -43,6 +44,7 @@ export class InteractionElement extends Element {
         if (this.before_render(new_state_values) !== false) {
             this.render();
         }
+        //!!!
     }
 
 

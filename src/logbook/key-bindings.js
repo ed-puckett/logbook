@@ -71,7 +71,7 @@ function _build_binding_trie(cb) {
           Object.entries(cb)
           .map(([ command, key_bindings ]) => {
               const canonical_key_bindings = key_bindings.map((key_binding) => {
-                  const key_binding_key_specs = key_binding.trim().split(/\s+/);
+                  const key_binding_key_specs = key_binding.trim().split(canonical_key_spec_separator);
                   const canonical_key_binding_key_specs = key_binding_key_specs.map(parse_key_spec);
                   const canonical_key_binding = canonical_key_binding_key_specs.join(canonical_key_spec_separator);
                   return canonical_key_binding;
@@ -95,6 +95,7 @@ function _build_binding_trie(cb) {
     }
     return trie;
 }
+
 
 
 // === KEY BINDING EVENTS ===
