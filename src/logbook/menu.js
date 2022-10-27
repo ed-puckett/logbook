@@ -16,7 +16,7 @@ const {
 } = await import('./key-bindings.js');
 
 const {
-    key_spec_to_glyphs,
+    KeySpec,
 } = await import('./key-spec.js');
 
 const {
@@ -390,7 +390,7 @@ export class MenuBar {
                 });
                 // create <kbd>...</kbd> elements
                 kbd_bindings.forEach(binding => {
-                    const binding_glyphs = key_spec_to_glyphs(binding);
+                    const binding_glyphs = new KeySpec(binding).glyphs;
                     create_child_element(kbd_container, 'kbd').innerText = binding_glyphs;
                 });
             }

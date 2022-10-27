@@ -3,9 +3,7 @@ const { beep } = await import('../beep.js');
 const { define_subscribable } = await import('../subscribable.js');
 
 const {
-    canonical_key_spec_separator,
-    parse_key_spec,
-    parse_keyboard_event,
+    KeySpec,
 } = await import('./key-spec.js');
 
 
@@ -61,43 +59,6 @@ function _command_binding_structure_valid(cb) {
 _freeze_command_bindings(initial_command_bindings);
 
 
-// === BINDING TRIE ===
-
-let _binding_trie;  // initialized below
-
-// cb: command_string->key_bindings_array
-function _build_binding_trie(cb) {
-    const ckb_to_c =  // array of [ canonical_key_binding, command ] entries
-          Object.entries(cb)
-          .map(([ command, key_bindings ]) => {
-              const canonical_key_bindings = key_bindings.map((key_binding) => {
-                  const key_binding_key_specs = key_binding.trim().split(canonical_key_spec_separator);
-                  const canonical_key_binding_key_specs = key_binding_key_specs.map(parse_key_spec);
-                  const canonical_key_binding = canonical_key_binding_key_specs.join(canonical_key_spec_separator);
-                  return canonical_key_binding;
-              });
-              const distinct_canonical_key_bindings = [ ...new Set(canonical_key_bindings).values() ];
-              return distinct_canonical_key_bindings.map(canonical_key_binding => [ canonical_key_binding, command ])
-          })
-          .reduce((acc, a) => [ ...acc, ...a ])
-
-    const trie = {};
-    for (const [ canonical_key_binding, command ] of ckb_to_c) {
-        let state = trie;
-        for (const canonical_key_spec of canonical_key_binding.split(canonical_key_spec_separator)) {
-            let next = state[canonical_key_spec];
-            if (!next) {
-                next = state[canonical_key_spec] = {};
-            }
-            state = next;
-        }
-        state[null] = command;
-    }
-    return trie;
-}
-
-
-
 // === KEY BINDING EVENTS ===
 
 export class KeyBindingCommandEvent extends define_subscribable('command-binding') {
@@ -151,9 +112,9 @@ function bind_key_handler(element) {
             break;
 
         default: {
-            const canonical_key_spec = parse_keyboard_event(event);
-            key_sequence.push(canonical_key_spec);
-            const next = state[canonical_key_spec];
+            const canonical_key_string = KeySpec.from_keyboard_event(event).canonical;
+            key_sequence.push(canonical_key_string);
+            const next = state[canonical_key_string];
             if (!next) {
                 if (state !== initial_state) {
                     // Beep only if at least one keypress has already been accepted.
