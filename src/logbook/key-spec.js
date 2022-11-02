@@ -1,4 +1,4 @@
-// === KEYSPEC ===
+//!!! need to compare key case-insensitive if modifiers exist, otherwise case-sensitive (?)
 
 export class KeySpec {
     constructor(key_string) {
@@ -8,6 +8,7 @@ export class KeySpec {
         this.#key_string = key_string;
         this.canonical;  // force parsing now to detect errors in key_string
     }
+    #key_string;
 
     get key_string (){ return this.#key_string; }
 
@@ -17,7 +18,7 @@ export class KeySpec {
     static canonical_key_modifier_separator = '+';  // separator between modifier codes and key in a canonical key string
     static canonical_key_string_separator   = ' ';  // separator between key_strings in a canonical key binding
 
-    // #basic_modifier_desc_map is the definition from which modifier_desc_map and modifier_code_desc_map are derived
+    // #basic_modifier_desc_map is the definition from which #modifier_desc_map and #modifier_code_desc_map are derived
     static #basic_modifier_desc_map = {
         meta:  { code: 'm', event_prop: 'metaKey',  glyph: '\u2318', display_order: 3, alternates: [ 'cmd', 'command' ] },
         ctrl:  { code: 'c', event_prop: 'ctrlKey',  glyph: '\u2303', display_order: 1, alternates: [ 'control' ] },
@@ -50,7 +51,7 @@ export class KeySpec {
               .sort((a, b) => (a.display_order - b.display_order))
               .map(desc => this.#modifier_code_to_modifier[desc.code]);
         const key = event.key.toLowerCase();
-        const key_string = `${modifier_strings}${this.#canonical_key_modifier_separator}${key}`;
+        const key_string = `${modifier_strings}${this.canonical_key_modifier_separator}${key}`;
         return new KeySpec(key_string);
     }
 
@@ -203,7 +204,7 @@ export class KeySpec {
             this.#modifier_code_to_modifier[desc.code] = modifier;
         }
 
-        this.#_modifier_code_to_glyph =  // code->glyph
+        this.#modifier_code_to_glyph =  // code->glyph
             Object.fromEntries(
                 Object.entries(this.#basic_modifier_desc_map)
                     .map(([modifier_key, { code, glyph }]) => [ code, glyph ])
@@ -215,13 +216,13 @@ export class KeySpec {
                     .map(([modifier_key, { code, display_order }]) => [ code, display_order ])
             );
 
-        this.#modifier_desc_map = build_modifier_desc_map();  // modifier_string->modifier_desc
+        this.#modifier_desc_map = this.#build_modifier_desc_map();  // modifier_string->modifier_desc
 
         this.#modifier_code_desc_map =  // modifier_code->modifier_desc
             Object.freeze(
                 Object.fromEntries(
                     Object.keys(this.#basic_modifier_desc_map)
-                        .map(k => modifier_desc_map[k])
+                        .map(k => this.#modifier_desc_map[k])
                         .map(desc => [ desc.code, desc ])
                 )
             );
@@ -230,5 +231,3 @@ export class KeySpec {
 
 // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
 KeySpec._init_static();
-
-//!!! need to compare key case-insensitive if modifiers exist, otherwise case-sensitive (?)

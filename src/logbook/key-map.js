@@ -73,15 +73,15 @@ export class KeyMap {
             this.#mapping      = mapping;
         }
 
-        // returns a string (complete), or undefined (failed), or a new Mapper instance (waiting for next key in sequence)
-        consume(key_string) {
-            const canonical_key_string = new KeySpec(key_string).canonical;
+        // returns a command string (complete), or undefined (failed), or a new Mapper instance (waiting for next key in sequence)
+        consume(key_spec) {
+            const canonical_key_string = key_spec.canonical;
             // this.#mapping takes precedence over this.#prior_mapper
             const mapping_result = this.#mapping?.[canonical_key_string];  // returns: undefined, string, or another mapping (object)
             if (typeof mapping_result === 'string') {
                 return mapping_result;
             }
-            const prior_mapper_result = this.#prior_mapper?.consume(key_string);
+            const prior_mapper_result = this.#prior_mapper?.consume(key_spec);
             if (typeof prior_mapper_result === 'string') {
                 return prior_mapper_result;
             }
@@ -91,6 +91,10 @@ export class KeyMap {
             return mapping_result
                 ? new Mapper(prior_mapper_result, mapping_result)
                 : prior_mapper_result;  // no need to compose with mapping_result (which is undefined)
+        }
+
+        consume_key_string(key_string) {
+            return this.consume(new KeySpec(key_string));
         }
     };
 }
