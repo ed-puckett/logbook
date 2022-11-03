@@ -82,7 +82,7 @@ export class KeySpec {
                   .sort((a, b) => (a.display_order - b.display_order))
                   .map(desc => desc.code)
                   .join('');
-            this.#canonical = `${canonical_modifiers}${this.canonical_key_modifier_separator}${key}`;
+            this.#canonical = `${canonical_modifiers}${this.constructor.canonical_key_modifier_separator}${key}`;
         }
         return this.#canonical;
     }
@@ -133,7 +133,7 @@ export class KeySpec {
             const CmdOrCtrl = this.#is_on_macos ? 'meta' : 'ctrl';
             modifier = CmdOrCtrl.toLowerCase();
         }
-        return this.modifier_desc_map[modifier];
+        return this.#modifier_desc_map[modifier];
     }
 
     static #modifier_code_to_modifier;       // code->modifier; initialized in this.#_init_static()

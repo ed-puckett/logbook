@@ -6,26 +6,33 @@ const {
 // === KEY MAP ===
 
 export class KeyMap {
-    constructor(prior=null, bindings=null) {
-        if (prior !== null && typeof prior !== 'undefined' && !(prior instanceof this.constructor)) {
-            throw new Error('prior must be null/undefined or a KeyMap instance');
-        }
-        this.#prior    = prior;
+    constructor(bindings) {
         this.#bindings = bindings;
-        this.#mapping  = this.constructor.#create_mapping(bindings);  // set up this.#mapping
-        this.#mapper   = new this.constructor.Mapper(prior?.mapper, this.#mapping);
+        this.#mapping  = this.constructor.#create_mapping(bindings);
     }
-
-    #prior;     // prior keymap which this one shadows
     #bindings;  // key/command bindings
     #mapping;   // canonical_key_string->(command|another_mapping)
-    #mapper;    // Mapper instance associated with this KeyMap
 
-    get prior    (){ return this.#prior; }
     get bindings (){ return this.#bindings; }
-    get mapper   (){ return this.#mapper; }
+
+    get_mapper(fallback_mapper=null) {
+        return new this.constructor.Mapper(this.#mapping, fallback_mapper);
+    }
+
+    static multi_mapper(...key_maps) {
+        if (key_maps.length <= 0) {
+            throw new Error('at least one KeyMap instance must be given');
+        }
+        if (!key_maps.every(m => m instanceof this)) {
+            throw new Error('arguments must all be KeyMap instances');
+        }
+        return key_maps.reduce((mapper, key_map) => key_map.get_mapper(mapper), null);
+    }
 
     static #create_mapping(bindings) {
+        if (bindings !== null && typeof bindings !== 'undefined' && typeof bindings !== 'object') {
+            throw new Error('bindings must be null/undefined or an object');
+        }
         const mapping = {};
         for (const command in bindings) {
             if (command.length <= 0) {
@@ -56,41 +63,43 @@ export class KeyMap {
     }
 
     static Mapper = class Mapper {
-        #prior_mapper;
-        #mapping;
-
-        constructor(prior_mapper, mapping) {
-            if (prior_mapper !== null && typeof prior_mapper !== 'undefined' && !(prior_mapper instanceof this.constructor)) {
-                throw new Error('prior_mapper must be null/undefined or a Mapper instance');
-            }
+        constructor(mapping, fallback_mapper=null) {
             if (mapping !== null && typeof mapping !== 'undefined' && typeof mapping !== 'object') {
                 throw new Error('mapping must be null/undefined or an object');
             }
-            if (!prior_mapper && !mapping) {
-                throw new Error('at least one of prior_mapper or mapping must be given');
+            if (fallback_mapper !== null && typeof fallback_mapper !== 'undefined' && !(fallback_mapper instanceof this.constructor)) {
+                throw new Error('fallback_mapper must be null/undefined or a KeyMap instance');
             }
-            this.#prior_mapper = prior_mapper;
-            this.#mapping      = mapping;
+            if (!mapping && !fallback_mapper) {
+                throw new Error('at least one of mapping or fallback_mapper must be given');
+            }
+            this.#mapping         = mapping;
+            this.#fallback_mapper = fallback_mapper;
         }
+        #mapping;
+        #fallback_mapper;
 
         // returns a command string (complete), or undefined (failed), or a new Mapper instance (waiting for next key in sequence)
         consume(key_spec) {
+            if (! (key_spec instanceof KeySpec)) {
+                throw new Error('key_spec must be an instance of KeySpec');
+            }
             const canonical_key_string = key_spec.canonical;
-            // this.#mapping takes precedence over this.#prior_mapper
+            // this.#mapping takes precedence over this.#fallback_mapper
             const mapping_result = this.#mapping?.[canonical_key_string];  // returns: undefined, string, or another mapping (object)
             if (typeof mapping_result === 'string') {
                 return mapping_result;
             }
-            const prior_mapper_result = this.#prior_mapper?.consume(key_spec);
-            if (typeof prior_mapper_result === 'string') {
-                return prior_mapper_result;
+            const fallback_mapper_result = this.#fallback_mapper?.consume(key_spec);
+            if (typeof fallback_mapper_result === 'string') {
+                return fallback_mapper_result;
             }
-            if (!mapping_result && !prior_mapper_result) {
+            if (!mapping_result && !fallback_mapper_result) {
                 return undefined;  // indicate: failed
             }
             return mapping_result
-                ? new Mapper(prior_mapper_result, mapping_result)
-                : prior_mapper_result;  // no need to compose with mapping_result (which is undefined)
+                ? new Mapper(mapping_result, fallback_mapper_result)
+                : fallback_mapper_result;  // no need to compose with mapping_result (which is undefined)
         }
 
         consume_key_string(key_string) {
