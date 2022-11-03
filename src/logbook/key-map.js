@@ -80,10 +80,10 @@ export class KeyMap {
         #fallback_mapper;
 
         // returns a command string (complete), or undefined (failed), or a new Mapper instance (waiting for next key in sequence)
-        consume(key_spec) {
-            if (! (key_spec instanceof KeySpec)) {
-                throw new Error('key_spec must be an instance of KeySpec');
-            }
+        consume(key_string_or_key_spec) {
+            const key_spec = (key_string_or_key_spec instanceof KeySpec)
+                  ? key_string_or_key_spec
+                  : new KeySpec(key_string_or_key_spec);
             const canonical_key_string = key_spec.canonical;
             // this.#mapping takes precedence over this.#fallback_mapper
             const mapping_result = this.#mapping?.[canonical_key_string];  // returns: undefined, string, or another mapping (object)
@@ -100,10 +100,6 @@ export class KeyMap {
             return mapping_result
                 ? new Mapper(mapping_result, fallback_mapper_result)
                 : fallback_mapper_result;  // no need to compose with mapping_result (which is undefined)
-        }
-
-        consume_key_string(key_string) {
-            return this.consume(new KeySpec(key_string));
         }
     };
 }
