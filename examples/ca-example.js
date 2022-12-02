@@ -4,7 +4,7 @@ var {
         ECA,
         CellularAutomatonRenderer,
     },
-} = await import_lib('cmjs.js');
+} = await import_lib('cmjs/_.js');
 
 const cell_value_count = 8;
 const input_radius     = 2;

@@ -25,6 +25,7 @@
     "mathjax": "^2.7.7",
     "nerdamer": "^1.1.6",
     "plotly.js-dist": "^2.7.0",
+    "rxjs": "^7.5.7",
     "sprintf-js": "^1.1.2",
     "uuid": "^8.3.2"
   },

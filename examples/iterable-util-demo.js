@@ -1,6 +1,6 @@
 // range() examples
 
-import_lib('iterable-util.js').then(iterable_util => {
+import_lib('sys/iterable-util.js').then(iterable_util => {
     const {
         range,
         flatten_iterable,

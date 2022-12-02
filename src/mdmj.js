@@ -2,7 +2,7 @@ const {
     create_inline_script,
     load_script,
     load_script_and_wait_for_condition,
-} = await import('./dom-util.js');
+} = await import('../lib/ui/dom-util.js');
 
 const mathjax_static_config_identifying_property = 'this_is_initial_static_data';
 

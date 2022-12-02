@@ -4,7 +4,7 @@
     "elements": [
         {
             "id": "id-f6fd1be4-f90f-483f-a902-601cfcbc5c8a",
-            "input": "//\nconst { tree: { MultiSampleTree, CountTree }, k_means_partition: { Partition } } = await import_lib('cmjs.js');\n\nvars({\n    MultiSampleTree, CountTree, Partition,\n\n    alphabet:      [ 'a', 'b', 'c' ],\n\n    depth:         10,\n    sample_size:   10000,\n    sample_count:  30,\n\n    past_window:   0,\n    future_window: 4,\n});\n",
+            "input": "//\nconst { tree: { MultiSampleTree, CountTree }, k_means_partition: { Partition } } = await import_lib('cmjs/_.js');\n\nvars({\n    MultiSampleTree, CountTree, Partition,\n\n    alphabet:      [ 'a', 'b', 'c' ],\n\n    depth:         10,\n    sample_size:   10000,\n    sample_count:  30,\n\n    past_window:   0,\n    future_window: 4,\n});\n",
             "output": [],
             "formatting_options": {
                 "align": "left",

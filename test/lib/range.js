@@ -12,7 +12,7 @@ const {
     zip,
     zip_longest,
     iterable_extension_handler_functions_keys,
-} = await import('../../build/lib/iterable-util.js');
+} = await import('../../build/lib/sys/iterable-util.js');
 
 for (const range_args of [
     [],
