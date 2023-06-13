@@ -1,1 +1,1 @@
-include: [ "_.js" "node_modules" ]
+include: [ "_.js", "node_modules" ]
