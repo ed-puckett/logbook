@@ -1,7 +1,7 @@
-const {
+import {
     db_key_recents,
     storage_db,
-} = await import('./storage.js');
+} from './storage.js';
 
 
 // === STORAGE ===
@@ -39,7 +39,7 @@ export async function add_to_recents(recent) {
         if (new_recents.length >= max_recents) {
             break;
         }
-        if (! (await r.file_handle.isSameEntry(recent.file_handle))) {
+        if (!(await r.file_handle.isSameEntry(recent.file_handle))) {
             new_recents.push(r);
         }
     }

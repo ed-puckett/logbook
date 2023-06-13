@@ -1,0 +1,99 @@
+:root {
+    /* background-color */
+
+    --bgcolor-cell:            hsl(224deg 100%  95% / 1);
+    --bgcolor-cell-tex:        hsl( 45deg  57%  88% / 1);
+    --bgcolor-cell-javascript: hsl(196deg 100%  95% / 1);
+
+    --bgcolor-status-mix-space: hsl;
+    --bgcolor-status-mix-ratio: 95%;
+    --bgcolor-status-mix-color: hsl(250deg 40% 40% / 1);
+
+    --bgcolor-status:            color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell)            var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
+    --bgcolor-status-tex:        color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell-tex)        var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
+    --bgcolor-status-javascript: color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell-javascript) var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
+
+
+    /* border */
+
+    --border-radius-cell:             0.125em;
+    --border-width-cell:              1px;
+    --border-style-cell:              solid;
+    --border-width-status:            1px;
+    --border-style-status:            solid;
+    --border-color-status:            #ccc;
+    --border-color-inter-status-cell: color-mix(in hsl, var(--bgcolor-cell) 50%, var(--bgcolor-status));
+    --border-color-cell:              #ccc;
+    --border-color-status-focus:      black;
+    --border-color-cell-focus:        black;
+}
+
+eval-cell {
+    outline: 0px solid transparent;  /* disable default outline */
+
+    white-space: pre-wrap;  /* properly display white-space */
+    font-family: monospace;
+    line-height: 120%;
+
+    display: block;
+    margin: 0;
+    padding: 0.3em 0.5em;
+}
+
+.eval-cell-output {
+    display: block;
+    padding: 0.7em;
+
+    white-space: pre-wrap;  /* properly display white-space */
+    background-color: white;
+}
+.eval-cell-output + eval-cell {
+    margin-top: 1em;
+}
+
+
+/* border */
+
+status-bar {
+    border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
+    border-width:  var(--border-width-status);
+    border-style:  var(--border-style-status);
+    border-color:  var(--border-color-status) var(--border-color-status) transparent var(--border-color-status);
+}
+eval-cell {
+    border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
+    border-width:  var(--border-width-cell);
+    border-style:  var(--border-style-cell);
+    border-color:  var(--border-color-inter-status-cell) var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
+}
+
+status-bar:has(+ eval-cell:focus-within) {
+    border-color: var(--border-color-status-focus) var(--border-color-status-focus) transparent var(--border-color-status-focus);
+}
+eval-cell:focus-within {
+    border-color: var(--border-color-inter-status-cell) var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
+}
+
+
+/* background-color */
+
+status-bar {
+    background-color: var(--bgcolor-status);
+}
+eval-cell {
+    background-color: var(--bgcolor-cell);
+}
+
+status-bar:has(+ eval-cell[data-input-type="tex"]) {
+    background-color: var(--bgcolor-status-tex);
+}
+eval-cell[data-input-type="tex"] {
+    background-color: var(--bgcolor-cell-tex);
+}
+
+status-bar:has(+ eval-cell[data-input-type="javascript"]) {
+    background-color: var(--bgcolor-status-javascript);
+}
+eval-cell[data-input-type="javascript"] {
+    background-color: var(--bgcolor-cell-javascript);
+}

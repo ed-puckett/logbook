@@ -1,21 +1,23 @@
-const {
+const current_script_url = import.meta.url;  // save for later
+
+import {
     create_element,
     create_stylesheet_link,
-} = await import('../../lib/ui/dom-util.js');
+} from '../../lib/ui/dom-util.js';
 
-const {
+import {
     Dialog,
     AlertDialog,
     create_control_element,
     create_select_element,
-} = await import('../../lib/ui/dialog/_.js');
+} from '../../lib/ui/dialog/_.js';
 
-const {
+import {
     get_obj_path,
     set_obj_path,
-} = await import('../../lib/sys/obj-path.js');
+} from '../../lib/sys/obj-path.js';
 
-const {
+import {
     get_settings,
     update_settings,
     analyze_editor_options_indentUnit,
@@ -28,15 +30,15 @@ const {
     analyze_formatting_options_indent,
     valid_theme_colors_values,
     analyze_theme_colors,
-} = await import('../settings.js');
+} from '../settings.js';
 
-const {
+import {
     beep,
-} = await import('../../lib/ui/beep.js');
+} from '../../lib/ui/beep.js';
 
 
 // add the stylesheet
-const stylesheet_url = new URL('./settings-dialog.css', import.meta.url);
+const stylesheet_url = new URL('./settings-dialog.css', current_script_url);
 create_stylesheet_link(document.head, stylesheet_url);
 
 
@@ -134,14 +136,14 @@ export class SettingsDialog extends Dialog {
 
         for (const { section } of sections) {
             const { name, settings } = section;
-            const section_div = create_element(this._dialog_form, { class: 'section' });
+            const section_div = create_element({ parent: this._dialog_form, attrs: { class: 'section' } });
 
-            const named_section_div = create_element(section_div, { 'data-section': name });
-            const error_div = create_element(section_div, { class: `error-message` });
+            const named_section_div = create_element({ parent: section_div, attrs: { 'data-section': name } });
+            const error_div = create_element({ parent: section_div, attrs: { class: `error-message` } });
 
             for (const setting of settings) {
                 const { id, label, type, settings_path, options, analyze, convert_to_number } = setting;
-                const setting_div = create_element(named_section_div, { 'data-setting': undefined });
+                const setting_div = create_element({ parent: named_section_div, attrs: { 'data-setting': undefined } });
                 let control;
                 if (type === 'select') {
                     control = create_select_element(setting_div, id, {
@@ -204,9 +206,13 @@ export class SettingsDialog extends Dialog {
 
         // Done button should not cause Enter to automatically submit the form
         // unless directly clicked.
-        const accept_button = create_element(this._dialog_form, 'input', {
-            type: 'button',
-            value: 'Done',
+        const accept_button = create_element({
+            parent: this._dialog_form,
+            tag:    'input',
+            attrs: {
+                type: 'button',
+                value: 'Done',
+            },
         });
         accept_button.onclick = (event) => this._dialog_element.close();
 

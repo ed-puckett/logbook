@@ -1,0 +1,16 @@
+/* fix display of errors from TeXZilla */
+/* !!! review this later !!! */
+merror>mtext {
+    display: block;  /* was "block math", but this prevents display beyond line 1 of the error message */
+}
+
+p,
+h1, h2, h3, h4, h5, h6, h7, h8, h9 {
+    margin-block-start: 0.1em;
+    margin-block-end:   0.1em;
+}
+
+/* expand the margin on error messages from texzilla */
+merror > mtext {
+    margin: 0.25em;
+}

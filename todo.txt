@@ -1,3 +1,111 @@
+ChangeManager: handle initial "neutral" setting better (using setTimeout() currently)
+static initialization for classes should not automatically add stylesheet (do it on demand later)
+improve saving
+save can cause disconnect between current document and its "file_handle" if the user saves to a different file
+make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste")
+subscribe()s leak if not unsubscribed
+
+
+--- DONE ---
+make clicking status-bar not move selection in eval-cell (currently selection gets reset)
+show "modified" warning when closing
+save: remove status-bar elements
+'+' and '-' KeySpec problems
+
+
+--- HOLD ---
+context menu cut/copy/paste: can this be hooked to use our internal implementation?
+make sure deleting selection that contains elements with !element_too deletes only the text
+rtl text is not handled correctly
+make modification operations direction-aware (ltr vs rtl)
+
+
+=== ARCHITECTURAL OVERVIEW ===
+
+Note: Each eval-cell maintains its own key_event_manager and key maps.
+Therefore the (active) eval-cell is the locus for incoming commands,
+whether from the menu or the keyboard.  The eval-cell in effect "precompiles"
+command dispatch in eval_cell.get_command_bindings().
+
+===
+
+LogbookManager
+- keeps track of "active cell" (necessary for directing menu commands)
+- maintains global ChangeManager
+- maintains global eval context
+- sets up menubar
+- contains some document-level command handlers
+
+EvalCellElement / EditorCellElement
+- eval_cell.eval() --> Evaluator.content_recognizer(this) to get evaluator_class --> evaluator_class.eval()
+- constructor allocates a KeyEventManager (with a new keymap)
+- implements method perform_command(command_context)
+- instance handles commands from key_event_manager via perform_command()
+- perform_command() is called from LogbookManager for commands from the menu
+
+Evaluators
+- evaluate an input cell into an output output
+- Evaluator.handles(input_element, innerText=null)
+- Evaluator.content_recognizer(input_element, innerText=null)  // async
+- Evaluator.eval(input_element, output_element, eval_context=null) --> create instance --> evaluator._perform_eval()
+- create instance allocates an output_context
+
+OutputContext
+- output_context.invoke_renderer(type, value, options=null)
+- manages output operations to output_element
+- (DOM manipulation methods for the output element)
+- etc...
+
+(eval context)
+(ephemeral eval context)
+
+(command context)
+
+Renderers
+- render specific type of content with use of an output_context
+- Renderer.from_id(id)
+- Renderer.from_type(type)
+
+KeyEventManager
+- maintains key map stack
+- listens for keyboard events and through the use of the key map stack emits commands
+
+MenuBar
+- listens for menu clicks and emits commands
+
+Dialog
+
+ChangeManager
+
+KeyMap / KeySpec
+
+(command subscriptions)
+
+config
+settings / theme-settings
+
+help
+
+======================================================================
+
+dom
+clipboard
+change-manager (undo/redo)
+input
+- keymaps
+- menus
+command engines
+persistence
+- config
+- data
+- document
+
+---
+selection (point & mark)
+"kill" ring
+
+=== OLD TODO ===
+
 remove use of DOMContentLoaded (rely on defer instead)
 sometimes underlying markup is displayed, e.g., html('br') has been seen to cause this
 nerdamer: nested functions using sum or product are not alpha-renamed properly and they fail strangely

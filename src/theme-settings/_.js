@@ -1,8 +1,12 @@
-const { Subscribable } = await import('../../lib/sys/subscribable.js');
+const current_script_url = import.meta.url;  // save for later
 
-const {
+import {
+    Subscribable,
+} from '../../lib/sys/subscribable.js';
+
+import {
     create_stylesheet_link,
-} = await import('../../lib/ui/dom-util.js');
+} from '../../lib/ui/dom-util.js';
 
 
 // === THEME SETTINGS INTERFACE ===
@@ -29,12 +33,12 @@ export const theme_settings_updated_events = new Subscribable();
 // === DOCUMENT DARK THEME SETTING ===
 
 // add theme-settings/theme-colors.css stylesheet
-const theme_colors_stylesheet_url = new URL('theme-colors.css', import.meta.url);
+const theme_colors_stylesheet_url = new URL('theme-colors.css', current_script_url);
 create_stylesheet_link(document.head, theme_colors_stylesheet_url);
 
 const dark_mode_class = 'dark';
 
-const root_element = document.getElementsByTagName('html')[0];
+const root_element = document.documentElement;
 
 export function update_document_dark_state(dark_state) {
     if (dark_state) {

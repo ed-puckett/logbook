@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script type="module" src="/src/init.js"></script>
+</head>
+<body>
+<eval-cell tabindex="0" contenteditable="true" id="id-8dda57cd-34f0-4321-bf60-51404e202fa3" data-output-element-id="id-ece335e3-e7ec-4900-a361-ef7f1d3848f2" data-input-type="markdown">/*
+## Markdown<br>```!
+const code = "for (let i = 0; i &lt; 10; i++) await printf('%s ', i); await markdown('*-- and that\\\'s all folks*');";
+await print__();
+await println(code);
+await print__();
+await javascript(code);
+await print__();
+```
+$$
+x_{markdown} = \frac{-b \pm \sqrt{b^2 - 4 a c}}{2 a}
+$$
+*/
+await markdown('$x_{eval} = 741$');
+yield Date.now();
+await graphviz({ nodes: "abc", edges: ["ab", "bc", "ca"] });<br></eval-cell>
+<div id="id-ece335e3-e7ec-4900-a361-ef7f1d3848f2" class="eval-cell-output"><div data-type="markdown" id="id-87924346-9a3d-41c0-8f51-2837b08c1204"><p>/*</p>
+<h2 id="markdown">Markdown</h2>
+<div data-type="javascript" id="id-0528647b-e735-4c31-9bad-aad7521e14c1"><hr>for (let i = 0; i &lt; 10; i++) await printf('%s ', i); await markdown('*-- and that\'s all folks*');
+<hr><div data-type="javascript" id="id-e23d85ce-788e-4459-bd6c-c5f0c3a655d4">0 1 2 3 4 5 6 7 8 9 <div data-type="markdown" id="id-57d64382-ee1b-460b-8085-44105568a128"><p><em>-- and that's all folks</em></p>
+</div></div><hr></div><p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>m</mi><mi>a</mi><mi>r</mi><mi>k</mi><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi></mrow></msub><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></mrow><annotation encoding="TeX">x_{markdown} = \frac{-b \pm \sqrt{b^2 - 4 a c}}{2 a}</annotation></semantics></math></p><p>*/
+await markdown('<math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>e</mi><mi>v</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>=</mo><mn>741</mn></mrow><annotation encoding="TeX">x_{eval} = 741</annotation></semantics></math>');
+yield Date.now();
+await graphviz({ nodes: "abc", edges: ["ab", "bc", "ca"] });</p>
+</div></div>
+<eval-cell tabindex="0" contenteditable="true" id="id-5be140ee-c329-4c10-99ae-0bb6c7141cce" data-input-type="javascript" data-output-element-id="id-e423dd6f-9fd9-4555-be25-e834baa4b9b3">const worker = await create_worker({ keepalive: true });<div>const worker_code = 'for (let i = 0; i &lt; 10; i++) { await new Promise(resolve =&gt; setTimeout(resolve, 100)); yield `Reply #${i}`; }';</div><div><div>for await (const reply of worker.stream_eval(worker_code)) {</div><div>    println(reply);</div><div>}</div></div><div>println(await worker.eval('return (Math.sqrt(5) + 1) / 2'));<br></div></eval-cell>
+<div id="id-e423dd6f-9fd9-4555-be25-e834baa4b9b3" class="eval-cell-output"><div data-type="javascript" id="id-ab41d7f1-4c1f-47db-aa3f-bf703e8947e5">Reply #0
+Reply #1
+Reply #2
+Reply #3
+Reply #4
+Reply #5
+Reply #6
+Reply #7
+Reply #8
+Reply #9
+1.618033988749895
+</div></div>
+<eval-cell tabindex="0" contenteditable="true" id="id-5ce35485-b300-4824-b247-8bc741d89bb3" data-output-element-id="id-1b83cd32-dab6-4e2a-9cb3-8b02f875736e" data-input-type="tex">x = \frac{-b \pm \sqrt{b^2 - 4 a c}}{2 a}</eval-cell>
+<div id="id-1b83cd32-dab6-4e2a-9cb3-8b02f875736e" class="eval-cell-output"><div data-type="tex" id="id-a0471180-6385-4978-9b65-bfb221ce6fe9"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></mrow><annotation encoding="TeX">x = \frac{-b \pm \sqrt{b^2 - 4 a c}}{2 a}</annotation></semantics></math></div></div>
+<eval-cell tabindex="0" contenteditable="true" id="id-1ec28e36-4142-47f6-8bcd-f80b68290b99" data-output-element-id="id-cd1eb32e-8b04-4ad5-9174-2f5f00bd3440" data-input-type="javascript">const code = "for (let i = 0; i &lt; 10; i++) await printf('%s ', i);";
+await println(code);
+await print__();
+await javascript(code);
+await print__();
+for (let i = 0; i &lt; 100; i++) { await delay_ms(10); await printf('%s ', i); }</eval-cell>
+<div id="id-cd1eb32e-8b04-4ad5-9174-2f5f00bd3440" class="eval-cell-output"><div data-type="javascript" id="id-bb75ec42-11ce-4af5-bd68-7b2fac7095c3">for (let i = 0; i &lt; 10; i++) await printf('%s ', i);
+<hr><div data-type="javascript" id="id-d48a1edc-23cd-48b6-ae43-00fa791b4eeb">0 1 2 3 4 5 6 7 8 9 </div><hr>0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 </div></div>
+</body>
+</html>

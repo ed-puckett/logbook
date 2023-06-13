@@ -9,7 +9,8 @@ MAKEFLAGS += --no-print-directory
 
 BUILDDIR = ./build
 
-SERVER_PORT = 4320
+SERVER_ADDRESS = 127.0.0.11
+SERVER_PORT    = 4320
 
 
 ######################################################################
@@ -31,11 +32,12 @@ full-clean: clean
 .PHONY: build-dir
 build-dir: ./node_modules README.md
 	mkdir -p "$(BUILDDIR)" && \
-	if [[ ! -e "$(BUILDDIR)/src" ]]; then ( cd "$(BUILDDIR)" && ln -s ../src . ); fi && \
-	if [[ ! -e "$(BUILDDIR)/lib" ]]; then ( cd "$(BUILDDIR)" && ln -s ../lib . ); fi && \
+	if [[ ! -e "$(BUILDDIR)/src"      ]]; then ( cd "$(BUILDDIR)" && ln -s ../src .      ); fi && \
+	if [[ ! -e "$(BUILDDIR)/lib"      ]]; then ( cd "$(BUILDDIR)" && ln -s ../lib .      ); fi && \
+	if [[ ! -e "$(BUILDDIR)/examples" ]]; then ( cd "$(BUILDDIR)" && ln -s ../examples . ); fi && \
 	rm -fr "$(BUILDDIR)/node_modules" && \
 	mkdir -p "$(BUILDDIR)/node_modules" && \
-	for d in chart.js codemirror d3 dagre-d3 dialog-polyfill dompurify js-sha256 marked mathjax nerdamer plotly.js-dist rxjs sprintf-js uuid; do cp -a "./node_modules/$${d}" "$(BUILDDIR)/node_modules/"; done && \
+	for d in chart.js d3 @hpcc-js d3-graphviz dialog-polyfill dompurify js-sha256 marked plotly.js-dist rxjs sprintf-js texzilla uuid; do cp -a "./node_modules/$${d}" "$(BUILDDIR)/node_modules/"; done && \
 	/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "$(BUILDDIR)/help.html"
 	cp src/favicon.ico "$(BUILDDIR)/"
 
@@ -44,7 +46,7 @@ demos-dir:
 	rm -fr ./demos && \
 	( cd ./examples/ && find . -type d -exec mkdir -p ../demos/{} \; ) && \
 	( cd ./examples/ && find . -iname '*.logbook' -exec /usr/bin/env node ../build-util/make-demo.mjs {} \; ) && \
-	( cd ./demos/ && find . -iname '*.html' | /usr/bin/env node ../build-util/make-demos-index.mjs \; )
+	( cd ./demos/ && find . -iname '*.html' | /usr/bin/env node ../build-util/make-demos-index.mjs )
 
 .PHONY: lint
 lint: ./node_modules
@@ -59,12 +61,12 @@ test:
 # server uses python (version 3)
 .PHONY: server
 server: build-dir demos-dir
-	( cd "$(BUILDDIR)" && python ../build-util/server.py 127.0.0.1 $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
+	( cd "$(BUILDDIR)" && python ../build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
 .PHONY: kill-server
 kill-server:
-	@if lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN >/dev/null 2>&1; then echo 'sending QUIT to server'; curl -s http://127.0.0.1:$(SERVER_PORT)/QUIT >/dev/null 2>&1; fi
+	@if lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN >/dev/null 2>&1; then echo 'sending QUIT to server'; curl -s http://$(SERVER_ADDRESS):$(SERVER_PORT)/QUIT >/dev/null 2>&1; fi
 
 .PHONY: dev-server
 dev-server:
@@ -72,7 +74,7 @@ dev-server:
 
 .PHONY: client
 client:
-	chromium --new-window http://127.0.0.1:$(SERVER_PORT)/src/index.html
+	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
 start: build-dir demos-dir

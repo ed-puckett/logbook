@@ -1,0 +1,24 @@
+status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 0.3em 0 0.3em;
+}
+
+.status-bar-indicator {
+    display: block;
+    width:  0.5em;
+    height: 0.5em;
+    margin: 3px;
+    padding: 0;
+    border: 1px solid black;
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+.status-bar-indicator.running[data-indicator-value="on"] {
+    background-color: green;
+}
+.status-bar-indicator.modified[data-indicator-value="on"] {
+    background-color: red;
+}

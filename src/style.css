@@ -1,0 +1,49 @@
+:root {
+    --controls-height: 1.5rem;
+}
+
+body {
+    margin: 0;
+    background-color: #eee;
+}
+
+#controls {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-begin;
+
+    height: var(--controls-height);
+    background-color: #f8f8f8;
+    border-bottom: 1px solid black;
+}
+
+#controls > status-bar {
+    border: 0;
+    align-self: center;
+    margin-left: auto;  /* push to far right */
+    background-color: transparent;
+}
+
+
+/* === print media queries === */
+
+@media not print {
+    /* these overflow styles cause only a single page to be "printed" (output) */
+
+    body {
+        overflow: hidden;
+    }
+
+    #content {
+        overflow: auto;
+        max-height: calc(100vh - var(--controls-height));
+    }
+}
+
+@media print {
+
+    #controls {
+        display: none;
+    }
+
+}

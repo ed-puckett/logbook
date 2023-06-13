@@ -1,18 +1,18 @@
 import { assert } from 'chai';
 
-const {
+import {
     range,
     flatten_iterable,
     iterable_extension,
     expand_iterable_bounded,
     chain,
     repeat,
-    max_range_generators,
     default_max_iterations,
     zip,
     zip_longest,
     iterable_extension_handler_functions_keys,
-} = await import('../../build/lib/sys/iterable-util.js');
+} from '../../build/lib/sys/iterable-util.js';
+
 
 for (const range_args of [
     [],

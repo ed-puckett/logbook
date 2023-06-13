@@ -1,13 +1,15 @@
-const { Subscribable } = await import('../../lib/sys/subscribable.js');
+import {
+    Subscribable,
+} from '../../lib/sys/subscribable.js';
 
-const {
+import {
     deep_freeze,
-} = await import('../lib/sys/util.js');
+} from '../lib/sys/util.js';
 
-const {
+import {
     db_key_settings,
     storage_db,
-} = await import('./storage.js');
+} from './storage.js';
 
 
 // === INITIAL SETTINGS ===
@@ -88,7 +90,7 @@ export function validate_numeric(test_value, options) {
  *  @return {string|undefined} complaint string if not in collection, or undefined if it is.
  */
 export function analyze_contained(test_value, collection, name) {
-    if (! collection.includes(test_value)) {
+    if (!collection.includes(test_value)) {
         return `${name ?? 'value'} must be one of: ${collection.join(', ')}`;
     }
     return undefined;
@@ -226,7 +228,7 @@ export function analyze_settings(settings, name) {
     if (!keys.every(k => ['editor_options', 'formatting_options', 'theme_colors'].includes(k))) {
         return `${name ?? 'settings'} may only have the keys "editor_options", "formatting_options" and "theme_colors"`;
     }
-    if (! ('editor_options' in settings)) {
+    if (!('editor_options' in settings)) {
         return `${name ?? 'settings'} must contain an editor_options property`;
     } else {
         const complaint = analyze_editor_options(settings.editor_options);
@@ -234,7 +236,7 @@ export function analyze_settings(settings, name) {
             return complaint;
         }
     }
-    if (! ('formatting_options' in settings)) {
+    if (!('formatting_options' in settings)) {
         return `${name ?? 'settings'} must contain an formmating_options property`;
     } else {
         const complaint = analyze_formatting_options(settings.formatting_options);
@@ -242,7 +244,7 @@ export function analyze_settings(settings, name) {
             return complaint;
         }
     }
-    if (! ('theme_colors' in settings)) {
+    if (!('theme_colors' in settings)) {
         return `${name ?? 'settings'} must contain an theme_colors property`;
     } else {
         const complaint = analyze_theme_colors(settings.theme_colors);

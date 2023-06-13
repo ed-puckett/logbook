@@ -1,4 +1,7 @@
-const { IndexedDBInterface } = await import('../lib/sys/idb.js');
+import {
+    IndexedDBInterface,
+} from '../lib/sys/idb.js';
+
 
 // db_key_settings uses a UUID, but this must be constant,
 // not generated each time the system is loaded.

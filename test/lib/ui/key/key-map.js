@@ -1,6 +1,9 @@
 import { assert } from 'chai';
 
-const { KeySpec, KeyMap } = await import('../../../../build/lib/ui/key/_.js');
+import {
+    KeySpec,
+    KeyMap,
+} from '../../../../build/lib/ui/key/_.js';
 
 describe(`KeyMap.multi_mapper()`, function () {
 
