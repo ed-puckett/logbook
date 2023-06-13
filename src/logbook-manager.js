@@ -245,7 +245,7 @@ ${contents}
 }
 
     async #setup_csp() {
-// / * !!! necessary? !!!
+/* !!! necessary? !!!
 
         // === CONTENT SECURITY POLICY ===
 
@@ -270,7 +270,7 @@ ${contents}
                 "content":    csp_header_content,
             },
         });
-// */
+*/
     }
 
     get_suggested_file_name() {
