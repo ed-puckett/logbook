@@ -2,18 +2,24 @@ status-bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 0.3em 0 0.3em;
+    gap: 0.5em;
+    padding: 0 0.5em;
+}
+
+status-bar > * {
+    margin: 0;  /* pack controls within status-bar; let flex gap handle spacing */
+    background-color: hsl(0deg 0% 98%);
 }
 
 .status-bar-indicator {
     display: block;
     width:  0.5em;
     height: 0.5em;
-    margin: 3px;
+    margin: 0;
     padding: 0;
     border: 1px solid black;
     border-radius: 50%;
-    background-color: transparent;
+    background-color: hsl(0deg 0% 97%);
 }
 
 .status-bar-indicator.running[data-indicator-value="on"] {
@@ -21,4 +27,8 @@ status-bar {
 }
 .status-bar-indicator.modified[data-indicator-value="on"] {
     background-color: red;
+}
+
+status-bar select option {
+    background-color: hsl(0deg 0% 97%);
 }

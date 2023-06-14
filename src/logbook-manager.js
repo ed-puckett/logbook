@@ -9,7 +9,7 @@ import {
 } from './eval-cell-element/_.js';
 
 import {
-    StatusBarElement,  // also ensures that the "eval-cell" custom element has been defined
+    StatusBarElement,  // also ensures that the "status-bar" custom element has been defined
 } from './status-bar-element/_.js';
 
 import {

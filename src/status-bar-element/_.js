@@ -46,10 +46,13 @@ export class StatusBarElement extends HTMLElement {
         this.#event_listener_manager = new EventListenerManager();
         this.#reset_configuration();
         this.addEventListener('pointerdown', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
             this.#target.focus();
-        }, true);  // this listener is never removed
+            if (event.target instanceof StatusBarElement) {
+                // stop event only if target is directly a StatusBarElement, not one of its children
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });  // this listener is never removed
     }
     #event_listener_manager;
     #controls;  // name -> { name?, control?, get?, set?}

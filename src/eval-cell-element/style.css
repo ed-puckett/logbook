@@ -1,7 +1,7 @@
 :root {
     /* background-color */
 
-    --bgcolor-cell:            hsl(224deg 100%  95% / 1);
+    --bgcolor-cell:            hsl(215deg 100%  95% / 1);
     --bgcolor-cell-tex:        hsl( 45deg  57%  88% / 1);
     --bgcolor-cell-javascript: hsl(196deg 100%  95% / 1);
 
@@ -33,7 +33,7 @@ eval-cell {
 
     white-space: pre-wrap;  /* properly display white-space */
     font-family: monospace;
-    line-height: 120%;
+    line-height: 140%;
 
     display: block;
     margin: 0;
@@ -42,13 +42,16 @@ eval-cell {
 
 .eval-cell-output {
     display: block;
-    padding: 0.7em;
+    padding: 0.5em;
 
     white-space: pre-wrap;  /* properly display white-space */
+    line-height: 140%;
+
     background-color: white;
 }
-.eval-cell-output + eval-cell {
-    margin-top: 1em;
+.eval-cell-output:has(+ status-bar),
+.eval-cell-output:has(+ eval-cell) {
+    padding-bottom: 1em;
 }
 
 
