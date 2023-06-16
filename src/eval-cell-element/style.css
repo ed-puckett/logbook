@@ -1,17 +1,13 @@
 :root {
     /* background-color */
 
-    --bgcolor-cell:            hsl(215deg 100%  95% / 1);
-    --bgcolor-cell-tex:        hsl( 45deg  57%  88% / 1);
-    --bgcolor-cell-javascript: hsl(196deg 100%  95% / 1);
+    --bgcolor-cell:              hsl(240deg 0% 98% / 100%);
+    --bgcolor-cell-tex:          var(--bgcolor-cell);
+    --bgcolor-cell-javascript:   var(--bgcolor-cell);
 
-    --bgcolor-status-mix-space: hsl;
-    --bgcolor-status-mix-ratio: 95%;
-    --bgcolor-status-mix-color: hsl(250deg 40% 40% / 32%);
-
-    --bgcolor-status:            color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell)            var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
-    --bgcolor-status-tex:        color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell-tex)        var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
-    --bgcolor-status-javascript: color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell-javascript) var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
+    --bgcolor-status:            hsl(215deg 100%  95% / 1);
+    --bgcolor-status-tex:        hsl( 45deg  57%  88% / 1);
+    --bgcolor-status-javascript: hsl(196deg 100%  95% / 1);
 
 
     /* border */
