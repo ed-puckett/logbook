@@ -7,7 +7,7 @@
 
     --bgcolor-status-mix-space: hsl;
     --bgcolor-status-mix-ratio: 95%;
-    --bgcolor-status-mix-color: hsl(250deg 40% 40% / 1);
+    --bgcolor-status-mix-color: hsl(250deg 40% 40% / 32%);
 
     --bgcolor-status:            color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell)            var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
     --bgcolor-status-tex:        color-mix(in var(--bgcolor-status-mix-space), var(--bgcolor-cell-tex)        var(--bgcolor-status-mix-ratio), var(--bgcolor-status-mix-color));
