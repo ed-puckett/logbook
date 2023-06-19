@@ -29,6 +29,6 @@ status-bar > * {
     background-color: red;
 }
 
-status-bar select option {
+status-bar > select > option {
     background-color: hsl(0deg 0% 97%);
 }

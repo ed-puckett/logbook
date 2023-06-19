@@ -10,7 +10,7 @@ body {
 #controls {
     display: flex;
     align-items: flex-end;
-    justify-content: flex-begin;
+    justify-content: flex-start;
 
     height: var(--controls-height);
     background-color: #f8f8f8;

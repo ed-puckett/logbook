@@ -1,30 +1,34 @@
 :root {
-    /* background-color */
+    /* color */
 
-    --bgcolor-cell:              hsl(240deg 0% 98% / 100%);
-    --bgcolor-cell-tex:          var(--bgcolor-cell);
-    --bgcolor-cell-javascript:   var(--bgcolor-cell);
+    --bgcolor-status:            hsl(0deg 0% 98% / 100%);
+    --bgcolor-cell:              hsl(0deg 0% 99% / 100%);
 
-    --bgcolor-status:            hsl(215deg 100%  95% / 1);
-    --bgcolor-status-tex:        hsl( 45deg  57%  88% / 1);
-    --bgcolor-status-javascript: hsl(196deg 100%  95% / 1);
+    --color-type-markdown:       hsl(205deg 100%  91% / 100%);
+    --color-type-tex:            hsl( 45deg  81%  87% / 100%);
+    --color-type-javascript:     hsl( 85deg 100%  85% / 100%);
 
 
     /* border */
 
-    --border-radius-cell:             0.125em;
-    --border-width-cell:              1px;
-    --border-style-cell:              solid;
-    --border-width-status:            1px;
-    --border-style-status:            solid;
-    --border-color-status:            #ccc;
-    --border-color-inter-status-cell: color-mix(in hsl, var(--bgcolor-cell) 50%, var(--bgcolor-status));
-    --border-color-cell:              #ccc;
-    --border-color-status-focus:      black;
-    --border-color-cell-focus:        black;
+    --border-radius-cell:        0.125em;
+    --border-width-cell:         1px;
+    --border-style-cell:         solid;
+    --border-width-status:       1px;
+    --border-style-status:       solid;
+    --border-color-status:       #ccc;
+    --border-color-cell:         #ccc;
+    --border-color-status-focus: black;
+    --border-color-cell-focus:   black;
+}
+
+status-bar {
+    background-color: var(--bgcolor-status);
 }
 
 eval-cell {
+    background-color: var(--bgcolor-cell);
+
     outline: 0px solid transparent;  /* disable default outline */
 
     white-space: pre-wrap;  /* properly display white-space */
@@ -57,42 +61,52 @@ status-bar {
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
     border-width:  var(--border-width-status);
     border-style:  var(--border-style-status);
-    border-color:  var(--border-color-status) var(--border-color-status) transparent var(--border-color-status);
+    border-color:  var(--border-color-status);
 }
 eval-cell {
     border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
     border-width:  var(--border-width-cell);
     border-style:  var(--border-style-cell);
-    border-color:  var(--border-color-inter-status-cell) var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
+    border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 }
 
 status-bar:has(+ eval-cell:focus-within) {
-    border-color: var(--border-color-status-focus) var(--border-color-status-focus) transparent var(--border-color-status-focus);
+    border-top-color:    var(--border-color-status-focus);
+    border-left-color:   var(--border-color-status-focus);
+    border-right-color:  var(--border-color-status-focus);
 }
 eval-cell:focus-within {
-    border-color: var(--border-color-inter-status-cell) var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
+    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
 }
 
 
-/* background-color */
+/* color selected by eval-cell input-type */
+
+
+status-bar option,
+status-bar select {
+    background-color: var(--color-type-markdown);
+}
+
+status-bar option[value="javascript"],
+status-bar > select:has(> option[value="javascript"]:checked) {
+    background-color: var(--color-type-javascript);
+}
+
+status-bar option[value="tex"],
+status-bar > select:has(> option[value="tex"]:checked) {
+    background-color: var(--color-type-tex);
+}
+
 
 status-bar {
-    background-color: var(--bgcolor-status);
-}
-eval-cell {
-    background-color: var(--bgcolor-cell);
+    border-bottom-color: var(--color-type-markdown);
 }
 
-status-bar:has(+ eval-cell[data-input-type="tex"]) {
-    background-color: var(--bgcolor-status-tex);
-}
-eval-cell[data-input-type="tex"] {
-    background-color: var(--bgcolor-cell-tex);
+status-bar:has(option[value="javascript"]:checked) {
+    border-bottom-color: var(--color-type-javascript);
 }
 
-status-bar:has(+ eval-cell[data-input-type="javascript"]) {
-    background-color: var(--bgcolor-status-javascript);
-}
-eval-cell[data-input-type="javascript"] {
-    background-color: var(--bgcolor-cell-javascript);
+status-bar:has(option[value="tex"]:checked) {
+    border-bottom-color: var(--color-type-tex);
 }
