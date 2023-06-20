@@ -20,7 +20,19 @@
     --border-color-cell:         #ccc;
     --border-color-status-focus: black;
     --border-color-cell-focus:   black;
+
+
+    /* focus transition */
+
+    --focus-x1-delay:             0s;
+    --focus-x1-duration:          0.2s;
+    --focus-x1-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
+
+    --focus-x2-delay:             calc(var(--focus-x1-duration) / 4);
+    --focus-x2-duration:          0.1s;
+    --focus-x2-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
 }
+
 
 status-bar {
     background-color: var(--bgcolor-status);
@@ -36,7 +48,7 @@ eval-cell {
     line-height: 140%;
 
     display: block;
-    margin: 0;
+    margin:  0;
     padding: 0.3em 0.5em;
 }
 
@@ -58,24 +70,49 @@ eval-cell {
 /* border */
 
 status-bar {
+    overflow: hidden;
+
+    max-height:   0;
+    border-width: 0;
+    padding:      0;
+    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
-    border-width:  var(--border-width-status);
     border-style:  var(--border-style-status);
     border-color:  var(--border-color-status);
 }
 eval-cell {
+    overflow: hidden;
+
+    max-height:   0;
+    border-width: 0;
+    padding:      0 0.5em;
+;
+    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+
     border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
-    border-width:  var(--border-width-cell);
     border-style:  var(--border-style-cell);
     border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 }
 
 status-bar:has(+ eval-cell:focus-within) {
-    border-top-color:    var(--border-color-status-focus);
-    border-left-color:   var(--border-color-status-focus);
-    border-right-color:  var(--border-color-status-focus);
+    max-height:   100vh;
+    border-width: var(--border-width-status);
+    padding:      0;
+
+    border-top-color:   var(--border-color-status-focus);
+    border-left-color:  var(--border-color-status-focus);
+    border-right-color: var(--border-color-status-focus);
 }
 eval-cell:focus-within {
+    max-height:   100vh;
+    border-width: var(--border-width-cell);
+    padding:      0.3em 0.5em;
+
     border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
 }
 
