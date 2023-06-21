@@ -39,6 +39,9 @@ import {
 export class EditorCellElement extends HTMLElement {
     static custom_element_name = 'editor-cell';
 
+    static attribute__active   = 'data-active';
+    static attribute__autohide = 'data-autohide';
+
     constructor() {
         super();
         this.#event_listener_manager = new EventListenerManager();
@@ -81,8 +84,8 @@ export class EditorCellElement extends HTMLElement {
     async establish_status_bar() {
         if (!this._status_bar) {
             this._status_bar = await StatusBarElement.create_for(this, {
-                autohide: { initial: true,  on: (event) => console.log('AUTOHIDE', event) },//!!!
-                autoeval: { initial: false, on: (event) => console.log('AUTOEVAL', event) },//!!!
+                autohide: { initial: this.autohide,  on: (event) => this.set_autohide(!this.autohide) },
+                autoeval: false,
                 modified: true,
             });
             this.parentElement.insertBefore(this._status_bar, this);
@@ -359,11 +362,21 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
-    // === FOCUS HANDLERS ===
+    // === ATTRIBUTES ===
+
+    set_active(state=false)    { if (state) this.setAttribute(this.constructor.attribute__active, true); else this.removeAttribute(this.constructor.attribute__active); }
+    get active               (){ return !!this.hasAttribute(this.constructor.attribute__active); }
+
+    set_autohide(state=false)  { if (state) this.setAttribute(this.constructor.attribute__autohide, true); else this.removeAttribute(this.constructor.attribute__autohide); }
+    get autohide             (){ return !!this.hasAttribute(this.constructor.attribute__autohide); }
+
+
+    // === FOCUS HANDLERS / ACTIVE ===
 
     #connect_focus_listeners() {
         if (this.#event_listener_manager.empty()) {
             function focus_handler(event) {
+                // logbook_manager.set_active_cell() clears/sets the "active" attributes of cells
                 logbook_manager.set_active_cell(this);
             }
             const listener_specs = [

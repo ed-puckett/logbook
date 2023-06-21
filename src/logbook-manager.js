@@ -66,6 +66,9 @@ class LogbookManager {
     get active_cell (){ return this.#active_cell; }
     set_active_cell(cell) {
         this.#active_cell = (cell ?? null);
+        for (const cell of this.constructor.get_cells()) {
+            cell.set_active(cell === this.active_cell);
+        }
     }
 
     get controls_element (){ return this.#controls_element; }
@@ -128,15 +131,17 @@ class LogbookManager {
                 //!!! improve this !!!
             }
 
-            // set up first cell
-            const first_cell = cells[0] ?? await this.create_cell();
-            first_cell.focus();
+            // set up active cell
+            // ... find the first incoming "active" cell, or the first cell, or create a new cell
+            const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? await this.create_cell();
+            this.set_active_cell(active_cell);  // also resets "active" status on all cells except for active_cell
+            active_cell.focus();
 
             // set baseline for undo/redo
             // use setTimeout() so that pending mutations are processed
             // before resetting
 //!!! horrible kludge with setTimeout() to wait until DOM changes have completed....
-while (!document.getElementById(first_cell.id)) { console.warn('--- WAITING---'); await new Promise(resolve => queueMicrotask(resolve)); }//!!!
+while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'); await new Promise(resolve => queueMicrotask(resolve)); }//!!!
             await new Promise(resolve => setTimeout(resolve, 200));//!!!
             //!!! setting up later now, still ok?
             // Set up this.#global_change_manager now so that it is available
@@ -292,6 +297,7 @@ ${contents}
 
         // add a status-bar element to the main document
         this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
+            autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
         });
         this.#controls_element.appendChild(this.#status_bar);

@@ -4,7 +4,7 @@
     --bgcolor-status:            hsl(0deg 0% 98% / 100%);
     --bgcolor-cell:              hsl(0deg 0% 99% / 100%);
 
-    --color-type-markdown:       hsl(205deg 100%  91% / 100%);
+    --color-type-markdown:       hsl(205deg 100%  93% / 100%);
     --color-type-tex:            hsl( 45deg  81%  87% / 100%);
     --color-type-javascript:     hsl( 85deg 100%  85% / 100%);
 
@@ -36,6 +36,8 @@
 
 status-bar {
     background-color: var(--bgcolor-status);
+
+    padding: 0.3em 0.5em;
 }
 
 eval-cell {
@@ -67,14 +69,15 @@ eval-cell {
 }
 
 
-/* border */
+/* border / animated attributes */
 
 status-bar {
     overflow: hidden;
 
     max-height:   0;
     border-width: 0;
-    padding:      0;
+    padding:      0 0.5em;
+
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
@@ -89,7 +92,7 @@ eval-cell {
     max-height:   0;
     border-width: 0;
     padding:      0 0.5em;
-;
+
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
@@ -99,21 +102,34 @@ eval-cell {
     border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 }
 
-status-bar:has(+ eval-cell:focus-within) {
+#controls > status-bar {
     max-height:   100vh;
     border-width: var(--border-width-status);
-    padding:      0;
+    padding:      0 0.5em;
+}
 
+status-bar:has(+ eval-cell:not([data-autohide])),
+status-bar:has(+ eval-cell[data-active]) {
     border-top-color:   var(--border-color-status-focus);
     border-left-color:  var(--border-color-status-focus);
     border-right-color: var(--border-color-status-focus);
 }
-eval-cell:focus-within {
+eval-cell:not([data-autohide]),
+eval-cell[data-active] {
+    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
+}
+
+status-bar:has(+ eval-cell:not([data-autohide])),
+status-bar:has(+ eval-cell[data-active]) {
+    max-height:   100vh;
+    border-width: var(--border-width-status);
+    padding:      0 0.5em;
+}
+eval-cell:not([data-autohide]),
+eval-cell[data-active] {
     max-height:   100vh;
     border-width: var(--border-width-cell);
     padding:      0.3em 0.5em;
-
-    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
 }
 
 
