@@ -225,7 +225,8 @@ export class EvalCellElement extends EditorCellElement {
         if (!this._status_bar) {
             let initial_type = this.input_type || undefined;
             this._status_bar = await StatusBarElement.create_for(this, {
-                autohide: { initial: this.autohide,  on: (event) => this.set_autohide(!this.autohide) },
+                editable: false,
+                visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
                 autoeval: false,
                 type:     { ...(initial_type ? { initial: initial_type } : {}),  on: (event) => { this.input_type = event.target.value } },//!!!
                 running:  true,

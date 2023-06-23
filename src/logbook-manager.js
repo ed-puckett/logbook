@@ -48,10 +48,12 @@ import {
 
 class LogbookManager {
     constructor() {
+        this.#editable = false;
         this.#active_cell = null;
         this.#initialize_logbook_called = false;
         this.reset_global_eval_context();
     }
+    #editable;
     #active_cell;
     #initialize_logbook_called;
     #controls_element;  // element inserted into document by initialize_logbook() to hold menus, etc
@@ -62,6 +64,16 @@ class LogbookManager {
     #global_eval_context;  // persistent eval_context for eval commands
     #global_change_manager;
     #file_handle;
+
+    get editable (){ return this.#editable }
+    set_editable(editable) {
+        editable = !!editable;
+        this.#editable = editable;
+        this.#status_bar.set_for('editable', editable);
+        for (const cell of this.constructor.get_cells()) {
+            cell.set_editable(editable);
+        }
+    }
 
     get active_cell (){ return this.#active_cell; }
     set_active_cell(cell) {
@@ -136,6 +148,8 @@ class LogbookManager {
             const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? await this.create_cell();
             this.set_active_cell(active_cell);  // also resets "active" status on all cells except for active_cell
             active_cell.focus();
+
+            this.set_editable(this.editable);  // update all cells consistently
 
             // set baseline for undo/redo
             // use setTimeout() so that pending mutations are processed
@@ -297,6 +311,7 @@ ${contents}
 
         // add a status-bar element to the main document
         this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
+            editable: { initial: this.editable,  on: (event) => this.set_editable(!this.editable) },
             autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
         });
@@ -400,6 +415,9 @@ ${contents}
             'set-mode-tex':        [ 'Alt-M t' ],
             'set-mode-javascript': [ 'Alt-M j' ],
 
+            'toggle-visible':      [ 'Alt-M v' ],
+            'toggle-editable':     [ 'Alt-M e' ],
+
             'undo':                [ 'CmdOrCtrl-Z' ],
             'redo':                [ 'CmdOrCtrl-Shift-Z' ],
         };
@@ -436,6 +454,8 @@ ${contents}
             'add-before':       this.command_handler__add_before.bind(this),
             'add-after':        this.command_handler__add_after.bind(this),
             'delete':           this.command_handler__delete.bind(this),
+
+            'toggle-editable':  this.command_handler__toggle_editable.bind(this),
 
             'undo':             this.command_handler__undo.bind(this),
             'redo':             this.command_handler__redo.bind(this),
@@ -697,6 +717,13 @@ ${contents}
             next_cell = await this.create_cell();
         }
         next_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__toggle_editable(command_context) {
+        this.set_editable(!this.editable);
         return true;
     }
 

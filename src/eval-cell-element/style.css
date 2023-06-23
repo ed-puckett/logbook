@@ -108,25 +108,25 @@ eval-cell {
     padding:      0 0.5em;
 }
 
-status-bar:has(+ eval-cell:not([data-autohide])),
-status-bar:has(+ eval-cell[data-active]) {
+status-bar:has(+ eval-cell[data-visible]),
+status-bar:has(+ eval-cell[contenteditable]) {
     border-top-color:   var(--border-color-status-focus);
     border-left-color:  var(--border-color-status-focus);
     border-right-color: var(--border-color-status-focus);
 }
-eval-cell:not([data-autohide]),
-eval-cell[data-active] {
+eval-cell[data-visible],
+eval-cell[contenteditable] {
     border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
 }
 
-status-bar:has(+ eval-cell:not([data-autohide])),
-status-bar:has(+ eval-cell[data-active]) {
+status-bar:has(+ eval-cell[data-visible]),
+status-bar:has(+ eval-cell[contenteditable]) {
     max-height:   100vh;
     border-width: var(--border-width-status);
     padding:      0 0.5em;
 }
-eval-cell:not([data-autohide]),
-eval-cell[data-active] {
+eval-cell[data-visible],
+eval-cell[contenteditable] {
     max-height:   100vh;
     border-width: var(--border-width-cell);
     padding:      0.3em 0.5em;

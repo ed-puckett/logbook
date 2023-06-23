@@ -39,8 +39,8 @@ import {
 export class EditorCellElement extends HTMLElement {
     static custom_element_name = 'editor-cell';
 
-    static attribute__active   = 'data-active';
-    static attribute__autohide = 'data-autohide';
+    static attribute__active  = 'data-active';
+    static attribute__visible = 'data-visible';
 
     constructor() {
         super();
@@ -58,6 +58,26 @@ export class EditorCellElement extends HTMLElement {
     #event_listener_manager;
     #key_event_manager;
     #command_bindings;
+
+
+    // === EDITABLE ===
+
+    get editable (){
+        if (!this.hasAttribute('contenteditable')) {
+            return false;
+        } else {
+            const contenteditable_value = this.getAttribute('contenteditable');
+            return (contenteditable_value !== false.toString());
+        }
+    }
+
+    set_editable(editable) {
+        if (editable) {
+            this.setAttribute('contenteditable', true.toString());
+        } else {
+            this.removeAttribute('contenteditable');
+        }
+    }
 
 
     // === KEY MAP STACK ===
@@ -79,12 +99,14 @@ export class EditorCellElement extends HTMLElement {
         return (key_spec.is_printable ? 'insert-self' : false);
     }
 
+
     // === STATUS BAR ===
 
     async establish_status_bar() {
         if (!this._status_bar) {
             this._status_bar = await StatusBarElement.create_for(this, {
-                autohide: { initial: this.autohide,  on: (event) => this.set_autohide(!this.autohide) },
+                editable: false,
+                visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
                 autoeval: false,
                 modified: true,
             });
@@ -125,9 +147,10 @@ export class EditorCellElement extends HTMLElement {
 
     /** create a new EditorCellElement instance with standard settings
      *  @param {null|undefined|Object} options: {
-     *      parent?:   Node,    // default: document.body
-     *      before?:   Node,    // default: null
-     *      innerText: String,  // cell.innerText to set
+     *      parent?:   Node,     // default: document.body
+     *      before?:   Node,     // default: null
+     *      innerText: String,   // cell.innerText to set
+     *      editable:  Boolean,  // set contenteditable?
      *  }
      *  @return {EditorCellElement} new cell
      */
@@ -144,9 +167,9 @@ export class EditorCellElement extends HTMLElement {
             tag: this.custom_element_name,
             attrs: {
                 tabindex: 0,  // permit focus
-                contenteditable: 'true',
             },
         });
+        cell.set_editable(editable);
 
         if (innerText) {
             cell.innerText = innerText;
@@ -266,6 +289,8 @@ export class EditorCellElement extends HTMLElement {
             'paste':               this.command_handler__paste.bind(this),
 
             'reset-cell':          this.command_handler__reset_cell.bind(this),
+
+            'toggle-visible':      this.command_handler__toggle_visible.bind(this),
         };
 
         return command_bindings;
@@ -361,14 +386,33 @@ export class EditorCellElement extends HTMLElement {
         return true;
     }
 
+    async command_handler__toggle_visible(command_context) {
+        this.set_visible(!this.visible);
+        return true;
+    }
+
 
     // === ATTRIBUTES ===
 
-    set_active(state=false)    { if (state) this.setAttribute(this.constructor.attribute__active, true); else this.removeAttribute(this.constructor.attribute__active); }
-    get active               (){ return !!this.hasAttribute(this.constructor.attribute__active); }
+    get active (){ return !!this.hasAttribute(this.constructor.attribute__active); }
+    set_active(state=false) {
+        if (state) {
+            this.setAttribute(this.constructor.attribute__active, true);
+        } else {
+            this.removeAttribute(this.constructor.attribute__active);
+        }
+    }
 
-    set_autohide(state=false)  { if (state) this.setAttribute(this.constructor.attribute__autohide, true); else this.removeAttribute(this.constructor.attribute__autohide); }
-    get autohide             (){ return !!this.hasAttribute(this.constructor.attribute__autohide); }
+    get visible (){ return !!this.hasAttribute(this.constructor.attribute__visible); }
+    set_visible(state=false) {
+        status = !!state;
+        this._status_bar.set_for('visible', state);
+        if (state) {
+            this.setAttribute(this.constructor.attribute__visible, true);
+        } else {
+            this.removeAttribute(this.constructor.attribute__visible);
+        }
+    }
 
 
     // === FOCUS HANDLERS / ACTIVE ===

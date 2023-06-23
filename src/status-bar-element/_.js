@@ -73,7 +73,8 @@ export class StatusBarElement extends HTMLElement {
     /** set the target for this status bar
      *  @param {any} target
      *  @param {Object|null|undefined} options: {
-     *      autohide?, { initial?, on? },
+     *      editable?: { initial?, on? },
+     *      visible?,  { initial?, on? },
      *      autoeval?, { initial?, on? },
      *      type?,     { initial?, on? },
      *      running?,  { initial?, on? },
@@ -153,7 +154,8 @@ export class StatusBarElement extends HTMLElement {
             // the order of this array determines order of control creation
 
             // NAME       CREATE_FN,                          GETTER_FN                            SETTER_FN
-            [ 'autohide', this.#create__autohide.bind(this),  this.constructor.#getter__autohide,  this.constructor.#setter__autohide ],
+            [ 'editable', this.#create__editable.bind(this),  this.constructor.#getter__editable,  this.constructor.#setter__editable ],
+            [ 'visible',  this.#create__visible.bind(this),   this.constructor.#getter__visible,   this.constructor.#setter__visible  ],
             [ 'autoeval', this.#create__autoeval.bind(this),  this.constructor.#getter__autoeval,  this.constructor.#setter__autoeval ],
             [ 'type',     this.#create__type.bind(this),      this.constructor.#getter__type,      this.constructor.#setter__type     ],
             [ 'running',  this.#create__running.bind(this),   this.constructor.#getter__running,   this.constructor.#setter__running  ],
@@ -166,13 +168,13 @@ export class StatusBarElement extends HTMLElement {
 
     // === CONTROL HANDLING ===
 
-    async #create__autohide(on_change_handler=null) {
+    async #create__editable(on_change_handler=null) {
         const control = create_element({
             parent: this,
             tag: 'input',
             attrs: {
                 type: 'checkbox',
-                title: 'autohide...',
+                title: 'editable...',
             },
         });
         if (on_change_handler) {
@@ -180,8 +182,25 @@ export class StatusBarElement extends HTMLElement {
         }
         return control;
     }
-    static #getter__autohide(control)        { return control.checked; }
-    static #setter__autohide(control, value) { control.checked = !!value; }
+    static #getter__editable(control)        { return control.checked; }
+    static #setter__editable(control, value) { control.checked = !!value; }
+
+    async #create__visible(on_change_handler=null) {
+        const control = create_element({
+            parent: this,
+            tag: 'input',
+            attrs: {
+                type: 'checkbox',
+                title: 'visible...',
+            },
+        });
+        if (on_change_handler) {
+            this.#event_listener_manager.add(control, 'change', on_change_handler);
+        }
+        return control;
+    }
+    static #getter__visible(control)        { return control.checked; }
+    static #setter__visible(control, value) { control.checked = !!value; }
 
     async #create__autoeval(on_change_handler=null) {
         const control = create_element({
