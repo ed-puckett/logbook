@@ -290,7 +290,7 @@ export class EditorCellElement extends HTMLElement {
 
             'reset-cell':          this.command_handler__reset_cell.bind(this),
 
-            'toggle-visible':      this.command_handler__toggle_visible.bind(this),
+            'toggle-cell-visible': this.command_handler__toggle_visible.bind(this),
         };
 
         return command_bindings;
