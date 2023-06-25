@@ -70,6 +70,7 @@ class LogbookManager {
         editable = !!editable;
         this.#editable = editable;
         this.#status_bar.set_for('editable', editable);
+        this.#menubar.set_menu_state('toggle-editable', { checked: editable });
         for (const cell of this.constructor.get_cells()) {
             cell.set_editable(editable);
         }
@@ -298,6 +299,10 @@ ${contents}
 
 
     // === MENU AND COMMAND CONFIGURATION ===
+
+    update_menu_state() {
+        //!!!
+    }
 
     async #setup_controls() {
         if (!this.controls_element) {

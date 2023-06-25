@@ -1,3 +1,4 @@
+implement and use logbook_manager.update_menu_state()
 ChangeManager: handle initial "neutral" setting better (using setTimeout() currently)
 static initialization for classes should not automatically add stylesheet (do it on demand later)
 improve saving

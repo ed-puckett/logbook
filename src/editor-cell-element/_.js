@@ -149,15 +149,16 @@ export class EditorCellElement extends HTMLElement {
      *  @param {null|undefined|Object} options: {
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
+     *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
      *      innerText: String,   // cell.innerText to set
-     *      editable:  Boolean,  // set contenteditable?
      *  }
      *  @return {EditorCellElement} new cell
      */
     static async create_cell(options=null) {
         const {
-            parent = document.body,
-            before = null,
+            parent   = document.body,
+            before   = null,
+            editable = logbook_manager.editable,
             innerText,
         } = (options ?? {});
 

@@ -30,6 +30,12 @@
     font-size: 90%;
 }
 
+.menubar .menuitem.checked:before {
+    content: "\2713";  /* unicode check mark */
+    position: absolute;
+    left: 0.5em;
+}
+
 .menubar div {
     display: inline;
 }
