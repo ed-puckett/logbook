@@ -301,6 +301,30 @@ ${contents}
     // === MENU AND COMMAND CONFIGURATION ===
 
     update_menu_state() {
+        const cells        = this.constructor.get_cells();
+        const active_cell  = this.active_cell;
+        const active_index = cells.indexOf(active_cell);
+        const can_undo     = this.#global_change_manager.can_perform_undo;
+        const can_redo     = this.#global_change_manager.can_perform_redo;
+/*
+'toggle-editable'  // handled in this.set_editable()
+'save'  // handled in this.#neutral_changes_observer()
+*/
+        this.#menubar.set_menu_state('undo', { enabled: can_undo });
+        this.#menubar.set_menu_state('redo', { enabled: can_redo });
+/*
+'eval-and-refocus'
+'eval'
+'eval-before'
+'eval-all'
+'stop-all'
+'toggle-cell-visible'
+'focus-up'
+'focus-down'
+'move-up'
+'move-down'
+'delete'
+*/
         //!!!
     }
 
@@ -346,20 +370,20 @@ ${contents}
                     // ...
                 ] },
                 '---',
-                { label: 'Reset cells',    item: { command: 'reset',             } },
-                { label: 'Clear document', item: { command: 'clear',             } },
+                { label: 'Reset cells',    item: { command: 'reset',               } },
+                { label: 'Clear document', item: { command: 'clear',               } },
                 '---',
-                { label: 'Editable',       item: { command: 'toggle-editable',   }, id: 'toggle-editable' },
+                { label: 'Editable',       item: { command: 'toggle-editable',     }, id: 'toggle-editable' },
                 '---',
-                { label: 'Save',           item: { command: 'save',              }, id: 'save' },
-                { label: 'Save as...',     item: { command: 'save-as',           } },
+                { label: 'Save',           item: { command: 'save',                }, id: 'save' },
+                { label: 'Save as...',     item: { command: 'save-as',             } },
                 '---',
-                { label: 'Settings...',    item: { command: 'settings',          } },
+                { label: 'Settings...',    item: { command: 'settings',            } },
             ] },
 
             { label: 'Edit', collection: [
-                { label: 'Undo',           item: { command: 'undo',              }, id: 'undo' },
-                { label: 'Redo',           item: { command: 'redo',              }, id: 'redo' },
+                { label: 'Undo',           item: { command: 'undo',                }, id: 'undo' },
+                { label: 'Redo',           item: { command: 'redo',                }, id: 'redo' },
             ] },
 
             { label: 'Cell', collection: [
@@ -480,6 +504,7 @@ ${contents}
             is_neutral,
         } = data;
         this.#status_bar.set_for('modified', !is_neutral);
+        this.#menubar.set_menu_state('save', { checked: !is_neutral });
     }
 
 
