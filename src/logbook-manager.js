@@ -59,7 +59,8 @@ class LogbookManager {
     #controls_element;  // element inserted into document by initialize_logbook() to hold menus, etc
     #content_element;   // element wrapped around original body content by initialize_logbook()
     #menubar;
-    #menubar_command_subscription;
+    #menubar_commands_subscription;
+    #menubar_selects_subscription;
     #status_bar;
     #global_eval_context;  // persistent eval_context for eval commands
     #global_change_manager;
@@ -307,8 +308,8 @@ ${contents}
         const can_undo     = this.#global_change_manager.can_perform_undo;
         const can_redo     = this.#global_change_manager.can_perform_redo;
 /*
-'toggle-editable'  // handled in this.set_editable()
-'save'  // handled in this.#neutral_changes_observer()
+'toggle-editable'  // directly handled in this.set_editable()
+'save'  // directly handled in this.#neutral_changes_observer()
 */
         this.#menubar.set_menu_state('undo', { enabled: can_undo });
         this.#menubar.set_menu_state('redo', { enabled: can_redo });
@@ -325,6 +326,9 @@ ${contents}
 'move-down'
 'delete'
 */
+/*
+recents
+*/
         //!!!
     }
 
@@ -335,8 +339,10 @@ ${contents}
         const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
         this.#menubar = await MenuBar.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
-        //!!! this.#menubar_command_subscription is never unsubscribed
-        this.#menubar_command_subscription = this.#menubar.commands.subscribe(this.#menubar_command_observer.bind(this));
+        //!!! this.#menubar_commands_subscription is never unsubscribed
+        this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
+        //!!! this.#menubar_selects_subscription is never unsubscribed
+        this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
 
         // add a status-bar element to the main document
         this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
@@ -347,7 +353,7 @@ ${contents}
         this.#controls_element.appendChild(this.#status_bar);
     }
 
-    #menubar_command_observer(command_context) {
+    #menubar_commands_observer(command_context) {
         const target = this.active_cell;
         if (!target) {
             beep();
