@@ -23,7 +23,7 @@ status-bar > * {
 }
 
 .status-bar-indicator.running[data-indicator-value="on"] {
-    background-color: green;
+    background-color: hsl(120deg 94% 40% / 100%);
 }
 .status-bar-indicator.modified[data-indicator-value="on"] {
     background-color: red;

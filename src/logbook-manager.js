@@ -13,6 +13,10 @@ import {
 } from './status-bar-element/_.js';
 
 import {
+    Subscribable,
+} from '../lib/sys/subscribable.js';
+
+import {
     show_initialization_failed,
     create_element,
     clear_element,
@@ -52,12 +56,18 @@ class LogbookManager {
         this.#active_cell = null;
         this.#initialize_logbook_called = false;
         this.reset_global_eval_context();
+        this.#eval_states = new Subscribable();
+        //!!! this.#eval_states_subscription is never unsubscribed
+        this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
+
     }
     #editable;
     #active_cell;
     #initialize_logbook_called;
     #controls_element;  // element inserted into document by initialize_logbook() to hold menus, etc
     #content_element;   // element wrapped around original body content by initialize_logbook()
+    #eval_states;
+    #eval_states_subscription;
     #menubar;
     #menubar_commands_subscription;
     #menubar_selects_subscription;
@@ -313,19 +323,21 @@ ${contents}
 */
         this.#menubar.set_menu_state('undo', { enabled: can_undo });
         this.#menubar.set_menu_state('redo', { enabled: can_redo });
-/*
-'eval-and-refocus'
-'eval'
-'eval-before'
-'eval-all'
-'stop-all'
-'toggle-cell-visible'
-'focus-up'
-'focus-down'
-'move-up'
-'move-down'
-'delete'
-*/
+
+        this.#menubar.set_menu_state('toggle-cell-visible', { checked: active_cell?.visible });
+
+        this.#menubar.set_menu_state('focus-up',   { enabled: (active_cell && active_index > 0) });
+        this.#menubar.set_menu_state('focus-down', { enabled: (active_cell && active_index < cells.length-1) });
+        this.#menubar.set_menu_state('move-up',    { enabled: (active_cell && active_index > 0) });
+        this.#menubar.set_menu_state('move-down',  { enabled: (active_cell && active_index < cells.length-1) });
+        this.#menubar.set_menu_state('delete',     { enabled: !!active_cell });
+
+        this.#menubar.set_menu_state('eval-and-refocus', { enabled: !!active_cell });
+        this.#menubar.set_menu_state('eval',             { enabled: !!active_cell });
+        this.#menubar.set_menu_state('eval-before',      { enabled: !!active_cell });
+        this.#menubar.set_menu_state('eval-all',         { enabled: !!active_cell });
+        this.#menubar.set_menu_state('stop',             { enabled: active_cell?.can_stop });
+        this.#menubar.set_menu_state('stop-all',         { enabled: cells.some(cell => cell.can_stop) });
 /*
 recents
 */
@@ -349,6 +361,7 @@ recents
             editable: { initial: this.editable,  on: (event) => this.set_editable(!this.editable) },
             autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
+            running:  true,
         });
         this.#controls_element.appendChild(this.#status_bar);
     }
@@ -398,6 +411,7 @@ recents
                 { label: 'Eval before',    item: { command: 'eval-before',         }, id: 'eval-before' },
                 { label: 'Eval all',       item: { command: 'eval-all',            }, id: 'eval-all' },
                 '---',
+                { label: 'Stop cell',      item: { command: 'stop',                }, id: 'stop' },
                 { label: 'Stop all',       item: { command: 'stop-all',            }, id: 'stop-all' },
                 '---',
                 { label: 'Reset cell',     item: { command: 'reset-cell',          } },
@@ -438,6 +452,7 @@ recents
             'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
             'eval-all':            [ 'CmdOrCtrl-Shift-Alt-Enter' ],
 
+            'stop':                [ 'CmdOrCtrl-Alt-!' ],
             'stop-all':            [ 'CmdOrCtrl-Shift-Alt-!' ],
 
             'focus-up':            [ 'Alt-Up' ],
@@ -482,6 +497,7 @@ recents
             'eval-before':      this.command_handler__eval_before.bind(this),
             'eval-all':         this.command_handler__eval_all.bind(this),
 
+            'stop':             this.command_handler__stop.bind(this),
             'stop-all':         this.command_handler__stop_all.bind(this),
 
             'focus-up':         this.command_handler__focus_up.bind(this),
@@ -511,6 +527,24 @@ recents
         } = data;
         this.#status_bar.set_for('modified', !is_neutral);
         this.#menubar.set_menu_state('save', { checked: !is_neutral });
+    }
+
+
+    // === EVAL STATES ===
+
+    emit_eval_state(cell, eval_state) {
+        this.#eval_states.dispatch({ cell, eval_state });
+    }
+
+    #eval_states_observer(data) {
+console.log('#eval_states_observer', data);//!!!
+        // data is ignored
+        const {
+            cell,
+            eval_state,
+        } = data;
+        const something_running = this.constructor.get_cells().some(cell => cell.can_stop);
+        this.#status_bar.set_for('running', something_running);
     }
 
 
@@ -610,11 +644,11 @@ recents
      *  @return {Boolean} true iff command successfully handled
      */
     async command_handler__eval_before(command_context) {
-        this.reset_global_eval_context();
         const cell = command_context.target;
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
+            this.reset_global_eval_context();
             for (const iter_cell of this.constructor.get_cells()) {
                 if (iter_cell === cell) {
                     break;
@@ -632,12 +666,12 @@ recents
      *  @return {Boolean} true iff command successfully handled
      */
     async command_handler__eval_all(command_context) {
-        this.stop();
-        this.reset_global_eval_context();
         const cell = command_context.target;
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
+            this.stop();
+            this.reset_global_eval_context();
             let final_cell;
             for (const iter_cell of this.constructor.get_cells()) {
                 await iter_cell.eval({
@@ -646,6 +680,19 @@ recents
                 final_cell = iter_cell;
             }
             final_cell.focus();
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__stop(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.stop();
             return true;
         }
     }

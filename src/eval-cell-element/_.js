@@ -201,13 +201,19 @@ export class EvalCellElement extends EditorCellElement {
         // allocate the evaluator, store it, then eval
         const evaluator = new evaluator_class(this, output_element, eval_context);
         this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
+
+        logbook_manager.emit_eval_state(this, true);
+
         return evaluator._perform_eval()
+            .then(() => logbook_manager.emit_eval_state(this, false))
             .catch(error => {
                 this.stop();  // stop anything that may have been started
                 return evaluator.output_context.invoke_renderer_for_type('error', error);
             });
     }
     #evaluator_stoppable;
+
+    get can_stop (){ return !!this.#evaluator_stoppable; }
 
     stop() {
         if (this.#evaluator_stoppable) {
@@ -219,6 +225,7 @@ export class EvalCellElement extends EditorCellElement {
             }
         }
         this.#evaluator_stoppable = undefined;
+        logbook_manager.emit_eval_state(this, false);
     }
 
     async establish_status_bar() {  // override of EditorCellElement.establish_status_bar()
