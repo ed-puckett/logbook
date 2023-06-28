@@ -359,7 +359,7 @@ recents
         // add a status-bar element to the main document
         this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
             editable: { initial: this.editable,  on: (event) => this.set_editable(!this.editable) },
-            autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
+            //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
             running:  true,
         });

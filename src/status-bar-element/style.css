@@ -26,7 +26,7 @@ status-bar > * {
     background-color: hsl(120deg 94% 40% / 100%);
 }
 .status-bar-indicator.modified[data-indicator-value="on"] {
-    background-color: red;
+    background-color: hsl(343 95% 50% / 100%);
 }
 
 status-bar > select > option {
