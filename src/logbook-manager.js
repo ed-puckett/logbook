@@ -537,14 +537,13 @@ recents
     }
 
     #eval_states_observer(data) {
-console.log('#eval_states_observer', data);//!!!
         // data is ignored
         const {
             cell,
             eval_state,
         } = data;
-        const something_running = this.constructor.get_cells().some(cell => cell.can_stop);
-        this.#status_bar.set_for('running', something_running);
+        const something_foreground = this.constructor.get_cells().some(cell => cell.evaluator_foreground);
+        this.#status_bar.set_for('running', something_foreground);
     }
 
 

@@ -200,19 +200,32 @@ export class EvalCellElement extends EditorCellElement {
 
         // allocate the evaluator, store it, then eval
         const evaluator = new evaluator_class(this, output_element, eval_context);
-        this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
 
+        this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
+        this.#evaluator_foreground = true;
+        this._status_bar?.set_for('running', true);
         logbook_manager.emit_eval_state(this, true);
 
         return evaluator._perform_eval()
-            .then(() => logbook_manager.emit_eval_state(this, false))
+            .then(() => {
+                this.#evaluator_foreground = undefined;
+                this._status_bar?.set_for('running', false);
+                logbook_manager.emit_eval_state(this, false);
+            })
             .catch(error => {
                 this.stop();  // stop anything that may have been started
                 return evaluator.output_context.invoke_renderer_for_type('error', error);
             });
     }
+    #evaluator_foreground;  // true iff evaluating and before return
     #evaluator_stoppable;
 
+    /** @return true iff an evaluation is running and has not yet returned
+     */
+    get evaluator_foreground (){ return !!this.#evaluator_foreground; }
+
+    /** @return true iff an evaluation has run and returned (but may still have pending asynchonous evaluations)
+     */
     get can_stop (){ return !!this.#evaluator_stoppable; }
 
     stop() {
@@ -224,7 +237,9 @@ export class EvalCellElement extends EditorCellElement {
                 // continue...
             }
         }
-        this.#evaluator_stoppable = undefined;
+        this.#evaluator_stoppable  = undefined;
+        this.#evaluator_foreground = undefined;
+        this._status_bar?.set_for('running', false);
         logbook_manager.emit_eval_state(this, false);
     }
 
