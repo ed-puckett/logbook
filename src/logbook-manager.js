@@ -54,7 +54,7 @@ class LogbookManager {
     constructor() {
         this.#editable = false;
         this.#active_cell = null;
-        this.#initialize_logbook_called = false;
+        this.#initialize_called = false;
         this.reset_global_eval_context();
         this.#eval_states = new Subscribable();
         //!!! this.#eval_states_subscription is never unsubscribed
@@ -63,9 +63,9 @@ class LogbookManager {
     }
     #editable;
     #active_cell;
-    #initialize_logbook_called;
-    #controls_element;  // element inserted into document by initialize_logbook() to hold menus, etc
-    #content_element;   // element wrapped around original body content by initialize_logbook()
+    #initialize_called;
+    #controls_element;  // element inserted into document by initialize() to hold menus, etc
+    #content_element;   // element wrapped around original body content by initialize()
     #eval_states;
     #eval_states_subscription;
     #menubar;
@@ -131,11 +131,11 @@ class LogbookManager {
         }
     }
 
-    async initialize_logbook() {
-        if (this.#initialize_logbook_called) {
-            throw new Error('initialize_logbook() called more than once');
+    async initialize() {
+        if (this.#initialize_called) {
+            throw new Error('initialize() called more than once');
         }
-        this.#initialize_logbook_called = true;
+        this.#initialize_called = true;
 
         try {
 
@@ -250,6 +250,10 @@ while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'
         // add a status-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {
             await cell.establish_status_bar();
+            // the following will establish the event handlers for cell
+            const current_output_element = cell.output_element;
+            cell.output_element = null;
+            cell.output_element = current_output_element;
         }
     }
 

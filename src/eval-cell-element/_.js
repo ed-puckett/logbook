@@ -42,6 +42,15 @@ export class EvalCellElement extends EditorCellElement {
     }
 
 
+    constructor() {
+        super();
+        // create a single bound handler function so that
+        // we have a consistent handler function for add
+        // and remove
+        this.#output_element_pointerdown_handler_bound = this.#output_element_pointerdown_handler.bind(this);
+    }
+
+
     // === OUTPUT ELEMENT ===
 
     // CSS class for output elements created by establish_output_element()
@@ -83,14 +92,23 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     set output_element (element){
-        if (element === null || typeof element === 'undefined') {
-            this.output_element_id = null;
-        } else {
-            if (!element.id || !(element instanceof HTMLElement)) {
-                throw new Error('element must be an instance of HTMLElement with an id');
-            }
-            this.output_element_id = element.id;
+        element ??= null;
+        if (element && (!element.id || !(element instanceof HTMLElement))) {
+            throw new Error('element must be null, undefined, or an instance of HTMLElement with an id');
         }
+
+        // remove handler from old output_element and add handler to new output_element
+        const current_output_element = this.output_element;
+        if (current_output_element !== element) {
+            if (current_output_element) {
+                current_output_element.removeEventListener('pointerdown', this.#output_element_pointerdown_handler_bound);
+            }
+            if (element) {
+                element.addEventListener('pointerdown', this.#output_element_pointerdown_handler_bound);
+            }
+        }
+
+        this.output_element_id = element ? element.id : null;
         return element;
     }
 
@@ -121,6 +139,15 @@ export class EvalCellElement extends EditorCellElement {
         }
         return this;
     }
+
+    #output_element_pointerdown_handler(event) {
+        if (!this.contains(document.activeElement)) {
+            this.focus();
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+    #output_element_pointerdown_handler_bound;  // initialized in constructor
 
     // === OUTPUT ELEMENT AWARE OVERRIDES ===
 
