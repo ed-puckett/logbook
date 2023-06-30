@@ -1,6 +1,6 @@
 import {
     Subscribable,
-} from '../../lib/sys/subscribable.js';
+} from '../lib/sys/subscribable.js';
 
 import {
     deep_freeze,
