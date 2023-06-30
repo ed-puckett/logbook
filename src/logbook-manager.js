@@ -270,7 +270,7 @@ while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <script type="module" src="/src/init.js"></script>
+    <script type="module" src="./init.js"></script>
 </head>
 <body>
 ${contents}
