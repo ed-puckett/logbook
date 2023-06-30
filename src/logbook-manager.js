@@ -280,32 +280,32 @@ ${contents}
 }
 
     async #setup_csp() {
-/* !!! necessary? !!!
+        if (false) {  //!!!
 
-        // === CONTENT SECURITY POLICY ===
+            // === CONTENT SECURITY POLICY ===
 
-        // set a Content-Security-Policy that will permit us
-        // to dynamically load associated content
+            // set a Content-Security-Policy that will permit us
+            // to dynamically load associated content
 
-        const csp_header_content = [
-            //!!! audit this !!!
-            "default-src 'self' 'unsafe-eval'",
-            "style-src   'self' 'unsafe-inline' *",
-            "script-src  'self' 'unsafe-inline' 'unsafe-eval' *",
-            "img-src     'self' data: blob: *",
-            "media-src   'self' data: blob: *",
-            "connect-src data:",
-        ].join('; ');
+            const csp_header_content = [
+                //!!! audit this !!!
+                "default-src 'self' 'unsafe-eval'",
+                "style-src   'self' 'unsafe-inline' *",
+                "script-src  'self' 'unsafe-inline' 'unsafe-eval' *",
+                "img-src     'self' data: blob: *",
+                "media-src   'self' data: blob: *",
+                "connect-src data:",
+            ].join('; ');
 
-        create_element({
-            parent: document.head,
-            tag:    'meta',
-            attrs: {
-                "http-equiv": "Content-Security-Policy",
-                "content":    csp_header_content,
-            },
-        });
-*/
+            create_element({
+                parent: document.head,
+                tag:    'meta',
+                attrs: {
+                    "http-equiv": "Content-Security-Policy",
+                    "content":    csp_header_content,
+                },
+            });
+        }
     }
 
     get_suggested_file_name() {
