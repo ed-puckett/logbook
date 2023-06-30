@@ -168,7 +168,7 @@ class LogbookManager {
             // before resetting
 //!!! horrible kludge with setTimeout() to wait until DOM changes have completed....
 while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'); await new Promise(resolve => queueMicrotask(resolve)); }//!!!
-            await new Promise(resolve => setTimeout(resolve, 200));//!!!
+            await new Promise(resolve => setTimeout(resolve, 300));//!!!
             //!!! setting up later now, still ok?
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
