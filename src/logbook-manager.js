@@ -163,20 +163,14 @@ class LogbookManager {
 
             this.set_editable(this.editable);  // update all cells consistently
 
-            // set baseline for undo/redo
-            // use setTimeout() so that pending mutations are processed
-            // before resetting
-//!!! horrible kludge with setTimeout() to wait until DOM changes have completed....
-while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'); await new Promise(resolve => queueMicrotask(resolve)); }//!!!
-            await new Promise(resolve => setTimeout(resolve, 300));//!!!
-            //!!! setting up later now, still ok?
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
             // initialization is complete.
+document.body.innerText;//!!! force layout
             this.#global_change_manager = new ChangeManager(this.content_element, {
                 neutral_changes_observer: this.#neutral_changes_observer.bind(this),
             });
-            this.#global_change_manager.set_neutral();
+
             // add "save before quit" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
                 if (!this.#global_change_manager.is_neutral) {
@@ -184,6 +178,11 @@ while (!document.getElementById(active_cell.id)) { console.warn('--- WAITING---'
                     return (event.returnValue = '');
                 }
             });  //!!! event handler never removed
+
+
+            // set baseline for undo/redo
+            // it is important that all async operations have finished before getting here
+            this.#global_change_manager.set_neutral();
 
         } catch (error) {
 

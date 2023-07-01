@@ -93,7 +93,7 @@ export class StatusBarElement extends HTMLElement {
         } else {
             if (this.#target !== target) {
                 this.#target = target;
-                this.#configure(options);
+                await this.#configure(options);
             }
         }
     }
