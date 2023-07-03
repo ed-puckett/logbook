@@ -180,6 +180,9 @@ export class StatusBarElement extends HTMLElement {
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
+        this.#event_listener_manager.add(control, 'change', (event) => {
+            control.title = control.checked ? 'editable...' : 'view only...';
+        });
         return control;
     }
     static #getter__editable(control)        { return control.checked; }
@@ -197,6 +200,9 @@ export class StatusBarElement extends HTMLElement {
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
+        this.#event_listener_manager.add(control, 'change', (event) => {
+            control.title = control.checked ? 'visible...' : 'hidden...';
+        });
         return control;
     }
     static #getter__visible(control)        { return control.checked; }
@@ -214,6 +220,9 @@ export class StatusBarElement extends HTMLElement {
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
+        this.#event_listener_manager.add(control, 'change', (event) => {
+            control.title = control.checked ? 'autoeval off...' : 'autoeval on...';
+        });
         return control;
     }
     static #getter__autoeval(control)        { return control.checked; }
@@ -247,9 +256,12 @@ export class StatusBarElement extends HTMLElement {
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
+        this.#event_listener_manager.add(control, 'change', (event) => {
+            control.title = `type ${control.value}`;
+        });
         return control;
     }
-    static #getter__type(control, value) { return control.value; }
+    static #getter__type(control)        { return control.value; }
     static #setter__type(control, value) {
         if (![ ...control.options ].map(option => option.value).includes(value)) {  //!!! what a kludge...
             throw new Error('setting unknown/illegal value');
@@ -257,13 +269,13 @@ export class StatusBarElement extends HTMLElement {
         control.value = value;
     }
 
-    async #create__running(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('running', 'running...', on_change_handler); }
-    static #getter__running(control)         { return this.#indicator_control__getter(control); }
-    static #setter__running(control, value)  { return this.#indicator_control__setter(control, value); }
+    async #create__running(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler); }
+    static #getter__running(control)        { return this.#indicator_control__getter(control); }
+    static #setter__running(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__modified(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('modified', 'modified...', on_change_handler); }
-    static #getter__modified(control)         { return this.#indicator_control__getter(control); }
-    static #setter__modified(control, value)  { return this.#indicator_control__setter(control, value); }
+    async #create__modified(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler); }
+    static #getter__modified(control)        { return this.#indicator_control__getter(control); }
+    static #setter__modified(control, value) { this.#indicator_control__setter(control, value); }
 
     async #create__run(on_change_handler=null) {
         //!!!
@@ -276,17 +288,20 @@ export class StatusBarElement extends HTMLElement {
     }
 
     // indicator control getter/setter
-    #indicator_control__create_with_class_and_title(css_class, title, on_change_handler=null) {
+    #indicator_control__create_with_class_and_title(css_class, title_for_on, title_for_off, on_change_handler=null) {
         const control = create_element({
             parent: this,
             attrs: {
-                title,
+                title: title_for_off,
                 class: `${this.constructor.indicator_control__class} ${css_class}`,
             },
         });
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
+        this.#event_listener_manager.add(control, 'change', (event) => {
+            control.title = this.constructor.#indicator_control__getter(control) ? title_for_on : title_for_off;
+        });
         return control;
     }
     static #indicator_control__getter(control) {
