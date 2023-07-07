@@ -1,0 +1,17 @@
+toggle-switch {
+    appearance: none;
+    border: 0;
+    width:  1.5rem;
+    height: 1.5rem;
+}
+
+toggle-switch svg {
+    width:  auto;
+    height: 100%;
+}
+toggle-switch[aria-checked="false"] svg path {
+    fill: #777;
+}
+toggle-switch[aria-checked="true"] svg path {
+    fill: red;
+}

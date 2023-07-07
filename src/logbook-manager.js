@@ -77,11 +77,12 @@ class LogbookManager {
     #file_handle;
 
     get editable (){ return this.#editable }
+
     set_editable(editable) {
         editable = !!editable;
         this.#editable = editable;
-        this.#status_bar.set_for('editable', editable);
         this.#menubar.set_menu_state('toggle-editable', { checked: editable });
+        this.#status_bar.set_for('editable', editable);
         for (const cell of this.constructor.get_cells()) {
             cell.set_editable(editable);
         }
@@ -361,7 +362,7 @@ recents
 
         // add a status-bar element to the main document
         this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
-            editable: { initial: this.editable,  on: (event) => this.set_editable(!this.editable) },
+            editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
             //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
             running:  true,

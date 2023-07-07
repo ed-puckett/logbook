@@ -1,6 +1,10 @@
 const current_script_url = import.meta.url;  // save for later
 
 import {
+    ToggleSwitchElement,
+} from '../toggle-switch-element/_.js';
+
+import {
     EventListenerManager,
 } from '../../lib/sys/event-listener-manager.js';
 
@@ -169,24 +173,31 @@ export class StatusBarElement extends HTMLElement {
     // === CONTROL HANDLING ===
 
     async #create__editable(on_change_handler=null) {
-        const control = create_element({
+        const control = ToggleSwitchElement.create({
             parent: this,
-            tag: 'input',
-            attrs: {
-                type: 'checkbox',
-                title: 'editable...',
-            },
+            title_for_on:  'edit mode on',
+            title_for_off: 'edit mode off',
         });
+        control.innerHTML = `\
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50">
+<!--
+    From: Alexander Madyankin, Roman Shamin, MIT <http://opensource.org/licenses/mit-license.php>, via Wikimedia Commons
+    https://commons.wikimedia.org/wiki/File:Ei-pencil.svg
+-->
+<path d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z" fill="#fff" fill-rule="evenodd"/>
+<path d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z" fill="#fff" fill-rule="evenodd"/>
+<path d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.412z" fill="#fff" fill-rule="evenodd"/>
+<path d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z" fill="#fff" fill-rule="evenodd"/>
+<path d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z" fill="#fff" fill-rule="evenodd"/>
+</svg>
+`;
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
-        this.#event_listener_manager.add(control, 'change', (event) => {
-            control.title = control.checked ? 'editable...' : 'view only...';
-        });
         return control;
     }
-    static #getter__editable(control)        { return control.checked; }
-    static #setter__editable(control, value) { control.checked = !!value; }
+    static #getter__editable(control)        { return control.get_state(); }
+    static #setter__editable(control, value) { control.set_state(value); }
 
     async #create__visible(on_change_handler=null) {
         const control = create_element({
@@ -269,11 +280,15 @@ export class StatusBarElement extends HTMLElement {
         control.value = value;
     }
 
-    async #create__running(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler); }
+    async #create__running(on_change_handler=null) {
+        return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler);
+    }
     static #getter__running(control)        { return this.#indicator_control__getter(control); }
     static #setter__running(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__modified(on_change_handler=null) { return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler); }
+    async #create__modified(on_change_handler=null) {
+        return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler);
+    }
     static #getter__modified(control)        { return this.#indicator_control__getter(control); }
     static #setter__modified(control, value) { this.#indicator_control__setter(control, value); }
 
