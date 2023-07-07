@@ -10,8 +10,8 @@ toggle-switch svg {
     height: 100%;
 }
 toggle-switch[aria-checked="false"] svg path {
-    fill: #777;
+    fill: hsl(0deg 9% 82% / 100%);
 }
 toggle-switch[aria-checked="true"] svg path {
-    fill: red;
+    fill: hsl(0deg 60% 70% / 100%);
 }

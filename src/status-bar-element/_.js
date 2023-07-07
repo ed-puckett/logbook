@@ -158,13 +158,13 @@ export class StatusBarElement extends HTMLElement {
             // the order of this array determines order of control creation
 
             // NAME       CREATE_FN,                          GETTER_FN                            SETTER_FN
+            [ 'running',  this.#create__running.bind(this),   this.constructor.#getter__running,   this.constructor.#setter__running  ],
+            [ 'modified', this.#create__modified.bind(this),  this.constructor.#getter__modified,  this.constructor.#setter__modified ],
             [ 'editable', this.#create__editable.bind(this),  this.constructor.#getter__editable,  this.constructor.#setter__editable ],
             [ 'visible',  this.#create__visible.bind(this),   this.constructor.#getter__visible,   this.constructor.#setter__visible  ],
             [ 'autoeval', this.#create__autoeval.bind(this),  this.constructor.#getter__autoeval,  this.constructor.#setter__autoeval ],
-            [ 'type',     this.#create__type.bind(this),      this.constructor.#getter__type,      this.constructor.#setter__type     ],
-            [ 'running',  this.#create__running.bind(this),   this.constructor.#getter__running,   this.constructor.#setter__running  ],
-            [ 'modified', this.#create__modified.bind(this),  this.constructor.#getter__modified,  this.constructor.#setter__modified ],
             [ 'run',      this.#create__run.bind(this),       this.constructor.#getter__run,       this.constructor.#setter__run      ],
+            [ 'type',     this.#create__type.bind(this),      this.constructor.#getter__type,      this.constructor.#setter__type     ],
 
         ];
     }
@@ -200,24 +200,28 @@ export class StatusBarElement extends HTMLElement {
     static #setter__editable(control, value) { control.set_state(value); }
 
     async #create__visible(on_change_handler=null) {
-        const control = create_element({
+        const control = ToggleSwitchElement.create({
             parent: this,
-            tag: 'input',
-            attrs: {
-                type: 'checkbox',
-                title: 'visible...',
-            },
+            title_for_on:  'visible',
+            title_for_off: 'not visible',
         });
+        control.innerHTML = `\
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    From: MGalloway (WMF), CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons
+    https://commons.wikimedia.org/wiki/File:OOjs_UI_icon_eye.svg
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path d="M10 7.5a2.5 2.5 0 1 0 2.5 2.5A2.5 2.5 0 0 0 10 7.5zm0 7a4.5 4.5 0 1 1 4.5-4.5 4.5 4.5 0 0 1-4.5 4.5zM10 3C3 3 0 10 0 10s3 7 10 7 10-7 10-7-3-7-10-7z" fill="#fff" fill-rule="evenodd"/>
+</svg>
+`;
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }
-        this.#event_listener_manager.add(control, 'change', (event) => {
-            control.title = control.checked ? 'visible...' : 'hidden...';
-        });
         return control;
     }
-    static #getter__visible(control)        { return control.checked; }
-    static #setter__visible(control, value) { control.checked = !!value; }
+    static #getter__visible(control)        { return control.get_state(); }
+    static #setter__visible(control, value) { control.set_state(value); }
 
     async #create__autoeval(on_change_handler=null) {
         const control = create_element({
