@@ -25,6 +25,10 @@ export class StatusBarElement extends HTMLElement {
     static indicator_control__class            = 'status-bar-indicator';
     static indicator_control__attribute__value = 'data-indicator-value';
 
+    static toggle_switch__editable__class = 'status-bar-toggle-editable';
+    static toggle_switch__visible__class  = 'status-bar-toggle-visible';
+    static toggle_switch__autoeval__class = 'status-bar-toggle-autoeval';
+
     /** create a new StatusBarElement in the document, then set target with options
      *  @param {any} target
      *  @param {Object|null|undefined} options to be passed to set_target()
@@ -175,6 +179,7 @@ export class StatusBarElement extends HTMLElement {
     async #create__editable(on_change_handler=null) {
         const control = ToggleSwitchElement.create({
             parent: this,
+            class:  this.constructor.toggle_switch__editable__class,
             title_for_on:  'edit mode on',
             title_for_off: 'edit mode off',
         });
@@ -184,11 +189,11 @@ export class StatusBarElement extends HTMLElement {
     From: Alexander Madyankin, Roman Shamin, MIT <http://opensource.org/licenses/mit-license.php>, via Wikimedia Commons
     https://commons.wikimedia.org/wiki/File:Ei-pencil.svg
 -->
-<path d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z" fill="#fff" fill-rule="evenodd"/>
-<path d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z" fill="#fff" fill-rule="evenodd"/>
-<path d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.412z" fill="#fff" fill-rule="evenodd"/>
-<path d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z" fill="#fff" fill-rule="evenodd"/>
-<path d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z" fill="#fff" fill-rule="evenodd"/>
+<path class="accent-fill" d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z" fill="#fff" fill-rule="evenodd"/>
+<path class="accent-fill" d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z" fill="#fff" fill-rule="evenodd"/>
+<path class="accent-fill" d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.412z" fill="#fff" fill-rule="evenodd"/>
+<path class="accent-fill" d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z" fill="#fff" fill-rule="evenodd"/>
+<path class="accent-fill" d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z" fill="#fff" fill-rule="evenodd"/>
 </svg>
 `;
         if (on_change_handler) {
@@ -202,17 +207,23 @@ export class StatusBarElement extends HTMLElement {
     async #create__visible(on_change_handler=null) {
         const control = ToggleSwitchElement.create({
             parent: this,
+            class:  this.constructor.toggle_switch__visible__class,
             title_for_on:  'visible',
             title_for_off: 'not visible',
         });
         control.innerHTML = `\
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    From: MGalloway (WMF), CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons
-    https://commons.wikimedia.org/wiki/File:OOjs_UI_icon_eye.svg
+    From: Vectorization:  Mrmw, CC0, via Wikimedia Commons
+    https://commons.wikimedia.org/wiki/File:ISO_7000_-_Ref-No_2030.svg
 -->
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <path d="M10 7.5a2.5 2.5 0 1 0 2.5 2.5A2.5 2.5 0 0 0 10 7.5zm0 7a4.5 4.5 0 1 1 4.5-4.5 4.5 4.5 0 0 1-4.5 4.5zM10 3C3 3 0 10 0 10s3 7 10 7 10-7 10-7-3-7-10-7z" fill="#fff" fill-rule="evenodd"/>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  version="1.1"
+  viewBox="0 0 200 200" 
+>
+  <path class="accent-stroke" d="m100 49.738a97.452 97.452 0 0 0-78.246 39.775 97.452 97.452 0 0 0 78.246 39.773 97.452 97.452 0 0 0 78.396-39.975 97.452 97.452 0 0 0-78.396-39.574z" stroke="#000" stroke-width="5" fill="transparent"/>
+  <circle class="accent-stroke accent-fill" cx="100" cy="89.438" r="19.85" stroke="#000" stroke-width="5"/>
 </svg>
 `;
         if (on_change_handler) {

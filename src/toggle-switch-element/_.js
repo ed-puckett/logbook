@@ -16,6 +16,7 @@ export class ToggleSwitchElement extends HTMLElement {
     static create(options=null) {
         const {
             parent,
+            class: cls,
             title_for_on,
             title_for_off,
             svg,
@@ -24,6 +25,7 @@ export class ToggleSwitchElement extends HTMLElement {
             parent,
             tag: this.custom_element_name,
             attrs: {
+                class: cls,
                 role: 'switch',
                 "aria-checked": false,
                 title: title_for_off,

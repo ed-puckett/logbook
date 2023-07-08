@@ -2,6 +2,42 @@
     --controls-height: 1.5rem;
 }
 
+:root {
+    /* color */
+
+    --bgcolor-status:            hsl(0deg 0% 98% / 100%);
+    --bgcolor-cell:              hsl(0deg 0% 99% / 100%);
+
+    --color-type-markdown:       hsl(205deg 100%  94% / 100%);
+    --color-type-tex:            hsl( 45deg  81%  87% / 100%);
+    --color-type-javascript:     hsl( 85deg 100%  85% / 100%);
+
+
+    /* border */
+
+    --border-radius-cell:        0.125em;
+    --border-width-cell:         1px;
+    --border-style-cell:         solid;
+    --border-width-status:       1px;
+    --border-style-status:       solid;
+    --border-color-status:       #ccc;
+    --border-color-cell:         #ccc;
+    --border-color-status-focus: black;
+    --border-color-cell-focus:   black;
+
+
+    /* focus transition */
+
+    --focus-x1-delay:             0s;
+    --focus-x1-duration:          0.2s;
+    --focus-x1-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
+
+    --focus-x2-delay:             calc(var(--focus-x1-duration) / 4);
+    --focus-x2-duration:          0.1s;
+    --focus-x2-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
+}
+
+
 body {
     margin: 0;
     background-color: #eee;
@@ -17,12 +53,210 @@ body {
     border-bottom: 1px solid black;
 }
 
-#controls > status-bar {
+#controls > status-bar {  /* next to menu */
     border: 0;
     align-self: center;
     margin-left: auto;  /* push to far right */
     background-color: transparent;
 }
+
+status-bar {
+    background-color: var(--bgcolor-status);
+
+    padding: 0.3em 0.5em;
+}
+
+eval-cell {
+    background-color: var(--bgcolor-cell);
+
+    outline: 0px solid transparent;  /* disable default outline */
+
+    white-space: pre-wrap;  /* properly display white-space */
+    font-family: monospace;
+    line-height: 140%;
+
+    display: block;
+    margin:  0;
+    padding: 0.3em 0.5em;
+}
+
+.eval-cell-output {
+    display: block;
+    padding: 0.5em;
+
+    white-space: pre-wrap;  /* properly display white-space */
+    line-height: 140%;
+
+    background-color: white;
+}
+.eval-cell-output:has(+ status-bar),
+.eval-cell-output:has(+ eval-cell) {
+    padding-bottom: 1em;
+}
+
+
+/* border / animated attributes */
+
+status-bar {
+    overflow: hidden;
+
+    max-height:   0;
+    border-width: 0;
+    padding:      0 0.5em;
+
+    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+
+    border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
+    border-style:  var(--border-style-status);
+    border-color:  var(--border-color-status);
+}
+eval-cell {
+    overflow: hidden;
+
+    max-height:   0;
+    border-width: 0;
+    padding:      0 0.5em;
+
+    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+
+    border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
+    border-style:  var(--border-style-cell);
+    border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
+}
+
+#controls > status-bar {
+    max-height:   100vh;
+    border-width: var(--border-width-status);
+    padding:      0 0.5em;
+}
+
+status-bar:has(+ eval-cell[data-visible]),
+status-bar:has(+ eval-cell[contenteditable]) {
+    border-top-color:   var(--border-color-status-focus);
+    border-left-color:  var(--border-color-status-focus);
+    border-right-color: var(--border-color-status-focus);
+}
+eval-cell[data-visible],
+eval-cell[contenteditable] {
+    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
+}
+
+status-bar:has(+ eval-cell[data-visible]),
+status-bar:has(+ eval-cell[contenteditable]) {
+    max-height:   100vh;
+    border-width: var(--border-width-status);
+    padding:      0 0.5em;
+}
+eval-cell[data-visible],
+eval-cell[contenteditable] {
+    max-height:   100vh;
+    border-width: var(--border-width-cell);
+    padding:      0.3em 0.5em;
+}
+
+
+/* color selected by eval-cell input-type */
+
+
+status-bar option,
+status-bar select {
+    background-color: var(--color-type-markdown);
+}
+
+status-bar option[value="javascript"],
+status-bar > select:has(> option[value="javascript"]:checked) {
+    background-color: var(--color-type-javascript);
+}
+
+status-bar option[value="tex"],
+status-bar > select:has(> option[value="tex"]:checked) {
+    background-color: var(--color-type-tex);
+}
+
+
+status-bar {
+    border-bottom-color: var(--color-type-markdown);
+}
+
+status-bar:has(option[value="javascript"]:checked) {
+    border-bottom-color: var(--color-type-javascript);
+}
+
+status-bar:has(option[value="tex"]:checked) {
+    border-bottom-color: var(--color-type-tex);
+}
+
+/* === */
+
+status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5em;
+    padding: 0 0.5em;
+}
+
+status-bar > * {
+    margin: 0;  /* pack controls within status-bar; let flex gap handle spacing */
+    background-color: hsl(0deg 0% 98% / 100%);
+}
+
+.status-bar-indicator {
+    display: block;
+    width:  0.5em;
+    height: 0.5em;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid hsl(0deg 9% 82% / 100%);
+    background-color: hsl(0deg 0% 97% / 100%);
+}
+
+.status-bar-indicator.running[data-indicator-value="on"] {
+    border: 1px solid black;
+    background-color: hsl(120deg 94% 40% / 100%);
+}
+.status-bar-indicator.modified[data-indicator-value="on"] {
+    border: 1px solid black;
+    background-color: hsl(0deg 60% 85% / 100%);
+}
+
+status-bar > select > option {
+    background-color: hsl(0deg 0% 97% / 100%);
+}
+
+/* === */
+
+toggle-switch {
+    appearance: none;
+    border: 0;
+    width:  1.5rem;
+    height: 1.5rem;
+}
+
+toggle-switch svg {
+    width:  auto;
+    height: 100%;
+}
+
+toggle-switch.status-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }
+toggle-switch.status-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }
+toggle-switch.status-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }
+toggle-switch.status-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: transparent; }
+
+toggle-switch.status-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }
+toggle-switch.status-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
+toggle-switch.status-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   chartreuse; }
+toggle-switch.status-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }
+
+toggle-switch.status-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }
+toggle-switch.status-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
+toggle-switch.status-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   transparent; }
+toggle-switch.status-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }
 
 
 /* === print media queries === */
