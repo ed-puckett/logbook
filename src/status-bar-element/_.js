@@ -220,9 +220,9 @@ export class StatusBarElement extends HTMLElement {
 <svg
   xmlns="http://www.w3.org/2000/svg"
   version="1.1"
-  viewBox="0 0 200 200" 
+  viewBox="0 0 200 170"
 >
-  <path class="accent-stroke" d="m100 49.738a97.452 97.452 0 0 0-78.246 39.775 97.452 97.452 0 0 0 78.246 39.773 97.452 97.452 0 0 0 78.396-39.975 97.452 97.452 0 0 0-78.396-39.574z" stroke="#000" stroke-width="5" fill="transparent"/>
+  <path class="accent-stroke" d="m100 49.738 a97.452 97.452 0 0 0-78.246 39.775 97.452 97.452 0 0 0 78.246 39.773 97.452 97.452 0 0 0 78.396-39.975 97.452 97.452 0 0 0-78.396-39.574z" stroke="#000" stroke-width="5" fill="transparent"/>
   <circle class="accent-stroke accent-fill" cx="100" cy="89.438" r="19.85" stroke="#000" stroke-width="5"/>
 </svg>
 `;
