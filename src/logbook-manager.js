@@ -9,8 +9,8 @@ import {
 } from './eval-cell-element/_.js';
 
 import {
-    StatusBarElement,  // also ensures that the "status-bar" custom element has been defined
-} from './status-bar-element/_.js';
+    ToolBarElement,  // also ensures that the "tool-bar" custom element has been defined
+} from './tool-bar-element/_.js';
 
 import {
     Subscribable,
@@ -71,7 +71,7 @@ class LogbookManager {
     #menubar;
     #menubar_commands_subscription;
     #menubar_selects_subscription;
-    #status_bar;
+    #tool_bar;
     #global_eval_context;  // persistent eval_context for eval commands
     #global_change_manager;
     #file_handle;
@@ -82,7 +82,7 @@ class LogbookManager {
         editable = !!editable;
         this.#editable = editable;
         this.#menubar.set_menu_state('toggle-editable', { checked: editable });
-        this.#status_bar.set_for('editable', editable);
+        this.#tool_bar.set_for('editable', editable);
         for (const cell of this.constructor.get_cells()) {
             cell.set_editable(editable);
         }
@@ -159,7 +159,7 @@ class LogbookManager {
             // set up active cell
             // ... find the first incoming "active" cell, or the first cell, or create a new cell
             const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? await this.create_cell();
-            this.set_active_cell(active_cell);  // also resets "active" status on all cells except for active_cell
+            this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
 
             this.set_editable(this.editable);  // update all cells consistently
@@ -247,9 +247,9 @@ document.body.innerText;//!!! force layout
         document.body.appendChild(this.#controls_element);
         document.body.appendChild(this.#content_element);
 
-        // add a status-bar element to each pre-existing cell
+        // add a tool-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {
-            await cell.establish_status_bar();
+            await cell.establish_tool_bar();
             // the following will establish the event handlers for cell
             const current_output_element = cell.output_element;
             cell.output_element = null;
@@ -360,14 +360,14 @@ recents
         //!!! this.#menubar_selects_subscription is never unsubscribed
         this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
 
-        // add a status-bar element to the main document
-        this.#status_bar = await StatusBarElement.create_for(this.controls_element, {
+        // add a tool-bar element to the main document
+        this.#tool_bar = await ToolBarElement.create_for(this.controls_element, {
             editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
             //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
             running:  true,
         });
-        this.#controls_element.appendChild(this.#status_bar);
+        this.#controls_element.appendChild(this.#tool_bar);
     }
 
     #menubar_commands_observer(command_context) {
@@ -529,7 +529,7 @@ recents
         const {
             is_neutral,
         } = data;
-        this.#status_bar.set_for('modified', !is_neutral);
+        this.#tool_bar.set_for('modified', !is_neutral);
         this.#menubar.set_menu_state('save', { checked: !is_neutral });
     }
 
@@ -547,7 +547,7 @@ recents
             eval_state,
         } = data;
         const something_foreground = this.constructor.get_cells().some(cell => cell.evaluator_foreground);
-        this.#status_bar.set_for('running', something_foreground);
+        this.#tool_bar.set_for('running', something_foreground);
     }
 
 

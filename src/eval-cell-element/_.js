@@ -24,8 +24,8 @@ import {
 } from '../../lib/sys/stoppable.js';
 
 import {
-    StatusBarElement,
-} from '../status-bar-element/_.js';
+    ToolBarElement,
+} from '../tool-bar-element/_.js';
 
 
 export class EvalCellElement extends EditorCellElement {
@@ -37,7 +37,7 @@ export class EvalCellElement extends EditorCellElement {
     get input_type (){ return this.getAttribute(this.constructor.#attribute__input_type); }
     set input_type (input_type){
         this.setAttribute(this.constructor.#attribute__input_type, input_type);
-        this._status_bar?.set_type(input_type);
+        this._tool_bar?.set_type(input_type);
         return input_type;
     }
 
@@ -230,13 +230,13 @@ export class EvalCellElement extends EditorCellElement {
 
         this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
         this.#evaluator_foreground = true;
-        this._status_bar?.set_for('running', true);
+        this._tool_bar?.set_for('running', true);
         logbook_manager.emit_eval_state(this, true);
 
         return evaluator._perform_eval()
             .then(() => {
                 this.#evaluator_foreground = undefined;
-                this._status_bar?.set_for('running', false);
+                this._tool_bar?.set_for('running', false);
                 logbook_manager.emit_eval_state(this, false);
             })
             .catch(error => {
@@ -266,14 +266,14 @@ export class EvalCellElement extends EditorCellElement {
         }
         this.#evaluator_stoppable  = undefined;
         this.#evaluator_foreground = undefined;
-        this._status_bar?.set_for('running', false);
+        this._tool_bar?.set_for('running', false);
         logbook_manager.emit_eval_state(this, false);
     }
 
-    async establish_status_bar() {  // override of EditorCellElement.establish_status_bar()
-        if (!this._status_bar) {
+    async establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
+        if (!this._tool_bar) {
             let initial_type = this.input_type || undefined;
-            this._status_bar = await StatusBarElement.create_for(this, {
+            this._tool_bar = await ToolBarElement.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(event.target.get_state()) },
                 autoeval: false,
@@ -282,7 +282,7 @@ export class EvalCellElement extends EditorCellElement {
                 modified: false,
                 run:      false,
             });
-            this.parentElement.insertBefore(this._status_bar, this);
+            this.parentElement.insertBefore(this._tool_bar, this);
         }
     }
 

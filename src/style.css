@@ -5,36 +5,36 @@
 :root {
     /* color */
 
-    --bgcolor-status:            hsl(0deg 0% 98% / 100%);
-    --bgcolor-cell:              hsl(0deg 0% 99% / 100%);
+    --bgcolor-tool:          hsl(0deg 0% 98% / 100%);
+    --bgcolor-cell:          hsl(0deg 0% 99% / 100%);
 
-    --color-type-markdown:       hsl(205deg 100%  94% / 100%);
-    --color-type-tex:            hsl( 45deg  81%  87% / 100%);
-    --color-type-javascript:     hsl( 85deg 100%  85% / 100%);
+    --color-type-markdown:   hsl(205deg 100%  94% / 100%);
+    --color-type-tex:        hsl( 45deg  81%  87% / 100%);
+    --color-type-javascript: hsl( 85deg 100%  85% / 100%);
 
 
     /* border */
 
-    --border-radius-cell:        0.125em;
-    --border-width-cell:         1px;
-    --border-style-cell:         solid;
-    --border-width-status:       1px;
-    --border-style-status:       solid;
-    --border-color-status:       #ccc;
-    --border-color-cell:         #ccc;
-    --border-color-status-focus: black;
-    --border-color-cell-focus:   black;
+    --border-radius-cell:      0.125em;
+    --border-width-cell:       1px;
+    --border-style-cell:       solid;
+    --border-width-tool:       1px;
+    --border-style-tool:       solid;
+    --border-color-tool:       #ccc;
+    --border-color-cell:       #ccc;
+    --border-color-tool-focus: black;
+    --border-color-cell-focus: black;
 
 
     /* focus transition */
 
-    --focus-x1-delay:             0s;
-    --focus-x1-duration:          0.2s;
-    --focus-x1-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x1-delay:    0s;
+    --focus-x1-duration: 0.2s;
+    --focus-x1-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);
 
-    --focus-x2-delay:             calc(var(--focus-x1-duration) / 4);
-    --focus-x2-duration:          0.1s;
-    --focus-x2-easing:            cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x2-delay:    calc(var(--focus-x1-duration) / 4);
+    --focus-x2-duration: 0.1s;
+    --focus-x2-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);
 }
 
 
@@ -53,15 +53,15 @@ body {
     border-bottom: 1px solid black;
 }
 
-#controls > status-bar {  /* next to menu */
+#controls > tool-bar {  /* next to menu */
     border: 0;
     align-self: center;
     margin-left: auto;  /* push to far right */
     background-color: transparent;
 }
 
-status-bar {
-    background-color: var(--bgcolor-status);
+tool-bar {
+    background-color: var(--bgcolor-tool);
 
     padding: 0.3em 0.5em;
 }
@@ -89,7 +89,7 @@ eval-cell {
 
     background-color: white;
 }
-.eval-cell-output:has(+ status-bar),
+.eval-cell-output:has(+ tool-bar),
 .eval-cell-output:has(+ eval-cell) {
     padding-bottom: 1em;
 }
@@ -97,7 +97,7 @@ eval-cell {
 
 /* border / animated attributes */
 
-status-bar {
+tool-bar {
     overflow: hidden;
 
     max-height:   0;
@@ -109,8 +109,8 @@ status-bar {
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
-    border-style:  var(--border-style-status);
-    border-color:  var(--border-color-status);
+    border-style:  var(--border-style-tool);
+    border-color:  var(--border-color-tool);
 }
 eval-cell {
     overflow: hidden;
@@ -128,27 +128,27 @@ eval-cell {
     border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 }
 
-#controls > status-bar {
+#controls > tool-bar {
     max-height:   100vh;
-    border-width: var(--border-width-status);
+    border-width: var(--border-width-tool);
     padding:      0 0.5em;
 }
 
-status-bar:has(+ eval-cell[data-visible]),
-status-bar:has(+ eval-cell[contenteditable]) {
-    border-top-color:   var(--border-color-status-focus);
-    border-left-color:  var(--border-color-status-focus);
-    border-right-color: var(--border-color-status-focus);
+tool-bar:has(+ eval-cell[data-visible]),
+tool-bar:has(+ eval-cell[contenteditable]) {
+    border-top-color:   var(--border-color-tool-focus);
+    border-left-color:  var(--border-color-tool-focus);
+    border-right-color: var(--border-color-tool-focus);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
     border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
 }
 
-status-bar:has(+ eval-cell[data-visible]),
-status-bar:has(+ eval-cell[contenteditable]) {
+tool-bar:has(+ eval-cell[data-visible]),
+tool-bar:has(+ eval-cell[contenteditable]) {
     max-height:   100vh;
-    border-width: var(--border-width-status);
+    border-width: var(--border-width-tool);
     padding:      0 0.5em;
 }
 eval-cell[data-visible],
@@ -162,37 +162,37 @@ eval-cell[contenteditable] {
 /* color selected by eval-cell input-type */
 
 
-status-bar option,
-status-bar select {
+tool-bar option,
+tool-bar select {
     background-color: var(--color-type-markdown);
 }
 
-status-bar option[value="javascript"],
-status-bar > select:has(> option[value="javascript"]:checked) {
+tool-bar option[value="javascript"],
+tool-bar > select:has(> option[value="javascript"]:checked) {
     background-color: var(--color-type-javascript);
 }
 
-status-bar option[value="tex"],
-status-bar > select:has(> option[value="tex"]:checked) {
+tool-bar option[value="tex"],
+tool-bar > select:has(> option[value="tex"]:checked) {
     background-color: var(--color-type-tex);
 }
 
 
-status-bar {
+tool-bar {
     border-bottom-color: var(--color-type-markdown);
 }
 
-status-bar:has(option[value="javascript"]:checked) {
+tool-bar:has(option[value="javascript"]:checked) {
     border-bottom-color: var(--color-type-javascript);
 }
 
-status-bar:has(option[value="tex"]:checked) {
+tool-bar:has(option[value="tex"]:checked) {
     border-bottom-color: var(--color-type-tex);
 }
 
 /* === */
 
-status-bar {
+tool-bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -200,12 +200,12 @@ status-bar {
     padding: 0 0.5em;
 }
 
-status-bar > * {
-    margin: 0;  /* pack controls within status-bar; let flex gap handle spacing */
+tool-bar > * {
+    margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
     background-color: hsl(0deg 0% 98% / 100%);
 }
 
-.status-bar-indicator {
+.tool-bar-indicator {
     display: block;
     width:  0.5em;
     height: 0.5em;
@@ -216,16 +216,16 @@ status-bar > * {
     background-color: hsl(0deg 0% 97% / 100%);
 }
 
-.status-bar-indicator.running[data-indicator-value="on"] {
+.tool-bar-indicator.running[data-indicator-value="on"] {
     border: 1px solid black;
     background-color: hsl(120deg 94% 40% / 100%);
 }
-.status-bar-indicator.modified[data-indicator-value="on"] {
+.tool-bar-indicator.modified[data-indicator-value="on"] {
     border: 1px solid black;
     background-color: hsl(0deg 60% 85% / 100%);
 }
 
-status-bar > select > option {
+tool-bar > select > option {
     background-color: hsl(0deg 0% 97% / 100%);
 }
 
@@ -243,20 +243,20 @@ toggle-switch svg {
     height: 100%;
 }
 
-toggle-switch.status-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }
-toggle-switch.status-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }
-toggle-switch.status-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }
-toggle-switch.status-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: transparent; }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: transparent; }
 
-toggle-switch.status-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }
-toggle-switch.status-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
-toggle-switch.status-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   chartreuse; }
-toggle-switch.status-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   chartreuse; }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }
 
-toggle-switch.status-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }
-toggle-switch.status-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
-toggle-switch.status-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   transparent; }
-toggle-switch.status-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   transparent; }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }
 
 
 /* === print media queries === */

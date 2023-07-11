@@ -28,8 +28,8 @@ import {
 } from '../../lib/ui/change-manager.js';
 
 import {
-    StatusBarElement,
-} from '../status-bar-element/_.js';
+    ToolBarElement,
+} from '../tool-bar-element/_.js';
 
 import {
     beep,
@@ -52,8 +52,8 @@ export class EditorCellElement extends HTMLElement {
         const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings(), this.constructor.key_map_insert_self_recognizer);
         this.push_key_map(key_map);
 
-        // _status_bar is used instead of #status_bar so that subclasses have access (see establish_status_bar())
-        this._status_bar = null;
+        // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
+        this._tool_bar = null;
     }
     #event_listener_manager;
     #key_event_manager;
@@ -100,24 +100,24 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
-    // === STATUS BAR ===
+    // === TOOL BAR ===
 
-    async establish_status_bar() {
-        if (!this._status_bar) {
-            this._status_bar = await StatusBarElement.create_for(this, {
+    async establish_tool_bar() {
+        if (!this._tool_bar) {
+            this._tool_bar = await ToolBarElement.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
                 autoeval: false,
                 modified: true,
             });
-            this.parentElement.insertBefore(this._status_bar, this);
+            this.parentElement.insertBefore(this._tool_bar, this);
         }
     }
 
-    remove_status_bar() {
-        if (this._status_bar) {
-            this._status_bar.remove();
-            this._status_bar = undefined;
+    remove_tool_bar() {
+        if (this._tool_bar) {
+            this._tool_bar.remove();
+            this._tool_bar = undefined;
         }
     }
 
@@ -133,12 +133,12 @@ export class EditorCellElement extends HTMLElement {
         } else {
             let first = this,
                 last  = this;
-            if (this._status_bar) {
-                if (first.compareDocumentPosition(this._status_bar) & Node.DOCUMENT_POSITION_PRECEDING) {
-                    first = this._status_bar;
+            if (this._tool_bar) {
+                if (first.compareDocumentPosition(this._tool_bar) & Node.DOCUMENT_POSITION_PRECEDING) {
+                    first = this._tool_bar;
                 }
-                if (last.compareDocumentPosition(this._status_bar) & Node.DOCUMENT_POSITION_FOLLOWING) {
-                    last = this._status_bar;
+                if (last.compareDocumentPosition(this._tool_bar) & Node.DOCUMENT_POSITION_FOLLOWING) {
+                    last = this._tool_bar;
                 }
             }
             return { first, last };
@@ -176,7 +176,7 @@ export class EditorCellElement extends HTMLElement {
             cell.innerText = innerText;
         }
 
-        await cell.establish_status_bar();
+        await cell.establish_tool_bar();
 
         return cell;
     }
@@ -221,12 +221,12 @@ export class EditorCellElement extends HTMLElement {
                 this.remove_cell();
             }
         } else {
-            const had_status_bar = !!this._status_bar;
-            this.remove_status_bar();
+            const had_tool_bar = !!this._tool_bar;
+            this.remove_tool_bar();
             parent.insertBefore(this, before);
-            if (had_status_bar) {
-                this.establish_status_bar();
-//!!! the above call to this.establish_status_bar() is async
+            if (had_tool_bar) {
+                this.establish_tool_bar();
+//!!! the above call to this.establish_tool_bar() is async
             }
         }
     }
@@ -234,7 +234,7 @@ export class EditorCellElement extends HTMLElement {
     /** remove this cell from the DOM
      */
     remove_cell() {
-        this.remove_status_bar();
+        this.remove_tool_bar();
         this.remove();
     }
 
@@ -406,8 +406,8 @@ export class EditorCellElement extends HTMLElement {
 
     get visible (){ return !!this.hasAttribute(this.constructor.attribute__visible); }
     set_visible(state=false) {
-        status = !!state;
-        this._status_bar.set_for('visible', state);
+        state = !!state;
+        this._tool_bar.set_for('visible', state);
         if (state) {
             this.setAttribute(this.constructor.attribute__visible, true);
         } else {

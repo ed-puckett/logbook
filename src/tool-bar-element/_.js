@@ -19,31 +19,31 @@ import {
 } from '../../lib/ui/dom-util.js';
 
 
-export class StatusBarElement extends HTMLElement {
-    static custom_element_name = 'status-bar';
+export class ToolBarElement extends HTMLElement {
+    static custom_element_name = 'tool-bar';
 
-    static indicator_control__class            = 'status-bar-indicator';
+    static indicator_control__class            = 'tool-bar-indicator';
     static indicator_control__attribute__value = 'data-indicator-value';
 
-    static toggle_switch__editable__class = 'status-bar-toggle-editable';
-    static toggle_switch__visible__class  = 'status-bar-toggle-visible';
-    static toggle_switch__autoeval__class = 'status-bar-toggle-autoeval';
+    static toggle_switch__editable__class = 'tool-bar-toggle-editable';
+    static toggle_switch__visible__class  = 'tool-bar-toggle-visible';
+    static toggle_switch__autoeval__class = 'tool-bar-toggle-autoeval';
 
-    /** create a new StatusBarElement in the document, then set target with options
+    /** create a new ToolBarElement in the document, then set target with options
      *  @param {any} target
      *  @param {Object|null|undefined} options to be passed to set_target()
-     *  @return {StatusBarElement} status bar element
+     *  @return {ToolBarElement} tool bar element
      */
     static async create_for(target, options) {
-        const status_bar = document.createElement(this.custom_element_name);
-        if (!status_bar) {
-            throw new Error('error creating status bar');
+        const tool_bar = document.createElement(this.custom_element_name);
+        if (!tool_bar) {
+            throw new Error('error creating tool bar');
         }
         try {
-            await status_bar.set_target(target, options);
-            return status_bar;
+            await tool_bar.set_target(target, options);
+            return tool_bar;
         } catch (error) {
-            status_bar.remove();
+            tool_bar.remove();
             throw error;
         }
     }
@@ -55,8 +55,8 @@ export class StatusBarElement extends HTMLElement {
         this.#reset_configuration();
         this.addEventListener('pointerdown', (event) => {
             this.#target.focus();
-            if (event.target instanceof StatusBarElement) {
-                // stop event only if target is directly a StatusBarElement, not one of its children
+            if (event.target instanceof ToolBarElement) {
+                // stop event only if target is directly a ToolBarElement, not one of its children
                 event.preventDefault();
                 event.stopPropagation();
             }
@@ -78,7 +78,7 @@ export class StatusBarElement extends HTMLElement {
      */
     get target (){ return this.#target; }
 
-    /** set the target for this status bar
+    /** set the target for this tool bar
      *  @param {any} target
      *  @param {Object|null|undefined} options: {
      *      editable?: { initial?, on? },
@@ -107,10 +107,16 @@ export class StatusBarElement extends HTMLElement {
     }
 
     get_for(name, value) {
-        return this.#controls[name]?.get?.();
+        if (!(name in this.#controls)) {
+            throw new Error('unknown name');
+        }
+        return this.#controls[name].get();
     }
     set_for(name, value) {
-        this.#controls[name]?.set?.(value);
+        if (!(name in this.#controls)) {
+            throw new Error('unknown name');
+        }
+        this.#controls[name].set(value);
     }
 
 
@@ -138,8 +144,8 @@ export class StatusBarElement extends HTMLElement {
                     this.#controls[name] = {
                         name,
                         control,
-                        get: getter.bind(StatusBarElement, control),
-                        set: setter.bind(StatusBarElement, control),
+                        get: getter.bind(ToolBarElement, control),
+                        set: setter.bind(ToolBarElement, control),
                     };
                 }
             }
@@ -161,15 +167,14 @@ export class StatusBarElement extends HTMLElement {
         return [
             // the order of this array determines order of control creation
 
-            // NAME       CREATE_FN,                          GETTER_FN                            SETTER_FN
-            [ 'running',  this.#create__running.bind(this),   this.constructor.#getter__running,   this.constructor.#setter__running  ],
-            [ 'modified', this.#create__modified.bind(this),  this.constructor.#getter__modified,  this.constructor.#setter__modified ],
-            [ 'editable', this.#create__editable.bind(this),  this.constructor.#getter__editable,  this.constructor.#setter__editable ],
-            [ 'visible',  this.#create__visible.bind(this),   this.constructor.#getter__visible,   this.constructor.#setter__visible  ],
-            [ 'autoeval', this.#create__autoeval.bind(this),  this.constructor.#getter__autoeval,  this.constructor.#setter__autoeval ],
-            [ 'run',      this.#create__run.bind(this),       this.constructor.#getter__run,       this.constructor.#setter__run      ],
-            [ 'type',     this.#create__type.bind(this),      this.constructor.#getter__type,      this.constructor.#setter__type     ],
-
+            // NAME       CREATE_FN,                         GETTER_FN                           SETTER_FN
+            [ 'running',  this.#create__running.bind(this),  this.constructor.#getter__running,  this.constructor.#setter__running  ],
+            [ 'modified', this.#create__modified.bind(this), this.constructor.#getter__modified, this.constructor.#setter__modified ],
+            [ 'editable', this.#create__editable.bind(this), this.constructor.#getter__editable, this.constructor.#setter__editable ],
+            [ 'visible',  this.#create__visible.bind(this),  this.constructor.#getter__visible,  this.constructor.#setter__visible  ],
+            [ 'autoeval', this.#create__autoeval.bind(this), this.constructor.#getter__autoeval, this.constructor.#setter__autoeval ],
+            [ 'run',      this.#create__run.bind(this),      this.constructor.#getter__run,      this.constructor.#setter__run      ],
+            [ 'type',     this.#create__type.bind(this),     this.constructor.#getter__type,     this.constructor.#setter__type     ],
         ];
     }
 
@@ -414,4 +419,4 @@ console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value })
 }
 
 // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
-StatusBarElement._init_static();
+ToolBarElement._init_static();

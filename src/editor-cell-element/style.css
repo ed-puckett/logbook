@@ -18,7 +18,7 @@ editor-cell[data-active] {
 }
 
 
-/* assumes status bar on top of editor-cell */
-status-bar + editor-cell {
+/* assumes tool bar on top of editor-cell */
+tool-bar + editor-cell {
     margin-top: 0;
 }

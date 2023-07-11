@@ -1,4 +1,4 @@
-status-bar {
+tool-bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -6,12 +6,12 @@ status-bar {
     padding: 0 0.5em;
 }
 
-status-bar > * {
-    margin: 0;  /* pack controls within status-bar; let flex gap handle spacing */
+tool-bar > * {
+    margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
     background-color: hsl(0deg 0% 98% / 100%);
 }
 
-.status-bar-indicator {
+.tool-bar-indicator {
     display: block;
     width:  0.5em;
     height: 0.5em;
@@ -22,15 +22,15 @@ status-bar > * {
     background-color: hsl(0deg 0% 97% / 100%);
 }
 
-.status-bar-indicator.running[data-indicator-value="on"] {
+.tool-bar-indicator.running[data-indicator-value="on"] {
     border: 1px solid black;
     background-color: hsl(120deg 94% 40% / 100%);
 }
-.status-bar-indicator.modified[data-indicator-value="on"] {
+.tool-bar-indicator.modified[data-indicator-value="on"] {
     border: 1px solid black;
     background-color: hsl(0deg 60% 85% / 100%);
 }
 
-status-bar > select > option {
+tool-bar > select > option {
     background-color: hsl(0deg 0% 97% / 100%);
 }
