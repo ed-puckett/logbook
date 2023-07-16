@@ -11,7 +11,9 @@
     "chai": "^4.3.6",
     "eslint": "^7.30.0",
     "http-server": "^14.1.0",
-    "mocha": "^10.1.0"
+    "mocha": "^10.1.0",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "chart.js": "^2.9.4",
