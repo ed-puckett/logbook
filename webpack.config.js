@@ -15,6 +15,9 @@ const config = {
         filename: 'main.js',
         path: build_dir_path,
     },
+    optimization: {
+        minimize: false
+    },
 };
 
 export default config;
