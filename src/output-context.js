@@ -225,7 +225,7 @@ export class OutputContext {
      *  @param {Object} options for renderer
      *  @return {any} return value from renderer
      */
-    invoke_renderer_for_type(type, value, options=null) {
+    async invoke_renderer_for_type(type, value, options=null) {
         const renderer = this.renderer_for_type(type);
         return this.invoke_renderer(renderer, value, options);
     }
