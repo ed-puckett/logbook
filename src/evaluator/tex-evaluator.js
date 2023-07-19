@@ -1,6 +1,6 @@
 import {
     Evaluator,
-} from './_.js';
+} from './evaluator.js';
 
 import {
     Stoppable,
@@ -18,7 +18,7 @@ export class TeXEvaluator extends Evaluator {
             inline: false,//!!!
             rtl:    false,//!!!
         };
-        const renderer = await this.output_context.renderer_for_type('tex');
+        const renderer = this.output_context.renderer_for_type('tex');
         this.add_stoppable(new Stoppable(renderer));
         return this.output_context.invoke_renderer(renderer, this.input_element.innerText, options);
     }

@@ -4,10 +4,10 @@ import {
 
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 
-export default class ChartRenderer extends Renderer {
+export class ChartRenderer extends Renderer {
     static type = 'chart';
 
     // Format of config object: see Chart.js documentation

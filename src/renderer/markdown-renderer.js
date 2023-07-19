@@ -1,6 +1,6 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 import {
     marked,
@@ -15,7 +15,7 @@ import {
 } from '../output-context.js';
 
 
-export default class MarkdownRenderer extends Renderer {
+export class MarkdownRenderer extends Renderer {
     static type = 'markdown';
 
     // options: { style?: Object }
@@ -127,7 +127,7 @@ marked.use({
             const options = {
                 //!!!
             };
-            const renderer = await output_context.renderer_for_type('javascript');
+            const renderer = output_context.renderer_for_type('javascript');
             await output_context.invoke_renderer(renderer, token.text, options)
                 .catch(error => output_context.invoke_renderer_for_type('error', error));
             renderer?.stop();  // stop background processing, if any

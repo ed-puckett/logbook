@@ -1,13 +1,13 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 import {
     render as graphviz_render,
 } from './graphviz.js';
 
 
-export default class GraphvizRenderer extends Renderer {
+export class GraphvizRenderer extends Renderer {
     static type = 'graphviz';
 
     // Format of config object: {

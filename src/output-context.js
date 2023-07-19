@@ -163,7 +163,7 @@ export class OutputContext {
      *  @return this
      */
     update_style(spec) {
-        return this.constructor.update_element_style(this.element, spec);
+        this.constructor.update_element_style(this.element, spec);
         return this;
     }
 
@@ -196,8 +196,8 @@ export class OutputContext {
      *  @param {String} type
      *  @return {Renderer} renderer_class
      */
-    async renderer_for_type(type) {
-        const renderer_class = await Renderer.class_from_type(type);
+    renderer_for_type(type) {
+        const renderer_class = Renderer.class_from_type(type);
         if (!renderer_class) {
             throw new Error(`unknown output type: ${type}`);
         } else {
@@ -225,8 +225,8 @@ export class OutputContext {
      *  @param {Object} options for renderer
      *  @return {any} return value from renderer
      */
-    async invoke_renderer_for_type(type, value, options=null) {
-        const renderer = await this.renderer_for_type(type);
+    invoke_renderer_for_type(type, value, options=null) {
+        const renderer = this.renderer_for_type(type);
         return this.invoke_renderer(renderer, value, options);
     }
 }

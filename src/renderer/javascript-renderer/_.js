@@ -56,7 +56,7 @@ import {
 
 import {
     Renderer,
-} from '../_.js';
+} from '../renderer.js';
 
 import {
     EvalWorker,
@@ -89,7 +89,7 @@ import {
 } from '../../../lib/ui/dom-util.js';
 
 
-export default class JavaScriptRenderer extends Renderer {
+export class JavaScriptRenderer extends Renderer {
     static type = 'javascript';
 
     // options: { style?: Object, eval_context?: Object, inline?: Boolean }
@@ -202,7 +202,7 @@ export default class JavaScriptRenderer extends Renderer {
         }
 
         async function render(type, value, options=null) {
-            const renderer = await output_context.renderer_for_type(type);
+            const renderer = output_context.renderer_for_type(type);
             self.add_stoppable(new Stoppable(renderer));
             return output_context.invoke_renderer(renderer, value, options)
                   .catch(error => output_context.invoke_renderer_for_type('error', error));

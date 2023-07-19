@@ -37,7 +37,7 @@ build-dir: ./node_modules README.md
 	if [[ ! -e "$(BUILDDIR)/examples" ]]; then ( cd "$(BUILDDIR)" && ln -s ../examples . ); fi && \
 	rm -fr "$(BUILDDIR)/node_modules" && \
 	mkdir -p "$(BUILDDIR)/node_modules" && \
-	for d in chart.js d3 @hpcc-js d3-graphviz dialog-polyfill dompurify js-sha256 marked plotly.js-dist rxjs sprintf-js texzilla uuid; do cp -a "./node_modules/$${d}" "$(BUILDDIR)/node_modules/"; done && \
+	for d in chart.js d3 @hpcc-js d3-graphviz js-sha256 marked plotly.js-dist rxjs sprintf-js texzilla uuid; do cp -a "./node_modules/$${d}" "$(BUILDDIR)/node_modules/"; done && \
 	/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "$(BUILDDIR)/help.html"
 	cp src/favicon.ico "$(BUILDDIR)/"
 

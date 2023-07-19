@@ -39,6 +39,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_error(HTTPStatus.NOT_FOUND, "directory listing not supported")
         return None
 
+    def end_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        http.server.SimpleHTTPRequestHandler.end_headers(self)
+
 with socketserver.TCPServer((ADDR, int(PORT)), Handler) as httpd:
     print("started server at", ADDR, PORT)
     httpd.serve_forever()

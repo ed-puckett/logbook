@@ -1,6 +1,6 @@
 import {
     Evaluator,
-} from './_.js';
+} from './evaluator.js';
 
 import {
     Stoppable,
@@ -17,7 +17,7 @@ export class JavaScriptEvaluator extends Evaluator {
             style:  undefined,//!!!
             eval_context: this.eval_context,
         };
-        const renderer = await this.output_context.renderer_for_type('javascript');
+        const renderer = this.output_context.renderer_for_type('javascript');
         this.add_stoppable(new Stoppable(renderer));
         return this.output_context.invoke_renderer(renderer, this.input_element.innerText, options);
     }

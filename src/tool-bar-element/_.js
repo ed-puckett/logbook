@@ -277,7 +277,7 @@ export class ToolBarElement extends HTMLElement {
             },
         });
 
-        const types = new Set((await get_evaluator_classes()).map(e => e.handled_input_types).flat()).values();
+        const types = new Set(get_evaluator_classes().map(e => e.handled_input_types).flat()).values();
         let subsequent = false;
         for (const type of types) {
             create_element({

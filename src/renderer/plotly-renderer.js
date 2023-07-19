@@ -1,13 +1,13 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 import {
     Plotly,
 } from './plotly.js';
 
 
-export default class PlotlyRenderer extends Renderer {
+export class PlotlyRenderer extends Renderer {
     static type = 'plotly';
 
     // Format of config object: { data, layout, config, frames }

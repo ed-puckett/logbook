@@ -8,3 +8,4 @@ import {
 
 
 await logbook_manager.initialize();
+console.log('>>>', 'import.meta.url', import.meta.url, 'location.pathname', location.pathname);//!!!

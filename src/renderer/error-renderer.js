@@ -1,9 +1,9 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 
-export default class ErrorRenderer extends Renderer {
+export class ErrorRenderer extends Renderer {
     static type = 'error';
 
     static error_element_class      = 'error';

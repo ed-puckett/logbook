@@ -1,9 +1,9 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 
-export default class TextRenderer extends Renderer {
+export class TextRenderer extends Renderer {
     static type = 'text';
 
     async render(output_context, text, options) {

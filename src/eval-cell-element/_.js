@@ -207,7 +207,7 @@ export class EvalCellElement extends EditorCellElement {
             eval_context,
         } = (options ?? {});
 
-        const evaluator_class = evaluator_class_from_options ?? await Evaluator.class_for_content(this);
+        const evaluator_class = evaluator_class_from_options ?? Evaluator.class_for_content(this);
 
         if (!(evaluator_class === Evaluator || evaluator_class.prototype instanceof Evaluator)) {
             throw new Error('evaluator_class must be an instance of Evaluator');

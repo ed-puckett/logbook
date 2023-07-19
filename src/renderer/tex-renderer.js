@@ -1,13 +1,13 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 import {
     TeXZilla,
 } from './texzilla.js';
 
 
-export default class TeXRenderer extends Renderer {
+export class TeXRenderer extends Renderer {
     static type = 'tex';
 
     // options: { style?: Object, inline?: Boolean, rtl?: Boolean }

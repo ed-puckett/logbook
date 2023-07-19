@@ -1,9 +1,9 @@
 import {
     Renderer,
-} from './_.js';
+} from './renderer.js';
 
 
-export default class ImageDataRenderer extends Renderer {
+export class ImageDataRenderer extends Renderer {
     static type = 'image-data';
 
     // Format of config object: {

@@ -1,58 +1,28 @@
-const current_script_url = import.meta.url;  // save for later
+// Renderer is defined in a separate file to break dependency cycle in get_renderer_classes()
+export {
+    Renderer,
+} from './renderer.js';
 
-import {
-    StoppableObjectsManager,
-} from '../../lib/sys/stoppable.js';
+import { TextRenderer       } from './text-renderer.js';
+import { ErrorRenderer      } from './error-renderer.js';
+import { MarkdownRenderer   } from './markdown-renderer.js';
+import { TeXRenderer        } from './tex-renderer.js';
+import { JavaScriptRenderer } from './javascript-renderer/_.js';
+import { ImageDataRenderer  } from './image-data-renderer.js';
+import { ChartRenderer      } from './chart-renderer.js';
+import { GraphvizRenderer   } from './graphviz-renderer.js';
+import { PlotlyRenderer     } from './plotly-renderer.js';
 
-
-export class Renderer extends StoppableObjectsManager {
-    static type = undefined;  // type which instances handle; to be overridden in subclasses
-
-    get type (){ return this.constructor.type }
-
-    async render(output_context, value, options) {
-        // to be implemented by subclasses
-        throw new Error('NOT UNIMPLEMENTED');
-    }
-
-    static async class_from_type(type) {
-        return (await this.#establish_type_to_class_mapping())[type];
-    }
-
-
-    // === TYPE TO RENDERER MAPPING ===
-
-    // importing the classes is deferred until this function is called to avoid dependency cycles
-    static async #establish_type_to_class_mapping() {
-        if (!this.type_to_class_mapping) {
-            const renderer_modules = await Promise.all(
-                this.#renderer_paths.map(
-                    renderer_path => import(new URL(renderer_path, current_script_url))
-                )
-            );
-            this.#type_to_class_mapping =
-                Object.fromEntries(
-                    renderer_modules.map(renderer_module => {
-                        const renderer_class = renderer_module.default;
-                        return [ renderer_class.type, renderer_class ];
-                    })
-                );
-        }
-        return this.#type_to_class_mapping;
-    }
-    static #type_to_class_mapping;  // memoization
-
-    // paths to known renderer class implementations, default-exported
-    static #renderer_paths = [
-
-        './text-renderer.js',
-        './error-renderer.js',
-        './markdown-renderer.js',
-        './tex-renderer.js',
-        './javascript-renderer/_.js',
-        './image-data-renderer.js',
-        './chart-renderer.js',
-        './graphviz-renderer.js',
-        './plotly-renderer.js',
+export function get_renderer_classes() {
+    return [
+        TextRenderer,
+        ErrorRenderer,
+        MarkdownRenderer,
+        TeXRenderer,
+        JavaScriptRenderer,
+        ImageDataRenderer,
+        ChartRenderer,
+        GraphvizRenderer,
+        PlotlyRenderer,
     ];
 }
