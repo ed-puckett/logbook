@@ -120,7 +120,7 @@ export class JavaScriptRenderer extends Renderer {
             output_context = new OutputContext(parent);
         }
 
-        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, output_context);
+        const ephemeral_eval_context = this.#create_ephemeral_eval_context(eval_context, output_context);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
         // create an async generator with the given code as the heart of its
@@ -167,7 +167,7 @@ export class JavaScriptRenderer extends Renderer {
         }
     }
 
-    async #create_ephemeral_eval_context(eval_context, output_context) {
+    #create_ephemeral_eval_context(eval_context, output_context) {
         const self = this;
 
         function is_stopped() {

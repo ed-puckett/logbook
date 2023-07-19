@@ -6564,7 +6564,7 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_2__/* .Re
             output_context = new _output_context_js__WEBPACK_IMPORTED_MODULE_4__/* .OutputContext */ .l(parent);
         }
 
-        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, output_context);
+        const ephemeral_eval_context = this.#create_ephemeral_eval_context(eval_context, output_context);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
         // create an async generator with the given code as the heart of its
@@ -6611,7 +6611,7 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_2__/* .Re
         }
     }
 
-    async #create_ephemeral_eval_context(eval_context, output_context) {
+    #create_ephemeral_eval_context(eval_context, output_context) {
         const self = this;
 
         function is_stopped() {
