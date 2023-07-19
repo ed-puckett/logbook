@@ -1500,48 +1500,14 @@ function create_select_element(parent, id, opts) {
 /* harmony export */   xe: () => (/* binding */ set_selection_focus),
 /* harmony export */   yU: () => (/* binding */ insert_at)
 /* harmony export */ });
-/* unused harmony exports convert_to_location_url, escape_unescaped_$, escape_for_html, make_string_literal, with_designMode, find_matching_ancestor, create_inline_stylesheet, create_script, create_inline_script, load_script_and_wait_for_condition, find_child_offset, save_current_selection, restore_selection, move_point_forward, move_point_reverse, move_point, is_text_direction_ltr */
+/* unused harmony exports escape_unescaped_$, escape_for_html, make_string_literal, with_designMode, find_matching_ancestor, create_inline_stylesheet, create_script, create_inline_script, load_script_and_wait_for_condition, find_child_offset, save_current_selection, restore_selection, move_point_forward, move_point_reverse, move_point, is_text_direction_ltr */
 /* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1896);
 /* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1951);
-// IF THIS FILE IS MOVED, UPDATE THE LOGIC FOR FINDING THE SERVER ROOT BELOW
-
 const current_script_url = "file:///home/ed/code/logbook/lib/ui/dom-util.js";  // save for later
 
 
 
 
-
-
-// === FILE TO LOCATION URL ===
-
-const location_server_root = new URL('../..', window.location);  // assumes we are two directory levels below the server root
-
-function convert_to_location_url(local_url) {
-    if (typeof local_url === 'string') {
-        local_url = new URL(local_url);
-    }
-    if (!(local_url instanceof URL)) {
-        throw new Error('local_url must be a string or an instance of URL');
-    }
-
-    if (location_server_root.protocol === 'file:') {
-        return local_url;
-    }
-
-
-    const {
-        protocol,
-        host,
-        pathname,
-        searchParams,
-        hash,
-    } = local_url;
-
-    if (local_url.protocol === 'file:' && current_script_url.startsWith('file:')) {
-    }
-}
-globalThis.location_server_root = location_server_root;//!!!
-globalThis.convert_to_location_url = convert_to_location_url;//!!!
 
 
 // === ESCAPE TEXT AND HTML ===
@@ -5183,7 +5149,35 @@ document.body.innerText;//!!! force layout
     }
 
 
-    // === DOCUMENT UTILITIES FOR LOAD/SAVE ===
+    // === FILE: TO LOCATION URL ===
+
+    convert_to_location_url(local_url) {
+        if (typeof local_url === 'string') {
+            local_url = new URL(local_url);
+        }
+        if (!(local_url instanceof URL)) {
+            throw new Error('local_url must be a string or an instance of URL');
+        }
+
+        if (this.#assets_server_root.protocol === 'file:') {
+            return local_url;
+        }
+
+
+        const {
+            protocol,
+            host,
+            pathname,
+            searchParams,
+            hash,
+        } = local_url;
+
+        if (local_url.protocol === 'file:' && current_script_url.startsWith('file:')) {
+        }
+    }
+
+
+    // === DOCUMENT UTILITIES ===
 
     static controls_element_id = 'controls';
     static content_element_id  = 'content';
@@ -5196,6 +5190,14 @@ document.body.innerText;//!!! force layout
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
+
+        const assets_server_script = document.querySelector('script');
+        if (!assets_server_script || !assets_server_script.src) {
+            throw new Error('no script for assets server found in document');
+        }
+        this.#assets_server_root = new URL('..', assets_server_script.src);  // assumes script src points to is one directory level below the server root
+        this.#local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
+
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));
@@ -5223,6 +5225,8 @@ document.body.innerText;//!!! force layout
             cell.output_element = current_output_element;
         }
     }
+    #assets_server_root;
+    #local_server_root;
 
     #save_serializer() {
         const queried_content_element = document.getElementById(this.constructor.content_element_id);

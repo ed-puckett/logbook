@@ -216,7 +216,35 @@ document.body.innerText;//!!! force layout
     }
 
 
-    // === DOCUMENT UTILITIES FOR LOAD/SAVE ===
+    // === FILE: TO LOCATION URL ===
+
+    convert_to_location_url(local_url) {
+        if (typeof local_url === 'string') {
+            local_url = new URL(local_url);
+        }
+        if (!(local_url instanceof URL)) {
+            throw new Error('local_url must be a string or an instance of URL');
+        }
+
+        if (this.#assets_server_root.protocol === 'file:') {
+            return local_url;
+        }
+
+
+        const {
+            protocol,
+            host,
+            pathname,
+            searchParams,
+            hash,
+        } = local_url;
+
+        if (local_url.protocol === 'file:' && current_script_url.startsWith('file:')) {
+        }
+    }
+
+
+    // === DOCUMENT UTILITIES ===
 
     static controls_element_id = 'controls';
     static content_element_id  = 'content';
@@ -229,6 +257,14 @@ document.body.innerText;//!!! force layout
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
+
+        const assets_server_script = document.querySelector('script');
+        if (!assets_server_script || !assets_server_script.src) {
+            throw new Error('no script for assets server found in document');
+        }
+        this.#assets_server_root = new URL('..', assets_server_script.src);  // assumes script src points to is one directory level below the server root
+        this.#local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
+
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));
@@ -256,6 +292,8 @@ document.body.innerText;//!!! force layout
             cell.output_element = current_output_element;
         }
     }
+    #assets_server_root;
+    #local_server_root;
 
     #save_serializer() {
         const queried_content_element = document.getElementById(this.constructor.content_element_id);
