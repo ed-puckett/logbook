@@ -106,9 +106,9 @@ export class EditorCellElement extends HTMLElement {
 
     // === TOOL BAR ===
 
-    async establish_tool_bar() {
+    establish_tool_bar() {
         if (!this._tool_bar) {
-            this._tool_bar = await ToolBarElement.create_for(this, {
+            this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
                 autoeval: false,
@@ -158,7 +158,7 @@ export class EditorCellElement extends HTMLElement {
      *  }
      *  @return {EditorCellElement} new cell
      */
-    static async create_cell(options=null) {
+    static create_cell(options=null) {
         const {
             parent   = document.body,
             before   = null,
@@ -180,7 +180,7 @@ export class EditorCellElement extends HTMLElement {
             cell.innerText = innerText;
         }
 
-        await cell.establish_tool_bar();
+        cell.establish_tool_bar();
 
         return cell;
     }
@@ -230,7 +230,6 @@ export class EditorCellElement extends HTMLElement {
             parent.insertBefore(this, before);
             if (had_tool_bar) {
                 this.establish_tool_bar();
-//!!! the above call to this.establish_tool_bar() is async
             }
         }
     }
@@ -302,19 +301,18 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #command_observer(command_context) {
-        this.perform_command(command_context)
-            .then(success => {
-                if (!success) {
-                    beep();
-                }
-            })
-            .catch(error => {
-                console.error('error processing command', command_context, error);
+        try {
+            const success = this.perform_command(command_context);
+            if (!success) {
                 beep();
-            });
+            }
+        } catch (error) {
+            console.error('error processing command', command_context, error);
+            beep();
+        }
     }
 
-    async perform_command(command_context) {
+    perform_command(command_context) {
         if (!command_context) {
             return false;  // indicate: command not handled
         } else {
@@ -363,12 +361,12 @@ export class EditorCellElement extends HTMLElement {
         };
     }
 
-    async command_handler__cut(command_context) {
+    command_handler__cut(command_context) {
         document.execCommand('cut');  // updates selection
         return true;
     }
 
-    async command_handler__copy(command_context) {
+    command_handler__copy(command_context) {
         document.execCommand('copy');  // updates selection
         return true;
     }
@@ -386,12 +384,12 @@ export class EditorCellElement extends HTMLElement {
         }
     }
 
-    async command_handler__reset_cell(command_context) {
+    command_handler__reset_cell(command_context) {
         this.reset();
         return true;
     }
 
-    async command_handler__toggle_visible(command_context) {
+    command_handler__toggle_visible(command_context) {
         this.set_visible(!this.visible);
         return true;
     }

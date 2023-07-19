@@ -3235,7 +3235,7 @@ class MenuBar {
      *  @param {Function|null|undefined} get_command_bindings
      *  @return {MenuBar} menu bar instance
      */
-    static async create(parent, menubar_spec, get_command_bindings) {
+    static create(parent, menubar_spec, get_command_bindings) {
         const menubar = new this(parent, menubar_spec, get_command_bindings);
         return menubar;
     }
@@ -3888,9 +3888,9 @@ class EditorCellElement extends HTMLElement {
 
     // === TOOL BAR ===
 
-    async establish_tool_bar() {
+    establish_tool_bar() {
         if (!this._tool_bar) {
-            this._tool_bar = await _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__/* .ToolBarElement */ .d.create_for(this, {
+            this._tool_bar = _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__/* .ToolBarElement */ .d.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
                 autoeval: false,
@@ -3940,7 +3940,7 @@ class EditorCellElement extends HTMLElement {
      *  }
      *  @return {EditorCellElement} new cell
      */
-    static async create_cell(options=null) {
+    static create_cell(options=null) {
         const {
             parent   = document.body,
             before   = null,
@@ -3962,7 +3962,7 @@ class EditorCellElement extends HTMLElement {
             cell.innerText = innerText;
         }
 
-        await cell.establish_tool_bar();
+        cell.establish_tool_bar();
 
         return cell;
     }
@@ -4012,7 +4012,6 @@ class EditorCellElement extends HTMLElement {
             parent.insertBefore(this, before);
             if (had_tool_bar) {
                 this.establish_tool_bar();
-//!!! the above call to this.establish_tool_bar() is async
             }
         }
     }
@@ -4084,19 +4083,18 @@ class EditorCellElement extends HTMLElement {
     }
 
     #command_observer(command_context) {
-        this.perform_command(command_context)
-            .then(success => {
-                if (!success) {
-                    (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__/* .beep */ .V)();
-                }
-            })
-            .catch(error => {
-                console.error('error processing command', command_context, error);
+        try {
+            const success = this.perform_command(command_context);
+            if (!success) {
                 (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__/* .beep */ .V)();
-            });
+            }
+        } catch (error) {
+            console.error('error processing command', command_context, error);
+            (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__/* .beep */ .V)();
+        }
     }
 
-    async perform_command(command_context) {
+    perform_command(command_context) {
         if (!command_context) {
             return false;  // indicate: command not handled
         } else {
@@ -4145,12 +4143,12 @@ class EditorCellElement extends HTMLElement {
         };
     }
 
-    async command_handler__cut(command_context) {
+    command_handler__cut(command_context) {
         document.execCommand('cut');  // updates selection
         return true;
     }
 
-    async command_handler__copy(command_context) {
+    command_handler__copy(command_context) {
         document.execCommand('copy');  // updates selection
         return true;
     }
@@ -4168,12 +4166,12 @@ class EditorCellElement extends HTMLElement {
         }
     }
 
-    async command_handler__reset_cell(command_context) {
+    command_handler__reset_cell(command_context) {
         this.reset();
         return true;
     }
 
-    async command_handler__toggle_visible(command_context) {
+    command_handler__toggle_visible(command_context) {
         this.set_visible(!this.visible);
         return true;
     }
@@ -4563,10 +4561,10 @@ class EvalCellElement extends _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2
         _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.emit_eval_state(this, false);
     }
 
-    async establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
+    establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
         if (!this._tool_bar) {
             let initial_type = this.input_type || undefined;
-            this._tool_bar = await _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__/* .ToolBarElement */ .d.create_for(this, {
+            this._tool_bar = _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__/* .ToolBarElement */ .d.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(event.target.get_state()) },
                 autoeval: false,
@@ -4645,15 +4643,15 @@ class EvalCellElement extends _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2
         return true;
     }
 
-    async command_handler__set_mode_markdown(command_context) {
+    command_handler__set_mode_markdown(command_context) {
         this.input_type = 'markdown';
         return true;
     }
-    async command_handler__set_mode_tex(command_context) {
+    command_handler__set_mode_tex(command_context) {
         this.input_type = 'tex';
         return true;
     }
-    async command_handler__set_mode_javascript(command_context) {
+    command_handler__set_mode_javascript(command_context) {
         this.input_type = 'javascript';
         return true;
     }
@@ -4982,10 +4980,10 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_eva
 
 
 
-await _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.initialize();
+_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.initialize();
 
 __webpack_async_result__();
-} catch(e) { __webpack_async_result__(e); } }, 1);
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -5111,9 +5109,9 @@ class LogbookManager {
 
     /** clear the current document
      */
-    async clear() {
+    clear() {
         (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .clear_element */ .gX)(this.content_element);
-        const first_cell = await this.create_cell();
+        const first_cell = this.create_cell();
         first_cell.focus();
     }
 
@@ -5123,7 +5121,7 @@ class LogbookManager {
         }
     }
 
-    async initialize() {
+    initialize() {
         if (this.#initialize_called) {
             throw new Error('initialize() called more than once');
         }
@@ -5132,15 +5130,15 @@ class LogbookManager {
         try {
 
             // establish this.#content_element / this.content_element
-            await this.#initialize_document_structure();
+            this.#initialize_document_structure();
 
             // add top-level stylesheets
             const server_url = (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_9__/* .assets_server_url */ .h)(current_script_url);
             (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css',       server_url));
             (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style-hacks.css', server_url));
 
-            await this.#setup_csp();
-            await this.#setup_controls();
+            this.#setup_csp();
+            this.#setup_controls();
 
             // validate structure of document
             const cells = this.constructor.get_cells();
@@ -5150,7 +5148,7 @@ class LogbookManager {
 
             // set up active cell
             // ... find the first incoming "active" cell, or the first cell, or create a new cell
-            const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? await this.create_cell();
+            const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? this.create_cell();
             this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
 
@@ -5190,7 +5188,7 @@ document.body.innerText;//!!! force layout
      * options is passed to EvalCellElement.create_cell() but
      * with parent overridden to this.content_element.
      */
-    async create_cell(options=null) {
+    create_cell(options=null) {
         return _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p.create_cell({
             ...(options ?? {}),
             parent: this.content_element,
@@ -5214,7 +5212,7 @@ document.body.innerText;//!!! force layout
     static content_element_id  = 'content';
 
     // put everything this the body into a top-level content element
-    async #initialize_document_structure() {
+    #initialize_document_structure() {
         if (document.getElementById(this.constructor.controls_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.controls_element_id} already exists`);
         }
@@ -5241,7 +5239,7 @@ document.body.innerText;//!!! force layout
 
         // add a tool-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {
-            await cell.establish_tool_bar();
+            cell.establish_tool_bar();
             // the following will establish the event handlers for cell
             const current_output_element = cell.output_element;
             cell.output_element = null;
@@ -5273,7 +5271,7 @@ ${contents}
 `;
 }
 
-    async #setup_csp() {
+    #setup_csp() {
         if (false) {}
     }
 
@@ -5317,20 +5315,20 @@ recents
         //!!!
     }
 
-    async #setup_controls() {
+    #setup_controls() {
         if (!this.controls_element) {
             throw new Error(`bad format for document: controls element does not exist`);
         }
         const get_command_bindings = () => _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
-        this.#menubar = await _lib_ui_menu_js__WEBPACK_IMPORTED_MODULE_5__/* .MenuBar */ .j.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
+        this.#menubar = _lib_ui_menu_js__WEBPACK_IMPORTED_MODULE_5__/* .MenuBar */ .j.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
         this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
         this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
 
         // add a tool-bar element to the main document
-        this.#tool_bar = await _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_2__/* .ToolBarElement */ .d.create_for(this.controls_element, {
+        this.#tool_bar = _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_2__/* .ToolBarElement */ .d.create_for(this.controls_element, {
             editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
             //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
@@ -5524,13 +5522,13 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__create_cell(command_context) {
+    command_handler__create_cell(command_context) {
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
             before = next_cell.get_dom_extent().first;
         }
-        const cell = await this.create_cell({ before });
+        const cell = this.create_cell({ before });
         if (!cell) {
             return false;
         } else {
@@ -5541,15 +5539,15 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__reset(command_context) {
+    command_handler__reset(command_context) {
         this.reset();
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__clear(command_context) {
-        await this.clear();
+    command_handler__clear(command_context) {
+        this.clear();
         return true;
     }
 
@@ -5605,7 +5603,7 @@ recents
             await cell.eval({
                 eval_context: this.global_eval_context,
             });
-            const next_cell = cell.adjacent_cell(true) ?? await this.create_cell();
+            const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
             next_cell.focus();
             return true;
         }
@@ -5659,7 +5657,7 @@ recents
     /** stop evaluation for the active cell.
      *  @return {Boolean} true iff command successfully handled
      */
-    async command_handler__stop(command_context) {
+    command_handler__stop(command_context) {
         const cell = command_context.target;
         if (!cell || !(cell instanceof _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p)) {
             return false;
@@ -5672,14 +5670,14 @@ recents
     /** stop all running evaluations.
      *  @return {Boolean} true iff command successfully handled
      */
-    async command_handler__stop_all(command_context) {
+    command_handler__stop_all(command_context) {
         this.stop();
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__focus_up(command_context) {
+    command_handler__focus_up(command_context) {
         const focus_cell = command_context.target.adjacent_cell(false);
         if (!focus_cell) {
             return false;
@@ -5691,7 +5689,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__focus_down(command_context) {
+    command_handler__focus_down(command_context) {
         const focus_cell = command_context.target.adjacent_cell(true);
         if (!focus_cell) {
             return false;
@@ -5703,7 +5701,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__move_up(command_context) {
+    command_handler__move_up(command_context) {
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -5723,7 +5721,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__move_down(command_context) {
+    command_handler__move_down(command_context) {
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -5744,9 +5742,9 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__add_before(command_context) {
+    command_handler__add_before(command_context) {
         const cell = command_context.target;
-        const new_cell = await this.create_cell({
+        const new_cell = this.create_cell({
             before: cell.get_dom_extent().first,
         });
         new_cell.focus();
@@ -5755,9 +5753,9 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__add_after(command_context) {
+    command_handler__add_after(command_context) {
         const cell = command_context.target;
-        const new_cell = await this.create_cell({
+        const new_cell = this.create_cell({
             before: cell.get_dom_extent().last.nextSibling,
             parent: cell.parentElement,  // necessary if before is null
         });
@@ -5767,12 +5765,12 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__delete(command_context) {
+    command_handler__delete(command_context) {
         const cell = command_context.target;
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
         cell.remove_cell();
         if (!next_cell) {
-            next_cell = await this.create_cell();
+            next_cell = this.create_cell();
         }
         next_cell.focus();
         return true;
@@ -5780,20 +5778,20 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__toggle_editable(command_context) {
+    command_handler__toggle_editable(command_context) {
         this.set_editable(!this.editable);
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__undo(command_context) {
+    command_handler__undo(command_context) {
         return this.#global_change_manager?.perform_undo();
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__redo(command_context) {
+    command_handler__redo(command_context) {
         return this.#global_change_manager?.perform_redo();
     }
 }
@@ -8347,13 +8345,13 @@ class ToolBarElement extends HTMLElement {
      *  @param {Object|null|undefined} options to be passed to set_target()
      *  @return {ToolBarElement} tool bar element
      */
-    static async create_for(target, options) {
+    static create_for(target, options) {
         const tool_bar = document.createElement(this.custom_element_name);
         if (!tool_bar) {
             throw new Error('error creating tool bar');
         }
         try {
-            await tool_bar.set_target(target, options);
+            tool_bar.set_target(target, options);
             return tool_bar;
         } catch (error) {
             tool_bar.remove();
@@ -8404,7 +8402,7 @@ class ToolBarElement extends HTMLElement {
      *  }
      * A prior target, if any, is silently replaced.
      */
-    async set_target(target, options=null) {
+    set_target(target, options=null) {
         if (target !== null && typeof target !== 'undefined' && !(target instanceof EventTarget)) {
             throw new Error('target must be null, undefined, or and instance of EventTarget');
         }
@@ -8414,7 +8412,7 @@ class ToolBarElement extends HTMLElement {
         } else {
             if (this.#target !== target) {
                 this.#target = target;
-                await this.#configure(options);
+                this.#configure(options);
             }
         }
     }
@@ -8438,7 +8436,7 @@ class ToolBarElement extends HTMLElement {
     /** set up controls, etc according to options
      *  @param {Object|null|undefined} options from set_target()
      */
-    async #configure(options=null) {
+    #configure(options=null) {
         options ??= {};
         this.#reset_configuration();
         try {
@@ -8449,7 +8447,7 @@ class ToolBarElement extends HTMLElement {
                         control_options = {};
                     }
 
-                    const control = await create(control_options.on);
+                    const control = create(control_options.on);
                     if ('initial' in control_options) {
                         setter(control, control_options.initial);
                     }
@@ -8494,7 +8492,7 @@ class ToolBarElement extends HTMLElement {
 
     // === CONTROL HANDLING ===
 
-    async #create__editable(on_change_handler=null) {
+    #create__editable(on_change_handler=null) {
         const control = _toggle_switch_element_js__WEBPACK_IMPORTED_MODULE_0__/* .ToggleSwitchElement */ .O.create({
             parent: this,
             class:  this.constructor.toggle_switch__editable__class,
@@ -8527,7 +8525,7 @@ class ToolBarElement extends HTMLElement {
     static #getter__editable(control)        { return control.get_state(); }
     static #setter__editable(control, value) { control.set_state(value); }
 
-    async #create__visible(on_change_handler=null) {
+    #create__visible(on_change_handler=null) {
         const control = _toggle_switch_element_js__WEBPACK_IMPORTED_MODULE_0__/* .ToggleSwitchElement */ .O.create({
             parent: this,
             class:  this.constructor.toggle_switch__visible__class,
@@ -8561,7 +8559,7 @@ class ToolBarElement extends HTMLElement {
     static #getter__visible(control)        { return control.get_state(); }
     static #setter__visible(control, value) { control.set_state(value); }
 
-    async #create__autoeval(on_change_handler=null) {
+    #create__autoeval(on_change_handler=null) {
         const control = (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_2__/* .create_element */ .T1)({
             parent: this,
             tag: 'input',
@@ -8581,7 +8579,7 @@ class ToolBarElement extends HTMLElement {
     static #getter__autoeval(control)        { return control.checked; }
     static #setter__autoeval(control, value) { control.checked = !!value; }
 
-    async #create__type(on_change_handler=null) {
+    #create__type(on_change_handler=null) {
         const control = (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_2__/* .create_element */ .T1)({
             parent: this,
             tag: 'select',
@@ -8622,19 +8620,19 @@ class ToolBarElement extends HTMLElement {
         control.value = value;
     }
 
-    async #create__running(on_change_handler=null) {
+    #create__running(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler);
     }
     static #getter__running(control)        { return this.#indicator_control__getter(control); }
     static #setter__running(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__modified(on_change_handler=null) {
+    #create__modified(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler);
     }
     static #getter__modified(control)        { return this.#indicator_control__getter(control); }
     static #setter__modified(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__run(on_change_handler=null) {
+    #create__run(on_change_handler=null) {
         //!!!
     }
     static #getter__run(control) {

@@ -7,4 +7,4 @@ import {
 } from './logbook-manager.js';
 
 
-await logbook_manager.initialize();
+logbook_manager.initialize();

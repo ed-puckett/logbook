@@ -124,9 +124,9 @@ class LogbookManager {
 
     /** clear the current document
      */
-    async clear() {
+    clear() {
         clear_element(this.content_element);
-        const first_cell = await this.create_cell();
+        const first_cell = this.create_cell();
         first_cell.focus();
     }
 
@@ -136,7 +136,7 @@ class LogbookManager {
         }
     }
 
-    async initialize() {
+    initialize() {
         if (this.#initialize_called) {
             throw new Error('initialize() called more than once');
         }
@@ -145,15 +145,15 @@ class LogbookManager {
         try {
 
             // establish this.#content_element / this.content_element
-            await this.#initialize_document_structure();
+            this.#initialize_document_structure();
 
             // add top-level stylesheets
             const server_url = assets_server_url(current_script_url);
             create_stylesheet_link(document.head, new URL('style.css',       server_url));
             create_stylesheet_link(document.head, new URL('style-hacks.css', server_url));
 
-            await this.#setup_csp();
-            await this.#setup_controls();
+            this.#setup_csp();
+            this.#setup_controls();
 
             // validate structure of document
             const cells = this.constructor.get_cells();
@@ -163,7 +163,7 @@ class LogbookManager {
 
             // set up active cell
             // ... find the first incoming "active" cell, or the first cell, or create a new cell
-            const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? await this.create_cell();
+            const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? this.create_cell();
             this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
 
@@ -203,7 +203,7 @@ document.body.innerText;//!!! force layout
      * options is passed to EvalCellElement.create_cell() but
      * with parent overridden to this.content_element.
      */
-    async create_cell(options=null) {
+    create_cell(options=null) {
         return EvalCellElement.create_cell({
             ...(options ?? {}),
             parent: this.content_element,
@@ -227,7 +227,7 @@ document.body.innerText;//!!! force layout
     static content_element_id  = 'content';
 
     // put everything this the body into a top-level content element
-    async #initialize_document_structure() {
+    #initialize_document_structure() {
         if (document.getElementById(this.constructor.controls_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.controls_element_id} already exists`);
         }
@@ -254,7 +254,7 @@ document.body.innerText;//!!! force layout
 
         // add a tool-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {
-            await cell.establish_tool_bar();
+            cell.establish_tool_bar();
             // the following will establish the event handlers for cell
             const current_output_element = cell.output_element;
             cell.output_element = null;
@@ -286,7 +286,7 @@ ${contents}
 `;
 }
 
-    async #setup_csp() {
+    #setup_csp() {
         if (false) {  //!!!
 
             // === CONTENT SECURITY POLICY ===
@@ -355,20 +355,20 @@ recents
         //!!!
     }
 
-    async #setup_controls() {
+    #setup_controls() {
         if (!this.controls_element) {
             throw new Error(`bad format for document: controls element does not exist`);
         }
         const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
-        this.#menubar = await MenuBar.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
+        this.#menubar = MenuBar.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
         this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
         this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
 
         // add a tool-bar element to the main document
-        this.#tool_bar = await ToolBarElement.create_for(this.controls_element, {
+        this.#tool_bar = ToolBarElement.create_for(this.controls_element, {
             editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
             //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
@@ -562,13 +562,13 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__create_cell(command_context) {
+    command_handler__create_cell(command_context) {
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
             before = next_cell.get_dom_extent().first;
         }
-        const cell = await this.create_cell({ before });
+        const cell = this.create_cell({ before });
         if (!cell) {
             return false;
         } else {
@@ -579,15 +579,15 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__reset(command_context) {
+    command_handler__reset(command_context) {
         this.reset();
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__clear(command_context) {
-        await this.clear();
+    command_handler__clear(command_context) {
+        this.clear();
         return true;
     }
 
@@ -643,7 +643,7 @@ recents
             await cell.eval({
                 eval_context: this.global_eval_context,
             });
-            const next_cell = cell.adjacent_cell(true) ?? await this.create_cell();
+            const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
             next_cell.focus();
             return true;
         }
@@ -697,7 +697,7 @@ recents
     /** stop evaluation for the active cell.
      *  @return {Boolean} true iff command successfully handled
      */
-    async command_handler__stop(command_context) {
+    command_handler__stop(command_context) {
         const cell = command_context.target;
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
@@ -710,14 +710,14 @@ recents
     /** stop all running evaluations.
      *  @return {Boolean} true iff command successfully handled
      */
-    async command_handler__stop_all(command_context) {
+    command_handler__stop_all(command_context) {
         this.stop();
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__focus_up(command_context) {
+    command_handler__focus_up(command_context) {
         const focus_cell = command_context.target.adjacent_cell(false);
         if (!focus_cell) {
             return false;
@@ -729,7 +729,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__focus_down(command_context) {
+    command_handler__focus_down(command_context) {
         const focus_cell = command_context.target.adjacent_cell(true);
         if (!focus_cell) {
             return false;
@@ -741,7 +741,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__move_up(command_context) {
+    command_handler__move_up(command_context) {
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -761,7 +761,7 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__move_down(command_context) {
+    command_handler__move_down(command_context) {
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -782,9 +782,9 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__add_before(command_context) {
+    command_handler__add_before(command_context) {
         const cell = command_context.target;
-        const new_cell = await this.create_cell({
+        const new_cell = this.create_cell({
             before: cell.get_dom_extent().first,
         });
         new_cell.focus();
@@ -793,9 +793,9 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__add_after(command_context) {
+    command_handler__add_after(command_context) {
         const cell = command_context.target;
-        const new_cell = await this.create_cell({
+        const new_cell = this.create_cell({
             before: cell.get_dom_extent().last.nextSibling,
             parent: cell.parentElement,  // necessary if before is null
         });
@@ -805,12 +805,12 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__delete(command_context) {
+    command_handler__delete(command_context) {
         const cell = command_context.target;
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
         cell.remove_cell();
         if (!next_cell) {
-            next_cell = await this.create_cell();
+            next_cell = this.create_cell();
         }
         next_cell.focus();
         return true;
@@ -818,20 +818,20 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__toggle_editable(command_context) {
+    command_handler__toggle_editable(command_context) {
         this.set_editable(!this.editable);
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__undo(command_context) {
+    command_handler__undo(command_context) {
         return this.#global_change_manager?.perform_undo();
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
-    async command_handler__redo(command_context) {
+    command_handler__redo(command_context) {
         return this.#global_change_manager?.perform_redo();
     }
 }

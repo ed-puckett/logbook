@@ -38,13 +38,13 @@ export class ToolBarElement extends HTMLElement {
      *  @param {Object|null|undefined} options to be passed to set_target()
      *  @return {ToolBarElement} tool bar element
      */
-    static async create_for(target, options) {
+    static create_for(target, options) {
         const tool_bar = document.createElement(this.custom_element_name);
         if (!tool_bar) {
             throw new Error('error creating tool bar');
         }
         try {
-            await tool_bar.set_target(target, options);
+            tool_bar.set_target(target, options);
             return tool_bar;
         } catch (error) {
             tool_bar.remove();
@@ -95,7 +95,7 @@ export class ToolBarElement extends HTMLElement {
      *  }
      * A prior target, if any, is silently replaced.
      */
-    async set_target(target, options=null) {
+    set_target(target, options=null) {
         if (target !== null && typeof target !== 'undefined' && !(target instanceof EventTarget)) {
             throw new Error('target must be null, undefined, or and instance of EventTarget');
         }
@@ -105,7 +105,7 @@ export class ToolBarElement extends HTMLElement {
         } else {
             if (this.#target !== target) {
                 this.#target = target;
-                await this.#configure(options);
+                this.#configure(options);
             }
         }
     }
@@ -129,7 +129,7 @@ export class ToolBarElement extends HTMLElement {
     /** set up controls, etc according to options
      *  @param {Object|null|undefined} options from set_target()
      */
-    async #configure(options=null) {
+    #configure(options=null) {
         options ??= {};
         this.#reset_configuration();
         try {
@@ -140,7 +140,7 @@ export class ToolBarElement extends HTMLElement {
                         control_options = {};
                     }
 
-                    const control = await create(control_options.on);
+                    const control = create(control_options.on);
                     if ('initial' in control_options) {
                         setter(control, control_options.initial);
                     }
@@ -185,7 +185,7 @@ export class ToolBarElement extends HTMLElement {
 
     // === CONTROL HANDLING ===
 
-    async #create__editable(on_change_handler=null) {
+    #create__editable(on_change_handler=null) {
         const control = ToggleSwitchElement.create({
             parent: this,
             class:  this.constructor.toggle_switch__editable__class,
@@ -218,7 +218,7 @@ export class ToolBarElement extends HTMLElement {
     static #getter__editable(control)        { return control.get_state(); }
     static #setter__editable(control, value) { control.set_state(value); }
 
-    async #create__visible(on_change_handler=null) {
+    #create__visible(on_change_handler=null) {
         const control = ToggleSwitchElement.create({
             parent: this,
             class:  this.constructor.toggle_switch__visible__class,
@@ -252,7 +252,7 @@ export class ToolBarElement extends HTMLElement {
     static #getter__visible(control)        { return control.get_state(); }
     static #setter__visible(control, value) { control.set_state(value); }
 
-    async #create__autoeval(on_change_handler=null) {
+    #create__autoeval(on_change_handler=null) {
         const control = create_element({
             parent: this,
             tag: 'input',
@@ -272,7 +272,7 @@ export class ToolBarElement extends HTMLElement {
     static #getter__autoeval(control)        { return control.checked; }
     static #setter__autoeval(control, value) { control.checked = !!value; }
 
-    async #create__type(on_change_handler=null) {
+    #create__type(on_change_handler=null) {
         const control = create_element({
             parent: this,
             tag: 'select',
@@ -313,19 +313,19 @@ export class ToolBarElement extends HTMLElement {
         control.value = value;
     }
 
-    async #create__running(on_change_handler=null) {
+    #create__running(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler);
     }
     static #getter__running(control)        { return this.#indicator_control__getter(control); }
     static #setter__running(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__modified(on_change_handler=null) {
+    #create__modified(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler);
     }
     static #getter__modified(control)        { return this.#indicator_control__getter(control); }
     static #setter__modified(control, value) { this.#indicator_control__setter(control, value); }
 
-    async #create__run(on_change_handler=null) {
+    #create__run(on_change_handler=null) {
         //!!!
     }
     static #getter__run(control) {

@@ -274,10 +274,10 @@ export class EvalCellElement extends EditorCellElement {
         logbook_manager.emit_eval_state(this, false);
     }
 
-    async establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
+    establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
         if (!this._tool_bar) {
             let initial_type = this.input_type || undefined;
-            this._tool_bar = await ToolBarElement.create_for(this, {
+            this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
                 visible:  { initial: this.visible,  on: (event) => this.set_visible(event.target.get_state()) },
                 autoeval: false,
@@ -356,15 +356,15 @@ export class EvalCellElement extends EditorCellElement {
         return true;
     }
 
-    async command_handler__set_mode_markdown(command_context) {
+    command_handler__set_mode_markdown(command_context) {
         this.input_type = 'markdown';
         return true;
     }
-    async command_handler__set_mode_tex(command_context) {
+    command_handler__set_mode_tex(command_context) {
         this.input_type = 'tex';
         return true;
     }
-    async command_handler__set_mode_javascript(command_context) {
+    command_handler__set_mode_javascript(command_context) {
         this.input_type = 'javascript';
         return true;
     }
