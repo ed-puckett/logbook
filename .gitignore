@@ -1,8 +1,8 @@
-/dist/
+# /dist/
 # build/
+# /node_modules/
 .tmp/
 .nyc_output/
-/node_modules/
 coverage/
 public/index.html
 

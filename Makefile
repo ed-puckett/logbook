@@ -7,20 +7,19 @@ all: start
 SHELL = /bin/bash
 MAKEFLAGS += --no-print-directory
 
-BUILDDIR = ./build
+DISTDIR = ./dist
 
 SERVER_ADDRESS = 127.0.0.11
 SERVER_PORT    = 4320
 
 
 ######################################################################
-# build rules
 
 .DEFAULT: all
 
 .PHONY: clean
 clean: kill-server
-	@-rm -fr "$(BUILDDIR)" >/dev/null 2>&1 || true
+	@-rm -fr "$(DISTDIR)" >/dev/null 2>&1 || true
 
 .PHONY: full-clean
 full-clean: clean
@@ -29,17 +28,11 @@ full-clean: clean
 ./node_modules: ./package.json
 	npm install
 
-.PHONY: build-dir
-build-dir: ./node_modules README.md
-	mkdir -p "$(BUILDDIR)" && \
-	if [[ ! -e "$(BUILDDIR)/src"      ]]; then ( cd "$(BUILDDIR)" && ln -s ../src .      ); fi && \
-	if [[ ! -e "$(BUILDDIR)/lib"      ]]; then ( cd "$(BUILDDIR)" && ln -s ../lib .      ); fi && \
-	if [[ ! -e "$(BUILDDIR)/examples" ]]; then ( cd "$(BUILDDIR)" && ln -s ../examples . ); fi && \
-	rm -fr "$(BUILDDIR)/node_modules" && \
-	mkdir -p "$(BUILDDIR)/node_modules" && \
-	for d in chart.js d3 @hpcc-js d3-graphviz js-sha256 marked plotly.js-dist rxjs sprintf-js texzilla uuid; do cp -a "./node_modules/$${d}" "$(BUILDDIR)/node_modules/"; done && \
-	/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "$(BUILDDIR)/help.html"
-	cp src/favicon.ico "$(BUILDDIR)/"
+.PHONY: dist-dir
+dist-dir: ./node_modules README.md
+	mkdir -p "$(DISTDIR)" && \
+	npx webpack --config ./webpack.config.js
+	/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "$(DISTDIR)/help.html"
 
 .PHONY: demos-dir
 demos-dir:
@@ -60,8 +53,8 @@ test:
 # uses Linux commands: lsof, grep, cut
 # server uses python (version 3)
 .PHONY: server
-server: build-dir demos-dir
-	( cd "$(BUILDDIR)" && python ../build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
+server: dist-dir demos-dir
+	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
 .PHONY: kill-server
@@ -77,5 +70,5 @@ client:
 	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
-start: build-dir demos-dir
+start: dist-dir demos-dir
 	if ! lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN; then make server <&- >/dev/null 2>&1 & sleep 1; fi; make client

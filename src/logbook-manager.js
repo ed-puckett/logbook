@@ -216,9 +216,9 @@ document.body.innerText;//!!! force layout
     }
 
 
-    // === FILE: TO LOCATION URL ===
+    // === FILE: TO ASSET SERVER URL ===
 
-    convert_to_location_url(local_url) {
+    convert_to_asset_server_url(local_url) {
         if (typeof local_url === 'string') {
             local_url = new URL(local_url);
         }
@@ -226,10 +226,9 @@ document.body.innerText;//!!! force layout
             throw new Error('local_url must be a string or an instance of URL');
         }
 
-        if (this.#assets_server_root.protocol === 'file:') {
-            return local_url;
+        if (local_url.protocol !== 'file:' || this.#local_server_root.protocol !== 'file:' || this.#assets_server_root.protocol === 'file:') {
+            return local_url;  // nothing to do...
         }
-
 
         const {
             protocol,
@@ -238,9 +237,6 @@ document.body.innerText;//!!! force layout
             searchParams,
             hash,
         } = local_url;
-
-        if (local_url.protocol === 'file:' && current_script_url.startsWith('file:')) {
-        }
     }
 
 

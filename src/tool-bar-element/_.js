@@ -369,21 +369,18 @@ export class ToolBarElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-console.log('COMPONENT CONNECTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-console.log('COMPONENT DISCONNECTED', this);//!!!
         // event handlers have been disconnected, but just leave things alone so we can reconnect
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-console.log('COMPONENT ADOPTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
@@ -391,7 +388,6 @@ console.log('COMPONENT ADOPTED', this);//!!!
     //     Invoked each time one of the custom element's attributes is added, removed, or changed.
     //     Which attributes to notice change for is specified in a static get observedAttributes method
     attributeChangedCallback(name, old_value, new_value) {
-console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value });//!!!
         switch (name) {
         case 'xyzzy': {
             //!!!
