@@ -8,9 +8,13 @@ import {
     load_script,
 } from '../../lib/ui/dom-util.js';
 
+import {
+    assets_server_url,
+} from '../assets-server-url.js';
 
-await load_script(document.head, new URL('../../node_modules/@hpcc-js/wasm/dist/graphviz.umd.js',   current_script_url));
-await load_script(document.head, new URL('../../node_modules/d3-graphviz/build/d3-graphviz.min.js', current_script_url));
+
+await load_script(document.head, new URL('../../node_modules/@hpcc-js/wasm/dist/graphviz.umd.js',   assets_server_url(current_script_url)));
+await load_script(document.head, new URL('../../node_modules/d3-graphviz/build/d3-graphviz.min.js', assets_server_url(current_script_url)));
 
 export async function render(element_selector, dot, options) {
     const {

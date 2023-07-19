@@ -8,6 +8,10 @@ import {
     OpenPromise,
 } from '../../../../lib/sys/open-promise.js';
 
+import {
+    assets_server_url,
+} from '../../../assets-server-url.js';
+
 
 export class EvalWorker {
     /** @param {null|undefined|Object} options: {
@@ -27,7 +31,7 @@ export class EvalWorker {
                 enumerable: true,
             },
         });
-        this._worker = new Worker(new URL('./web-worker.js', current_script_url));
+        this._worker = new Worker(new URL('./web-worker.js', assets_server_url(current_script_url)));
         this._terminated = false;
         this._current_expression = undefined;
     }

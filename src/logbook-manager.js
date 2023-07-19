@@ -43,6 +43,10 @@ import {
     beep,
 } from '../lib/ui/beep.js';
 
+import {
+    assets_server_url,
+} from './assets-server-url.js';
+
 
 // Note: Each eval-cell maintains its own key_event_manager and key maps.
 // Therefore the (active) eval-cell is the locus for incoming commands,
@@ -144,8 +148,9 @@ class LogbookManager {
             await this.#initialize_document_structure();
 
             // add top-level stylesheets
-            create_stylesheet_link(document.head, new URL('style.css', current_script_url));
-            create_stylesheet_link(document.head, new URL('style-hacks.css', current_script_url));
+            const server_url = assets_server_url(current_script_url);
+            create_stylesheet_link(document.head, new URL('style.css',       server_url));
+            create_stylesheet_link(document.head, new URL('style-hacks.css', server_url));
 
             await this.#setup_csp();
             await this.#setup_controls();
@@ -216,30 +221,6 @@ document.body.innerText;//!!! force layout
     }
 
 
-    // === FILE: TO ASSET SERVER URL ===
-
-    convert_to_asset_server_url(local_url) {
-        if (typeof local_url === 'string') {
-            local_url = new URL(local_url);
-        }
-        if (!(local_url instanceof URL)) {
-            throw new Error('local_url must be a string or an instance of URL');
-        }
-
-        if (local_url.protocol !== 'file:' || this.#local_server_root.protocol !== 'file:' || this.#assets_server_root.protocol === 'file:') {
-            return local_url;  // nothing to do...
-        }
-
-        const {
-            protocol,
-            host,
-            pathname,
-            searchParams,
-            hash,
-        } = local_url;
-    }
-
-
     // === DOCUMENT UTILITIES ===
 
     static controls_element_id = 'controls';
@@ -253,14 +234,6 @@ document.body.innerText;//!!! force layout
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
-
-        const assets_server_script = document.querySelector('script');
-        if (!assets_server_script || !assets_server_script.src) {
-            throw new Error('no script for assets server found in document');
-        }
-        this.#assets_server_root = new URL('..', assets_server_script.src);  // assumes script src points to is one directory level below the server root
-        this.#local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
-
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));

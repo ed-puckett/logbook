@@ -502,7 +502,10 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/lib/sys/rxjs.js";  // save for later
+
+
 
 
 
@@ -516,7 +519,7 @@ const current_script_url = "file:///home/ed/code/logbook/lib/sys/rxjs.js";  // s
 // globalThis.rxjs) and deal with it that way
 // DOES NOT WORK: import * as rxjs from '../../node_modules/rxjs/dist/esm/index.js';
 
-const rxjs_url = new URL('../../node_modules/rxjs/dist/bundles/rxjs.umd.min.js', current_script_url);
+const rxjs_url = new URL('../../node_modules/rxjs/dist/bundles/rxjs.umd.min.js', (0,_src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url));
 await (0,_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, rxjs_url);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ ...globalThis.rxjs });
@@ -536,12 +539,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   g: () => (/* binding */ sprintf)
 /* harmony export */ });
 /* harmony import */ var _ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/lib/sys/sprintf.js";  // save for later
 
 
 
 
-await (0,_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/sprintf-js/dist/sprintf.min.js', current_script_url));
+
+
+await (0,_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/sprintf-js/dist/sprintf.min.js', (0,_src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));
 
 const sprintf = globalThis.sprintf;
 
@@ -1167,9 +1173,12 @@ __webpack_async_result__();
 /* harmony export */ });
 /* unused harmony export ConfirmDialog */
 /* harmony import */ var _dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
-/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1896);
-/* harmony import */ var _sys_open_promise_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4889);
+/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1896);
+/* harmony import */ var _sys_open_promise_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4889);
+/* harmony import */ var _src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/lib/ui/dialog/_.js";  // save for later
+
+
 
 
 
@@ -1180,7 +1189,7 @@ const current_script_url = "file:///home/ed/code/logbook/lib/ui/dialog/_.js";  /
 
 // === STYLESHEET AND POLYFILL ===
 
-(0,_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('./dialog.css', current_script_url));
+(0,_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('./dialog.css', (0,_src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));
 
 
 // === DIALOG BASE CLASS ===
@@ -1212,7 +1221,7 @@ class Dialog {
 
     constructor() {
         this._completed = false;
-        this._promise = new _sys_open_promise_js__WEBPACK_IMPORTED_MODULE_1__/* .OpenPromise */ .i();
+        this._promise = new _sys_open_promise_js__WEBPACK_IMPORTED_MODULE_2__/* .OpenPromise */ .i();
         this._promise.promise.finally(() => {
             try {
                 this._destroy_dialog_element();
@@ -1221,7 +1230,7 @@ class Dialog {
             }
         });
         try {
-            this._dialog_element_id = `dialog-${(0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_2__/* .uuidv4 */ .k$)()}`;
+            this._dialog_element_id = `dialog-${(0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_3__/* .uuidv4 */ .k$)()}`;
             this._create_dialog_element();
             _dialog_element_to_instance_map.set(this._dialog_element, this);
         } catch (error) {
@@ -1501,9 +1510,12 @@ function create_select_element(parent, id, opts) {
 /* harmony export */   yU: () => (/* binding */ insert_at)
 /* harmony export */ });
 /* unused harmony exports escape_unescaped_$, escape_for_html, make_string_literal, with_designMode, find_matching_ancestor, create_inline_stylesheet, create_script, create_inline_script, load_script_and_wait_for_condition, find_child_offset, save_current_selection, restore_selection, move_point_forward, move_point_reverse, move_point, is_text_direction_ltr */
-/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1896);
-/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1951);
+/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1896);
+/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1951);
+/* harmony import */ var _src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/lib/ui/dom-util.js";  // save for later
+
+
 
 
 
@@ -1812,7 +1824,7 @@ function create_element(options) {
         }
     }
     if (!element_id_specified) {
-        element.id = (0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__/* .generate_object_id */ .pk)();
+        element.id = (0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__/* .generate_object_id */ .pk)();
     }
 
     if (style) {
@@ -2056,7 +2068,7 @@ function _establish_script_promise_data(full_script_url) {
  *  or for error.
  */
 async function load_script(parent, script_url, attrs=null, permit_duplication=false) {
-    const full_script_url = new URL(script_url, current_script_url);
+    const full_script_url = new URL(script_url, (0,_src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__/* .assets_server_url */ .h)(current_script_url));
     const { promise_data, initial } = _establish_script_promise_data(full_script_url);
     if (initial) {
         let script_el;
@@ -2105,7 +2117,7 @@ async function load_script(parent, script_url, attrs=null, permit_duplication=fa
  *  or for error.
  */
 async function load_script_and_wait_for_condition(parent, script_url, condition_poll_fn, attrs=null, permit_duplication=false) {
-    const full_script_url = new URL(script_url, current_script_url);
+    const full_script_url = new URL(script_url, assets_server_url(current_script_url));
     const { promise_data, initial } = _establish_script_promise_data(full_script_url);
     if (initial) {
         let script_el;
@@ -2224,7 +2236,7 @@ function manage_selection_for_delete(updater) {
         };
         point = updater(point);
         if (!point) {
-            (0,_beep_js__WEBPACK_IMPORTED_MODULE_1__/* .beep */ .V)();  // there was nothing to delete
+            (0,_beep_js__WEBPACK_IMPORTED_MODULE_2__/* .beep */ .V)();  // there was nothing to delete
         } else {
             selection.setBaseAndExtent(point.node, point.offset, point.node, point.offset);
         }
@@ -3170,12 +3182,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   j: () => (/* binding */ MenuBar)
 /* harmony export */ });
 /* harmony import */ var _sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6092);
-/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1896);
+/* harmony import */ var _sys_uuid_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(1896);
 /* harmony import */ var _dom_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(984);
 /* harmony import */ var _key_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2050);
+/* harmony import */ var _src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__, _key_js__WEBPACK_IMPORTED_MODULE_2__]);
 ([_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__, _key_js__WEBPACK_IMPORTED_MODULE_2__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/lib/ui/menu/_.js";  // save for later
+
+
 
 
 
@@ -3536,7 +3551,7 @@ class MenuBar {
 
     #build_menuitem(label, toplevel=false) {
         // both items and collections are menuitem elements, but the collection also has children...
-        const id = (0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_3__/* .generate_object_id */ .pk)();
+        const id = (0,_sys_uuid_js__WEBPACK_IMPORTED_MODULE_4__/* .generate_object_id */ .pk)();
         const menuitem = (0,_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .create_element */ .T1)({
             tag: this.constructor.menuitem_element_tag_name,
             attrs: {
@@ -3719,7 +3734,7 @@ class MenuBar {
     // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
     static _init_static() {
         //!!! should we assume that the document is ready here?
-        (0,_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
+        (0,_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', (0,_src_assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__/* .assets_server_url */ .h)(current_script_url)));
     }
 }
 
@@ -3728,6 +3743,45 @@ MenuBar._init_static();
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
+
+/***/ }),
+
+/***/ 6973:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   h: () => (/* binding */ assets_server_url)
+/* harmony export */ });
+const current_script_url = "file:///home/ed/code/logbook/src/assets-server-url.js";  // save for later
+
+const assets_server_script = document.querySelector('script');
+if (!assets_server_script || !assets_server_script.src) {
+    throw new Error('no script for assets server found in document');
+}
+const assets_server_root = new URL('..', assets_server_script.src);  // assumes script src points to is one directory level below the server root
+const local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
+
+
+function assets_server_url(local_url) {
+    if (typeof local_url === 'string') {
+        local_url = new URL(local_url);
+    }
+    if (!(local_url instanceof URL)) {
+        throw new Error('local_url must be a string or an instance of URL');
+    }
+
+    if ( local_url.protocol !== 'file:' ||
+         local_server_root.protocol !== 'file:' ||
+         assets_server_root.protocol === 'file:' ||
+         !local_url.href.startsWith(local_server_root.href) ) {
+        return local_url;  // nothing to do...
+    } else {
+        const relative = local_url.href.slice(local_server_root.href.length);
+        return new URL(assets_server_root.href + relative);
+    }
+}
+
 
 /***/ }),
 
@@ -3741,14 +3795,17 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
 /* harmony import */ var _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
-/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9886);
+/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(9886);
 /* harmony import */ var _lib_ui_key_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2050);
 /* harmony import */ var _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3688);
 /* harmony import */ var _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3653);
-/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(1951);
+/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(1951);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _lib_ui_key_js__WEBPACK_IMPORTED_MODULE_2__, _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_3__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__]);
 ([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _lib_ui_key_js__WEBPACK_IMPORTED_MODULE_2__, _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_3__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/src/editor-cell-element/_.js";  // save for later
+
+
 
 
 
@@ -3773,7 +3830,7 @@ class EditorCellElement extends HTMLElement {
 
     constructor() {
         super();
-        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_5__/* .EventListenerManager */ .w();
+        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_6__/* .EventListenerManager */ .w();
 
         this.#key_event_manager = new _lib_ui_key_js__WEBPACK_IMPORTED_MODULE_2__/* .KeyEventManager */ .Qm(this, this.#command_observer.bind(this));
         this.#command_bindings  = this.get_command_bindings();
@@ -4030,12 +4087,12 @@ class EditorCellElement extends HTMLElement {
         this.perform_command(command_context)
             .then(success => {
                 if (!success) {
-                    (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_6__/* .beep */ .V)();
+                    (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__/* .beep */ .V)();
                 }
             })
             .catch(error => {
                 console.error('error processing command', command_context, error);
-                (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_6__/* .beep */ .V)();
+                (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_7__/* .beep */ .V)();
             });
     }
 
@@ -4174,7 +4231,6 @@ class EditorCellElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-console.log('COMPONENT CONNECTED', this);//!!!
         this.#connect_focus_listeners();
         this.#key_event_manager.attach();
     }
@@ -4182,7 +4238,6 @@ console.log('COMPONENT CONNECTED', this);//!!!
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-console.log('COMPONENT DISCONNECTED', this);//!!!
         this.#disconnect_focus_listeners();
         this.#key_event_manager.detach();
     }
@@ -4190,7 +4245,6 @@ console.log('COMPONENT DISCONNECTED', this);//!!!
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-console.log('COMPONENT ADOPTED', this);//!!!
         this.#connect_focus_listeners();
         this.#key_event_manager.attach();
     }
@@ -4199,7 +4253,6 @@ console.log('COMPONENT ADOPTED', this);//!!!
     //     Invoked each time one of the custom element's attributes is added, removed, or changed.
     //     Which attributes to notice change for is specified in a static get observedAttributes method
     attributeChangedCallback(name, old_value, new_value) {
-console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value });//!!!
         switch (name) {
         case 'xyzzy': {
             //!!!
@@ -4222,7 +4275,7 @@ console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value })
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
         //!!! should we assume that the document is ready here?
-        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
+        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_5__/* .assets_server_url */ .h)(current_script_url)));
     }
 }
 
@@ -4246,11 +4299,14 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
 /* harmony import */ var _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3088);
 /* harmony import */ var _evaluator_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9026);
-/* harmony import */ var _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(4429);
+/* harmony import */ var _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(4429);
 /* harmony import */ var _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3653);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2__, _evaluator_js__WEBPACK_IMPORTED_MODULE_3__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__]);
 ([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2__, _evaluator_js__WEBPACK_IMPORTED_MODULE_3__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_4__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/src/eval-cell-element/_.js";  // save for later
+
+
 
 
 
@@ -4465,7 +4521,7 @@ class EvalCellElement extends _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2
         // allocate the evaluator, store it, then eval
         const evaluator = new evaluator_class(this, output_element, eval_context);
 
-        this.#evaluator_stoppable = new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_5__/* .Stoppable */ .X(evaluator);  // already cleared by this.stop() above
+        this.#evaluator_stoppable = new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_6__/* .Stoppable */ .X(evaluator);  // already cleared by this.stop() above
         this.#evaluator_foreground = true;
         this._tool_bar?.set_for('running', true);
         _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.emit_eval_state(this, true);
@@ -4617,7 +4673,7 @@ class EvalCellElement extends _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_2
         };
         globalThis.customElements.define(this.custom_element_name, this, options);
         //!!! should we assume that the document is ready here?
-        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
+        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_5__/* .assets_server_url */ .h)(current_script_url)));
     }
 }
 
@@ -4927,7 +4983,6 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_eva
 
 
 await _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.initialize();
-console.log('>>>', 'import.meta.url', "file:///home/ed/code/logbook/src/init.js", 'location.pathname', location.pathname);//!!!
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
@@ -4951,10 +5006,13 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(3688);
 /* harmony import */ var _lib_sys_fs_interface_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(345);
 /* harmony import */ var _settings_dialog_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(9713);
-/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(1951);
+/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(1951);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_editor_cell_element_js__WEBPACK_IMPORTED_MODULE_0__, _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_2__, _lib_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_3__, _lib_ui_menu_js__WEBPACK_IMPORTED_MODULE_5__, _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_6__, _settings_dialog_js__WEBPACK_IMPORTED_MODULE_8__]);
 ([_editor_cell_element_js__WEBPACK_IMPORTED_MODULE_0__, _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__, _tool_bar_element_js__WEBPACK_IMPORTED_MODULE_2__, _lib_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_3__, _lib_ui_menu_js__WEBPACK_IMPORTED_MODULE_5__, _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_6__, _settings_dialog_js__WEBPACK_IMPORTED_MODULE_8__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/src/logbook-manager.js";  // save for later
+
+
 
 
 
@@ -5077,8 +5135,9 @@ class LogbookManager {
             await this.#initialize_document_structure();
 
             // add top-level stylesheets
-            (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
-            (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style-hacks.css', current_script_url));
+            const server_url = (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_9__/* .assets_server_url */ .h)(current_script_url);
+            (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css',       server_url));
+            (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_stylesheet_link */ .KP)(document.head, new URL('style-hacks.css', server_url));
 
             await this.#setup_csp();
             await this.#setup_controls();
@@ -5149,34 +5208,6 @@ document.body.innerText;//!!! force layout
     }
 
 
-    // === FILE: TO LOCATION URL ===
-
-    convert_to_location_url(local_url) {
-        if (typeof local_url === 'string') {
-            local_url = new URL(local_url);
-        }
-        if (!(local_url instanceof URL)) {
-            throw new Error('local_url must be a string or an instance of URL');
-        }
-
-        if (this.#assets_server_root.protocol === 'file:') {
-            return local_url;
-        }
-
-
-        const {
-            protocol,
-            host,
-            pathname,
-            searchParams,
-            hash,
-        } = local_url;
-
-        if (local_url.protocol === 'file:' && current_script_url.startsWith('file:')) {
-        }
-    }
-
-
     // === DOCUMENT UTILITIES ===
 
     static controls_element_id = 'controls';
@@ -5190,14 +5221,6 @@ document.body.innerText;//!!! force layout
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
-
-        const assets_server_script = document.querySelector('script');
-        if (!assets_server_script || !assets_server_script.src) {
-            throw new Error('no script for assets server found in document');
-        }
-        this.#assets_server_root = new URL('..', assets_server_script.src);  // assumes script src points to is one directory level below the server root
-        this.#local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
-
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));
@@ -5319,9 +5342,9 @@ recents
     #menubar_commands_observer(command_context) {
         const target = this.active_cell;
         if (!target) {
-            (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_9__/* .beep */ .V)();
+            (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_10__/* .beep */ .V)();
         } else if (!(target instanceof _editor_cell_element_js__WEBPACK_IMPORTED_MODULE_0__/* .EditorCellElement */ .W)) {
-            (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_9__/* .beep */ .V)();
+            (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_10__/* .beep */ .V)();
         } else {
             // set target in command_context to be the active cell
             const updated_command_context = {
@@ -6140,12 +6163,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   k: () => (/* binding */ Chart)
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/chart.js";  // save for later
 
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/chart.js/dist/Chart.bundle.min.js', current_script_url));  // defines globalThis.Chart
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/chart.js/dist/Chart.bundle.min.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));  // defines globalThis.Chart
 
 const Chart = globalThis.Chart;
 
@@ -6163,12 +6189,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   d3: () => (/* binding */ d3)
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/d3.js";  // save for later
 
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/d3/dist/d3.min.js', current_script_url));  // defines globalThis.d3
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/d3/dist/d3.min.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));  // defines globalThis.d3
 
 const d3 = globalThis.d3;
 
@@ -6307,6 +6336,7 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */ });
 /* harmony import */ var _d3_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5717);
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_d3_js__WEBPACK_IMPORTED_MODULE_0__]);
 _d3_js__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/graphviz.js";  // save for later
@@ -6316,8 +6346,10 @@ const current_script_url = "file:///home/ed/code/logbook/src/renderer/graphviz.j
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .load_script */ .h0)(document.head, new URL('../../node_modules/@hpcc-js/wasm/dist/graphviz.umd.js',   current_script_url));
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .load_script */ .h0)(document.head, new URL('../../node_modules/d3-graphviz/build/d3-graphviz.min.js', current_script_url));
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .load_script */ .h0)(document.head, new URL('../../node_modules/@hpcc-js/wasm/dist/graphviz.umd.js',   (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_2__/* .assets_server_url */ .h)(current_script_url)));
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .load_script */ .h0)(document.head, new URL('../../node_modules/d3-graphviz/build/d3-graphviz.min.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_2__/* .assets_server_url */ .h)(current_script_url)));
 
 async function render(element_selector, dot, options) {
     const {
@@ -6422,21 +6454,24 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   f: () => (/* binding */ JavaScriptRenderer)
 /* harmony export */ });
-/* harmony import */ var _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(53);
-/* harmony import */ var _renderer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3393);
-/* harmony import */ var _eval_worker_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(7783);
-/* harmony import */ var _output_context_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(266);
-/* harmony import */ var _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(4429);
-/* harmony import */ var _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6227);
-/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2724);
-/* harmony import */ var _theme_settings_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7098);
-/* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(984);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__, _renderer_js__WEBPACK_IMPORTED_MODULE_1__, _output_context_js__WEBPACK_IMPORTED_MODULE_2__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_3__, _settings_js__WEBPACK_IMPORTED_MODULE_4__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_5__]);
-([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__, _renderer_js__WEBPACK_IMPORTED_MODULE_1__, _output_context_js__WEBPACK_IMPORTED_MODULE_2__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_3__, _settings_js__WEBPACK_IMPORTED_MODULE_4__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_5__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6973);
+/* harmony import */ var _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(53);
+/* harmony import */ var _renderer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3393);
+/* harmony import */ var _eval_worker_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7783);
+/* harmony import */ var _output_context_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(266);
+/* harmony import */ var _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(4429);
+/* harmony import */ var _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6227);
+/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2724);
+/* harmony import */ var _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(7098);
+/* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(984);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__]);
+([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/javascript-renderer/_.js";  // save for later
 
+
+
 const lib_dir_path = '../../../lib/';//!!!
-const lib_dir_url = new URL(lib_dir_path, current_script_url);
+const lib_dir_url = new URL(lib_dir_path, (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__/* .assets_server_url */ .h)(current_script_url));
 
 
 // ======================================================================
@@ -6504,7 +6539,7 @@ const AsyncGeneratorFunction = Object.getPrototypeOf(async function* () {}).cons
 
 
 
-class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Renderer */ .T {
+class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_2__/* .Renderer */ .T {
     static type = 'javascript';
 
     // options: { style?: Object, eval_context?: Object, inline?: Boolean }
@@ -6514,7 +6549,7 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
     async render(output_context, code, options=null) {
         const {
             style,
-            eval_context = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .logbook_manager */ .N.global_eval_context,
+            eval_context = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .logbook_manager */ .N.global_eval_context,
             inline,
         } = (options ?? {});
 
@@ -6528,7 +6563,7 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
                 },
                 style,
             });
-            output_context = new _output_context_js__WEBPACK_IMPORTED_MODULE_2__/* .OutputContext */ .l(parent);
+            output_context = new _output_context_js__WEBPACK_IMPORTED_MODULE_4__/* .OutputContext */ .l(parent);
         }
 
         const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, output_context);
@@ -6586,8 +6621,8 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
         }
 
         async function create_worker(options) {
-            const worker = new _eval_worker_js__WEBPACK_IMPORTED_MODULE_7__/* .EvalWorker */ .V(options);
-            self.add_stoppable(new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_8__/* .Stoppable */ .X(worker, worker => worker.terminate()));
+            const worker = new _eval_worker_js__WEBPACK_IMPORTED_MODULE_3__/* .EvalWorker */ .V(options);
+            self.add_stoppable(new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_9__/* .Stoppable */ .X(worker, worker => worker.terminate()));
             return worker;
         }
 
@@ -6601,24 +6636,24 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
         }
 
         async function delay_ms(ms) {
-            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_6__/* .delay_ms */ .li)(ms);
+            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__/* .delay_ms */ .li)(ms);
         }
 
         async function next_tick() {
-            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_6__/* .next_tick */ .rf)();
+            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__/* .next_tick */ .rf)();
         }
 
         async function next_micro_tick() {
-            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_6__/* .next_micro_tick */ .pX)();
+            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__/* .next_micro_tick */ .pX)();
         }
 
         async function sleep(s) {
-            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_6__/* .delay_ms */ .li)(1000*s);
+            return (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__/* .delay_ms */ .li)(1000*s);
         }
 
         async function render(type, value, options=null) {
             const renderer = output_context.renderer_for_type(type);
-            self.add_stoppable(new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_8__/* .Stoppable */ .X(renderer));
+            self.add_stoppable(new _lib_sys_stoppable_js__WEBPACK_IMPORTED_MODULE_9__/* .Stoppable */ .X(renderer));
             return output_context.invoke_renderer(renderer, value, options)
                   .catch(error => output_context.invoke_renderer_for_type('error', error));
         }
@@ -6664,7 +6699,7 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
                 if (typeof format !== 'string') {
                     format = format.toString();
                 }
-                const text = (0,_lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_3__/* .sprintf */ .g)(format, ...args);
+                const text = (0,_lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__/* .sprintf */ .g)(format, ...args);
                 return render_text(text).
                     catch(error => output_context.invoke_renderer_for_type('error', error));
             }
@@ -6701,9 +6736,9 @@ class JavaScriptRenderer extends _renderer_js__WEBPACK_IMPORTED_MODULE_1__/* .Re
 
         const ephemeral_eval_context = {
             // external
-            settings:        (0,_settings_js__WEBPACK_IMPORTED_MODULE_4__/* .get_settings */ .oj)(),
-            theme_settings:  (0,_theme_settings_js__WEBPACK_IMPORTED_MODULE_5__/* .get_theme_settings */ .VI)(),
-            sprintf:         AIS(_lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_3__/* .sprintf */ .g),
+            settings:        (0,_settings_js__WEBPACK_IMPORTED_MODULE_6__/* .get_settings */ .oj)(),
+            theme_settings:  (0,_theme_settings_js__WEBPACK_IMPORTED_MODULE_7__/* .get_theme_settings */ .VI)(),
+            sprintf:         AIS(_lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__/* .sprintf */ .g),
             // functions defined above
             is_stopped,
             create_worker:   AIS(create_worker),
@@ -6747,9 +6782,12 @@ __webpack_async_result__();
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   V: () => (/* binding */ EvalWorker)
 /* harmony export */ });
-/* harmony import */ var _lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1896);
-/* harmony import */ var _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4889);
+/* harmony import */ var _lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1896);
+/* harmony import */ var _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4889);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/javascript-renderer/eval-worker/_.js";  // save for later
+
+
 
 
 
@@ -6770,11 +6808,11 @@ class EvalWorker {
 
         Object.defineProperties(this, {
             id: {
-                value: (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__/* .generate_object_id */ .pk)(),
+                value: (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__/* .generate_object_id */ .pk)(),
                 enumerable: true,
             },
         });
-        this._worker = new Worker(new URL('./web-worker.js', current_script_url));
+        this._worker = new Worker(new URL('./web-worker.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__/* .assets_server_url */ .h)(current_script_url)));
         this._terminated = false;
         this._current_expression = undefined;
     }
@@ -6800,7 +6838,7 @@ class EvalWorker {
             throw new Error(`eval worker ${this.id}: an expression evaluation is already in process`);
         }
 
-        const result_promise = new _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_1__/* .OpenPromise */ .i();
+        const result_promise = new _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_2__/* .OpenPromise */ .i();
         let result_promise_fulfilled = false;
 
         const handle_done = () => {
@@ -6814,7 +6852,7 @@ class EvalWorker {
             }
         };
 
-        const expression_id = (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__/* .generate_object_id */ .pk)();
+        const expression_id = (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__/* .generate_object_id */ .pk)();
 
         const worker_message = {
             request: 'eval',
@@ -6904,7 +6942,7 @@ class EvalWorker {
             }
         }
 
-        const expression_id = (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_0__/* .generate_object_id */ .pk)();
+        const expression_id = (0,_lib_sys_uuid_js__WEBPACK_IMPORTED_MODULE_1__/* .generate_object_id */ .pk)();
 
         const worker_message = {
             request: 'stream_eval',
@@ -6958,7 +6996,7 @@ class EvalWorker {
                             }
                             return Promise.resolve({ done: true });
                         } else {
-                            const new_promise = new _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_1__/* .OpenPromise */ .i();
+                            const new_promise = new _lib_sys_open_promise_js__WEBPACK_IMPORTED_MODULE_2__/* .OpenPromise */ .i();
                             pending_promises.push(new_promise);
                             return new_promise.promise;
                         }
@@ -7142,12 +7180,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   T: () => (/* binding */ marked)
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/marked.js";  // save for later
 
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/marked/marked.min.js', current_script_url));
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/marked/marked.min.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));
 
 const marked = globalThis.marked;
 
@@ -7211,12 +7252,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   N: () => (/* binding */ Plotly)
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/plotly.js";  // save for later
 
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/plotly.js-dist/plotly.js', current_script_url));  // defines globalThis.Plotly
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/plotly.js-dist/plotly.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));  // defines globalThis.Plotly
 
 const Plotly = globalThis.Plotly;
 
@@ -7392,12 +7436,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   w: () => (/* binding */ TeXZilla)
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/texzilla.js";  // save for later
 
 
 
 
-await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/texzilla/TeXZilla.js', current_script_url));  // defines globalThis.TeXZilla
+
+
+await (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .load_script */ .h0)(document.head, new URL('../../node_modules/texzilla/TeXZilla.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));  // defines globalThis.TeXZilla
 
 const TeXZilla = globalThis.TeXZilla;
 
@@ -7416,9 +7463,10 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */ });
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
 /* harmony import */ var _lib_ui_dialog_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7569);
-/* harmony import */ var _lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2007);
+/* harmony import */ var _lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2007);
 /* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2724);
-/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(1951);
+/* harmony import */ var _lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1951);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_settings_js__WEBPACK_IMPORTED_MODULE_2__]);
 _settings_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 const current_script_url = "file:///home/ed/code/logbook/src/settings-dialog/_.js";  // save for later
@@ -7434,8 +7482,10 @@ const current_script_url = "file:///home/ed/code/logbook/src/settings-dialog/_.j
 
 
 
+
+
 // add the stylesheet
-const stylesheet_url = new URL('./settings-dialog.css', current_script_url);
+const stylesheet_url = new URL('./settings-dialog.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__/* .assets_server_url */ .h)(current_script_url));
 (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, stylesheet_url);
 
 
@@ -7555,9 +7605,9 @@ class SettingsDialog extends _lib_ui_dialog_js__WEBPACK_IMPORTED_MODULE_1__/* .D
                 }
 
                 if (type === 'checkbox') {
-                    control.checked = (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_3__/* .get_obj_path */ .Z)(current_settings, settings_path);
+                    control.checked = (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_4__/* .get_obj_path */ .Z)(current_settings, settings_path);
                 } else {
-                    control.value = (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_3__/* .get_obj_path */ .Z)(current_settings, settings_path);
+                    control.value = (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_4__/* .get_obj_path */ .Z)(current_settings, settings_path);
                 }
 
                 const update_handler = async (event) => {
@@ -7572,7 +7622,7 @@ class SettingsDialog extends _lib_ui_dialog_js__WEBPACK_IMPORTED_MODULE_1__/* .D
                             if (existing_control instanceof HTMLInputElement && existing_control.type === 'text') {
                                 existing_control.select();
                             }
-                            await (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_4__/* .beep */ .V)();
+                            await (0,_lib_ui_beep_js__WEBPACK_IMPORTED_MODULE_5__/* .beep */ .V)();
                         } else {
                             await _lib_ui_dialog_js__WEBPACK_IMPORTED_MODULE_1__/* .AlertDialog */ .aR.run(`settings update failed: ${error_message}`);
                         }
@@ -7586,7 +7636,7 @@ class SettingsDialog extends _lib_ui_dialog_js__WEBPACK_IMPORTED_MODULE_1__/* .D
                             return;
                         }
                     }
-                    (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_3__/* .set_obj_path */ .$)(current_settings, settings_path, (convert_to_number ? +value : value));
+                    (0,_lib_sys_obj_path_js__WEBPACK_IMPORTED_MODULE_4__/* .set_obj_path */ .$)(current_settings, settings_path, (convert_to_number ? +value : value));
 
                     try {
                         await (0,_settings_js__WEBPACK_IMPORTED_MODULE_2__/* .update_settings */ .ZA)(current_settings)
@@ -8068,9 +8118,12 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* unused harmony exports theme_settings_updated_events, update_document_dark_state */
 /* harmony import */ var _lib_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6092);
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_lib_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__]);
 _lib_sys_subscribable_js__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 const current_script_url = "file:///home/ed/code/logbook/src/theme-settings/_.js";  // save for later
+
+
 
 
 
@@ -8101,7 +8154,7 @@ const theme_settings_updated_events = new _lib_sys_subscribable_js__WEBPACK_IMPO
 // === DOCUMENT DARK THEME SETTING ===
 
 // add theme-settings/theme-colors.css stylesheet
-const theme_colors_stylesheet_url = new URL('theme-colors.css', current_script_url);
+const theme_colors_stylesheet_url = new URL('theme-colors.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_2__/* .assets_server_url */ .h)(current_script_url));
 (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_1__/* .create_stylesheet_link */ .KP)(document.head, theme_colors_stylesheet_url);
 
 const dark_mode_class = 'dark';
@@ -8128,9 +8181,12 @@ __webpack_async_result__();
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   O: () => (/* binding */ ToggleSwitchElement)
 /* harmony export */ });
-/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9886);
+/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9886);
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6973);
 const current_script_url = "file:///home/ed/code/logbook/src/toggle-switch-element/_.js";  // save for later
+
+
 
 
 
@@ -8168,7 +8224,7 @@ class ToggleSwitchElement extends HTMLElement {
         super();
 //        this.setAttribute('role', 'switch');
 //        this.setAttribute('aria-checked', this.get_state());  // ensure 'aria-checked' is set
-        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_1__/* .EventListenerManager */ .w();
+        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_2__/* .EventListenerManager */ .w();
         this.#event_listener_manager.add(this, 'click', (event) => {
             this.set_state();
         });
@@ -8197,21 +8253,18 @@ class ToggleSwitchElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-console.log('COMPONENT CONNECTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-console.log('COMPONENT DISCONNECTED', this);//!!!
         // event handlers have been disconnected, but just leave things alone so we can reconnect
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-console.log('COMPONENT ADOPTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
@@ -8219,7 +8272,6 @@ console.log('COMPONENT ADOPTED', this);//!!!
     //     Invoked each time one of the custom element's attributes is added, removed, or changed.
     //     Which attributes to notice change for is specified in a static get observedAttributes method
     attributeChangedCallback(name, old_value, new_value) {
-console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value });//!!!
         switch (name) {
         case 'xyzzy': {
             //!!!
@@ -8242,7 +8294,7 @@ console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value })
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
         //!!! should we assume that the document is ready here?
-        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
+        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_0__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_1__/* .assets_server_url */ .h)(current_script_url)));
     }
 }
 
@@ -8261,12 +8313,15 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   d: () => (/* binding */ ToolBarElement)
 /* harmony export */ });
 /* harmony import */ var _toggle_switch_element_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2358);
-/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9886);
+/* harmony import */ var _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9886);
 /* harmony import */ var _evaluator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9026);
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(984);
+/* harmony import */ var _assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6973);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_evaluator_js__WEBPACK_IMPORTED_MODULE_1__]);
 _evaluator_js__WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 const current_script_url = "file:///home/ed/code/logbook/src/tool-bar-element/_.js";  // save for later
+
+
 
 
 
@@ -8309,7 +8364,7 @@ class ToolBarElement extends HTMLElement {
     constructor() {
         super();
         this.#target = null;
-        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_3__/* .EventListenerManager */ .w();
+        this.#event_listener_manager = new _lib_sys_event_listener_manager_js__WEBPACK_IMPORTED_MODULE_4__/* .EventListenerManager */ .w();
         this.#reset_configuration();
         this.addEventListener('pointerdown', (event) => {
             this.#target.focus();
@@ -8627,21 +8682,18 @@ class ToolBarElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-console.log('COMPONENT CONNECTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-console.log('COMPONENT DISCONNECTED', this);//!!!
         // event handlers have been disconnected, but just leave things alone so we can reconnect
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-console.log('COMPONENT ADOPTED', this);//!!!
         this.#event_listener_manager.reattach();
     }
 
@@ -8649,7 +8701,6 @@ console.log('COMPONENT ADOPTED', this);//!!!
     //     Invoked each time one of the custom element's attributes is added, removed, or changed.
     //     Which attributes to notice change for is specified in a static get observedAttributes method
     attributeChangedCallback(name, old_value, new_value) {
-console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value });//!!!
         switch (name) {
         case 'xyzzy': {
             //!!!
@@ -8672,7 +8723,7 @@ console.log('COMPONENT ATTRIBUTE CHANGED', this, { name, old_value, new_value })
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
         //!!! should we assume that the document is ready here?
-        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_2__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', current_script_url));
+        (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_2__/* .create_stylesheet_link */ .KP)(document.head, new URL('style.css', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_3__/* .assets_server_url */ .h)(current_script_url)));
     }
 }
 

@@ -18,6 +18,10 @@ import {
     create_stylesheet_link,
 } from '../../lib/ui/dom-util.js';
 
+import {
+    assets_server_url,
+} from '../assets-server-url.js';
+
 
 export class ToolBarElement extends HTMLElement {
     static custom_element_name = 'tool-bar';
@@ -410,7 +414,7 @@ export class ToolBarElement extends HTMLElement {
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
         //!!! should we assume that the document is ready here?
-        create_stylesheet_link(document.head, new URL('style.css', current_script_url));
+        create_stylesheet_link(document.head, new URL('style.css', assets_server_url(current_script_url)));
     }
 }
 

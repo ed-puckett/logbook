@@ -35,6 +35,10 @@ import {
     beep,
 } from '../../lib/ui/beep.js';
 
+import {
+    assets_server_url,
+} from '../assets-server-url.js';
+
 
 export class EditorCellElement extends HTMLElement {
     static custom_element_name = 'editor-cell';
@@ -489,7 +493,7 @@ export class EditorCellElement extends HTMLElement {
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
         //!!! should we assume that the document is ready here?
-        create_stylesheet_link(document.head, new URL('style.css', current_script_url));
+        create_stylesheet_link(document.head, new URL('style.css', assets_server_url(current_script_url)));
     }
 }
 

@@ -27,6 +27,10 @@ import {
     ToolBarElement,
 } from '../tool-bar-element/_.js';
 
+import {
+    assets_server_url,
+} from '../assets-server-url.js';
+
 
 export class EvalCellElement extends EditorCellElement {
     static custom_element_name = 'eval-cell';
@@ -380,7 +384,7 @@ export class EvalCellElement extends EditorCellElement {
         };
         globalThis.customElements.define(this.custom_element_name, this, options);
         //!!! should we assume that the document is ready here?
-        create_stylesheet_link(document.head, new URL('style.css', current_script_url));
+        create_stylesheet_link(document.head, new URL('style.css', assets_server_url(current_script_url)));
     }
 }
 

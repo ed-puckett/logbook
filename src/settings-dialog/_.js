@@ -36,9 +36,13 @@ import {
     beep,
 } from '../../lib/ui/beep.js';
 
+import {
+    assets_server_url,
+} from '../assets-server-url.js';
+
 
 // add the stylesheet
-const stylesheet_url = new URL('./settings-dialog.css', current_script_url);
+const stylesheet_url = new URL('./settings-dialog.css', assets_server_url(current_script_url));
 create_stylesheet_link(document.head, stylesheet_url);
 
 
