@@ -43,6 +43,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         http.server.SimpleHTTPRequestHandler.end_headers(self)
 
+# The following avoids the problem where the server is still holding the socket open after exit:
+# See: https://zaiste.net/posts/python_simplehttpserver_not_closing_port/
+socketserver.TCPServer.allow_reuse_address = True
+
 with socketserver.TCPServer((ADDR, int(PORT)), Handler) as httpd:
     print("started server at", ADDR, PORT)
     httpd.serve_forever()

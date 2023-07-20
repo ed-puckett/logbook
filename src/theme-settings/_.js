@@ -4,13 +4,21 @@ import {
     Subscribable,
 } from '../../lib/sys/subscribable.js';
 
+/*!!!
 import {
     create_stylesheet_link,
 } from '../../lib/ui/dom-util.js';
+*/
 
 import {
     assets_server_url,
 } from '../assets-server-url.js';
+
+
+// add theme-settings/theme-colors.css stylesheet
+//const theme_colors_stylesheet_url = new URL('theme-colors.css', assets_server_url(current_script_url));
+//create_stylesheet_link(document.head, theme_colors_stylesheet_url);
+import './theme-colors.css';  // webpack implementation
 
 
 // === THEME SETTINGS INTERFACE ===
@@ -35,10 +43,6 @@ export const theme_settings_updated_events = new Subscribable();
 
 
 // === DOCUMENT DARK THEME SETTING ===
-
-// add theme-settings/theme-colors.css stylesheet
-const theme_colors_stylesheet_url = new URL('theme-colors.css', assets_server_url(current_script_url));
-create_stylesheet_link(document.head, theme_colors_stylesheet_url);
 
 const dark_mode_class = 'dark';
 
