@@ -31,7 +31,7 @@ export class EvalWorker {
                 enumerable: true,
             },
         });
-        this._worker = new Worker(new URL('./web-worker.js', assets_server_url(current_script_url)));
+        this._worker = new Worker(this.constructor.#worker_code_uri);
         this._terminated = false;
         this._current_expression = undefined;
     }
@@ -236,4 +236,31 @@ export class EvalWorker {
             this._worker.onmessageerror = undefined;
         }
     }
+
+    // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
+    static async _async_init_static() {
+        // create a data: URI for the web worker code so that we avoid cross-origin access errors
+        const worker_path = './web-worker.js';
+        const worker_url  = new URL(worker_path, assets_server_url(current_script_url));
+        return fetch(worker_url)
+            .then(res => res.text())
+            .catch(error => {
+                throw new Error('unable to fetch worker code');
+            })
+            .then(code => {
+                const preamble = `\
+{
+    const original_importScripts = globalThis.importScripts;
+    globalThis.importScripts = (...urls) => {
+        return original_importScripts( ...urls.map(url => new URL(url, "${worker_url.href}")) );
+    };
 }
+`;
+                this.#worker_code_uri = `data:text/javascript,${encodeURIComponent(preamble + code)}`;
+            });
+    }
+    static #worker_code_uri;
+}
+
+// Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
+await EvalWorker._async_init_static();

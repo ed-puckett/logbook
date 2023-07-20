@@ -172,7 +172,6 @@ class LogbookManager {
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
             // initialization is complete.
-document.body.innerText;//!!! force layout
             this.#global_change_manager = new ChangeManager(this.content_element, {
                 neutral_changes_observer: this.#neutral_changes_observer.bind(this),
             });

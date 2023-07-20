@@ -1839,7 +1839,7 @@ function create_element(options) {
 }
 
 /** create or update a child text node of the given element
- *  @param {HTMLElement} element  //!!! might be sufficient to be a Node
+ *  @param {HTMLElement} element  //!!! may be sufficient to be a Node
  *  @param {any} text to be contained in the new text node
  *  @param {Object|undefined|null} options: {
  *             before?: null|Node,  // child node or element before which to insert; append if null or undefined
@@ -5157,7 +5157,6 @@ class LogbookManager {
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
             // initialization is complete.
-document.body.innerText;//!!! force layout
             this.#global_change_manager = new _lib_ui_change_manager_js__WEBPACK_IMPORTED_MODULE_6__/* .ChangeManager */ .a(this.content_element, {
                 neutral_changes_observer: this.#neutral_changes_observer.bind(this),
             });
@@ -6034,7 +6033,7 @@ class OutputContext {
      *  @param {Object} options for renderer
      *  @return {any} return value from renderer
      */
-    invoke_renderer_for_type(type, value, options=null) {
+    async invoke_renderer_for_type(type, value, options=null) {
         const renderer = this.renderer_for_type(type);
         return this.invoke_renderer(renderer, value, options);
     }
@@ -6462,8 +6461,8 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2724);
 /* harmony import */ var _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(7098);
 /* harmony import */ var _lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(984);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__]);
-([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _eval_worker_js__WEBPACK_IMPORTED_MODULE_3__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__]);
+([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_1__, _renderer_js__WEBPACK_IMPORTED_MODULE_2__, _eval_worker_js__WEBPACK_IMPORTED_MODULE_3__, _output_context_js__WEBPACK_IMPORTED_MODULE_4__, _lib_sys_sprintf_js__WEBPACK_IMPORTED_MODULE_5__, _settings_js__WEBPACK_IMPORTED_MODULE_6__, _theme_settings_js__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 const current_script_url = "file:///home/ed/code/logbook/src/renderer/javascript-renderer/_.js";  // save for later
 
 
@@ -6774,9 +6773,10 @@ __webpack_async_result__();
 /***/ }),
 
 /***/ 7783:
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+/***/ ((__webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
+__webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   V: () => (/* binding */ EvalWorker)
 /* harmony export */ });
@@ -6810,7 +6810,7 @@ class EvalWorker {
                 enumerable: true,
             },
         });
-        this._worker = new Worker(new URL('./web-worker.js', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__/* .assets_server_url */ .h)(current_script_url)));
+        this._worker = new Worker(this.constructor.#worker_code_uri);
         this._terminated = false;
         this._current_expression = undefined;
     }
@@ -7015,8 +7015,37 @@ class EvalWorker {
             this._worker.onmessageerror = undefined;
         }
     }
+
+    // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
+    static async _async_init_static() {
+        // create a data: URI for the web worker code so that we avoid cross-origin access errors
+        const worker_path = './web-worker.js';
+        const worker_url  = new URL(worker_path, (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_0__/* .assets_server_url */ .h)(current_script_url));
+        return fetch(worker_url)
+            .then(res => res.text())
+            .catch(error => {
+                throw new Error('unable to fetch worker code');
+            })
+            .then(code => {
+                const preamble = `\
+{
+    const original_importScripts = globalThis.importScripts;
+    globalThis.importScripts = (...urls) => {
+        return original_importScripts( ...urls.map(url => new URL(url, "${worker_url.href}")) );
+    };
+}
+`;
+                this.#worker_code_uri = `data:text/javascript,${encodeURIComponent(preamble + code)}`;
+            });
+    }
+    static #worker_code_uri;
 }
 
+// Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
+await EvalWorker._async_init_static();
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
 
 /***/ }),
 
