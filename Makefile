@@ -63,7 +63,7 @@ kill-server:
 
 .PHONY: dev-server
 dev-server:
-	npx nodemon -w src -w lib -w node_modules -e js,cjs,mjs,html,css,ico,svg -x "bash -c 'make server' || exit 1"
+	npx nodemon --watch src --watch lib --watch node_modules  --ext js,cjs,mjs,html,css,ico,svg  --exec "bash -c 'make server' || exit 1"
 
 .PHONY: client
 client:
