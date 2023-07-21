@@ -233,6 +233,17 @@ class LogbookManager {
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
+        // establish favicon
+        if (!document.querySelector('link[rel="icon"]')) {
+            create_element({
+                parent: document.head,
+                tag:    'link',
+                attrs: {
+                    rel: 'icon',
+                    href: new URL('favicon.ico', assets_server_url(current_script_url)),
+                },
+            });
+        }
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));

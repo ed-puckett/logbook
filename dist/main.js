@@ -5734,6 +5734,17 @@ class LogbookManager {
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
+        // establish favicon
+        if (!document.querySelector('link[rel="icon"]')) {
+            (0,_lib_ui_dom_util_js__WEBPACK_IMPORTED_MODULE_4__/* .create_element */ .T1)({
+                parent: document.head,
+                tag:    'link',
+                attrs: {
+                    rel: 'icon',
+                    href: new URL('favicon.ico', (0,_assets_server_url_js__WEBPACK_IMPORTED_MODULE_9__/* .assets_server_url */ .h)(current_script_url)),
+                },
+            });
+        }
         // establish body element if not already present
         if (!document.body) {
             document.documentElement.appendChild(document.createElement('body'));
