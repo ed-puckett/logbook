@@ -3,7 +3,6 @@ const current_script_url = import.meta.url;  // save for later
 import {
     create_element,
     clear_element,
-    create_stylesheet_link,
     validate_parent_and_before_from_options,
 } from '../../lib/ui/dom-util.js';
 
@@ -30,6 +29,12 @@ import {
 import {
     assets_server_url,
 } from '../assets-server-url.js';
+
+// import {
+//     create_stylesheet_link,
+// } from '../../lib/ui/dom-util.js';
+// create_stylesheet_link(document.head, new URL('./style.css', assets_server_url(current_script_url)));
+import './style.css';  // webpack implementation
 
 
 export class EvalCellElement extends EditorCellElement {
@@ -383,8 +388,6 @@ export class EvalCellElement extends EditorCellElement {
             //!!! extends: EditorCellElement.custom_element_name,
         };
         globalThis.customElements.define(this.custom_element_name, this, options);
-        //!!! should we assume that the document is ready here?
-        create_stylesheet_link(document.head, new URL('style.css', assets_server_url(current_script_url)));
     }
 }
 

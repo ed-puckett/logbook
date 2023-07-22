@@ -2,7 +2,6 @@ const current_script_url = import.meta.url;  // save for later
 
 import {
     create_element,
-    create_stylesheet_link,
 } from '../../lib/ui/dom-util.js';
 
 import {
@@ -41,9 +40,14 @@ import {
 } from '../assets-server-url.js';
 
 
-// add the stylesheet
-const stylesheet_url = new URL('./settings-dialog.css', assets_server_url(current_script_url));
-create_stylesheet_link(document.head, stylesheet_url);
+// import {
+//     create_stylesheet_link,
+// } from '../../lib/ui/dom-util.js';
+// {
+//     const stylesheet_url = new URL('./settings-dialog.css', assets_server_url(current_script_url));
+//     create_stylesheet_link(document.head, stylesheet_url);
+// }
+import './settings-dialog.css';  // webpack implementation
 
 
 // dialog definitiion

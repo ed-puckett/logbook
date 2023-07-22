@@ -15,12 +15,17 @@ import {
 import {
     create_element,
     clear_element,
-    create_stylesheet_link,
 } from '../../lib/ui/dom-util.js';
 
 import {
     assets_server_url,
 } from '../assets-server-url.js';
+
+// import {
+//     create_stylesheet_link,
+// } from '../../lib/ui/dom-util.js';
+// create_stylesheet_link(document.head, new URL('./style.css', assets_server_url(current_script_url)));
+import './style.css';  // webpack implementation
 
 
 export class ToolBarElement extends HTMLElement {
@@ -413,8 +418,6 @@ export class ToolBarElement extends HTMLElement {
     // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:
     static _init_static() {
         globalThis.customElements.define(this.custom_element_name, this);
-        //!!! should we assume that the document is ready here?
-        create_stylesheet_link(document.head, new URL('style.css', assets_server_url(current_script_url)));
     }
 }
 

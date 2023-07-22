@@ -20,7 +20,6 @@ import {
     show_initialization_failed,
     create_element,
     clear_element,
-    create_stylesheet_link,
 } from '../lib/ui/dom-util.js';
 
 import {
@@ -46,6 +45,18 @@ import {
 import {
     assets_server_url,
 } from './assets-server-url.js';
+
+
+// import {
+//     create_stylesheet_link,
+// } from '../lib/ui/dom-util.js';
+// {
+//     const server_url = assets_server_url(current_script_url);
+//     create_stylesheet_link(document.head, new URL('./style.css',       server_url));
+//     create_stylesheet_link(document.head, new URL('./style-hacks.css', server_url));
+// }
+import './style.css';        // webpack implementation
+import './style-hacks.css';  // webpack implementation
 
 
 // Note: Each eval-cell maintains its own key_event_manager and key maps.
@@ -147,13 +158,10 @@ class LogbookManager {
             // establish this.#content_element / this.content_element
             this.#initialize_document_structure();
 
-            // add top-level stylesheets
-            const server_url = assets_server_url(current_script_url);
-            create_stylesheet_link(document.head, new URL('style.css',       server_url));
-            create_stylesheet_link(document.head, new URL('style-hacks.css', server_url));
-
             this.#setup_csp();
             this.#setup_controls();
+
+            this.set_editable(this.editable);  // update all cells consistently
 
             // validate structure of document
             const cells = this.constructor.get_cells();
@@ -166,8 +174,6 @@ class LogbookManager {
             const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? this.create_cell();
             this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
-
-            this.set_editable(this.editable);  // update all cells consistently
 
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
@@ -233,6 +239,7 @@ class LogbookManager {
         if (document.getElementById(this.constructor.content_element_id)) {
             throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
         }
+
         // establish favicon
         if (!document.querySelector('link[rel="icon"]')) {
             create_element({
