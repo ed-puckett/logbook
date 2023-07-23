@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 const dist_dir_path = fileURLToPath(new URL("./dist", current_script_url));
 
 const config = {
+devtool: 'source-map',
     entry: './src/init.js',
+
+    devtool: 'source-map',
 
     output: {
         path: dist_dir_path,
@@ -13,7 +16,7 @@ const config = {
     },
 
     optimization: {
-        minimize: false,
+        minimize: true,
     },
 
     stats: {

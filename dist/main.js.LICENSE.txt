@@ -1,9 +1,3 @@
-/*!!!
-import {
-    create_stylesheet_link,
-} from '../../lib/ui/dom-util.js';
-*/
-
 //!!!
 
 //!!! Also, the following does not work on Firefox:
@@ -29,8 +23,6 @@ import {
 //!!! should be configurable
 
 //!!! should other members of options be checked (e.g., "once")?
-
-//!!! should we assume that the document is ready here?
 
 //!!! this.#eval_states_subscription is never unsubscribed
 
