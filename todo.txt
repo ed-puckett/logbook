@@ -1,5 +1,9 @@
+handle keypresses originating outside of cells
+toggle-menu command
 implement and use logbook_manager.update_menu_state()
-static initialization for classes should not automatically add stylesheet (do it on demand later)
+implement recents
+rationalize style settings in preparation for dark/light mode
+implement go/stop control in tool-bar
 improve saving
 save can cause disconnect between current document and its "file_handle" if the user saves to a different file
 make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste")
@@ -15,6 +19,7 @@ save: remove status-bar elements
 
 
 --- HOLD ---
+static initialization for classes should not automatically add stylesheet (do it on demand later)
 context menu cut/copy/paste: can this be hooked to use our internal implementation?
 make sure deleting selection that contains elements with !element_too deletes only the text
 rtl text is not handled correctly

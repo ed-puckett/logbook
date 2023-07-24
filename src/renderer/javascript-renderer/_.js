@@ -7,6 +7,9 @@ import {
 const lib_dir_path = '../../../lib/';//!!!
 const lib_dir_url = new URL(lib_dir_path, assets_server_url(current_script_url));
 
+// provide an implementation of dynamic import that is safe from modification by webpack
+const dynamic_import = new Function('path', 'return import(path);');
+
 
 // ======================================================================
 //!!!
@@ -181,7 +184,7 @@ export class JavaScriptRenderer extends Renderer {
         }
 
         async function import_lib(lib_path) {
-            return import(new URL(lib_path, lib_dir_url));
+            return dynamic_import(new URL(lib_path, lib_dir_url));
         }
 
         function vars(...objects) {
