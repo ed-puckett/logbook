@@ -130,7 +130,11 @@ export class EvalCellElement extends EditorCellElement {
             const dom_extent = this.get_dom_extent();
             const before = dom_extent ? dom_extent.last.nextSibling : this.nextSibling;
             const parent = before?.parentElement ?? this.parentElement;
-            output_element = create_element({ parent, before });
+            output_element = create_element({
+                tag: 'output',
+                parent,
+                before,
+            });
             this.output_element = output_element;
         }
         output_element.classList.add(this.constructor.output_element_class);
@@ -186,14 +190,15 @@ export class EvalCellElement extends EditorCellElement {
         super.remove_cell();
     }
 
-    /** reset the cell; clear the output_element, if any
+    /** reset the cell; remove the output_element, if any
      *  @return {EvalCellElement} this
      */
     reset() {
         super.reset();
         const output_element = this.output_element;
         if (output_element) {
-            clear_element(output_element);
+            this.output_element = null;  // unhook from cell
+            output_element.remove();
         }
         return this;
     }

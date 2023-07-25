@@ -340,18 +340,23 @@ export class EditorCellElement extends HTMLElement {
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__insert_self(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const key_spec = command_context.key_spec;
         const text = key_spec?.key ?? key_spec?.canonical ?? '';
         if (!text) {
             return false;
-        } else {
-            return manage_selection_for_insert(
-                (point) => insert_at(point, text)
-            );
         }
+        return manage_selection_for_insert(
+            (point) => insert_at(point, text)
+        );
     }
 
     command_handler__insert_line_break(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         return manage_selection_for_insert(
 //            (point) => insert_at(point, document.createElement('br'))
             (point) => insert_at(point, '\n')
@@ -359,6 +364,9 @@ export class EditorCellElement extends HTMLElement {
     }
 
     create_command_handler___delete(options) {
+        if (!this.editable) {
+            return false;
+        }
         return (command_context) => {
             return manage_selection_for_delete(
                 (point) => delete_nearest_leaf(point, options)
@@ -367,6 +375,9 @@ export class EditorCellElement extends HTMLElement {
     }
 
     command_handler__cut(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         document.execCommand('cut');  // updates selection
         return true;
     }
@@ -377,6 +388,9 @@ export class EditorCellElement extends HTMLElement {
     }
 
     async command_handler__paste(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         //!!! THIS NO LONGER WORKS: return document.execCommand('paste');  // updates selection
         //!!! Also, the following does not work on Firefox:
         const text = await navigator.clipboard.readText();
