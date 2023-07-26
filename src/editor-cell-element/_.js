@@ -256,6 +256,10 @@ export class EditorCellElement extends HTMLElement {
 
     // === COMMAND HANDLER INTERFACE ===
 
+    inject_key_event(key_event) {
+        this.#key_event_manager.inject_key_event(key_event);
+    }
+
     /** return the initial key map bindings
      *  @return {Object} mapping from command strings to arrays of triggering key sequences
      */

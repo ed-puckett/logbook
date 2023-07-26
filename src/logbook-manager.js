@@ -392,6 +392,15 @@ recents
             running:  true,
         });
         this.#controls_element.appendChild(this.#tool_bar);
+        //!!! is the following useful?
+        // send keydown events destined for document.body to the active cell's key_event_manager
+        document.body.addEventListener('keydown', (event) => {
+            if (event.target === document.body) {
+                this.active_cell?.inject_key_event(event);
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });  //!!! event handler never removed
     }
 
     #menubar_commands_observer(command_context) {
