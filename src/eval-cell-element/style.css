@@ -1,5 +1,5 @@
 eval-cell {
-    background-color: var(--bgcolor-cell);
+    background-color: white;
 
     outline: 0px solid transparent;  /* disable default outline */
 

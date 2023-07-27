@@ -39,7 +39,7 @@
 
 
 body {
-    margin: 0;
+    margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
     background-color: #eee;
 }
 
@@ -59,7 +59,6 @@ body {
     padding: 0 0.5em;
 
     border: 0;
-    border-width: var(--border-width-tool);
 
     background-color: transparent;
 
@@ -86,7 +85,7 @@ eval-cell[data-active] + .eval-cell-output::before {
     content: " ";
     background-color: cornflowerblue;
     min-width: 1em;
-},
+}
 
 
 /* visible/active - animated attributes */
@@ -101,18 +100,19 @@ tool-bar {
 
     background-color: var(--bgcolor-tool);
 
-    max-height: 0;
-    padding:    0 0.5em;
-    /* split color into the three sides; the bottom side is controlled by the input type selector */
+    max-height:   0;
+    padding:      0 0.5em;
+    border-width: 0;
+    /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
     border-top-color:   var(--border-color-tool);
     border-right-color: var(--border-color-tool);
     border-left-color:  var(--border-color-tool);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-width:  var(--border-width-tool);
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
     border-style:  var(--border-style-tool);
 
@@ -132,15 +132,16 @@ eval-cell {
 
     background-color: var(--bgcolor-cell);
 
-    max-height:  0;
-    padding:     0 0.5em;
+    max-height:   0;
+    padding:      0 0.5em;
+    border-width: 0;
     border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-width:  var(--border-width-cell);
     border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
     border-style:  var(--border-style-cell);
 }
@@ -148,13 +149,15 @@ eval-cell {
 
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
-    max-height: 100vh;
-    padding:    0 0.5em;
+    max-height:   100vh;
+    padding:      0 0.5em;
+    border-width: var(--border-width-tool);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
-    max-height: 100vh;
-    padding:    0.3em 0.5em;
+    max-height:   100vh;
+    padding:      0.3em 0.5em;
+    border-width: var(--border-width-cell);
 }
 
 tool-bar:has(+ eval-cell[data-visible][data-active]),

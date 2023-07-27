@@ -13,6 +13,7 @@ editor-cell {
     border-radius: 0.125em;
     background-color: #eee;
 }
+
 editor-cell[data-active] {
     border: 1px solid black;
 }

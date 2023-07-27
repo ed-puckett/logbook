@@ -1,15 +1,15 @@
 const current_script_url = import.meta.url;  // save for later
 
 import {
-    EditorCellElement,  // also ensures that the "editor-cell" custom element has been defined
+    EditorCellElement,
 } from './editor-cell-element/_.js';
 
 import {
-    EvalCellElement,  // also ensures that the "eval-cell" custom element has been defined
+    EvalCellElement,
 } from './eval-cell-element/_.js';
 
 import {
-    ToolBarElement,  // also ensures that the "tool-bar" custom element has been defined
+    ToolBarElement,
 } from './tool-bar-element/_.js';
 
 import {
@@ -478,7 +478,7 @@ recents
             is_neutral,
         } = data;
         this.#tool_bar.set_for('modified', !is_neutral);
-        this.#menubar.set_menu_state('save', { checked: !is_neutral });
+        this.#menubar.set_menu_state('save', { enabled: !is_neutral });
     }
 
 
@@ -500,6 +500,207 @@ recents
 
 
     // === COMMAND HANDLERS ===
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__create_cell(command_context) {
+        let before = null;
+        const next_cell = command_context.target?.adjacent_cell?.(true);
+        if (next_cell) {
+            before = next_cell.get_dom_extent().first;
+        }
+        const cell = this.create_cell({ before });
+        if (!cell) {
+            return false;
+        } else {
+            cell.focus();
+            return true;
+        }
+    }
+
+    /** eval target cell and refocus to next cell (or a new one if at the end of the document)
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_and_refocus(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            await cell.eval({
+                eval_context: this.global_eval_context,
+            });
+            const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
+            next_cell.focus();
+            return true;
+        }
+    }
+
+    /** reset global eval context and then eval all cells in the document
+     *  from the beginning up to but not including the target cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_before(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            this.reset_global_eval_context();
+            for (const iter_cell of this.constructor.get_cells()) {
+                if (iter_cell === cell) {
+                    break;
+                }
+                await iter_cell.eval({
+                    eval_context: this.global_eval_context,
+                });
+            }
+            return true;
+        }
+    }
+
+    /** stop all running evaluations, reset global eval context and then eval all cells in the document
+     *  from first to last, and set focus to the last.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_all(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            this.stop();
+            this.reset_global_eval_context();
+            let final_cell;
+            for (const iter_cell of this.constructor.get_cells()) {
+                await iter_cell.eval({
+                    eval_context: this.global_eval_context,
+                });
+                final_cell = iter_cell;
+            }
+            final_cell.focus();
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__stop(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.stop();
+            return true;
+        }
+    }
+
+    /** stop all running evaluations.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__stop_all(command_context) {
+        this.stop();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__focus_up(command_context) {
+        const focus_cell = command_context.target.adjacent_cell(false);
+        if (!focus_cell) {
+            return false;
+        } else {
+            focus_cell.focus();
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__focus_down(command_context) {
+        const focus_cell = command_context.target.adjacent_cell(true);
+        if (!focus_cell) {
+            return false;
+        } else {
+            focus_cell.focus();
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__move_up(command_context) {
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        } else {
+            const previous = cell.adjacent_cell(false);
+            if (!previous) {
+                return false;
+            } else {
+                cell.move_cell({
+                    before: previous.get_dom_extent().first,
+                });
+                cell.focus();
+                return true;
+            }
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__move_down(command_context) {
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        } else {
+            const next = cell.adjacent_cell(true);
+            if (!next) {
+                return false;
+            } else {
+                cell.move_cell({
+                    before: next.get_dom_extent().last.nextSibling,
+                    parent: cell.parentElement,  // necessary if before is null
+                });
+                cell.focus();
+                return true;
+            }
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__add_before(command_context) {
+        const cell = command_context.target;
+        const new_cell = this.create_cell({
+            before: cell.get_dom_extent().first,
+        });
+        new_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__add_after(command_context) {
+        const cell = command_context.target;
+        const new_cell = this.create_cell({
+            before: cell.get_dom_extent().last.nextSibling,
+            parent: cell.parentElement,  // necessary if before is null
+        });
+        new_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__delete(command_context) {
+        const cell = command_context.target;
+        let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
+        cell.remove_cell();
+        if (!next_cell) {
+            next_cell = this.create_cell();
+        }
+        next_cell.focus();
+        return true;
+    }
 
     /** @return {Boolean} true iff command successfully handled
      */

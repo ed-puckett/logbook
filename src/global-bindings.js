@@ -65,8 +65,11 @@ export function get_global_command_bindings() {
         'save':             command_handler__save,
         'save-as':          command_handler__save_as,
 
+        'toggle-editable':  command_handler__toggle_editable,
+
         'settings':         command_handler__show_settings_dialog,
 
+        // binding for plain old 'eval' is defined by EvalCellElement
         'eval-and-refocus': command_handler__eval_and_refocus,
         'eval-before':      command_handler__eval_before,
         'eval-all':         command_handler__eval_all,
@@ -83,8 +86,6 @@ export function get_global_command_bindings() {
         'add-after':        command_handler__add_after,
         'delete':           command_handler__delete,
 
-        'toggle-editable':  command_handler__toggle_editable,
-
         'undo':             command_handler__undo,
         'redo':             command_handler__redo,
     };
@@ -95,21 +96,13 @@ export function get_global_command_bindings() {
 
 // === COMMAND HANDLERS ===
 
+// Note that these functions prevent us from having to access LogbookManager statically.
+// LogbookManager and this module depend upon each other.
+
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__create_cell(command_context) {
-    let before = null;
-    const next_cell = command_context.target?.adjacent_cell?.(true);
-    if (next_cell) {
-        before = next_cell.get_dom_extent().first;
-    }
-    const cell = LogbookManager.singleton.create_cell({ before });
-    if (!cell) {
-        return false;
-    } else {
-        cell.focus();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__create_cell(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
@@ -140,6 +133,13 @@ export async function command_handler__save_as(command_context) {
 
 /** @return {Boolean} true iff command successfully handled
  */
+export function command_handler__toggle_editable(command_context) {
+    LogbookManager.singleton.set_editable(!LogbookManager.singleton.editable);
+    return true;
+}
+
+/** @return {Boolean} true iff command successfully handled
+ */
 export function command_handler__show_settings_dialog(command_context) {
     SettingsDialog.run();
     return true;
@@ -149,17 +149,7 @@ export function command_handler__show_settings_dialog(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_and_refocus(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        await cell.eval({
-            eval_context: LogbookManager.singleton.global_eval_context,
-        });
-        const next_cell = cell.adjacent_cell(true) ?? LogbookManager.singleton.create_cell();
-        next_cell.focus();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__eval_and_refocus(command_context);
 }
 
 /** reset global eval context and then eval all cells in the document
@@ -167,21 +157,7 @@ export async function command_handler__eval_and_refocus(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_before(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        LogbookManager.singleton.reset_global_eval_context();
-        for (const iter_cell of LogbookManager.get_cells()) {
-            if (iter_cell === cell) {
-                break;
-            }
-            await iter_cell.eval({
-                eval_context: LogbookManager.singleton.global_eval_context,
-            });
-        }
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__eval_before(command_context);
 }
 
 /** stop all running evaluations, reset global eval context and then eval all cells in the document
@@ -189,152 +165,65 @@ export async function command_handler__eval_before(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_all(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        LogbookManager.singleton.stop();
-        LogbookManager.singleton.reset_global_eval_context();
-        let final_cell;
-        for (const iter_cell of LogbookManager.get_cells()) {
-            await iter_cell.eval({
-                eval_context: LogbookManager.singleton.global_eval_context,
-            });
-            final_cell = iter_cell;
-        }
-        final_cell.focus();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__eval_all(command_context);
 }
 
 /** stop evaluation for the active cell.
  *  @return {Boolean} true iff command successfully handled
  */
 export function command_handler__stop(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        cell.stop();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__stop(command_context);
 }
 
 /** stop all running evaluations.
  *  @return {Boolean} true iff command successfully handled
  */
 export function command_handler__stop_all(command_context) {
-    LogbookManager.singleton.stop();
-    return true;
+    return LogbookManager.singleton.command_handler__stop_all(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__focus_up(command_context) {
-    const focus_cell = command_context.target.adjacent_cell(false);
-    if (!focus_cell) {
-        return false;
-    } else {
-        focus_cell.focus();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__focus_up(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__focus_down(command_context) {
-    const focus_cell = command_context.target.adjacent_cell(true);
-    if (!focus_cell) {
-        return false;
-    } else {
-        focus_cell.focus();
-        return true;
-    }
+    return LogbookManager.singleton.command_handler__focus_down(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__move_up(command_context) {
-    const cell = command_context.target;
-    if (!cell) {
-        return false;
-    } else {
-        const previous = cell.adjacent_cell(false);
-        if (!previous) {
-            return false;
-        } else {
-            cell.move_cell({
-                before: previous.get_dom_extent().first,
-            });
-            cell.focus();
-            return true;
-        }
-    }
+    return LogbookManager.singleton.command_handler__move_up(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__move_down(command_context) {
-    const cell = command_context.target;
-    if (!cell) {
-        return false;
-    } else {
-        const next = cell.adjacent_cell(true);
-        if (!next) {
-            return false;
-        } else {
-            cell.move_cell({
-                before: next.get_dom_extent().last.nextSibling,
-                parent: cell.parentElement,  // necessary if before is null
-            });
-            cell.focus();
-            return true;
-        }
-    }
+    return LogbookManager.singleton.command_handler__move_down(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__add_before(command_context) {
-    const cell = command_context.target;
-    const new_cell = LogbookManager.singleton.create_cell({
-        before: cell.get_dom_extent().first,
-    });
-    new_cell.focus();
-    return true;
+    return LogbookManager.singleton.command_handler__add_before(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__add_after(command_context) {
-    const cell = command_context.target;
-    const new_cell = LogbookManager.singleton.create_cell({
-        before: cell.get_dom_extent().last.nextSibling,
-        parent: cell.parentElement,  // necessary if before is null
-    });
-    new_cell.focus();
-    return true;
+    return LogbookManager.singleton.command_handler__add_after(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__delete(command_context) {
-    const cell = command_context.target;
-    let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
-    cell.remove_cell();
-    if (!next_cell) {
-        next_cell = LogbookManager.singleton.create_cell();
-    }
-    next_cell.focus();
-    return true;
+    return LogbookManager.singleton.command_handler__delete(command_context);
 }
 
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__toggle_editable(command_context) {
-    LogbookManager.singleton.set_editable(!LogbookManager.singleton.editable);
-    return true;
-}
 
 /** @return {Boolean} true iff command successfully handled
  */

@@ -181,10 +181,11 @@ ___CSS_LOADER_EXPORT___.push([module.id, `editor-cell {
     border-radius: 0.125em;
     background-color: #eee;
 }
+
 editor-cell[data-active] {
     border: 1px solid black;
 }
-`, "",{"version":3,"sources":["webpack://./src/editor-cell-element/style.css"],"names":[],"mappings":"AAAA;IACI,8BAA8B,GAAG,4BAA4B;;IAE7D,qBAAqB,GAAG,iCAAiC;IACzD,sBAAsB;IACtB,iBAAiB;;IAEjB,cAAc;IACd,SAAS;IACT,oBAAoB;;IAEpB,sBAAsB;IACtB,sBAAsB;IACtB,sBAAsB;AAC1B;AACA;IACI,uBAAuB;AAC3B","sourcesContent":["editor-cell {\n    outline: 0px solid transparent;  /* disable default outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 120%;\n\n    display: block;\n    margin: 0;\n    padding: 0.3em 0.5em;\n\n    border: 1px solid #ccc;\n    border-radius: 0.125em;\n    background-color: #eee;\n}\neditor-cell[data-active] {\n    border: 1px solid black;\n}\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/editor-cell-element/style.css"],"names":[],"mappings":"AAAA;IACI,8BAA8B,GAAG,4BAA4B;;IAE7D,qBAAqB,GAAG,iCAAiC;IACzD,sBAAsB;IACtB,iBAAiB;;IAEjB,cAAc;IACd,SAAS;IACT,oBAAoB;;IAEpB,sBAAsB;IACtB,sBAAsB;IACtB,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["editor-cell {\n    outline: 0px solid transparent;  /* disable default outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 120%;\n\n    display: block;\n    margin: 0;\n    padding: 0.3em 0.5em;\n\n    border: 1px solid #ccc;\n    border-radius: 0.125em;\n    background-color: #eee;\n}\n\neditor-cell[data-active] {\n    border: 1px solid black;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -208,7 +209,7 @@ editor-cell[data-active] {
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `eval-cell {
-    background-color: var(--bgcolor-cell);
+    background-color: white;
 
     outline: 0px solid transparent;  /* disable default outline */
 
@@ -230,7 +231,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `eval-cell {
 
     background-color: white;
 }
-`, "",{"version":3,"sources":["webpack://./src/eval-cell-element/style.css"],"names":[],"mappings":"AAAA;IACI,qCAAqC;;IAErC,8BAA8B,GAAG,4BAA4B;;IAE7D,qBAAqB,GAAG,iCAAiC;IACzD,sBAAsB;IACtB,iBAAiB;;IAEjB,cAAc;IACd,UAAU;IACV,oBAAoB;AACxB;;AAEA;IACI,cAAc;IACd,cAAc;;IAEd,qBAAqB,GAAG,iCAAiC;IACzD,iBAAiB;;IAEjB,uBAAuB;AAC3B","sourcesContent":["eval-cell {\n    background-color: var(--bgcolor-cell);\n\n    outline: 0px solid transparent;  /* disable default outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 140%;\n\n    display: block;\n    margin:  0;\n    padding: 0.3em 0.5em;\n}\n\n.eval-cell-output {\n    display: block;\n    padding: 0.5em;\n\n    white-space: pre-wrap;  /* properly display white-space */\n    line-height: 140%;\n\n    background-color: white;\n}\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/eval-cell-element/style.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;;IAEvB,8BAA8B,GAAG,4BAA4B;;IAE7D,qBAAqB,GAAG,iCAAiC;IACzD,sBAAsB;IACtB,iBAAiB;;IAEjB,cAAc;IACd,UAAU;IACV,oBAAoB;AACxB;;AAEA;IACI,cAAc;IACd,cAAc;;IAEd,qBAAqB,GAAG,iCAAiC;IACzD,iBAAiB;;IAEjB,uBAAuB;AAC3B","sourcesContent":["eval-cell {\n    background-color: white;\n\n    outline: 0px solid transparent;  /* disable default outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 140%;\n\n    display: block;\n    margin:  0;\n    padding: 0.3em 0.5em;\n}\n\n.eval-cell-output {\n    display: block;\n    padding: 0.5em;\n\n    white-space: pre-wrap;  /* properly display white-space */\n    line-height: 140%;\n\n    background-color: white;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -463,7 +464,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 
 
 body {
-    margin: 0;
+    margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
     background-color: #eee;
 }
 
@@ -483,7 +484,6 @@ body {
     padding: 0 0.5em;
 
     border: 0;
-    border-width: var(--border-width-tool);
 
     background-color: transparent;
 
@@ -510,7 +510,7 @@ eval-cell[data-active] + .eval-cell-output::before {
     content: " ";
     background-color: cornflowerblue;
     min-width: 1em;
-},
+}
 
 
 /* visible/active - animated attributes */
@@ -525,18 +525,19 @@ tool-bar {
 
     background-color: var(--bgcolor-tool);
 
-    max-height: 0;
-    padding:    0 0.5em;
-    /* split color into the three sides; the bottom side is controlled by the input type selector */
+    max-height:   0;
+    padding:      0 0.5em;
+    border-width: 0;
+    /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
     border-top-color:   var(--border-color-tool);
     border-right-color: var(--border-color-tool);
     border-left-color:  var(--border-color-tool);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-width:  var(--border-width-tool);
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
     border-style:  var(--border-style-tool);
 
@@ -556,15 +557,16 @@ eval-cell {
 
     background-color: var(--bgcolor-cell);
 
-    max-height:  0;
-    padding:     0 0.5em;
+    max-height:   0;
+    padding:      0 0.5em;
+    border-width: 0;
     border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-width:  var(--border-width-cell);
     border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
     border-style:  var(--border-style-cell);
 }
@@ -572,13 +574,15 @@ eval-cell {
 
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
-    max-height: 100vh;
-    padding:    0 0.5em;
+    max-height:   100vh;
+    padding:      0 0.5em;
+    border-width: var(--border-width-tool);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
-    max-height: 100vh;
-    padding:    0.3em 0.5em;
+    max-height:   100vh;
+    padding:      0.3em 0.5em;
+    border-width: var(--border-width-cell);
 }
 
 tool-bar:has(+ eval-cell[data-visible][data-active]),
@@ -707,7 +711,7 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
     }
 
 }
-`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"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","sourcesContent":[":root {\n    --controls-height: 1.5rem;\n}\n\n:root {\n    /* color */\n\n    --bgcolor-tool:          hsl(0deg 0% 98% / 100%);\n    --bgcolor-cell:          hsl(0deg 0% 99% / 100%);\n\n    --color-type-markdown:   hsl(205deg 100%  94% / 100%);\n    --color-type-tex:        hsl( 45deg  81%  87% / 100%);\n    --color-type-javascript: hsl( 85deg 100%  85% / 100%);\n\n\n    /* border */\n\n    --border-radius-cell:      0.125em;\n    --border-width-cell:       1px;\n    --border-style-cell:       solid;\n    --border-width-tool:       1px;\n    --border-style-tool:       solid;\n    --border-color-tool:       #ccc;\n    --border-color-cell:       #ccc;\n    --border-color-tool-focus: black;\n    --border-color-cell-focus: black;\n\n\n    /* focus transition */\n\n    --focus-x1-delay:    0s;\n    --focus-x1-duration: 0.2s;\n    --focus-x1-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);\n\n    --focus-x2-delay:    calc(var(--focus-x1-duration) / 4);\n    --focus-x2-duration: 0.1s;\n    --focus-x2-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);\n}\n\n\nbody {\n    margin: 0;\n    background-color: #eee;\n}\n\n#controls {\n    display: flex;\n    align-items: flex-end;\n    justify-content: flex-start;\n\n    height: var(--controls-height);\n    background-color: #f8f8f8;\n    border-bottom: 1px solid black;\n}\n\n#controls > tool-bar {  /* next to menu */\n    max-height: 100vh;\n\n    padding: 0 0.5em;\n\n    border: 0;\n    border-width: var(--border-width-tool);\n\n    background-color: transparent;\n\n    align-self: center;\n    margin-left: auto;  /* push to far right */\n}\n\n.eval-cell-output {\n    display: block;\n    padding: 0.5em;\n\n    white-space: pre-wrap;  /* properly display white-space */\n    line-height: 140%;\n\n    background-color: white;\n}\n.eval-cell-output:has(+ tool-bar),\n.eval-cell-output:has(+ eval-cell) {\n    padding-bottom: 1em;\n}\n\n/* */\neval-cell[data-active] + .eval-cell-output::before {\n    content: \" \";\n    background-color: cornflowerblue;\n    min-width: 1em;\n},\n\n\n/* visible/active - animated attributes */\n\ntool-bar {\n    overflow: hidden;\n\n    display: flex;\n    align-items: center;\n    justify-content: flex-end;\n    gap: 0.5em;\n\n    background-color: var(--bgcolor-tool);\n\n    max-height: 0;\n    padding:    0 0.5em;\n    /* split color into the three sides; the bottom side is controlled by the input type selector */\n    border-top-color:   var(--border-color-tool);\n    border-right-color: var(--border-color-tool);\n    border-left-color:  var(--border-color-tool);\n\n    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);\n    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n\n    border-width:  var(--border-width-tool);\n    border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;\n    border-style:  var(--border-style-tool);\n\n}\n\neval-cell {\n    overflow: hidden;\n\n    display: block;\n    margin:  0;\n\n    outline: 0px solid transparent;  /* disable default contenteditable outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 140%;\n\n    background-color: var(--bgcolor-cell);\n\n    max-height:  0;\n    padding:     0 0.5em;\n    border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);\n\n    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);\n    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n\n    border-width:  var(--border-width-cell);\n    border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);\n    border-style:  var(--border-style-cell);\n}\n\n\ntool-bar:has(+ eval-cell[data-visible]),\ntool-bar:has(+ eval-cell[contenteditable]) {\n    max-height: 100vh;\n    padding:    0 0.5em;\n}\neval-cell[data-visible],\neval-cell[contenteditable] {\n    max-height: 100vh;\n    padding:    0.3em 0.5em;\n}\n\ntool-bar:has(+ eval-cell[data-visible][data-active]),\ntool-bar:has(+ eval-cell[contenteditable][data-active]) {\n    border-top-color:   var(--border-color-tool-focus);\n    border-right-color: var(--border-color-tool-focus);\n    border-left-color:  var(--border-color-tool-focus);\n}\neval-cell[data-visible][data-active],\neval-cell[contenteditable][data-active] {\n    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);\n}\n\n\n/* color selected by eval-cell input-type */\n\n\ntool-bar option,\ntool-bar select {\n    background-color: var(--color-type-markdown);\n}\n\ntool-bar option[value=\"javascript\"],\ntool-bar > select:has(> option[value=\"javascript\"]:checked) {\n    background-color: var(--color-type-javascript);\n}\n\ntool-bar option[value=\"tex\"],\ntool-bar > select:has(> option[value=\"tex\"]:checked) {\n    background-color: var(--color-type-tex);\n}\n\n\ntool-bar:has(option) {\n    border-bottom-color: var(--color-type-markdown);\n}\n\ntool-bar:has(option[value=\"javascript\"]:checked) {\n    border-bottom-color: var(--color-type-javascript);\n}\n\ntool-bar:has(option[value=\"tex\"]:checked) {\n    border-bottom-color: var(--color-type-tex);\n}\n\n/* === tool-bar indicators and controls === */\n\ntool-bar > * {\n    margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */\n    background-color: hsl(0deg 0% 98% / 100%);\n}\n\n.tool-bar-indicator {\n    display: block;\n    width:  0.5em;\n    height: 0.5em;\n    margin: 0;\n    padding: 0;\n    border-radius: 50%;\n    border: 1px solid hsl(0deg 9% 82% / 100%);\n    background-color: hsl(0deg 0% 97% / 100%);\n}\n\n.tool-bar-indicator.running[data-indicator-value=\"on\"] {\n    border: 1px solid black;\n    background-color: hsl(120deg 94% 40% / 100%);\n}\n.tool-bar-indicator.modified[data-indicator-value=\"on\"] {\n    border: 1px solid black;\n    background-color: hsl(0deg 60% 85% / 100%);\n}\n\ntool-bar > select > option {\n    background-color: hsl(0deg 0% 97% / 100%);\n}\n\n/* === toggle-switch === */\n\ntoggle-switch {\n    appearance: none;\n    border: 0;\n    width:  1.5rem;\n    height: 1.5rem;\n}\n\ntoggle-switch svg {\n    width:  auto;\n    height: 100%;\n}\n\ntoggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }\ntoggle-switch.tool-bar-toggle-editable[aria-checked=\"true\"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }\ntoggle-switch.tool-bar-toggle-editable[aria-checked=\"true\"] svg .accent-stroke { stroke: transparent; }\n\ntoggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-visible[aria-checked=\"true\"]  svg .accent-fill   { fill:   chartreuse; }\ntoggle-switch.tool-bar-toggle-visible[aria-checked=\"true\"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }\n\ntoggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-autoeval[aria-checked=\"true\"] svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-autoeval[aria-checked=\"true\"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }\n\n\n/* === print media queries === */\n\n@media not print {\n    /* these overflow styles cause only a single page to be \"printed\" (output) */\n\n    body {\n        overflow: hidden;\n    }\n\n    #content {\n        overflow: auto;\n        max-height: calc(100vh - var(--controls-height));\n    }\n}\n\n@media print {\n\n    #controls {\n        display: none;\n    }\n\n}\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;IACI,yBAAyB;AAC7B;;AAEA;IACI,UAAU;;IAEV,gDAAgD;IAChD,gDAAgD;;IAEhD,qDAAqD;IACrD,qDAAqD;IACrD,qDAAqD;;;IAGrD,WAAW;;IAEX,kCAAkC;IAClC,8BAA8B;IAC9B,gCAAgC;IAChC,8BAA8B;IAC9B,gCAAgC;IAChC,+BAA+B;IAC/B,+BAA+B;IAC/B,gCAAgC;IAChC,gCAAgC;;;IAGhC,qBAAqB;;IAErB,uBAAuB;IACvB,yBAAyB;IACzB,sDAAsD;;IAEtD,uDAAuD;IACvD,yBAAyB;IACzB,sDAAsD;AAC1D;;;AAGA;IACI,iBAAiB,GAAG,wEAAwE;IAC5F,sBAAsB;AAC1B;;AAEA;IACI,aAAa;IACb,qBAAqB;IACrB,2BAA2B;;IAE3B,8BAA8B;IAC9B,yBAAyB;IACzB,8BAA8B;AAClC;;AAEA,wBAAwB,iBAAiB;IACrC,iBAAiB;;IAEjB,gBAAgB;;IAEhB,SAAS;;IAET,6BAA6B;;IAE7B,kBAAkB;IAClB,iBAAiB,GAAG,sBAAsB;AAC9C;;AAEA;IACI,cAAc;IACd,cAAc;;IAEd,qBAAqB,GAAG,iCAAiC;IACzD,iBAAiB;;IAEjB,uBAAuB;AAC3B;AACA;;IAEI,mBAAmB;AACvB;;AAEA,IAAI;AACJ;IACI,YAAY;IACZ,gCAAgC;IAChC,cAAc;AAClB;;;AAGA,yCAAyC;;AAEzC;IACI,gBAAgB;;IAEhB,aAAa;IACb,mBAAmB;IACnB,yBAAyB;IACzB,UAAU;;IAEV,qCAAqC;;IAErC,eAAe;IACf,qBAAqB;IACrB,eAAe;IACf,0HAA0H;IAC1H,4CAA4C;IAC5C,4CAA4C;IAC5C,4CAA4C;;IAE5C,8FAA8F;IAC9F,8FAA8F;IAC9F,8FAA8F;IAC9F,8FAA8F;;IAE9F,sEAAsE;IACtE,uCAAuC;;AAE3C;;AAEA;IACI,gBAAgB;;IAEhB,cAAc;IACd,UAAU;;IAEV,8BAA8B,GAAG,4CAA4C;;IAE7E,qBAAqB,GAAG,iCAAiC;IACzD,sBAAsB;IACtB,iBAAiB;;IAEjB,qCAAqC;;IAErC,eAAe;IACf,qBAAqB;IACrB,eAAe;IACf,oGAAoG;;IAEpG,8FAA8F;IAC9F,8FAA8F;IAC9F,8FAA8F;IAC9F,8FAA8F;;IAE9F,sEAAsE;IACtE,uCAAuC;AAC3C;;;AAGA;;IAEI,mBAAmB;IACnB,qBAAqB;IACrB,sCAAsC;AAC1C;AACA;;IAEI,mBAAmB;IACnB,yBAAyB;IACzB,sCAAsC;AAC1C;;AAEA;;IAEI,kDAAkD;IAClD,kDAAkD;IAClD,kDAAkD;AACtD;AACA;;IAEI,sHAAsH;AAC1H;;;AAGA,2CAA2C;;;AAG3C;;IAEI,4CAA4C;AAChD;;AAEA;;IAEI,8CAA8C;AAClD;;AAEA;;IAEI,uCAAuC;AAC3C;;;AAGA;IACI,+CAA+C;AACnD;;AAEA;IACI,iDAAiD;AACrD;;AAEA;IACI,0CAA0C;AAC9C;;AAEA,6CAA6C;;AAE7C;IACI,SAAS,GAAG,+DAA+D;IAC3E,yCAAyC;AAC7C;;AAEA;IACI,cAAc;IACd,aAAa;IACb,aAAa;IACb,SAAS;IACT,UAAU;IACV,kBAAkB;IAClB,yCAAyC;IACzC,yCAAyC;AAC7C;;AAEA;IACI,uBAAuB;IACvB,4CAA4C;AAChD;AACA;IACI,uBAAuB;IACvB,0CAA0C;AAC9C;;AAEA;IACI,yCAAyC;AAC7C;;AAEA,0BAA0B;;AAE1B;IACI,gBAAgB;IAChB,SAAS;IACT,cAAc;IACd,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA,iFAAiF,+BAA+B,EAAE;AAClH,iFAAiF,mBAAmB,EAAE;AACtG,iFAAiF,gCAAgC,EAAE;AACnH,iFAAiF,mBAAmB,EAAE;;AAEtG,iFAAiF,mBAAmB,EAAE;AACtG,iFAAiF,+BAA+B,EAAE;AAClH,iFAAiF,kBAAkB,EAAE;AACrG,iFAAiF,iCAAiC,EAAE;;AAEpH,iFAAiF,mBAAmB,EAAE;AACtG,iFAAiF,+BAA+B,EAAE;AAClH,iFAAiF,mBAAmB,EAAE;AACtG,iFAAiF,gCAAgC,EAAE;;;AAGnH,gCAAgC;;AAEhC;IACI,4EAA4E;;IAE5E;QACI,gBAAgB;IACpB;;IAEA;QACI,cAAc;QACd,gDAAgD;IACpD;AACJ;;AAEA;;IAEI;QACI,aAAa;IACjB;;AAEJ","sourcesContent":[":root {\n    --controls-height: 1.5rem;\n}\n\n:root {\n    /* color */\n\n    --bgcolor-tool:          hsl(0deg 0% 98% / 100%);\n    --bgcolor-cell:          hsl(0deg 0% 99% / 100%);\n\n    --color-type-markdown:   hsl(205deg 100%  94% / 100%);\n    --color-type-tex:        hsl( 45deg  81%  87% / 100%);\n    --color-type-javascript: hsl( 85deg 100%  85% / 100%);\n\n\n    /* border */\n\n    --border-radius-cell:      0.125em;\n    --border-width-cell:       1px;\n    --border-style-cell:       solid;\n    --border-width-tool:       1px;\n    --border-style-tool:       solid;\n    --border-color-tool:       #ccc;\n    --border-color-cell:       #ccc;\n    --border-color-tool-focus: black;\n    --border-color-cell-focus: black;\n\n\n    /* focus transition */\n\n    --focus-x1-delay:    0s;\n    --focus-x1-duration: 0.2s;\n    --focus-x1-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);\n\n    --focus-x2-delay:    calc(var(--focus-x1-duration) / 4);\n    --focus-x2-duration: 0.1s;\n    --focus-x2-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);\n}\n\n\nbody {\n    margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */\n    background-color: #eee;\n}\n\n#controls {\n    display: flex;\n    align-items: flex-end;\n    justify-content: flex-start;\n\n    height: var(--controls-height);\n    background-color: #f8f8f8;\n    border-bottom: 1px solid black;\n}\n\n#controls > tool-bar {  /* next to menu */\n    max-height: 100vh;\n\n    padding: 0 0.5em;\n\n    border: 0;\n\n    background-color: transparent;\n\n    align-self: center;\n    margin-left: auto;  /* push to far right */\n}\n\n.eval-cell-output {\n    display: block;\n    padding: 0.5em;\n\n    white-space: pre-wrap;  /* properly display white-space */\n    line-height: 140%;\n\n    background-color: white;\n}\n.eval-cell-output:has(+ tool-bar),\n.eval-cell-output:has(+ eval-cell) {\n    padding-bottom: 1em;\n}\n\n/* */\neval-cell[data-active] + .eval-cell-output::before {\n    content: \" \";\n    background-color: cornflowerblue;\n    min-width: 1em;\n}\n\n\n/* visible/active - animated attributes */\n\ntool-bar {\n    overflow: hidden;\n\n    display: flex;\n    align-items: center;\n    justify-content: flex-end;\n    gap: 0.5em;\n\n    background-color: var(--bgcolor-tool);\n\n    max-height:   0;\n    padding:      0 0.5em;\n    border-width: 0;\n    /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */\n    border-top-color:   var(--border-color-tool);\n    border-right-color: var(--border-color-tool);\n    border-left-color:  var(--border-color-tool);\n\n    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);\n    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n\n    border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;\n    border-style:  var(--border-style-tool);\n\n}\n\neval-cell {\n    overflow: hidden;\n\n    display: block;\n    margin:  0;\n\n    outline: 0px solid transparent;  /* disable default contenteditable outline */\n\n    white-space: pre-wrap;  /* properly display white-space */\n    font-family: monospace;\n    line-height: 140%;\n\n    background-color: var(--bgcolor-cell);\n\n    max-height:   0;\n    padding:      0 0.5em;\n    border-width: 0;\n    border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);\n\n    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);\n    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);\n\n    border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);\n    border-style:  var(--border-style-cell);\n}\n\n\ntool-bar:has(+ eval-cell[data-visible]),\ntool-bar:has(+ eval-cell[contenteditable]) {\n    max-height:   100vh;\n    padding:      0 0.5em;\n    border-width: var(--border-width-tool);\n}\neval-cell[data-visible],\neval-cell[contenteditable] {\n    max-height:   100vh;\n    padding:      0.3em 0.5em;\n    border-width: var(--border-width-cell);\n}\n\ntool-bar:has(+ eval-cell[data-visible][data-active]),\ntool-bar:has(+ eval-cell[contenteditable][data-active]) {\n    border-top-color:   var(--border-color-tool-focus);\n    border-right-color: var(--border-color-tool-focus);\n    border-left-color:  var(--border-color-tool-focus);\n}\neval-cell[data-visible][data-active],\neval-cell[contenteditable][data-active] {\n    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);\n}\n\n\n/* color selected by eval-cell input-type */\n\n\ntool-bar option,\ntool-bar select {\n    background-color: var(--color-type-markdown);\n}\n\ntool-bar option[value=\"javascript\"],\ntool-bar > select:has(> option[value=\"javascript\"]:checked) {\n    background-color: var(--color-type-javascript);\n}\n\ntool-bar option[value=\"tex\"],\ntool-bar > select:has(> option[value=\"tex\"]:checked) {\n    background-color: var(--color-type-tex);\n}\n\n\ntool-bar:has(option) {\n    border-bottom-color: var(--color-type-markdown);\n}\n\ntool-bar:has(option[value=\"javascript\"]:checked) {\n    border-bottom-color: var(--color-type-javascript);\n}\n\ntool-bar:has(option[value=\"tex\"]:checked) {\n    border-bottom-color: var(--color-type-tex);\n}\n\n/* === tool-bar indicators and controls === */\n\ntool-bar > * {\n    margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */\n    background-color: hsl(0deg 0% 98% / 100%);\n}\n\n.tool-bar-indicator {\n    display: block;\n    width:  0.5em;\n    height: 0.5em;\n    margin: 0;\n    padding: 0;\n    border-radius: 50%;\n    border: 1px solid hsl(0deg 9% 82% / 100%);\n    background-color: hsl(0deg 0% 97% / 100%);\n}\n\n.tool-bar-indicator.running[data-indicator-value=\"on\"] {\n    border: 1px solid black;\n    background-color: hsl(120deg 94% 40% / 100%);\n}\n.tool-bar-indicator.modified[data-indicator-value=\"on\"] {\n    border: 1px solid black;\n    background-color: hsl(0deg 60% 85% / 100%);\n}\n\ntool-bar > select > option {\n    background-color: hsl(0deg 0% 97% / 100%);\n}\n\n/* === toggle-switch === */\n\ntoggle-switch {\n    appearance: none;\n    border: 0;\n    width:  1.5rem;\n    height: 1.5rem;\n}\n\ntoggle-switch svg {\n    width:  auto;\n    height: 100%;\n}\n\ntoggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }\ntoggle-switch.tool-bar-toggle-editable[aria-checked=\"true\"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }\ntoggle-switch.tool-bar-toggle-editable[aria-checked=\"true\"] svg .accent-stroke { stroke: transparent; }\n\ntoggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-visible[aria-checked=\"true\"]  svg .accent-fill   { fill:   chartreuse; }\ntoggle-switch.tool-bar-toggle-visible[aria-checked=\"true\"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }\n\ntoggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }\ntoggle-switch.tool-bar-toggle-autoeval[aria-checked=\"true\"] svg .accent-fill   { fill:   transparent; }\ntoggle-switch.tool-bar-toggle-autoeval[aria-checked=\"true\"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }\n\n\n/* === print media queries === */\n\n@media not print {\n    /* these overflow styles cause only a single page to be \"printed\" (output) */\n\n    body {\n        overflow: hidden;\n    }\n\n    #content {\n        overflow: auto;\n        max-height: calc(100vh - var(--controls-height));\n    }\n}\n\n@media print {\n\n    #controls {\n        display: none;\n    }\n\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6735,7 +6739,7 @@ __webpack_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony export */   $R: () => (/* binding */ get_global_command_bindings),
 /* harmony export */   ZD: () => (/* binding */ get_global_initial_key_map_bindings)
 /* harmony export */ });
-/* unused harmony exports command_handler__create_cell, command_handler__reset, command_handler__clear, command_handler__save, command_handler__save_as, command_handler__show_settings_dialog, command_handler__eval_and_refocus, command_handler__eval_before, command_handler__eval_all, command_handler__stop, command_handler__stop_all, command_handler__focus_up, command_handler__focus_down, command_handler__move_up, command_handler__move_down, command_handler__add_before, command_handler__add_after, command_handler__delete, command_handler__toggle_editable, command_handler__undo, command_handler__redo */
+/* unused harmony exports command_handler__create_cell, command_handler__reset, command_handler__clear, command_handler__save, command_handler__save_as, command_handler__toggle_editable, command_handler__show_settings_dialog, command_handler__eval_and_refocus, command_handler__eval_before, command_handler__eval_all, command_handler__stop, command_handler__stop_all, command_handler__focus_up, command_handler__focus_down, command_handler__move_up, command_handler__move_down, command_handler__add_before, command_handler__add_after, command_handler__delete, command_handler__undo, command_handler__redo */
 /* harmony import */ var _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(53);
 /* harmony import */ var _settings_dialog_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9713);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__, _settings_dialog_js__WEBPACK_IMPORTED_MODULE_1__]);
@@ -6803,8 +6807,11 @@ function get_global_command_bindings() {
         'save':             command_handler__save,
         'save-as':          command_handler__save_as,
 
+        'toggle-editable':  command_handler__toggle_editable,
+
         'settings':         command_handler__show_settings_dialog,
 
+        // binding for plain old 'eval' is defined by EvalCellElement
         'eval-and-refocus': command_handler__eval_and_refocus,
         'eval-before':      command_handler__eval_before,
         'eval-all':         command_handler__eval_all,
@@ -6821,8 +6828,6 @@ function get_global_command_bindings() {
         'add-after':        command_handler__add_after,
         'delete':           command_handler__delete,
 
-        'toggle-editable':  command_handler__toggle_editable,
-
         'undo':             command_handler__undo,
         'redo':             command_handler__redo,
     };
@@ -6833,21 +6838,13 @@ function get_global_command_bindings() {
 
 // === COMMAND HANDLERS ===
 
+// Note that these functions prevent us from having to access LogbookManager statically.
+// LogbookManager and this module depend upon each other.
+
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__create_cell(command_context) {
-    let before = null;
-    const next_cell = command_context.target?.adjacent_cell?.(true);
-    if (next_cell) {
-        before = next_cell.get_dom_extent().first;
-    }
-    const cell = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.create_cell({ before });
-    if (!cell) {
-        return false;
-    } else {
-        cell.focus();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__create_cell(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
@@ -6878,6 +6875,13 @@ async function command_handler__save_as(command_context) {
 
 /** @return {Boolean} true iff command successfully handled
  */
+function command_handler__toggle_editable(command_context) {
+    _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.set_editable(!_logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.editable);
+    return true;
+}
+
+/** @return {Boolean} true iff command successfully handled
+ */
 function command_handler__show_settings_dialog(command_context) {
     _settings_dialog_js__WEBPACK_IMPORTED_MODULE_1__/* .SettingsDialog */ .D.run();
     return true;
@@ -6887,17 +6891,7 @@ function command_handler__show_settings_dialog(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 async function command_handler__eval_and_refocus(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        await cell.eval({
-            eval_context: _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.global_eval_context,
-        });
-        const next_cell = cell.adjacent_cell(true) ?? _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.create_cell();
-        next_cell.focus();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__eval_and_refocus(command_context);
 }
 
 /** reset global eval context and then eval all cells in the document
@@ -6905,21 +6899,7 @@ async function command_handler__eval_and_refocus(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 async function command_handler__eval_before(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.reset_global_eval_context();
-        for (const iter_cell of _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.get_cells()) {
-            if (iter_cell === cell) {
-                break;
-            }
-            await iter_cell.eval({
-                eval_context: _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.global_eval_context,
-            });
-        }
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__eval_before(command_context);
 }
 
 /** stop all running evaluations, reset global eval context and then eval all cells in the document
@@ -6927,152 +6907,65 @@ async function command_handler__eval_before(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 async function command_handler__eval_all(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.stop();
-        _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.reset_global_eval_context();
-        let final_cell;
-        for (const iter_cell of _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.get_cells()) {
-            await iter_cell.eval({
-                eval_context: _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.global_eval_context,
-            });
-            final_cell = iter_cell;
-        }
-        final_cell.focus();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__eval_all(command_context);
 }
 
 /** stop evaluation for the active cell.
  *  @return {Boolean} true iff command successfully handled
  */
 function command_handler__stop(command_context) {
-    const cell = command_context.target;
-    if (!cell || !(cell instanceof EvalCellElement)) {
-        return false;
-    } else {
-        cell.stop();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__stop(command_context);
 }
 
 /** stop all running evaluations.
  *  @return {Boolean} true iff command successfully handled
  */
 function command_handler__stop_all(command_context) {
-    _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.stop();
-    return true;
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__stop_all(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__focus_up(command_context) {
-    const focus_cell = command_context.target.adjacent_cell(false);
-    if (!focus_cell) {
-        return false;
-    } else {
-        focus_cell.focus();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__focus_up(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__focus_down(command_context) {
-    const focus_cell = command_context.target.adjacent_cell(true);
-    if (!focus_cell) {
-        return false;
-    } else {
-        focus_cell.focus();
-        return true;
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__focus_down(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__move_up(command_context) {
-    const cell = command_context.target;
-    if (!cell) {
-        return false;
-    } else {
-        const previous = cell.adjacent_cell(false);
-        if (!previous) {
-            return false;
-        } else {
-            cell.move_cell({
-                before: previous.get_dom_extent().first,
-            });
-            cell.focus();
-            return true;
-        }
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__move_up(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__move_down(command_context) {
-    const cell = command_context.target;
-    if (!cell) {
-        return false;
-    } else {
-        const next = cell.adjacent_cell(true);
-        if (!next) {
-            return false;
-        } else {
-            cell.move_cell({
-                before: next.get_dom_extent().last.nextSibling,
-                parent: cell.parentElement,  // necessary if before is null
-            });
-            cell.focus();
-            return true;
-        }
-    }
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__move_down(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__add_before(command_context) {
-    const cell = command_context.target;
-    const new_cell = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.create_cell({
-        before: cell.get_dom_extent().first,
-    });
-    new_cell.focus();
-    return true;
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__add_before(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__add_after(command_context) {
-    const cell = command_context.target;
-    const new_cell = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.create_cell({
-        before: cell.get_dom_extent().last.nextSibling,
-        parent: cell.parentElement,  // necessary if before is null
-    });
-    new_cell.focus();
-    return true;
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__add_after(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 function command_handler__delete(command_context) {
-    const cell = command_context.target;
-    let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
-    cell.remove_cell();
-    if (!next_cell) {
-        next_cell = _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.create_cell();
-    }
-    next_cell.focus();
-    return true;
+    return _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.command_handler__delete(command_context);
 }
 
-/** @return {Boolean} true iff command successfully handled
- */
-function command_handler__toggle_editable(command_context) {
-    _logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.set_editable(!_logbook_manager_js__WEBPACK_IMPORTED_MODULE_0__/* .LogbookManager */ .E.singleton.editable);
-    return true;
-}
 
 /** @return {Boolean} true iff command successfully handled
  */
@@ -7576,7 +7469,7 @@ recents
             is_neutral,
         } = data;
         this.#tool_bar.set_for('modified', !is_neutral);
-        this.#menubar.set_menu_state('save', { checked: !is_neutral });
+        this.#menubar.set_menu_state('save', { enabled: !is_neutral });
     }
 
 
@@ -7598,6 +7491,207 @@ recents
 
 
     // === COMMAND HANDLERS ===
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__create_cell(command_context) {
+        let before = null;
+        const next_cell = command_context.target?.adjacent_cell?.(true);
+        if (next_cell) {
+            before = next_cell.get_dom_extent().first;
+        }
+        const cell = this.create_cell({ before });
+        if (!cell) {
+            return false;
+        } else {
+            cell.focus();
+            return true;
+        }
+    }
+
+    /** eval target cell and refocus to next cell (or a new one if at the end of the document)
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_and_refocus(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p)) {
+            return false;
+        } else {
+            await cell.eval({
+                eval_context: this.global_eval_context,
+            });
+            const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
+            next_cell.focus();
+            return true;
+        }
+    }
+
+    /** reset global eval context and then eval all cells in the document
+     *  from the beginning up to but not including the target cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_before(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p)) {
+            return false;
+        } else {
+            this.reset_global_eval_context();
+            for (const iter_cell of this.constructor.get_cells()) {
+                if (iter_cell === cell) {
+                    break;
+                }
+                await iter_cell.eval({
+                    eval_context: this.global_eval_context,
+                });
+            }
+            return true;
+        }
+    }
+
+    /** stop all running evaluations, reset global eval context and then eval all cells in the document
+     *  from first to last, and set focus to the last.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval_all(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p)) {
+            return false;
+        } else {
+            this.stop();
+            this.reset_global_eval_context();
+            let final_cell;
+            for (const iter_cell of this.constructor.get_cells()) {
+                await iter_cell.eval({
+                    eval_context: this.global_eval_context,
+                });
+                final_cell = iter_cell;
+            }
+            final_cell.focus();
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__stop(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof _eval_cell_element_js__WEBPACK_IMPORTED_MODULE_1__/* .EvalCellElement */ .p)) {
+            return false;
+        } else {
+            cell.stop();
+            return true;
+        }
+    }
+
+    /** stop all running evaluations.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__stop_all(command_context) {
+        this.stop();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__focus_up(command_context) {
+        const focus_cell = command_context.target.adjacent_cell(false);
+        if (!focus_cell) {
+            return false;
+        } else {
+            focus_cell.focus();
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__focus_down(command_context) {
+        const focus_cell = command_context.target.adjacent_cell(true);
+        if (!focus_cell) {
+            return false;
+        } else {
+            focus_cell.focus();
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__move_up(command_context) {
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        } else {
+            const previous = cell.adjacent_cell(false);
+            if (!previous) {
+                return false;
+            } else {
+                cell.move_cell({
+                    before: previous.get_dom_extent().first,
+                });
+                cell.focus();
+                return true;
+            }
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__move_down(command_context) {
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        } else {
+            const next = cell.adjacent_cell(true);
+            if (!next) {
+                return false;
+            } else {
+                cell.move_cell({
+                    before: next.get_dom_extent().last.nextSibling,
+                    parent: cell.parentElement,  // necessary if before is null
+                });
+                cell.focus();
+                return true;
+            }
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__add_before(command_context) {
+        const cell = command_context.target;
+        const new_cell = this.create_cell({
+            before: cell.get_dom_extent().first,
+        });
+        new_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__add_after(command_context) {
+        const cell = command_context.target;
+        const new_cell = this.create_cell({
+            before: cell.get_dom_extent().last.nextSibling,
+            parent: cell.parentElement,  // necessary if before is null
+        });
+        new_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__delete(command_context) {
+        const cell = command_context.target;
+        let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
+        cell.remove_cell();
+        if (!next_cell) {
+            next_cell = this.create_cell();
+        }
+        next_cell.focus();
+        return true;
+    }
 
     /** @return {Boolean} true iff command successfully handled
      */
