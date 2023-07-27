@@ -16,7 +16,7 @@ devtool: 'source-map',
     },
 
     optimization: {
-        minimize: true,
+        minimize: false,
     },
 
     stats: {

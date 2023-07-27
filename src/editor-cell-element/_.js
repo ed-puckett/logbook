@@ -10,7 +10,7 @@ import {
 } from '../../lib/ui/dom-util.js';
 
 import {
-    logbook_manager,
+    LogbookManager,
 } from '../logbook-manager.js';
 
 import {
@@ -23,8 +23,9 @@ import {
 } from '../../lib/ui/key/_.js';
 
 import {
-    ChangeManager,
-} from '../../lib/ui/change-manager.js';
+    get_global_initial_key_map_bindings,
+    get_global_command_bindings,
+} from '../global-bindings.js';
 
 import {
     ToolBarElement,
@@ -34,10 +35,9 @@ import {
     beep,
 } from '../../lib/ui/beep.js';
 
-import {
-    assets_server_url,
-} from '../assets-server-url.js';
-
+// import {
+//     assets_server_url,
+// } from '../assets-server-url.js';
 // import {
 //     create_stylesheet_link,
 // } from '../../lib/ui/dom-util.js';
@@ -167,7 +167,7 @@ export class EditorCellElement extends HTMLElement {
         const {
             parent   = document.body,
             before   = null,
-            editable = logbook_manager.editable,
+            editable = LogbookManager.singleton.editable,
             innerText,
         } = (options ?? {});
 
@@ -265,8 +265,9 @@ export class EditorCellElement extends HTMLElement {
      */
     static get_initial_key_map_bindings() {
         return {
-            ...logbook_manager.constructor.get_global_initial_key_map_bindings(),
+            ...get_global_initial_key_map_bindings(),
 
+//!!! the following are implemented via setting the contenteditable attribute on the element
 //!!!            'insert-line-break':   [ 'Enter' ],
 
 //!!!            'delete-forward':      [ 'Delete' ],
@@ -282,12 +283,12 @@ export class EditorCellElement extends HTMLElement {
 
     /** return command bindings for this cell
      *  @return {Object} mapping from command strings to functions implementing that command
-     * The bindings are obtained by merging local command bindings with logbook_manager
+     * The bindings are obtained by merging local command bindings with LogbookManager.singleton
      * command bindings.
      */
     get_command_bindings() {
         const command_bindings = {
-            ...logbook_manager.get_global_command_bindings(),
+            ...get_global_command_bindings(),
 
             'insert-self':         this.command_handler__insert_self.bind(this),
             'insert-line-break':   this.command_handler__insert_line_break.bind(this),
@@ -446,8 +447,8 @@ export class EditorCellElement extends HTMLElement {
     #connect_focus_listeners() {
         if (this.#event_listener_manager.empty()) {
             function focus_handler(event) {
-                // logbook_manager.set_active_cell() clears/sets the "active" attributes of cells
-                logbook_manager.set_active_cell(this);
+                // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
+                LogbookManager.singleton.set_active_cell(this);
             }
             const listener_specs = [
                 [ this, 'focus', focus_handler, { capture: true } ],

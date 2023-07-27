@@ -16,9 +16,3 @@ editor-cell {
 editor-cell[data-active] {
     border: 1px solid black;
 }
-
-
-/* assumes tool bar on top of editor-cell */
-tool-bar + editor-cell {
-    margin-top: 0;
-}

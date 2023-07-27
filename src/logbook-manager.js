@@ -65,7 +65,16 @@ import './style-hacks.css';  // webpack implementation
 // command dispatch in eval_cell.get_command_bindings().
 
 
-class LogbookManager {
+export class LogbookManager {
+    static get singleton() {
+        if (!this.#singleton) {
+            this.#singleton = new this();
+            this.#singleton.initialize();
+        }
+        return this.#singleton;
+    }
+    static #singleton;
+
     constructor() {
         this.#editable = false;
         this.#active_cell = null;
@@ -392,15 +401,6 @@ recents
             running:  true,
         });
         this.#controls_element.appendChild(this.#tool_bar);
-        //!!! is the following useful?
-        // send keydown events destined for document.body to the active cell's key_event_manager
-        document.body.addEventListener('keydown', (event) => {
-            if (event.target === document.body) {
-                this.active_cell?.inject_key_event(event);
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        });  //!!! event handler never removed
     }
 
     #menubar_commands_observer(command_context) {
@@ -470,91 +470,6 @@ recents
         ];
     }
 
-    /** return the initial key map bindings
-     *  @return {Object} mapping from command strings to arrays of triggering key sequences
-     */
-    static get_global_initial_key_map_bindings() {
-        return {
-            'create-cell':         [ 'CmdOrCtrl-Shift-Alt-N' ],
-
-            'reset':               [ ],
-            'clear':               [ ],
-
-            'save':                [ 'CmdOrCtrl-S' ],
-            'save-as':             [ 'CmdOrCtrl-Shift-S' ],
-
-            'settings':            [ 'CmdOrCtrl-,' ],
-
-            'eval-and-refocus':    [ 'Shift-Enter' ],
-            'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
-            'eval-all':            [ 'CmdOrCtrl-Shift-Alt-Enter' ],
-
-            'stop':                [ 'CmdOrCtrl-Alt-!' ],
-            'stop-all':            [ 'CmdOrCtrl-Shift-Alt-!' ],
-
-            'focus-up':            [ 'Alt-Up' ],
-            'focus-down':          [ 'Alt-Down' ],
-
-            'move-up':             [ 'CmdOrCtrl-Alt-Up' ],
-            'move-down':           [ 'CmdOrCtrl-Alt-Down' ],
-            'add-before':          [ 'CmdOrCtrl-Alt-Shift-Up' ],
-            'add-after':           [ 'CmdOrCtrl-Alt-Shift-Down' ],
-            'delete':              [ 'CmdOrCtrl-Alt-Backspace' ],
-
-            'set-mode-markdown':   [ 'Alt-M m' ],
-            'set-mode-tex':        [ 'Alt-M t' ],
-            'set-mode-javascript': [ 'Alt-M j' ],
-
-            'toggle-cell-visible': [ 'Alt-M v' ],
-            'toggle-editable':     [ 'Alt-M e' ],
-
-            'undo':                [ 'CmdOrCtrl-Z' ],
-            'redo':                [ 'CmdOrCtrl-Shift-Z' ],
-        };
-    }
-
-    /** return global command bindings
-     *  @return {Object} mapping from command strings to functions implementing that command
-     * The bindings are obtained by merging local command bindings with logbook_manager
-     * command bindings.
-     */
-    get_global_command_bindings() {
-        const command_bindings = {
-            'create-cell':      this.command_handler__create_cell.bind(this),
-
-            'reset':            this.command_handler__reset.bind(this),
-            'clear':            this.command_handler__clear.bind(this),
-
-            'save':             this.command_handler__save.bind(this),
-            'save-as':          this.command_handler__save_as.bind(this),
-
-            'settings':         this.command_handler__show_settings_dialog.bind(this),
-
-            'eval-and-refocus': this.command_handler__eval_and_refocus.bind(this),
-            'eval-before':      this.command_handler__eval_before.bind(this),
-            'eval-all':         this.command_handler__eval_all.bind(this),
-
-            'stop':             this.command_handler__stop.bind(this),
-            'stop-all':         this.command_handler__stop_all.bind(this),
-
-            'focus-up':         this.command_handler__focus_up.bind(this),
-            'focus-down':       this.command_handler__focus_down.bind(this),
-
-            'move-up':          this.command_handler__move_up.bind(this),
-            'move-down':        this.command_handler__move_down.bind(this),
-            'add-before':       this.command_handler__add_before.bind(this),
-            'add-after':        this.command_handler__add_after.bind(this),
-            'delete':           this.command_handler__delete.bind(this),
-
-            'toggle-editable':  this.command_handler__toggle_editable.bind(this),
-
-            'undo':             this.command_handler__undo.bind(this),
-            'redo':             this.command_handler__redo.bind(this),
-        };
-
-        return command_bindings;
-    }
-
 
     // === NEUTRAL CHANGES OBSERVER ===
 
@@ -585,37 +500,6 @@ recents
 
 
     // === COMMAND HANDLERS ===
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__create_cell(command_context) {
-        let before = null;
-        const next_cell = command_context.target?.adjacent_cell?.(true);
-        if (next_cell) {
-            before = next_cell.get_dom_extent().first;
-        }
-        const cell = this.create_cell({ before });
-        if (!cell) {
-            return false;
-        } else {
-            cell.focus();
-            return true;
-        }
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__reset(command_context) {
-        this.reset();
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__clear(command_context) {
-        this.clear();
-        return true;
-    }
 
     /** @return {Boolean} true iff command successfully handled
      */
@@ -653,204 +537,6 @@ recents
 
     /** @return {Boolean} true iff command successfully handled
      */
-    command_handler__show_settings_dialog(command_context) {
-        SettingsDialog.run();
-        return true;
-    }
-
-    /** eval target cell and refocus to next cell (or a new one if at the end of the document)
-     *  @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__eval_and_refocus(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            await cell.eval({
-                eval_context: this.global_eval_context,
-            });
-            const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
-            next_cell.focus();
-            return true;
-        }
-    }
-
-    /** reset this.global_eval_context and then eval all cells in the document
-     *  from the beginning up to but not including the target cell.
-     *  @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__eval_before(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            this.reset_global_eval_context();
-            for (const iter_cell of this.constructor.get_cells()) {
-                if (iter_cell === cell) {
-                    break;
-                }
-                await iter_cell.eval({
-                    eval_context: this.global_eval_context,
-                });
-            }
-            return true;
-        }
-    }
-
-    /** stop all running evaluations, reset this.global_eval_context and then eval all cells in the document
-     *  from first to last, and set focus to the last.
-     *  @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__eval_all(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            this.stop();
-            this.reset_global_eval_context();
-            let final_cell;
-            for (const iter_cell of this.constructor.get_cells()) {
-                await iter_cell.eval({
-                    eval_context: this.global_eval_context,
-                });
-                final_cell = iter_cell;
-            }
-            final_cell.focus();
-            return true;
-        }
-    }
-
-    /** stop evaluation for the active cell.
-     *  @return {Boolean} true iff command successfully handled
-     */
-    command_handler__stop(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            cell.stop();
-            return true;
-        }
-    }
-
-    /** stop all running evaluations.
-     *  @return {Boolean} true iff command successfully handled
-     */
-    command_handler__stop_all(command_context) {
-        this.stop();
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__focus_up(command_context) {
-        const focus_cell = command_context.target.adjacent_cell(false);
-        if (!focus_cell) {
-            return false;
-        } else {
-            focus_cell.focus();
-            return true;
-        }
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__focus_down(command_context) {
-        const focus_cell = command_context.target.adjacent_cell(true);
-        if (!focus_cell) {
-            return false;
-        } else {
-            focus_cell.focus();
-            return true;
-        }
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__move_up(command_context) {
-        const cell = command_context.target;
-        if (!cell) {
-            return false;
-        } else {
-            const previous = cell.adjacent_cell(false);
-            if (!previous) {
-                return false;
-            } else {
-                cell.move_cell({
-                    before: previous.get_dom_extent().first,
-                });
-                cell.focus();
-                return true;
-            }
-        }
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__move_down(command_context) {
-        const cell = command_context.target;
-        if (!cell) {
-            return false;
-        } else {
-            const next = cell.adjacent_cell(true);
-            if (!next) {
-                return false;
-            } else {
-                cell.move_cell({
-                    before: next.get_dom_extent().last.nextSibling,
-                    parent: cell.parentElement,  // necessary if before is null
-                });
-                cell.focus();
-                return true;
-            }
-        }
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__add_before(command_context) {
-        const cell = command_context.target;
-        const new_cell = this.create_cell({
-            before: cell.get_dom_extent().first,
-        });
-        new_cell.focus();
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__add_after(command_context) {
-        const cell = command_context.target;
-        const new_cell = this.create_cell({
-            before: cell.get_dom_extent().last.nextSibling,
-            parent: cell.parentElement,  // necessary if before is null
-        });
-        new_cell.focus();
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__delete(command_context) {
-        const cell = command_context.target;
-        let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
-        cell.remove_cell();
-        if (!next_cell) {
-            next_cell = this.create_cell();
-        }
-        next_cell.focus();
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__toggle_editable(command_context) {
-        this.set_editable(!this.editable);
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
     command_handler__undo(command_context) {
         return this.#global_change_manager?.perform_undo();
     }
@@ -861,7 +547,3 @@ recents
         return this.#global_change_manager?.perform_redo();
     }
 }
-
-
-export const logbook_manager = new LogbookManager();
-globalThis.logbook_manager = logbook_manager;//!!!

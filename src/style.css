@@ -54,30 +54,17 @@ body {
 }
 
 #controls > tool-bar {  /* next to menu */
+    max-height: 100vh;
+
+    padding: 0 0.5em;
+
     border: 0;
+    border-width: var(--border-width-tool);
+
+    background-color: transparent;
+
     align-self: center;
     margin-left: auto;  /* push to far right */
-    background-color: transparent;
-}
-
-tool-bar {
-    background-color: var(--bgcolor-tool);
-
-    padding: 0.3em 0.5em;
-}
-
-eval-cell {
-    background-color: var(--bgcolor-cell);
-
-    outline: 0px solid transparent;  /* disable default outline */
-
-    white-space: pre-wrap;  /* properly display white-space */
-    font-family: monospace;
-    line-height: 140%;
-
-    display: block;
-    margin:  0;
-    padding: 0.3em 0.5em;
 }
 
 .eval-cell-output {
@@ -94,68 +81,91 @@ eval-cell {
     padding-bottom: 1em;
 }
 
+/* */
+eval-cell[data-active] + .eval-cell-output::before {
+    content: " ";
+    background-color: cornflowerblue;
+    min-width: 1em;
+},
 
-/* border / animated attributes */
+
+/* visible/active - animated attributes */
 
 tool-bar {
     overflow: hidden;
 
-    max-height:   0;
-    border-width: 0;
-    padding:      0 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5em;
+
+    background-color: var(--bgcolor-tool);
+
+    max-height: 0;
+    padding:    0 0.5em;
+    /* split color into the three sides; the bottom side is controlled by the input type selector */
+    border-top-color:   var(--border-color-tool);
+    border-right-color: var(--border-color-tool);
+    border-left-color:  var(--border-color-tool);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
-    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
+    border-width:  var(--border-width-tool);
     border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
     border-style:  var(--border-style-tool);
-    border-color:  var(--border-color-tool);
+
 }
+
 eval-cell {
     overflow: hidden;
 
-    max-height:   0;
-    border-width: 0;
-    padding:      0 0.5em;
+    display: block;
+    margin:  0;
+
+    outline: 0px solid transparent;  /* disable default contenteditable outline */
+
+    white-space: pre-wrap;  /* properly display white-space */
+    font-family: monospace;
+    line-height: 140%;
+
+    background-color: var(--bgcolor-cell);
+
+    max-height:  0;
+    padding:     0 0.5em;
+    border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
-    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
+    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
+    border-width:  var(--border-width-cell);
     border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
     border-style:  var(--border-style-cell);
-    border-color:  transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 }
 
-#controls > tool-bar {
-    max-height:   100vh;
-    border-width: var(--border-width-tool);
-    padding:      0 0.5em;
-}
 
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
+    max-height: 100vh;
+    padding:    0 0.5em;
+}
+eval-cell[data-visible],
+eval-cell[contenteditable] {
+    max-height: 100vh;
+    padding:    0.3em 0.5em;
+}
+
+tool-bar:has(+ eval-cell[data-visible][data-active]),
+tool-bar:has(+ eval-cell[contenteditable][data-active]) {
     border-top-color:   var(--border-color-tool-focus);
-    border-left-color:  var(--border-color-tool-focus);
     border-right-color: var(--border-color-tool-focus);
+    border-left-color:  var(--border-color-tool-focus);
 }
-eval-cell[data-visible],
-eval-cell[contenteditable] {
+eval-cell[data-visible][data-active],
+eval-cell[contenteditable][data-active] {
     border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
-}
-
-tool-bar:has(+ eval-cell[data-visible]),
-tool-bar:has(+ eval-cell[contenteditable]) {
-    max-height:   100vh;
-    border-width: var(--border-width-tool);
-    padding:      0 0.5em;
-}
-eval-cell[data-visible],
-eval-cell[contenteditable] {
-    max-height:   100vh;
-    border-width: var(--border-width-cell);
-    padding:      0.3em 0.5em;
 }
 
 
@@ -178,7 +188,7 @@ tool-bar > select:has(> option[value="tex"]:checked) {
 }
 
 
-tool-bar {
+tool-bar:has(option) {
     border-bottom-color: var(--color-type-markdown);
 }
 
@@ -190,15 +200,7 @@ tool-bar:has(option[value="tex"]:checked) {
     border-bottom-color: var(--color-type-tex);
 }
 
-/* === */
-
-tool-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5em;
-    padding: 0 0.5em;
-}
+/* === tool-bar indicators and controls === */
 
 tool-bar > * {
     margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
@@ -229,7 +231,7 @@ tool-bar > select > option {
     background-color: hsl(0deg 0% 97% / 100%);
 }
 
-/* === */
+/* === toggle-switch === */
 
 toggle-switch {
     appearance: none;

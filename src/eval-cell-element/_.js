@@ -7,7 +7,7 @@ import {
 } from '../../lib/ui/dom-util.js';
 
 import {
-    logbook_manager,
+    LogbookManager,
 } from '../logbook-manager.js';
 
 import {
@@ -245,13 +245,13 @@ export class EvalCellElement extends EditorCellElement {
         this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
         this.#evaluator_foreground = true;
         this._tool_bar?.set_for('running', true);
-        logbook_manager.emit_eval_state(this, true);
+        LogbookManager.singleton.emit_eval_state(this, true);
 
         return evaluator._perform_eval()
             .then(() => {
                 this.#evaluator_foreground = undefined;
                 this._tool_bar?.set_for('running', false);
-                logbook_manager.emit_eval_state(this, false);
+                LogbookManager.singleton.emit_eval_state(this, false);
             })
             .catch(error => {
                 this.stop();  // stop anything that may have been started
@@ -281,7 +281,7 @@ export class EvalCellElement extends EditorCellElement {
         this.#evaluator_stoppable  = undefined;
         this.#evaluator_foreground = undefined;
         this._tool_bar?.set_for('running', false);
-        logbook_manager.emit_eval_state(this, false);
+        LogbookManager.singleton.emit_eval_state(this, false);
     }
 
     establish_tool_bar() {  // override of EditorCellElement.establish_tool_bar()
@@ -361,7 +361,7 @@ export class EvalCellElement extends EditorCellElement {
      */
     async command_handler__eval(command_context) {
         await this.eval({
-            eval_context: logbook_manager.global_eval_context,
+            eval_context: LogbookManager.singleton.global_eval_context,
         });
         return true;
     }

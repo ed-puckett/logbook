@@ -58,7 +58,7 @@ const dynamic_import = new Function('path', 'return import(path);');
 const AsyncGeneratorFunction = Object.getPrototypeOf(async function* () {}).constructor;
 
 import {
-    logbook_manager,
+    LogbookManager,
 } from '../../logbook-manager.js';
 
 import {
@@ -102,11 +102,11 @@ export class JavaScriptRenderer extends Renderer {
     // options: { style?: Object, eval_context?: Object, inline?: Boolean }
 
     // may throw an error
-    // if eval_context is not given in options, then logbook_manager.global_eval_context is used
+    // if eval_context is not given in options, then LogbookManager.singleton.global_eval_context is used
     async render(output_context, code, options=null) {
         const {
             style,
-            eval_context = logbook_manager.global_eval_context,
+            eval_context = LogbookManager.singleton.global_eval_context,
             inline,
         } = (options ?? {});
 
