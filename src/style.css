@@ -26,6 +26,15 @@
     --border-color-cell-focus: black;
 
 
+    /* active output element highlight */
+
+    --active-output-highlight-width: 4px;
+    --active-output-highlight-color: hsl(190deg 100% 15% / 100%);
+    --active-output-highlight-style: dotted;
+
+    --output-background-color: white;
+
+
     /* focus transition */
 
     --focus-x1-delay:    0s;
@@ -54,41 +63,45 @@ body {
 }
 
 #controls > tool-bar {  /* next to menu */
-    max-height: 100vh;
-
-    padding: 0 0.5em;
-
-    border: 0;
-
-    background-color: transparent;
-
     align-self: center;
     margin-left: auto;  /* push to far right */
+
+    max-height: 100vh;
+    padding: 0 0.5em;
+    border: 0;
+    background-color: transparent;
 }
 
 .eval-cell-output {
     display: block;
-    padding: 0.5em;
-
-    white-space: pre-wrap;  /* properly display white-space */
+    white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
 
-    background-color: white;
+    padding: 0.5em;
+    background-color: var(--output-background-color);
+
+    /* no highlight */
+    border-width: 0 0 0 var(--active-output-highlight-width);
+    border-color: transparent transparent transparent transparent;
+    border-style: var(--active-output-highlight-style);
 }
 .eval-cell-output:has(+ tool-bar),
 .eval-cell-output:has(+ eval-cell) {
     padding-bottom: 1em;
 }
 
-/* */
-eval-cell[data-active] + .eval-cell-output::before {
-    content: " ";
-    background-color: cornflowerblue;
-    min-width: 1em;
+
+/* output element active highlight */
+eval-cell[data-active] + .eval-cell-output {
+    border-width: 0 0 0 var(--active-output-highlight-width);
+    border-color: transparent transparent transparent var(--active-output-highlight-color);
+    border-style: var(--active-output-highlight-style);
 }
 
 
-/* visible/active - animated attributes */
+/* === visible/active - animated attributes === */
+
+/* tool-bar and eval-cell base definitions: the define a collapsed state */
 
 tool-bar {
     overflow: hidden;
@@ -146,7 +159,7 @@ eval-cell {
     border-style:  var(--border-style-cell);
 }
 
-
+/* tool-bar and eval-cell visible but not active */
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
     max-height:   100vh;
@@ -160,6 +173,7 @@ eval-cell[contenteditable] {
     border-width: var(--border-width-cell);
 }
 
+/* tool-bar and eval-cell visible and active */
 tool-bar:has(+ eval-cell[data-visible][data-active]),
 tool-bar:has(+ eval-cell[contenteditable][data-active]) {
     border-top-color:   var(--border-color-tool-focus);
@@ -173,7 +187,6 @@ eval-cell[contenteditable][data-active] {
 
 
 /* color selected by eval-cell input-type */
-
 
 tool-bar option,
 tool-bar select {
