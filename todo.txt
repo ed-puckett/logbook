@@ -1,3 +1,5 @@
+menu navigation with mouse is sluggish
+first click in newly-opened document's first eval-cell sends focus to <body>, second click causes document modification but focuses to eval-cell
 handle keypresses originating outside of cells
 toggle-menu command
 implement and use logbook_manager.update_menu_state()

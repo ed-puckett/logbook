@@ -7550,10 +7550,10 @@ recents
         } else {
             this.reset_global_eval_context();
             for (const iter_cell of this.constructor.get_cells()) {
+                iter_cell.focus();
                 if (iter_cell === cell) {
                     break;
                 }
-                iter_cell.focus();
                 await iter_cell.eval({
                     eval_context: this.global_eval_context,
                 });
@@ -7573,15 +7573,12 @@ recents
         } else {
             this.stop();
             this.reset_global_eval_context();
-            let final_cell;
             for (const iter_cell of this.constructor.get_cells()) {
                 iter_cell.focus();
                 await iter_cell.eval({
                     eval_context: this.global_eval_context,
                 });
-                final_cell = iter_cell;
             }
-            final_cell.focus();
             return true;
         }
     }
