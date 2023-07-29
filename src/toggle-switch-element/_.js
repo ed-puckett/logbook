@@ -79,19 +79,19 @@ export class ToggleSwitchElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-        this.#event_listener_manager.reattach();
+        this.#event_listener_manager.attach();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-        // event handlers have been disconnected, but just leave things alone so we can reconnect
+        this.#event_listener_manager.deattach();
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-        this.#event_listener_manager.reattach();
+        this.#event_listener_manager.attach();
     }
 
     // attributeChangedCallback:

@@ -56,7 +56,9 @@ export class EditorCellElement extends HTMLElement {
         this.#event_listener_manager = new EventListenerManager();
 
         this.#key_event_manager = new KeyEventManager(this, this.#command_observer.bind(this));
-        this.#command_bindings  = this.get_command_bindings();
+        this.#connect_focus_listeners();
+
+        this.#command_bindings = this.get_command_bindings();
 
         const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings(), this.constructor.key_map_insert_self_recognizer);
         this.push_key_map(key_map);
@@ -442,25 +444,19 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
-    // === FOCUS HANDLERS / ACTIVE ===
+    // === FOCUS LISTENERS / ACTIVE ===
 
     #connect_focus_listeners() {
-        if (this.#event_listener_manager.empty()) {
-            function focus_handler(event) {
-                // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
-                LogbookManager.singleton.set_active_cell(this);
-            }
-            const listener_specs = [
-                [ this, 'focus', focus_handler, { capture: true } ],
-            ];
-            for (const [ target, type, listener, options ] of listener_specs) {
-                this.#event_listener_manager.add(target, type, listener, options);
-            }
+        function focus_handler(event) {
+            // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
+            LogbookManager.singleton.set_active_cell(this);
         }
-    }
-
-    #disconnect_focus_listeners() {
-        this.#event_listener_manager.remove_all();
+        const listener_specs = [
+            [ this, 'focus', focus_handler, { capture: true } ],
+        ];
+        for (const [ target, type, listener, options ] of listener_specs) {
+            this.#event_listener_manager.add(target, type, listener, options);
+        }
     }
 
 
@@ -471,21 +467,21 @@ export class EditorCellElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-        this.#connect_focus_listeners();
+        this.#event_listener_manager.attach();
         this.#key_event_manager.attach();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-        this.#disconnect_focus_listeners();
         this.#key_event_manager.detach();
+        this.#event_listener_manager.detach();
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-        this.#connect_focus_listeners();
+        this.#event_listener_manager.attach();
         this.#key_event_manager.attach();
     }
 
