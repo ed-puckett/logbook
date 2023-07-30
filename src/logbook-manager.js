@@ -13,6 +13,10 @@ import {
 } from './tool-bar-element/_.js';
 
 import {
+    get_menubar_spec,
+} from './global-bindings.js';
+
+import {
     Subscribable,
 } from '../lib/sys/subscribable.js';
 
@@ -129,8 +133,8 @@ export class LogbookManager {
     }
 
     /** reset the document, meaning that all cells will be reset,
-     *  and this.global_eval_context will be reset.  Also,
-     *  the saved file handle this.#file_handle set to undefined.
+     *  and this.global_eval_context will be reset.  Also, the
+     *  saved file handle this.#file_handle set to undefined.
      *  @return {LogbookManager} this
      */
     reset() {
@@ -199,6 +203,15 @@ export class LogbookManager {
                 }
             });  //!!! event handler never removed
 
+            //!!! is the following useful?
+            // send keydown events destined for document.body to the active cell's key_event_manager
+            document.body.addEventListener('keydown', (event) => {
+                if (event.target === document.body) {
+                    this.active_cell?.inject_key_event(event);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });  //!!! event handler never removed
 
             // set baseline for undo/redo
             // it is important that all async operations have finished before getting here
@@ -387,7 +400,7 @@ recents
         }
         const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
-        this.#menubar = MenuBar.create(this.controls_element, this.constructor.#get_menubar_spec(), get_command_bindings, get_recents);
+        this.#menubar = MenuBar.create(this.controls_element, get_menubar_spec(), get_command_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
         this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
@@ -417,57 +430,6 @@ recents
             };
             target.perform_command(updated_command_context);
         }
-    }
-
-    static #get_menubar_spec() {
-        return [
-            { label: 'File', collection: [
-                { label: 'Recent logbooks', id: 'recents', collection: [
-                    // ...
-                ] },
-                '---',
-                { label: 'Reset cells',    item: { command: 'reset',               } },
-                { label: 'Clear document', item: { command: 'clear',               } },
-                '---',
-                { label: 'Editable',       item: { command: 'toggle-editable',     }, id: 'toggle-editable' },
-                '---',
-                { label: 'Save',           item: { command: 'save',                }, id: 'save' },
-                { label: 'Save as...',     item: { command: 'save-as',             } },
-                '---',
-                { label: 'Settings...',    item: { command: 'settings',            } },
-            ] },
-
-            { label: 'Edit', collection: [
-                { label: 'Undo',           item: { command: 'undo',                }, id: 'undo' },
-                { label: 'Redo',           item: { command: 'redo',                }, id: 'redo' },
-            ] },
-
-            { label: 'Cell', collection: [
-                { label: 'Eval',           item: { command: 'eval-and-refocus',    }, id: 'eval-and-refocus' },
-                { label: 'Eval and stay',  item: { command: 'eval',                }, id: 'eval' },
-                { label: 'Eval before',    item: { command: 'eval-before',         }, id: 'eval-before' },
-                { label: 'Eval all',       item: { command: 'eval-all',            }, id: 'eval-all' },
-                '---',
-                { label: 'Stop cell',      item: { command: 'stop',                }, id: 'stop' },
-                { label: 'Stop all',       item: { command: 'stop-all',            }, id: 'stop-all' },
-                '---',
-                { label: 'Reset cell',     item: { command: 'reset-cell',          } },
-                { label: 'Visible',        item: { command: 'toggle-cell-visible', }, id: 'toggle-cell-visible' },
-                '---',
-                { label: 'Focus up',       item: { command: 'focus-up',            }, id: 'focus-up' },
-                { label: 'Focus down',     item: { command: 'focus-down',          }, id: 'focus-down' },
-                '---',
-                { label: 'Move up',        item: { command: 'move-up',             }, id: 'move-up' },
-                { label: 'Move down',      item: { command: 'move-down',           }, id: 'move-down' },
-                { label: 'Add before',     item: { command: 'add-before',          } },
-                { label: 'Add after',      item: { command: 'add-after',           } },
-                { label: 'Delete',         item: { command: 'delete',              }, id: 'delete' },
-            ] },
-
-            { label: 'Help', collection: [
-                { label: 'Help...',        item: { command: 'help',                } },
-            ] },
-        ];
     }
 
 

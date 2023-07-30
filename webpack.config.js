@@ -4,24 +4,24 @@ import { fileURLToPath } from "node:url";
 
 const dist_dir_path = fileURLToPath(new URL("./dist", current_script_url));
 
-const config = {
-devtool: 'source-map',
+const webpack_config = {
     entry: './src/init.js',
+    mode:  'production',
 
-    devtool: 'source-map',
+    optimization: {
+        minimize: false,
+    },
+
+    stats: {
+        errorDetails: true,
+    },
 
     output: {
         path: dist_dir_path,
         filename: 'main.js',
     },
 
-    optimization: {
-        minimize: true,
-    },
-
-    stats: {
-        errorDetails: true,
-    },
+    devtool: 'source-map',
 
     module: {
         rules: [
@@ -33,4 +33,4 @@ devtool: 'source-map',
     },
 };
 
-export default config;
+export default webpack_config;

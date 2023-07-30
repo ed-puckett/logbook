@@ -259,6 +259,26 @@ export class EditorCellElement extends HTMLElement {
     // === COMMAND HANDLER INTERFACE ===
 
     inject_key_event(key_event) {
+        if (!this.contains(key_event.target)) {
+            // try to set target to the currently active cell
+            const active_cell = LogbookManager.singleton.active_cell;
+            if (active_cell) {
+                // this is a clumsy clone of event, but it will only be used internally from this point
+                // the goal is to clone the event but change target and currentTarget
+                key_event = {
+                    ...key_event,
+                    key:           key_event.key,       // getter
+                    metaKey:       key_event.metaKey,   // getter
+                    ctrlKey:       key_event.ctrlKey,   // getter
+                    shiftKey:      key_event.shiftKey,  // getter
+                    altKey:        key_event.altKey,    // getter
+                    target:        active_cell,
+                    currentTarget: active_cell,
+                    preventDefault:  event.preventDefault.bind(event),
+                    stopPropagation: event.stopPropagation.bind(event),
+                };
+            }
+        }
         this.#key_event_manager.inject_key_event(key_event);
     }
 
@@ -421,7 +441,7 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
-    // === ATTRIBUTES ===
+    // === ACTIVE/VISIBLE ATTRIBUTES ===
 
     get active (){ return !!this.hasAttribute(this.constructor.attribute__active); }
     set_active(state=false) {

@@ -7,6 +7,61 @@ import {
 } from './settings-dialog/_.js';
 
 
+/** return the initial menu specification
+ *  @return {Object} menu specification
+ */
+export function get_menubar_spec() {
+    return [
+        { label: 'File', collection: [
+            { label: 'Recent logbooks', id: 'recents', collection: [
+                // ...
+            ] },
+            '---',
+            { label: 'Reset cells',    item: { command: 'reset',               } },
+            { label: 'Clear document', item: { command: 'clear',               } },
+            '---',
+            { label: 'Editable',       item: { command: 'toggle-editable',     }, id: 'toggle-editable' },
+            '---',
+            { label: 'Save',           item: { command: 'save',                }, id: 'save' },
+            { label: 'Save as...',     item: { command: 'save-as',             } },
+            '---',
+            { label: 'Settings...',    item: { command: 'settings',            } },
+        ] },
+
+        { label: 'Edit', collection: [
+            { label: 'Undo',           item: { command: 'undo',                }, id: 'undo' },
+            { label: 'Redo',           item: { command: 'redo',                }, id: 'redo' },
+        ] },
+
+        { label: 'Cell', collection: [
+            { label: 'Eval',           item: { command: 'eval-and-refocus',    }, id: 'eval-and-refocus' },
+            { label: 'Eval and stay',  item: { command: 'eval',                }, id: 'eval' },
+            { label: 'Eval before',    item: { command: 'eval-before',         }, id: 'eval-before' },
+            { label: 'Eval all',       item: { command: 'eval-all',            }, id: 'eval-all' },
+            '---',
+            { label: 'Stop cell',      item: { command: 'stop',                }, id: 'stop' },
+            { label: 'Stop all',       item: { command: 'stop-all',            }, id: 'stop-all' },
+            '---',
+            { label: 'Reset cell',     item: { command: 'reset-cell',          } },
+            { label: 'Visible',        item: { command: 'toggle-cell-visible', }, id: 'toggle-cell-visible' },
+            '---',
+            { label: 'Focus up',       item: { command: 'focus-up',            }, id: 'focus-up' },
+            { label: 'Focus down',     item: { command: 'focus-down',          }, id: 'focus-down' },
+            '---',
+            { label: 'Move up',        item: { command: 'move-up',             }, id: 'move-up' },
+            { label: 'Move down',      item: { command: 'move-down',           }, id: 'move-down' },
+            { label: 'Add before',     item: { command: 'add-before',          } },
+            { label: 'Add after',      item: { command: 'add-after',           } },
+            { label: 'Delete',         item: { command: 'delete',              }, id: 'delete' },
+        ] },
+
+        { label: 'Help', collection: [
+            { label: 'Help...',        item: { command: 'help',                } },
+        ] },
+    ];
+}
+
+
 /** return the initial key map bindings
  *  @return {Object} mapping from command strings to arrays of triggering key sequences
  */

@@ -85,7 +85,7 @@ export class ToggleSwitchElement extends HTMLElement {
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-        this.#event_listener_manager.deattach();
+        this.#event_listener_manager.detach();
     }
 
     // adoptedCallback:

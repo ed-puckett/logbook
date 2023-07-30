@@ -1,18 +1,24 @@
+review uses of addEventListener() (maybe use EventListenerManager instead)
+make sure LogbookManager.singleton.active_cell remains valid when deleting or otherwise modfiying document
+set/reset tabindex for tool-bar controls when they change visibility
+make toggle-switch more ui-aware (press space to click, aria stuff, etc)
+set contenteditable for empty document (so that not just a blank pages is displayed), or indicate that the document is empty
+rationalize style settings in preparation for dark/light mode
 menu navigation with mouse is sluggish
-first click in newly-opened document's first eval-cell sends focus to <body>, second click causes document modification but focuses to eval-cell
-handle keypresses originating outside of cells
-toggle-menu command
+maybe prevent default generation of element ids by create_element()
+toggle-menu command (for keyboard)
 implement and use logbook_manager.update_menu_state()
 implement recents
-rationalize style settings in preparation for dark/light mode
 implement go/stop control in tool-bar
 improve saving
 save can cause disconnect between current document and its "file_handle" if the user saves to a different file
 make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste")
-subscribe()s leak if not unsubscribed
 
 
 --- DONE ---
+first click in newly-opened document's first eval-cell sends focus to <body>, second click causes document modification but focuses to eval-cell
+handle keypresses originating outside of cells
+find alternate implementation of KeySpec.#is_on_macos (just changed the order so that navigator.userAgentData.platform is tried before navigator.platform)
 ChangeManager: handle initial "neutral" setting better (using setTimeout() currently)
 make clicking status-bar not move selection in eval-cell (currently selection gets reset)
 show "modified" warning when closing
@@ -21,6 +27,7 @@ save: remove status-bar elements
 
 
 --- HOLD ---
+subscribe()s leak if not unsubscribed (probably "expected behavior")
 static initialization for classes should not automatically add stylesheet (do it on demand later)
 context menu cut/copy/paste: can this be hooked to use our internal implementation?
 make sure deleting selection that contains elements with !element_too deletes only the text

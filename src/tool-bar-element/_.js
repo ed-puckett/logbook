@@ -62,14 +62,6 @@ export class ToolBarElement extends HTMLElement {
         this.#target = null;
         this.#event_listener_manager = new EventListenerManager();
         this.#reset_configuration();
-        this.addEventListener('pointerdown', (event) => {
-            this.#target.focus();
-            if (event.target instanceof ToolBarElement) {
-                // stop event only if target is directly a ToolBarElement, not one of its children
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        });  // this listener is never removed
     }
     #event_listener_manager;
     #controls;  // name -> { name?, control?, get?, set?}
@@ -158,6 +150,15 @@ export class ToolBarElement extends HTMLElement {
                     };
                 }
             }
+            this.#event_listener_manager.add(this, 'pointerdown', (event) => {
+                this.#target.focus();
+                if (event.target instanceof ToolBarElement) {
+                    // stop event only if target is directly a ToolBarElement, not one of its children
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+
         } catch (error) {
             this.#reset_configuration();
             throw error;
@@ -384,7 +385,7 @@ export class ToolBarElement extends HTMLElement {
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-        this.#event_listener_manager.deattach();
+        this.#event_listener_manager.detach();
     }
 
     // adoptedCallback:

@@ -1,15 +1,23 @@
 // ensure that the various custom elements have been defined
-import { ToggleSwitchElement } from './toggle-switch-element/_.js';
-import { ToolBarElement      } from './tool-bar-element/_.js';
-import { EditorCellElement   } from './editor-cell-element/_.js';
-import { EvalCellElement     } from './eval-cell-element/_.js';
+// this is not entirely necessary but gets stylesheets, etc loaded
+import './toggle-switch-element/_.js';
+import './tool-bar-element/_.js';
+import './editor-cell-element/_.js';
+import './eval-cell-element/_.js';
 
 import {
     LogbookManager,
 } from './logbook-manager.js';
 
-window.addEventListener('load', async (load_event) => {
+if (document.readyState === 'interactive') {
+    trigger_document_initialization();
+} else {
+    window.addEventListener('load', (load_event) => {
+        trigger_document_initialization();
+    }, { once: true });
+}
+
+function trigger_document_initialization() {
     LogbookManager.singleton;  // accessing this will trigger document initialization
-}, {
-    once: true,
-});
+globalThis.logbook_manager = LogbookManager.singleton;//!!!
+}
