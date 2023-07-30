@@ -9,7 +9,7 @@ const webpack_config = {
     mode:  'production',
 
     optimization: {
-        minimize: false,
+        minimize: true,
     },
 
     stats: {
