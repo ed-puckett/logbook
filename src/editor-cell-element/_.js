@@ -289,7 +289,7 @@ export class EditorCellElement extends HTMLElement {
         return {
             ...get_global_initial_key_map_bindings(),
 
-//!!! the following are implemented via setting the contenteditable attribute on the element
+//!!! the following are "implemented" via setting the contenteditable attribute on the element
 //!!!            'insert-line-break':   [ 'Enter' ],
 
 //!!!            'delete-forward':      [ 'Delete' ],
