@@ -30,16 +30,7 @@ full-clean: clean
 
 .PHONY: dist-dir
 dist-dir: ./node_modules README.md
-	mkdir -p "$(DISTDIR)" && \
-	npx webpack --config ./webpack.config.js
-	/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "$(DISTDIR)/help.html"
-
-.PHONY: demos-dir
-demos-dir:
-	rm -fr ./demos && \
-	( cd ./examples/ && find . -type d -exec mkdir -p ../demos/{} \; ) && \
-	( cd ./examples/ && find . -iname '*.logbook' -exec /usr/bin/env node ../build-util/make-demo.mjs {} \; ) && \
-	( cd ./demos/ && find . -iname '*.html' | /usr/bin/env node ../build-util/make-demos-index.mjs )
+	./build-util/build-dist.sh
 
 .PHONY: lint
 lint: ./node_modules
@@ -53,7 +44,7 @@ test:
 # uses Linux commands: lsof, grep, cut
 # server uses python (version 3)
 .PHONY: server
-server: dist-dir demos-dir
+server: dist-dir
 	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
@@ -70,5 +61,5 @@ client:
 	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
-start: dist-dir demos-dir
+start: dist-dir
 	if ! lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN; then make server <&- >/dev/null 2>&1 & sleep 1; fi; make client

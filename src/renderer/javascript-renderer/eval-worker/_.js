@@ -242,8 +242,7 @@ export class EvalWorker {
         // create a data: URI for the web worker code so that we avoid cross-origin access errors
         // see: https://stackoverflow.com/questions/23953543/cross-domain-web-workers
         // and: https://github.com/CezaryDanielNowak/CrossOriginWorker/blob/main/index.js
-        const worker_path = './web-worker.js';
-        const worker_url  = new URL(worker_path, assets_server_url(current_script_url));
+        const worker_url = assets_server_url('dist/web-worker.js');  // ./web-worker.js is copied to dist/ dir by build process
         return fetch(worker_url)
             .then(res => res.text())
             .catch(error => {

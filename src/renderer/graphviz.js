@@ -1,5 +1,3 @@
-const current_script_url = import.meta.url;  // save for later
-
 import {
     d3,
 } from './d3.js';
@@ -13,8 +11,8 @@ import {
 } from '../assets-server-url.js';
 
 
-await load_script(document.head, new URL('../../node_modules/@hpcc-js/wasm/dist/graphviz.umd.js',   assets_server_url(current_script_url)));
-await load_script(document.head, new URL('../../node_modules/d3-graphviz/build/d3-graphviz.min.js', assets_server_url(current_script_url)));
+await load_script(document.head, assets_server_url('dist/graphviz.umd.js'));
+await load_script(document.head, assets_server_url('dist/d3-graphviz.min.js'));
 
 export async function render(element_selector, dot, options) {
     const {

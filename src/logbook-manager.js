@@ -1,5 +1,3 @@
-const current_script_url = import.meta.url;  // save for later
-
 import {
     EditorCellElement,
 } from './editor-cell-element/_.js';
@@ -55,7 +53,7 @@ import {
 //     create_stylesheet_link,
 // } from '../lib/ui/dom-util.js';
 // {
-//     const server_url = assets_server_url(current_script_url);
+//     const server_url = assets_server_url(current_script_url);  // current_script_url is from initial import.meta.url
 //     create_stylesheet_link(document.head, new URL('./style.css',       server_url));
 //     create_stylesheet_link(document.head, new URL('./style-hacks.css', server_url));
 // }
@@ -269,7 +267,7 @@ export class LogbookManager {
                 tag:    'link',
                 attrs: {
                     rel: 'icon',
-                    href: new URL('favicon.ico', assets_server_url(current_script_url)),
+                    href: assets_server_url('dist/favicon.ico'),
                 },
             });
         }

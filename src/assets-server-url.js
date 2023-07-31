@@ -10,7 +10,7 @@ const local_server_root  = new URL('..', current_script_url);        // assumes 
 
 export function assets_server_url(local_url) {
     if (typeof local_url === 'string') {
-        local_url = new URL(local_url);
+        local_url = new URL(local_url, local_server_root);
     }
     if (!(local_url instanceof URL)) {
         throw new Error('local_url must be a string or an instance of URL');

@@ -1,6 +1,6 @@
 # /dist/
 # build/
-# /node_modules/
+node_modules/
 .tmp/
 .nyc_output/
 coverage/

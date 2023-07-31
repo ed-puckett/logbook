@@ -266,16 +266,19 @@ export class EditorCellElement extends HTMLElement {
                 // this is a clumsy clone of event, but it will only be used internally from this point
                 // the goal is to clone the event but change target and currentTarget
                 key_event = {
-                    ...key_event,
-                    key:           key_event.key,       // getter
-                    metaKey:       key_event.metaKey,   // getter
-                    ctrlKey:       key_event.ctrlKey,   // getter
-                    shiftKey:      key_event.shiftKey,  // getter
-                    altKey:        key_event.altKey,    // getter
-                    target:        active_cell,
-                    currentTarget: active_cell,
+                    ...key_event,  // captures almost nothing, e.g., just the "isTrusted" property
+
+                    key:           key_event.key,       // non-enumerable getter
+                    metaKey:       key_event.metaKey,   // non-enumerable getter
+                    ctrlKey:       key_event.ctrlKey,   // non-enumerable getter
+                    shiftKey:      key_event.shiftKey,  // non-enumerable getter
+                    altKey:        key_event.altKey,    // non-enumerable getter
+
                     preventDefault:  event.preventDefault.bind(event),
                     stopPropagation: event.stopPropagation.bind(event),
+
+                    target:        active_cell,
+                    currentTarget: active_cell,
                 };
             }
         }
