@@ -1,8 +1,7 @@
-set/reset tabindex for tool-bar controls when they change visibility
 review uses of addEventListener() (maybe use EventListenerManager instead)
 make sure LogbookManager.singleton.active_cell remains valid when deleting or otherwise modfiying document
 make toggle-switch more ui-aware (press space to click, aria stuff, etc)
-set contenteditable for empty document (so that not just a blank pages is displayed), or indicate that the document is empty
+set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 rationalize style settings in preparation for dark/light mode
 menu navigation with mouse is sluggish
 maybe prevent default generation of element ids by create_element()

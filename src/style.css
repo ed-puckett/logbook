@@ -66,6 +66,7 @@ body {
     align-self: center;
     margin-left: auto;  /* push to far right */
 
+    visibility: visible;
     max-height: 100vh;
     padding: 0 0.5em;
     border: 0;
@@ -112,6 +113,10 @@ tool-bar {
     gap: 0.5em;
 
     background-color: var(--bgcolor-tool);
+
+    /* prevent tabbing to contained controls by setting visibility:hidden */
+    /* this is necessary because we don't set display:none because we want to animate the transition */
+    visibility: hidden;
 
     max-height:   0;
     padding:      0 0.5em;
@@ -162,6 +167,7 @@ eval-cell {
 /* tool-bar and eval-cell visible but not active */
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
+    visibility:   visible;
     max-height:   100vh;
     padding:      0 0.5em;
     border-width: var(--border-width-tool);
