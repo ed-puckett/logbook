@@ -8,6 +8,8 @@ const assets_server_root = new URL('..', assets_server_script.src);  // assumes 
 const local_server_root  = new URL('..', current_script_url);        // assumes this script is located one directory level below server root
 
 
+/** @return {URL} url resolved against the running server url
+ */
 export function assets_server_url(local_url) {
     if (typeof local_url === 'string') {
         local_url = new URL(local_url, local_server_root);
