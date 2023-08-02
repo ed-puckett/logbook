@@ -7,6 +7,7 @@ declare ROOT_DIR="${THIS_FILE_DIR}/.."
 declare DIST_DIR="${ROOT_DIR}/dist"
 
 declare -a FILES_TO_COPY=(
+    'src/index.html'
     'src/favicon.ico'
     'src/renderer/javascript-renderer/eval-worker/web-worker.js'
     'node_modules/sprintf-js/dist/sprintf.min.js'
