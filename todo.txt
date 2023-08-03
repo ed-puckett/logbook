@@ -1,3 +1,4 @@
+undo setting eval-cell visible: eval cell has "data-visible" attribute set to "null" (should have removed the attribute)
 rationalize style settings in preparation for dark/light mode
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
