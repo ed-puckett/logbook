@@ -5,6 +5,7 @@
 :root {
     /* color */
 
+    --bgcolor-body:          #eee;
     --bgcolor-tool:          hsl(0deg 0% 98% / 100%);
     --bgcolor-cell:          hsl(0deg 0% 99% / 100%);
 
@@ -49,7 +50,7 @@
 
 body {
     margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
-    background-color: #eee;
+    background-color: var(--bgcolor-body);
 }
 
 #controls {
