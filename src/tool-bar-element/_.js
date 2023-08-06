@@ -218,11 +218,11 @@ export class ToolBarElement extends HTMLElement {
   version="1.1"
   viewBox="0 0 50 50"
 >
-  <path class="accent-fill" d="M9.6 40.4 l2.5 -9.9 L27 15.6 l7.4 7.4 -14.9 14.9 -9.9 2.5z m4.3 -8.9 l-1.5 6.1 6.1 -1.5 L31.6 23 27 18.4 13.9 31.5z"/>
-  <path class="accent-fill" d="M17.8 37.3 c-.6 -2.5 -2.6 -4.5 -5.1 -5.1 l.5 -1.9 c3.2 .8 5.7 3.3 6.5 6.5 l-1.9 .5z"/>
-  <path class="accent-fill" d="M29.298 19.287 l1.414 1.414 -13.01 13.02 -1.414 -1.412z"/>
-  <path class="accent-fill" d="M11 39 l2.9 -.7 c-.3 -1.1 -1.1 -1.9 -2.2 -2.2 L11 39z"/>
-  <path class="accent-fill" d="M35 22.4 L27.6 15 l3-3 .5.1 c3.6 .5 6.4 3.3 6.9 6.9 l.1 .5 -3.1 2.9z M30.4 15 l4.6 4.6 .9 -.9 c-.5 -2.3 -2.3 -4.1 -4.6 -4.6 l-.9 .9z"/>
+  <path class="accent-stroke" fill="#0000" d="M9.6 40.4 l2.5 -9.9 L27 15.6 l7.4 7.4 -14.9 14.9 -9.9 2.5z m4.3 -8.9 l-1.5 6.1 6.1 -1.5 L31.6 23 27 18.4 13.9 31.5z"/>
+  <path class="accent-stroke" fill="#0000" d="M17.8 37.3 c-.6 -2.5 -2.6 -4.5 -5.1 -5.1 l.5 -1.9 c3.2 .8 5.7 3.3 6.5 6.5 l-1.9 .5z"/>
+  <path class="accent-stroke" fill="#0000" d="M29.298 19.287 l1.414 1.414 -13.01 13.02 -1.414 -1.412z"/>
+  <path class="accent-stroke" fill="#0000" d="M11 39 l2.9 -.7 c-.3 -1.1 -1.1 -1.9 -2.2 -2.2 L11 39z"/>
+  <path class="accent-stroke" fill="#0000" d="M35 22.4 L27.6 15 l3-3 .5.1 c3.6 .5 6.4 3.3 6.9 6.9 l.1 .5 -3.1 2.9z M30.4 15 l4.6 4.6 .9 -.9 c-.5 -2.3 -2.3 -4.1 -4.6 -4.6 l-.9 .9z"/>
 </svg>
 `;
         if (on_change_handler) {

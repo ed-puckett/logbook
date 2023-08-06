@@ -1,30 +1,80 @@
 :root {
-    --controls-height: 1.5rem;
-}
+    /* metrics */
 
-:root {
-    /* color */
+    --height-controls:      1.5rem;
 
-    --bgcolor-body:          #eee;
-    --bgcolor-tool:          hsl(0deg 0% 98% / 100%);
-    --bgcolor-cell:          hsl(0deg 0% 99% / 100%);
+    --padding-tool:         0 0.5em;
+    --gap-tool:             0.5em;
 
-    --color-type-markdown:   hsl(205deg 100%  94% / 100%);
-    --color-type-tex:        hsl( 45deg  81%  87% / 100%);
-    --color-type-javascript: hsl( 85deg 100%  85% / 100%);
+    --padding-cell:         0 0.5em;
+    --line-height-cell:     140%;
+    --font-family-cell:     monospace;
+
+    --padding-output:       0.5em;
+    --padding-intercell:    1em;
+
+    --width-toggle-switch:  1.5rem;
+    --height-toggle-switch: 1.5rem;
 
 
     /* border */
 
-    --border-radius-cell:      0.125em;
-    --border-width-cell:       1px;
-    --border-style-cell:       solid;
+    --border-radius-controls:  0.125em;
+    --border-width-controls:   1px;
+    --border-style-controls:   solid;
+    --border-color-controls:   #ccc;
+
+    --border-radius-tool:      0;
     --border-width-tool:       1px;
     --border-style-tool:       solid;
     --border-color-tool:       #ccc;
-    --border-color-cell:       #ccc;
     --border-color-tool-focus: black;
+
+    --border-radius-cell:      0.125em;
+    --border-width-cell:       1px;
+    --border-style-cell:       solid;
+    --border-color-cell:       #ccc;
     --border-color-cell-focus: black;
+
+
+    /* color */
+
+    --bgcolor-body:                              #eee;
+    --bgcolor-controls:                          #f8f8f8;
+    --bgcolor-tool:                              hsl(0deg 0% 98% / 100%);
+    --bgcolor-cell:                              hsl(0deg 0% 99% / 100%);
+    --bgcolor-output:                            white;
+
+    --color-type-markdown:                       hsl(205deg 100%  94% / 100%);
+    --color-type-tex:                            hsl( 45deg  81%  87% / 100%);
+    --color-type-javascript:                     hsl( 85deg 100%  85% / 100%);
+
+
+    --color-tool-toggle-fill-editable:           transparent;
+    --color-tool-toggle-stroke-editable:         hsl(0deg 9% 82% / 100%);
+    --color-tool-toggle-fill-editable-checked:   transparent;
+    --color-tool-toggle-stroke-editable-checked: hsl(0deg 60% 70% / 100%);
+
+    --color-tool-toggle-fill-visible:            transparent;
+    --color-tool-toggle-stroke-visible:          hsl(0deg 9% 82% / 100%);
+    --color-tool-toggle-fill-visible-checked:    chartreuse;
+    --color-tool-toggle-stroke-visible-checked:  hsl(0deg 100% 45% / 100%);
+
+    --color-tool-toggle-fill-autoeval:           transparent;
+    --color-tool-toggle-stroke-autoeval:         hsl(0deg 9% 82% / 100%);
+    --color-tool-toggle-fill-autoeval-checked:   transparent;
+    --color-tool-toggle-stroke-autoeval-checked: hsl(0deg 60% 70% / 100%);
+
+    --border-color-tool-indicator:               hsl(0deg 9% 82% / 100%);
+    --color-tool-indicator:                      hsl(0deg 0% 97% / 100%);
+
+    --border-color-tool-indicator-running:       black;
+    --color-tool-indicator-running:              hsl(120deg 94% 40% / 100%);
+
+    --border-color-tool-indicator-modified:      black;
+    --color-tool-indicator-modified:             hsl(0deg 60% 85% / 100%);
+
+    --color-tool-type-select:                    hsl(0deg 0% 97% / 100%);
 
 
     /* active output element highlight */
@@ -32,8 +82,6 @@
     --active-output-highlight-width: 4px;
     --active-output-highlight-color: hsl(190deg 100% 15% / 100%);
     --active-output-highlight-style: dotted;
-
-    --output-background-color: white;
 
 
     /* focus transition */
@@ -58,9 +106,9 @@ body {
     align-items: flex-end;
     justify-content: flex-start;
 
-    height: var(--controls-height);
-    background-color: #f8f8f8;
-    border-bottom: 1px solid black;
+    height: var(--height-controls);
+    background-color: var(--bgcolor-controls);
+    border-bottom: var(--border-width-controls) var(--border-style-controls) var(--border-color-controls);
 }
 
 #controls > tool-bar {  /* next to menu */
@@ -79,17 +127,17 @@ body {
     white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
 
-    padding: 0.5em;
-    background-color: var(--output-background-color);
+    padding: var(--padding-output);
+    background-color: var(--bgcolor-output);
 
     /* no highlight */
     border-width: 0 0 0 var(--active-output-highlight-width);
-    border-color: transparent transparent transparent transparent;
+    border-color: transparent;
     border-style: var(--active-output-highlight-style);
 }
 .eval-cell-output:has(+ tool-bar),
 .eval-cell-output:has(+ eval-cell) {
-    padding-bottom: 1em;
+    padding-bottom: var(--padding-intercell);
 }
 
 
@@ -111,7 +159,7 @@ tool-bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.5em;
+    gap: var(--gap-tool);
 
     background-color: var(--bgcolor-tool);
 
@@ -120,7 +168,7 @@ tool-bar {
     visibility: hidden;
 
     max-height:   0;
-    padding:      0 0.5em;
+    padding:      var(--padding-tool);
     border-width: 0;
     /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
     border-top-color:   var(--border-color-tool);
@@ -146,13 +194,13 @@ eval-cell {
     outline: 0px solid transparent;  /* disable default contenteditable outline */
 
     white-space: pre-wrap;  /* properly display white-space */
-    font-family: monospace;
-    line-height: 140%;
+    font-family: var(--font-family-cell);
+    line-height: var(--line-height-cell);
 
     background-color: var(--bgcolor-cell);
 
     max-height:   0;
-    padding:      0 0.5em;
+    padding:      var(--padding-cell);
     border-width: 0;
     border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
 
@@ -170,13 +218,11 @@ tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
     visibility:   visible;
     max-height:   100vh;
-    padding:      0 0.5em;
     border-width: var(--border-width-tool);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
     max-height:   100vh;
-    padding:      0.3em 0.5em;
     border-width: var(--border-width-cell);
 }
 
@@ -223,11 +269,12 @@ tool-bar:has(option[value="tex"]:checked) {
     border-bottom-color: var(--color-type-tex);
 }
 
+
 /* === tool-bar indicators and controls === */
 
 tool-bar > * {
     margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
-    background-color: hsl(0deg 0% 98% / 100%);
+    background-color: var(--bgcolor-tool);  /* same "default" color as parent tool-bar */
 }
 
 .tool-bar-indicator {
@@ -237,30 +284,31 @@ tool-bar > * {
     margin: 0;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid hsl(0deg 9% 82% / 100%);
-    background-color: hsl(0deg 0% 97% / 100%);
+    border: 1px solid var(--border-color-tool-indicator);
+    background-color: var(--color-tool-indicator);
 }
 
 .tool-bar-indicator.running[data-indicator-value="on"] {
-    border: 1px solid black;
-    background-color: hsl(120deg 94% 40% / 100%);
+    border: 1px solid var(--border-color-tool-indicator-running);
+    background-color: var(--color-tool-indicator-running);
 }
 .tool-bar-indicator.modified[data-indicator-value="on"] {
-    border: 1px solid black;
-    background-color: hsl(0deg 60% 85% / 100%);
+    border: 1px solid var(--border-color-tool-indicator-modified);
+    background-color: var(--color-tool-indicator-modified);
 }
 
 tool-bar > select > option {
-    background-color: hsl(0deg 0% 97% / 100%);
+    background-color: var(--color-tool-type-select);
 }
+
 
 /* === toggle-switch === */
 
 toggle-switch {
     appearance: none;
     border: 0;
-    width:  1.5rem;
-    height: 1.5rem;
+    width:  var(--width-toggle-switch);
+    height: var(--height-toggle-switch);
 }
 
 toggle-switch svg {
@@ -268,35 +316,26 @@ toggle-switch svg {
     height: 100%;
 }
 
-toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   hsl(0deg 9% 82% / 100%); }
-toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: transparent; }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   hsl(0deg 60% 70% / 100%); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: transparent; }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--color-tool-toggle-fill-editable); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-editable); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--color-tool-toggle-fill-editable-checked); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-editable-checked); }
 
-toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   transparent; }
-toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   chartreuse; }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: hsl(0deg 100% 45% / 100%); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--color-tool-toggle-fill-visible); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-visible); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--color-tool-toggle-fill-visible-checked); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-visible-checked); }
 
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   transparent; }
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: hsl(0deg 9% 82% / 100%); }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   transparent; }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: hsl(0deg 60% 70% / 100%); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--color-tool-toggle-fill-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--color-tool-toggle-fill-autoeval-checked); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval-checked); }
 
 
 /* === print media queries === */
 
 @media not print {
-    /* these overflow styles cause only a single page to be "printed" (output) */
-
-    body {
-        overflow: hidden;
-    }
-
-    #content {
-        overflow: auto;
-        max-height: calc(100vh - var(--controls-height));
-    }
+    /* nothing for now */
 }
 
 @media print {
@@ -305,4 +344,15 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
         display: none;
     }
 
+    eval-cell: {
+        /* no highlighted border */
+        border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell) !important;
+    }
+
+    .eval-cell-output {
+        /* no highlight */
+        border-width: 0 0 0 var(--active-output-highlight-width) !important;
+        border-color: transparent !important;
+        border-style: var(--active-output-highlight-style) !important;
+    }
 }
