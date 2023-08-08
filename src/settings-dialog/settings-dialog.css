@@ -1,18 +1,3 @@
-/* See theme-colors.css for the general colors that are set according
- * to the prefers-color-scheme media query.
- */
-
-body {
-    --color-bg-settings-dialog-section: var(--color-bg-page-minor);
-    --color-fg-settings-dialog-section: var(--color-c0-page-minor);
-
-    --color-bg-settings-dialog-control: var(--color-bg-tool-active1-awake0);
-    --color-fg-settings-dialog-control: var(--color-c0-tool-active1-awake0);
-
-    --color-bg-settings-dialog-error:   var(--color-bg-page-alert2);
-    --color-fg-settings-dialog-error:   var(--color-c1-page-alert2);
-}
-
 .settings-dialog .dialog_text {
     font-size: x-large;
     font-style: italic;
@@ -30,8 +15,8 @@ body {
     height: max-content;
     border: 1px solid black;
     border-radius: 8px;
-    color: var(--color-fg-settings-dialog-section);
-    background: var(--color-bg-settings-dialog-section);
+    color: hsl(  0deg   0%   0% / 100%);
+    background-color: hsl(  0deg   0%  95% / 100%);
 }
 
 .settings-dialog [data-section]::before {
@@ -42,8 +27,8 @@ body {
     padding: 0 1rem;
     border: 1px solid #aaa;
     border-radius: 4px;
-    color: var(--color-fg-settings-dialog-section);
-    background: var(--color-bg-settings-dialog-section);
+    color: hsl(  0deg   0%   0% / 100%);
+    background-color: hsl(  0deg   0%  95% / 100%);
     font-style: italic;
 }
 
@@ -58,8 +43,8 @@ body {
 
 .settings-dialog [data-section] [data-setting] input,
 .settings-dialog [data-section] [data-setting] select {
-    color: var(--color-fg-settings-dialog-control);
-    background: var(--color-bg-settings-dialog-control);
+    color: hsl(  0deg   0%   0% / 100%);
+    background-color: hsl(  0deg   0%  96% / 100%);
     margin: 0.25rem;
 }
 
@@ -75,8 +60,8 @@ body {
     height: max-content;
     border: 1px solid black;
     border-radius: 8px;
-    color: var(--color-fg-settings-dialog-warning);
-    background: var(--color-bg-settings-dialog-warning);
+    color: hsl(  0deg   0%   0% / 100%);
+    background-color: hsl( 60deg  80%  50% / 100%);
 }
 .settings-dialog .warning p:first-child {
     margin-block-start: 0;
@@ -98,8 +83,8 @@ body {
     max-width: 25vx;
     padding: 0.5rem;
     border-radius: 5pt;
-    background-color: var(--color-bg-settings-dialog-error);
-    color: var(--color-fg-settings-dialog-error);
+    background-color: hsl(  0deg  60%  50% / 100%);
+    color: hsl(  0deg   0% 100% / 100%);
     height: fit-content;
 }
 .settings-dialog .error-message.active {

@@ -87,7 +87,7 @@ import {
 
 import {
     get_theme_settings,
-} from '../../theme-settings/_.js';
+} from '../../theme-settings.js';
 
 import {
     delay_ms        as util_delay_ms,

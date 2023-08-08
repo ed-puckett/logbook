@@ -1,3 +1,5 @@
+/* all other stylesheets are incorporated into this one (except editor-cell) */
+
 :root {
     /* metrics */
 
@@ -39,42 +41,71 @@
 
     /* color */
 
-    --bgcolor-body:                              #eee;
-    --bgcolor-controls:                          #f8f8f8;
-    --bgcolor-tool:                              hsl(  0deg   0%  98% / 100%);
-    --bgcolor-cell:                              hsl(  0deg   0%  99% / 100%);
-    --bgcolor-output:                            white;
+    --bgcolor-body:                                       #eee;
+    --bgcolor-controls:                                   #f8f8f8;
+    --bgcolor-tool:                                       hsl(  0deg   0%  98% / 100%);
+    --bgcolor-cell:                                       hsl(  0deg   0%  99% / 100%);
+    --bgcolor-output:                                     white;
 
-    --color-type-markdown:                       hsl(205deg 100%  94% / 100%);
-    --color-type-tex:                            hsl( 45deg  81%  87% / 100%);
-    --color-type-javascript:                     hsl( 85deg 100%  85% / 100%);
+    --color-type-markdown:                                hsl(205deg 100%  94% / 100%);
+    --color-type-tex:                                     hsl( 45deg  81%  87% / 100%);
+    --color-type-javascript:                              hsl( 85deg 100%  85% / 100%);
 
 
-    --color-tool-toggle-fill-editable:           transparent;
-    --color-tool-toggle-stroke-editable:         hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-editable-checked:   hsl(  0deg 100%  50% / 100%);
-    --color-tool-toggle-stroke-editable-checked: hsl( 53deg 100%  50% / 100%);
+    --color-tool-toggle-fill-editable:                    transparent;
+    --color-tool-toggle-stroke-editable:                  hsl(  0deg   9%  82% / 100%);
+    --color-tool-toggle-fill-editable-checked:            hsl(  0deg 100%  50% / 100%);
+    --color-tool-toggle-stroke-editable-checked:          hsl( 53deg 100%  50% / 100%);
 
-    --color-tool-toggle-fill-visible:            transparent;
-    --color-tool-toggle-stroke-visible:          hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-visible-checked:    hsl(205deg 100%  83% / 100%);
-    --color-tool-toggle-stroke-visible-checked:  hsl(  0deg 100%  45% / 100%);
+    --color-tool-toggle-fill-visible:                     transparent;
+    --color-tool-toggle-stroke-visible:                   hsl(  0deg   9%  82% / 100%);
+    --color-tool-toggle-fill-visible-checked:             hsl(205deg 100%  83% / 100%);
+    --color-tool-toggle-stroke-visible-checked:           hsl(  0deg 100%  45% / 100%);
 
-    --color-tool-toggle-fill-autoeval:           transparent;
-    --color-tool-toggle-stroke-autoeval:         hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-autoeval-checked:   transparent;
-    --color-tool-toggle-stroke-autoeval-checked: hsl(  0deg  60%  70% / 100%);
+    --color-tool-toggle-fill-autoeval:                    transparent;
+    --color-tool-toggle-stroke-autoeval:                  hsl(  0deg   9%  82% / 100%);
+    --color-tool-toggle-fill-autoeval-checked:            transparent;
+    --color-tool-toggle-stroke-autoeval-checked:          hsl(  0deg  60%  70% / 100%);
 
-    --border-color-tool-indicator:               hsl(  0deg   9%  82% / 100%);
-    --color-tool-indicator:                      hsl(  0deg   0%  97% / 100%);
+    --border-color-tool-indicator:                        hsl(  0deg   9%  82% / 100%);
+    --color-tool-indicator:                               hsl(  0deg   0%  97% / 100%);
 
-    --border-color-tool-indicator-running:       black;
-    --color-tool-indicator-running:              hsl(120deg  94%  40% / 100%);
+    --border-color-tool-indicator-running:                black;
+    --color-tool-indicator-running:                       hsl(120deg  94%  40% / 100%);
 
-    --border-color-tool-indicator-modified:      black;
-    --color-tool-indicator-modified:             hsl(  0deg  60%  85% / 100%);
+    --border-color-tool-indicator-modified:               black;
+    --color-tool-indicator-modified:                      hsl(  0deg  60%  85% / 100%);
 
-    --color-tool-type-select:                    hsl(  0deg   0%  97% / 100%);
+    --color-tool-type-select:                             hsl(  0deg   0%  97% / 100%);
+
+    --bgcolor-menu:                                       #f0f0f0;
+    --color-menu-border:                                  grey;
+    --color-menu-border-shadow:                           lightgrey;
+    --color-menuitem-text:                                black;
+    --color-menuitem-text-disabled:                       #bbb;
+    --bgcolor-menuitem-selected:                          #0004;
+    --color-menuitem-separator:                           #3334;
+
+    --color-dialog-shadow:                                grey;
+
+    --bgcolor-settings:                                   hsl(  0deg   0%  98% / 100%);
+    --color-border-settings-data-section:                 hsl(  0deg   0%   0% / 100%);
+    --bgcolor-settings-data-section:                      hsl(  0deg   0%  95% / 100%);
+    --color-settings-data-section:                        hsl(  0deg   0%   0% / 100%);
+    --color-border-settings-data-section-heading:         #aaa;
+    --bgcolor-settings-data-section-heading:              hsl(  0deg   0%  98% / 100%);
+    --color-settings-data-section-heading:                hsl(  0deg   0%   0% / 100%);
+
+    --color-settings-data-section-data-setting-control:   hsl(  0deg   0%   0% / 100%);
+    --bgcolor-settings-data-section-data-setting-control: hsl(  0deg   0%  96% / 100%);
+
+    --color-border-settings-warning:                      hsl(  0deg   0%   0% / 100%);
+    --color-settings-warning:                             hsl(  0deg   0%   0% / 100%);
+    --bgcolor-settings-warning:                           hsl( 60deg  80%  50% / 100%);
+
+    --color-border-settings-error:                        hsl(  0deg   0%   0% / 100%);
+    --color-settings-error:                               hsl(  0deg   0% 100% / 100%);
+    --bgcolor-settings-error:                             hsl(  0deg  60%  50% / 100%);
 
 
     /* active output element highlight */
@@ -151,7 +182,7 @@ eval-cell[data-active] + .eval-cell-output {
 
 /* === visible/active - animated attributes === */
 
-/* tool-bar and eval-cell base definitions: the define a collapsed state */
+/* bare tool-bar and eval-cell base definitions: they define a collapsed state */
 
 tool-bar {
     overflow: hidden;
@@ -330,6 +361,222 @@ toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   {
 toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval); }
 toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--color-tool-toggle-fill-autoeval-checked); }
 toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval-checked); }
+
+
+/* === menu === */
+
+.menu:not(.active) {
+    display: none;
+}
+
+.menubar {
+    margin: 0;
+    padding: 0.1rem 0 0.1rem 0;
+}
+
+.menubar>li {
+    display: inline;  /* horizontal orientation for top-level items of menubar */
+    padding: 0 0.5rem 0 0.5rem;
+}
+
+.menubar .menuitem {
+    list-style-type: none;
+    min-width: max-content;
+}
+
+.menuitem * {
+    user-select: none;
+}
+
+.menuitem .menuitem-label {
+    font-family: sans-serif;
+    font-size: 90%;
+}
+
+.menubar .menuitem.checked::before {
+    content: "\2713";  /* unicode check mark */
+    position: absolute;
+    left: 0.5em;
+}
+
+.menubar div {
+    display: inline;
+}
+
+.menu {
+    position: absolute;
+    z-index: 999;
+    background-color: var(--bgcolor-menu);
+    padding: 0.25rem 0 0.25rem 0;  /* override standard ul/li padding */
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-menu-border);
+    box-shadow: 3px 3px 16px var(--color-menu-border-shadow);
+
+    /* eliminate default styling for menu elements */
+    margin-block-start:   0;
+    margin-block-end:     0;
+    margin-inline-start:  0;
+    margin-inline-end:    0;
+    padding-inline-start: 0;
+}
+
+.menuitem {
+    color: var(--color-menuitem-text);
+}
+
+.menuitem.disabled {
+    color: var(--color-menuitem-text-disabled);
+}
+
+.menuitem.selected {
+    background-color: var(--bgcolor-menuitem-selected);
+}
+
+.menu .menuitem:not(.menuitem-separator) {
+    padding: 0 0.5rem 0 1.5rem;
+}
+
+.menu .menuitem.menuitem-separator {
+    margin: 0.2rem 0 0.2rem 0;
+    height: 0px;
+    color: transparent;
+    border-bottom: 1px solid var(--color-menuitem-separator);
+}
+
+.menu .menuitem .menuitem-annotation {
+    margin-left: 2rem;
+    float: right;
+}
+
+.menu .menuitem kbd {
+    margin: 0 0 0 0.5rem;
+}
+
+
+/* === dialog === */
+
+dialog {
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 16px var(--color-dialog-shadow);
+}
+
+dialog .dialog_text {
+    margin: 0.5rem 0.5rem 0.5rem 0;
+}
+
+dialog button,
+dialog input[type="button"] {
+    margin: 0.5rem 0.5rem 0.5rem 0;
+}
+
+dialog .dialog_decline {
+    display: inline;
+}
+
+dialog .dialog_accept {
+    display: inline;
+}
+
+
+/* === settings-dialog === */
+
+.settings-dialog .dialog_text {
+    font-size: x-large;
+    font-style: italic;
+}
+
+.settings-dialog .section {
+    display: flex;
+}
+
+.settings-dialog {
+    background-color: var(--bgcolor-settings);
+}
+
+.settings-dialog [data-section] {
+    position: relative;
+    min-width: max-content;
+    margin: 2rem 0 0 1rem;
+    padding: 1rem;
+    height: max-content;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-settings-data-section);
+    color:            var(--color-settings-data-section);
+    background-color: var(--bgcolor-settings-data-section);
+}
+
+.settings-dialog [data-section]::before {  /* named section heading */
+    position: absolute;
+    content: attr(data-section);
+    left: 0.8rem;
+    top: -0.7rem;
+    padding: 0 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border-settings-data-section-heading);
+    color:            var(--color-settings-data-section-heading);
+    background-color: var(--bgcolor-settings-data-section-heading);
+    font-style: italic;
+}
+
+.settings-dialog [data-section] [data-setting] label {
+    display: inline-block;
+    width: 9rem;
+    text-align: right;
+    font-family: sans-serif;
+    font-size: small;
+    user-select: none;
+}
+
+.settings-dialog [data-section] [data-setting] input,
+.settings-dialog [data-section] [data-setting] select {
+    color:            var(--color-settings-data-section-data-setting-control);
+    background-color: var(--bgcolor-settings-data-section-data-setting-control);
+    margin: 0.25rem;
+}
+
+.settings-dialog [data-section] [data-setting] input[type="text"] {
+    width: 5rem;
+}
+
+.settings-dialog .warning {
+    display: none;
+    width: 18rem;
+    margin: 2rem 0 0 1rem;
+    padding: 1rem;
+    height: max-content;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-settings-warning);
+    color:            var(--color-settings-warning);
+    background-color: var(--bgcolor-settings-warning);
+}
+.settings-dialog .warning p:first-child {
+    margin-block-start: 0;
+}
+.settings-dialog .warning p:last-child {
+    margin-block-end: 0;
+}
+.settings-dialog .show-emacs-warning .emacs-warning {
+    display: block;
+}
+
+.settings-dialog input[type="submit"] {
+    margin-top: 1rem;
+}
+
+.settings-dialog .error-message {
+    display: none;
+    margin: 2rem 0 0 1rem;
+    max-width: 25vx;
+    height: fit-content;
+    padding: 0.5rem;
+    border-radius: 5pt;
+    border: 1px solid var(--color-border-settings-error);
+    color:            var(--color-settings-error);
+    background-color: var(--bgcolor-settings-error);
+}
+.settings-dialog .error-message.active {
+    display: block;
+}
 
 
 /* === print media queries === */

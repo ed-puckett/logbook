@@ -47,7 +47,9 @@ import {
 //     const stylesheet_url = new URL('./settings-dialog.css', assets_server_url(current_script_url));
 //     create_stylesheet_link(document.head, stylesheet_url);
 // }
+/* do not import; stylesheet coalesced into main stylesheet
 import './settings-dialog.css';  // webpack implementation
+*/
 
 
 // dialog definitiion

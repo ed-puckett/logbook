@@ -1,7 +1,8 @@
-Map vs Object (problems: logbook_manager.#global_eval_context, fs_interface (?), ...)
-- https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md
-dblclick in output toggles visibility but also selects word in output (sometimes?)
 rationalize style settings in preparation for dark/light mode
+Map vs Object (problems: logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
+dblclick in output toggles visibility but also selects word in output (sometimes?)
+filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
+replace make with grunt (or similar)?
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
 make sure LogbookManager.singleton.active_cell remains valid when deleting or otherwise modfiying document
