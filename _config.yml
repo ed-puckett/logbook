@@ -1,3 +1,0 @@
-# additional Jekyll configuration for github pages
-
-include: [ "_.js", "/node_modules" ]

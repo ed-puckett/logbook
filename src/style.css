@@ -41,8 +41,8 @@
 
     --bgcolor-body:                              #eee;
     --bgcolor-controls:                          #f8f8f8;
-    --bgcolor-tool:                              hsl(0deg 0% 98% / 100%);
-    --bgcolor-cell:                              hsl(0deg 0% 99% / 100%);
+    --bgcolor-tool:                              hsl(  0deg   0%  98% / 100%);
+    --bgcolor-cell:                              hsl(  0deg   0%  99% / 100%);
     --bgcolor-output:                            white;
 
     --color-type-markdown:                       hsl(205deg 100%  94% / 100%);
@@ -51,36 +51,36 @@
 
 
     --color-tool-toggle-fill-editable:           transparent;
-    --color-tool-toggle-stroke-editable:         hsl(0deg 9% 82% / 100%);
-    --color-tool-toggle-fill-editable-checked:   transparent;
-    --color-tool-toggle-stroke-editable-checked: hsl(0deg 60% 70% / 100%);
+    --color-tool-toggle-stroke-editable:         hsl(  0deg   9%  82% / 100%);
+    --color-tool-toggle-fill-editable-checked:   hsl(  0deg 100%  50% / 100%);
+    --color-tool-toggle-stroke-editable-checked: hsl( 53deg 100%  50% / 100%);
 
     --color-tool-toggle-fill-visible:            transparent;
-    --color-tool-toggle-stroke-visible:          hsl(0deg 9% 82% / 100%);
-    --color-tool-toggle-fill-visible-checked:    chartreuse;
-    --color-tool-toggle-stroke-visible-checked:  hsl(0deg 100% 45% / 100%);
+    --color-tool-toggle-stroke-visible:          hsl(  0deg   9%  82% / 100%);
+    --color-tool-toggle-fill-visible-checked:    hsl(205deg 100%  83% / 100%);
+    --color-tool-toggle-stroke-visible-checked:  hsl(  0deg 100%  45% / 100%);
 
     --color-tool-toggle-fill-autoeval:           transparent;
-    --color-tool-toggle-stroke-autoeval:         hsl(0deg 9% 82% / 100%);
+    --color-tool-toggle-stroke-autoeval:         hsl(  0deg   9%  82% / 100%);
     --color-tool-toggle-fill-autoeval-checked:   transparent;
-    --color-tool-toggle-stroke-autoeval-checked: hsl(0deg 60% 70% / 100%);
+    --color-tool-toggle-stroke-autoeval-checked: hsl(  0deg  60%  70% / 100%);
 
-    --border-color-tool-indicator:               hsl(0deg 9% 82% / 100%);
-    --color-tool-indicator:                      hsl(0deg 0% 97% / 100%);
+    --border-color-tool-indicator:               hsl(  0deg   9%  82% / 100%);
+    --color-tool-indicator:                      hsl(  0deg   0%  97% / 100%);
 
     --border-color-tool-indicator-running:       black;
-    --color-tool-indicator-running:              hsl(120deg 94% 40% / 100%);
+    --color-tool-indicator-running:              hsl(120deg  94%  40% / 100%);
 
     --border-color-tool-indicator-modified:      black;
-    --color-tool-indicator-modified:             hsl(0deg 60% 85% / 100%);
+    --color-tool-indicator-modified:             hsl(  0deg  60%  85% / 100%);
 
-    --color-tool-type-select:                    hsl(0deg 0% 97% / 100%);
+    --color-tool-type-select:                    hsl(  0deg   0%  97% / 100%);
 
 
     /* active output element highlight */
 
     --active-output-highlight-width: 4px;
-    --active-output-highlight-color: hsl(190deg 100% 15% / 100%);
+    --active-output-highlight-color: hsl(190deg 100%  15% / 100%);
     --active-output-highlight-style: dotted;
 
 

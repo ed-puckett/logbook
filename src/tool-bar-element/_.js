@@ -251,7 +251,7 @@ export class ToolBarElement extends HTMLElement {
   version="1.1"
   viewBox="0 0 200 170"
 >
-  <path class="accent-stroke" stroke="#000" stroke-width="5" fill="transparent"
+  <path class="accent-stroke" stroke="#000" stroke-width="10" fill="transparent"
     d="m100 49.738 a97.452 97.452 0 0 0 -78.246 39.775 97.452 97.452 0 0 0 78.246 39.773 97.452 97.452 0 0 0 78.396 -39.975 97.452 97.452 0 0 0 -78.396 -39.574z"
   />
   <circle class="accent-stroke accent-fill" stroke="#000" stroke-width="5"

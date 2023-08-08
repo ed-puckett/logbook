@@ -1,3 +1,6 @@
+Map vs Object (problems: logbook_manager.#global_eval_context, fs_interface (?), ...)
+- https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md
+dblclick in output toggles visibility but also selects word in output (sometimes?)
 rationalize style settings in preparation for dark/light mode
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
