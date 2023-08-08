@@ -29,10 +29,10 @@ export class GraphvizRenderer extends Renderer {
         const element_selector = `#${element.id}`;
 
         const dot_stmts = [];
-        if (config.node_config) {
-            dot_stmts.push(`node ${node_config}`);
+        if (config?.node_config) {
+            dot_stmts.push(`node ${config.node_config}`);
         }
-        for (const node_spec of (config.nodes ?? [])) {
+        for (const node_spec of (config?.nodes ?? [])) {
             if (typeof node_spec === 'string') {
                 const name = node_spec;
                 dot_stmts.push(name);
@@ -41,7 +41,7 @@ export class GraphvizRenderer extends Renderer {
                 dot_stmts.push(`${name} [${node_options}]`);
             }
         }
-        for (const [ from, to, edge_options ] of (config.edges ?? [])) {
+        for (const [ from, to, edge_options ] of (config?.edges ?? [])) {
             dot_stmts.push(`${from}->${to}${edge_options ? `[${edge_options}]` : ''}`);
         }
         const dot = `digraph { ${dot_stmts.join(';')} }`;

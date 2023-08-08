@@ -4,6 +4,8 @@
 
 //!!! THIS NO LONGER WORKS: return document.execCommand('paste');  // updates selection
 
+//!!! audit this !!!
+
 //!!! could be more careful not to create empty text nodes here
 
 //!!! could use structuredClone(), but would that prevent remove() from finding?

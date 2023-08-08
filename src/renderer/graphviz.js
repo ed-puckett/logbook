@@ -22,8 +22,8 @@ export async function render(element_selector, dot, options) {
         duration   = 1500,
         logEvents  = true,
     } = (options ?? {});
-    try {
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        try {
             function reject_with_string(...args) {
                 reject(new Error(args[0]));
             }
@@ -46,8 +46,8 @@ export async function render(element_selector, dot, options) {
                         .onerror(reject_with_string)
                         .on("end", resolve);
                 });
-        });
-    } catch (error) {
-        reject(error);
-    }
+        } catch (error) {
+            reject(error);
+        }
+    });
 }

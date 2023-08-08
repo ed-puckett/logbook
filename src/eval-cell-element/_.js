@@ -47,7 +47,6 @@ export class EvalCellElement extends EditorCellElement {
     set input_type (input_type){
         this.setAttribute(this.constructor.#attribute__input_type, input_type);
         this._tool_bar?.set_type(input_type);
-        return input_type;
     }
 
 
@@ -83,7 +82,6 @@ export class EvalCellElement extends EditorCellElement {
             }
             this.setAttribute(this.constructor.#attribute__output_element_id, id);
         }
-        return id;
     }
 
     get output_element (){
@@ -121,7 +119,6 @@ export class EvalCellElement extends EditorCellElement {
         }
 
         this.output_element_id = element ? element.id : null;
-        return element;
     }
 
     /** create an output element, if necessary, and set its standard attributes

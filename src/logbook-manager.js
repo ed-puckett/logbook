@@ -306,7 +306,14 @@ export class LogbookManager {
         if (!queried_content_element || queried_content_element !== this.content_element) {
             throw new Error('bad format for document');
         }
-        const contents = [ ...this.content_element?.querySelectorAll(`${EvalCellElement.custom_element_name}, .${EvalCellElement.output_element_class}`) ]
+        if (!this.content_element) {
+            throw new Error('bad format for document: this.content_element not set');
+        }
+        const query_selector = [
+            EvalCellElement.custom_element_name,
+            `.${EvalCellElement.output_element_class}`,
+        ].join(' ');
+        const contents = [ ...this.content_element.querySelectorAll(query_selector) ]
               .map(e => e.outerHTML)
               .join('\n');
         return `\
@@ -323,8 +330,8 @@ ${contents}
 `;
 }
 
-    #setup_csp() {
-        if (false) {  //!!!
+    #setup_csp(enabled=false) {
+        if (enabled) {
 
             // === CONTENT SECURITY POLICY ===
 

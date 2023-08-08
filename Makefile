@@ -7,7 +7,7 @@ all: start
 SHELL = /bin/bash
 MAKEFLAGS += --no-print-directory
 
-DISTDIR = ./dist
+DIST_DIR = ./dist
 
 SERVER_ADDRESS = 127.0.0.11
 SERVER_PORT    = 4320
@@ -19,22 +19,32 @@ SERVER_PORT    = 4320
 
 .PHONY: clean
 clean: kill-server
-	@-rm -fr "$(DISTDIR)" >/dev/null 2>&1 || true
+	@-rm -fr "$(DIST_DIR)" >/dev/null 2>&1 || true
 
 .PHONY: full-clean
 full-clean: clean
 	@-rm -fr ./node_modules >/dev/null 2>&1 || true
 
-./node_modules: ./package.json
+./package-lock.json: ./package.json
 	npm install
+	touch ./package-lock.json
+
+./node_modules: ./package-lock.json
+	npm install
+	touch ./node_modules
+
+.PHONY: install
+install: ./node_modules $(DIST_DIR)/main.js
 
 .PHONY: dist-dir
-dist-dir: ./node_modules README.md
+dist-dir: $(DIST_DIR)/main.js
+
+$(DIST_DIR)/main.js: ./src ./lib ./node_modules README.md
 	./build-util/build-dist.sh
 
 .PHONY: lint
 lint: ./node_modules
-	./node_modules/.bin/eslint src
+	./node_modules/.bin/eslint --config .eslintrc.cjs src lib
 
 .PHONY: test
 test:
