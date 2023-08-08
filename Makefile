@@ -47,7 +47,7 @@ test:
 # uses Linux commands: lsof, grep, cut
 # server uses python (version 3)
 .PHONY: server
-server: dist
+server: "$(DIST_DIR)"
 	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
@@ -64,5 +64,5 @@ client:
 	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
-start: dist
+start: "$(DIST_DIR)"
 	if ! lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN; then make server <&- >/dev/null 2>&1 & sleep 1; fi; make client
