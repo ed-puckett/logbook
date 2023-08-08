@@ -1,5 +1,5 @@
 .PHONY: all
-all: start
+all: dist
 
 
 ######################################################################
@@ -25,21 +25,14 @@ clean: kill-server
 full-clean: clean
 	@-rm -fr ./node_modules >/dev/null 2>&1 || true
 
-./package-lock.json: ./package.json
+./package-lock.json ./node_modules: ./package.json
 	npm install
-	touch ./package-lock.json
-
-./node_modules: ./package-lock.json
-	npm install
-	touch ./node_modules
+	touch ./package-lock.json ./node_modules
 
 .PHONY: install
-install: ./node_modules $(DIST_DIR)/main.js
+install: ./node_modules $(DIST_DIR)
 
-.PHONY: dist-dir
-dist-dir: $(DIST_DIR)/main.js
-
-$(DIST_DIR)/main.js: ./src ./lib ./node_modules README.md
+$(DIST_DIR): ./src ./src/* ./src/*/* ./src/*/*/* ./src/*/*/*/* ./lib ./lib/* ./lib/*/* ./lib/*/*/* ./lib/*/*/* ./node_modules README.md
 	./build-util/build-dist.sh
 
 .PHONY: lint
@@ -54,7 +47,7 @@ test:
 # uses Linux commands: lsof, grep, cut
 # server uses python (version 3)
 .PHONY: server
-server: dist-dir
+server: dist
 	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
@@ -71,5 +64,5 @@ client:
 	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
-start: dist-dir
+start: dist
 	if ! lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN; then make server <&- >/dev/null 2>&1 & sleep 1; fi; make client
