@@ -47,7 +47,7 @@ test:
 # uses Linux commands: lsof, grep, cut
 # server uses python (version 3)
 .PHONY: server
-server: "$(DIST_DIR)"
+server: $(DIST_DIR)
 	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
@@ -57,12 +57,12 @@ kill-server:
 
 .PHONY: dev-server
 dev-server:
-	npx nodemon --watch src --watch lib --watch node_modules  --ext js,cjs,mjs,html,css,ico,svg  --exec "bash -c 'make server' || exit 1"
+	npx nodemon --watch src --watch lib --watch package.json --watch node_modules  --ext js,cjs,mjs,html,css,ico,svg  --exec "bash -c 'make server' || exit 1"
 
 .PHONY: client
 client:
 	chromium --new-window http://$(SERVER_ADDRESS):$(SERVER_PORT)/src/index.html &
 
 .PHONY: start
-start: "$(DIST_DIR)"
+start: $(DIST_DIR)
 	if ! lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN; then make server <&- >/dev/null 2>&1 & sleep 1; fi; make client
