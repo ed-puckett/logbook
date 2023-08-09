@@ -32,12 +32,12 @@ full-clean: clean
 .PHONY: install
 install: ./node_modules $(DIST_DIR)
 
-$(DIST_DIR): ./src ./src/* ./src/*/* ./src/*/*/* ./src/*/*/*/* ./lib ./lib/* ./lib/*/* ./lib/*/*/* ./lib/*/*/* ./node_modules README.md
-	./build-util/build-dist.sh
-
 .PHONY: lint
 lint: ./node_modules
 	./node_modules/.bin/eslint --config .eslintrc.cjs src lib
+
+$(DIST_DIR): ./src ./src/* ./src/*/* ./src/*/*/* ./src/*/*/*/* ./lib ./lib/* ./lib/*/* ./lib/*/*/* ./lib/*/*/* ./node_modules README.md
+	make lint && ./build-util/build-dist.sh
 
 .PHONY: test
 test:
