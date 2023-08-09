@@ -160,15 +160,6 @@ export class ToolBarElement extends HTMLElement {
                     event.stopPropagation();
                 }
             });
-            this.#event_listener_manager.add(this, 'dblclick', (event) => {
-                this.#target.focus();
-                if (event.target instanceof ToolBarElement) {
-                    // handle event only if target is directly a ToolBarElement, not one of its children
-                    this.#target.set_visible(!this.#target.visible);
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            });
 
         } catch (error) {
             this.#reset_configuration();

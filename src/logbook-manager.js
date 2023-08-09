@@ -201,7 +201,27 @@ export class LogbookManager {
                 }
             });  //!!! event handler never removed
 
-            //!!! is the following useful?
+            // make dblclick on top-level tool-bar toggle editable
+            document.body.addEventListener('dblclick', (event) => {
+                const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly a the tool-bar, not one of its children
+                const target_is_controls = (event.target === this.controls_element);
+                if (target_is_tool_bar || target_is_controls) {
+                    // event will be handled
+                    const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.controls_element);
+                    if (target_is_controls || target_is_top_level_tool_bar) {
+                        this.set_editable(!this.editable);
+                    } else {  // !target_is_controls && !target_is_top_level_tool_bar && target_is_tool_bar
+                        const cell = event.target.target;
+                        cell.set_visible(!cell.visible);
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }, {
+                capture: true,
+            });  //!!! event handler never removed
+
             // send keydown events destined for document.body to the active cell's key_event_manager
             document.body.addEventListener('keydown', (event) => {
                 if (event.target === document.body) {

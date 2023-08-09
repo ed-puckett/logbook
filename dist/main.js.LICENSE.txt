@@ -18,8 +18,6 @@
 
 //!!! incorrect comparison
 
-//!!! is the following useful?
-
 //!!! is this a correct implementation???
 
 //!!! no stats
