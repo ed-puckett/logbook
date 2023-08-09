@@ -41,10 +41,10 @@ import {
 // import {
 //     create_stylesheet_link,
 // } from '../../lib/ui/dom-util.js';
-// create_stylesheet_link(document.head, new URL('./style.css', assets_server_url(current_script_url)));
-/* do not import; stylesheet coalesced into main stylesheet
-import './style.css';  // webpack implementation
-*/
+export async function load_stylesheet() {
+    // create_stylesheet_link(document.head, new URL('./style.css', assets_server_url(current_script_url)));
+    await import('./style.css');  // webpack implementation
+}
 
 
 export class EditorCellElement extends HTMLElement {

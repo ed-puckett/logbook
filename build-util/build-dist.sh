@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # abort on error
+
 declare THIS_FILE=${BASH_SOURCE##*/}
 declare THIS_FILE_DIR=$([[ -z "${BASH_SOURCE%/*}" ]] && echo '' || { cd "${BASH_SOURCE%/*}"; pwd; })
 
@@ -23,8 +25,6 @@ declare -a FILES_TO_COPY=(
     'node_modules/@hpcc-js/wasm/dist/graphviz.umd.js.map'
     'node_modules/d3-graphviz/build/d3-graphviz.min.js'
 )
-
-set -e  # abort on error
 
 cd "${ROOT_DIR}"
 

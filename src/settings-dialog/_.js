@@ -43,13 +43,10 @@ import {
 // import {
 //     create_stylesheet_link,
 // } from '../../lib/ui/dom-util.js';
-// {
-//     const stylesheet_url = new URL('./settings-dialog.css', assets_server_url(current_script_url));
-//     create_stylesheet_link(document.head, stylesheet_url);
-// }
-/* do not import; stylesheet coalesced into main stylesheet
-import './settings-dialog.css';  // webpack implementation
-*/
+export async function load_stylesheet() {
+    // create_stylesheet_link(document.head, new URL('./settings-dialog.css', assets_server_url(current_script_url)));
+    await import('./settings-dialog.css');  // webpack implementation
+}
 
 
 // dialog definitiion

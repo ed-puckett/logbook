@@ -128,8 +128,16 @@
 
 
 body {
+    overflow: hidden;  /* inhibit scrolling for body */
     margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
     background-color: var(--bgcolor-body);
+}
+
+#content {
+    /* enable scrolling for #content */
+    overflow: auto;
+    max-height: calc(100vh - var(--height-controls));
+    max-width:  100vw;
 }
 
 #controls {
