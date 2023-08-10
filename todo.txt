@@ -1,27 +1,27 @@
+Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
 rationalize style settings in preparation for dark/light mode
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
-Map vs Object (problems: logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
-dblclick in output toggles visibility but also selects word in output (sometimes?)
+set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
-replace make with grunt (or similar)?
+maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
-make sure LogbookManager.singleton.active_cell remains valid when deleting or otherwise modfiying document
+make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modfiying document
 make toggle-switch more ui-aware (press space to click, aria stuff, etc)
-set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
-maybe prevent default generation of element ids by create_element()
 toggle-menu command (for keyboard)
-implement and use logbook_manager.update_menu_state()
+implement and use LogbookManager.singleton.update_menu_state()
 implement recents
 implement go/stop control in tool-bar
 improve saving
 save can cause disconnect between current document and its "file_handle" if the user saves to a different file
 make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste")
+replace make with grunt (or similar)?
 
 
 --- DONE ---
 content->main, controls->header
 dblclick handler in ToolBarElement is improper when ToolBarElement is used in the top-level menu, and not a cell
+dblclick in output toggles visibility but also selects word in output (sometimes?)
 undo setting eval-cell visible: eval cell has "data-visible" attribute set to "null" (should have removed the attribute)
 first click in newly-opened document's first eval-cell sends focus to <body>, second click causes document modification but focuses to eval-cell
 handle keypresses originating outside of cells
