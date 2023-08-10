@@ -6,8 +6,6 @@
 
 //!!! audit this !!!
 
-//!!! check this selector
-
 //!!! could be more careful not to create empty text nodes here
 
 //!!! could use structuredClone(), but would that prevent remove() from finding?
@@ -15,6 +13,8 @@
 //!!! event handler never removed
 
 //!!! implement this
+
+//!!! improve #ui
 
 //!!! incorrect comparison
 
@@ -27,8 +27,6 @@
 //!!! should be configurable
 
 //!!! should other members of options be checked (e.g., "once")?
-
-//!!! the following needs to be reworked to not depend on #content 
 
 //!!! this.#eval_states_subscription is never unsubscribed
 

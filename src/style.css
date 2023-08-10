@@ -3,7 +3,7 @@
 :root {
     /* metrics */
 
-    --height-controls:      1.5rem;
+    --height-header:        1.5rem;
 
     --padding-tool:         0 0.5em;
     --gap-tool:             0.5em;
@@ -21,10 +21,10 @@
 
     /* border */
 
-    --border-radius-controls:  0.125em;
-    --border-width-controls:   1px;
-    --border-style-controls:   solid;
-    --border-color-controls:   #ccc;
+    --border-radius-header:    0.125em;
+    --border-width-header:     1px;
+    --border-style-header:     solid;
+    --border-color-header:     #ccc;
 
     --border-radius-tool:      0;
     --border-width-tool:       1px;
@@ -42,7 +42,7 @@
     /* color */
 
     --bgcolor-body:                                       #eee;
-    --bgcolor-controls:                                   #f8f8f8;
+    --bgcolor-header:                                     #f8f8f8;
     --bgcolor-tool:                                       hsl(  0deg   0%  98% / 100%);
     --bgcolor-cell:                                       hsl(  0deg   0%  99% / 100%);
     --bgcolor-output:                                     white;
@@ -133,24 +133,24 @@ body {
     background-color: var(--bgcolor-body);
 }
 
-#content {
-    /* enable scrolling for #content */
+main {
+    /* enable scrolling for main element */
     overflow: auto;
-    max-height: calc(100vh - var(--height-controls));
+    max-height: calc(100vh - var(--height-header));
     max-width:  100vw;
 }
 
-#controls {
+header {
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
 
-    height: var(--height-controls);
-    background-color: var(--bgcolor-controls);
-    border-bottom: var(--border-width-controls) var(--border-style-controls) var(--border-color-controls);
+    height: var(--height-header);
+    background-color: var(--bgcolor-header);
+    border-bottom: var(--border-width-header) var(--border-style-header) var(--border-color-header);
 }
 
-#controls > tool-bar {  /* next to menu */
+header > tool-bar {  /* next to menu */
     align-self: center;
     margin-left: auto;  /* push to far right */
 
@@ -595,7 +595,7 @@ dialog .dialog_accept {
 
 @media print {
 
-    #controls {
+    header {
         display: none;
     }
 

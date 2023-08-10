@@ -90,8 +90,8 @@ export class LogbookManager {
     #editable;
     #active_cell;
     #initialize_called;
-    #controls_element;  // element inserted into document by initialize() to hold menus, etc
-    #content_element;   // element wrapped around original body content by initialize()
+    #header_element;  // element inserted into document by initialize() to hold menus, etc
+    #main_element;    // element wrapped around original body content by initialize()
     #eval_states;
     #eval_states_subscription;
     #menubar;
@@ -122,8 +122,8 @@ export class LogbookManager {
         }
     }
 
-    get controls_element (){ return this.#controls_element; }
-    get content_element  (){ return this.#content_element; }
+    get header_element (){ return this.#header_element; }
+    get main_element   (){ return this.#main_element; }
 
     get global_eval_context (){ return this.#global_eval_context; }
     reset_global_eval_context() {
@@ -147,7 +147,7 @@ export class LogbookManager {
     /** clear the current document
      */
     clear() {
-        clear_element(this.content_element);
+        clear_element(this.main_element);
         const first_cell = this.create_cell();
         first_cell.focus();
     }
@@ -166,11 +166,11 @@ export class LogbookManager {
 
         try {
 
-            // establish this.#content_element / this.content_element
+            // establish this.#main_element / this.main_element
             this.#initialize_document_structure();
 
             this.#setup_csp();
-            this.#setup_controls();
+            this.#setup_header();
 
             this.set_editable(this.editable);  // update all cells consistently
 
@@ -189,7 +189,7 @@ export class LogbookManager {
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
             // initialization is complete.
-            this.#global_change_manager = new ChangeManager(this.content_element, {
+            this.#global_change_manager = new ChangeManager(this.main_element, {
                 neutral_changes_observer: this.#neutral_changes_observer.bind(this),
             });
 
@@ -204,13 +204,13 @@ export class LogbookManager {
             // make dblclick on top-level tool-bar toggle editable
             document.body.addEventListener('dblclick', (event) => {
                 const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly a the tool-bar, not one of its children
-                const target_is_controls = (event.target === this.controls_element);
-                if (target_is_tool_bar || target_is_controls) {
+                const target_is_header = (event.target === this.header_element);
+                if (target_is_tool_bar || target_is_header) {
                     // event will be handled
-                    const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.controls_element);
-                    if (target_is_controls || target_is_top_level_tool_bar) {
+                    const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.header_element);
+                    if (target_is_header || target_is_top_level_tool_bar) {
                         this.set_editable(!this.editable);
-                    } else {  // !target_is_controls && !target_is_top_level_tool_bar && target_is_tool_bar
+                    } else {  // !target_is_header && !target_is_top_level_tool_bar && target_is_tool_bar
                         const cell = event.target.target;
                         cell.set_visible(!cell.visible);
                     }
@@ -246,12 +246,12 @@ export class LogbookManager {
      *  @param (Object|null|undefined} options
      *  @return {EvalCellElement} cell
      * options is passed to EvalCellElement.create_cell() but
-     * with parent overridden to this.content_element.
+     * with parent overridden to this.main_element.
      */
     create_cell(options=null) {
         return EvalCellElement.create_cell({
             ...(options ?? {}),
-            parent: this.content_element,
+            parent: this.main_element,
         });
     }
 
@@ -268,16 +268,16 @@ export class LogbookManager {
 
     // === DOCUMENT UTILITIES ===
 
-    static controls_element_id = 'controls';
-    static content_element_id  = 'content';
+    static header_element_tag = 'header';
+    static main_element_tag   = 'main';
 
-    // put everything this the body into a top-level content element
+    // put everything in the body into a new top-level main element
     #initialize_document_structure() {
-        if (document.getElementById(this.constructor.controls_element_id)) {
-            throw new Error(`bad format for document: element with id ${this.constructor.controls_element_id} already exists`);
+        if (document.querySelector(this.constructor.header_element_tag)) {
+            throw new Error(`bad format for document: element with id ${this.constructor.header_element_tag} already exists`);
         }
-        if (document.getElementById(this.constructor.content_element_id)) {
-            throw new Error(`bad format for document: element with id ${this.constructor.content_element_id} already exists`);
+        if (document.querySelector(this.constructor.main_element_tag)) {
+            throw new Error(`bad format for document: element with id ${this.constructor.main_element_tag} already exists`);
         }
 
         // establish favicon
@@ -296,18 +296,16 @@ export class LogbookManager {
             document.documentElement.appendChild(document.createElement('body'));
             // document.body is now set
         }
-        // create the content element and move the current children of the body to it
-        this.#content_element = document.createElement('div');
-        this.#content_element.id = this.constructor.content_element_id;
+        // create the main element and move the current children of the body to it
+        this.#main_element = document.createElement(this.constructor.main_element_tag);
         while (document.body.firstChild) {
-            this.#content_element.appendChild(document.body.firstChild);  // moves document.body.firstChild
+            this.#main_element.appendChild(document.body.firstChild);  // moves document.body.firstChild
         }
-        // create controls element
-        this.#controls_element = document.createElement('div');
-        this.#controls_element.id = this.constructor.controls_element_id;
-        // add controls and content elements
-        document.body.appendChild(this.#controls_element);
-        document.body.appendChild(this.#content_element);
+        // create header element
+        this.#header_element = document.createElement(this.constructor.header_element_tag);
+        // add header and main elements
+        document.body.appendChild(this.#header_element);
+        document.body.appendChild(this.#main_element);
 
         // add a tool-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {
@@ -322,18 +320,18 @@ export class LogbookManager {
     #local_server_root;
 
     #save_serializer() {
-        const queried_content_element = document.getElementById(this.constructor.content_element_id);
-        if (!queried_content_element || queried_content_element !== this.content_element) {
+        const queried_main_element = document.querySelector(this.constructor.main_element_tag);
+        if (!queried_main_element || queried_main_element !== this.main_element) {
             throw new Error('bad format for document');
         }
-        if (!this.content_element) {
-            throw new Error('bad format for document: this.content_element not set');
+        if (!this.main_element) {
+            throw new Error('bad format for document: this.main_element not set');
         }
         const query_selector = [
             EvalCellElement.custom_element_name,
             `.${EvalCellElement.output_element_class}`,
         ].join(' ');
-        const contents = [ ...this.content_element.querySelectorAll(query_selector) ]
+        const contents = [ ...this.main_element.querySelectorAll(query_selector) ]
               .map(e => e.outerHTML)
               .join('\n');
         return `\
@@ -419,26 +417,26 @@ recents
         //!!!
     }
 
-    #setup_controls() {
-        if (!this.controls_element) {
-            throw new Error(`bad format for document: controls element does not exist`);
+    #setup_header() {
+        if (!this.header_element) {
+            throw new Error(`bad format for document: header element does not exist`);
         }
         const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
-        this.#menubar = MenuBar.create(this.controls_element, get_menubar_spec(), get_command_bindings, get_recents);
+        this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_command_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
         this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
         this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
 
-        // add a tool-bar element to the main document
-        this.#tool_bar = ToolBarElement.create_for(this.controls_element, {
+        // add a tool-bar element to the header document
+        this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
             editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
             //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
             modified: true,
             running:  true,
         });
-        this.#controls_element.appendChild(this.#tool_bar);
+        this.#header_element.appendChild(this.#tool_bar);
     }
 
     #menubar_commands_observer(command_context) {

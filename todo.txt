@@ -1,7 +1,5 @@
-content->main, controls->header
 rationalize style settings in preparation for dark/light mode
-src/settings-dialog/_.js:126 verify selector being used to find pre_existing_element
-lib/ui/dialog/_.js:110 reword use of #content element
+fix dialog and settings-dialog in the way they handle the header, main and #ui elements
 Map vs Object (problems: logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
 dblclick in output toggles visibility but also selects word in output (sometimes?)
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
@@ -22,6 +20,7 @@ make KeySpec, etc events fire directly so they do not lose the "trusted" aspect 
 
 
 --- DONE ---
+content->main, controls->header
 dblclick handler in ToolBarElement is improper when ToolBarElement is used in the top-level menu, and not a cell
 undo setting eval-cell visible: eval cell has "data-visible" attribute set to "null" (should have removed the attribute)
 first click in newly-opened document's first eval-cell sends focus to <body>, second click causes document modification but focuses to eval-cell
