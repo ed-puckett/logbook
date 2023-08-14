@@ -489,6 +489,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__create_cell(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
@@ -612,6 +615,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__move_up(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -632,6 +638,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__move_down(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -653,6 +662,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__add_before(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const cell = command_context.target;
         const new_cell = this.create_cell({
             before: cell.get_dom_extent().first,
@@ -664,6 +676,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__add_after(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const cell = command_context.target;
         const new_cell = this.create_cell({
             before: cell.get_dom_extent().last.nextSibling,
@@ -676,6 +691,9 @@ recents
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__delete(command_context) {
+        if (!this.editable) {
+            return false;
+        }
         const cell = command_context.target;
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
         cell.remove_cell();

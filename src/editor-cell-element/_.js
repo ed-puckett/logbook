@@ -163,6 +163,7 @@ export class EditorCellElement extends HTMLElement {
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
      *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
+     *      visible:   Boolean,  // set visible?  default: false
      *      innerText: String,   // cell.innerText to set
      *  }
      *  @return {EditorCellElement} new cell
@@ -172,6 +173,7 @@ export class EditorCellElement extends HTMLElement {
             parent   = document.body,
             before   = null,
             editable = LogbookManager.singleton.editable,
+            visible,
             innerText,
         } = (options ?? {});
 
@@ -183,13 +185,16 @@ export class EditorCellElement extends HTMLElement {
                 tabindex: 0,  // permit focus
             },
         });
-        cell.set_editable(editable);
 
         if (innerText) {
             cell.innerText = innerText;
         }
 
         cell.establish_tool_bar();
+
+        // these settings must be done after the tool-bar is established
+        cell.set_editable(editable);
+        cell.set_visible(visible);
 
         return cell;
     }
