@@ -195,7 +195,7 @@ export class LogbookManager {
 
             // add "save before quit" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
-                if (!this.#global_change_manager.is_neutral) {
+                if (!this.#global_change_manager.is_neutral()) {
                     event.preventDefault();
                     return (event.returnValue = '');
                 }
@@ -460,10 +460,10 @@ recents
 
     #neutral_changes_observer(data) {
         const {
-            is_neutral,
+            neutral,
         } = data;
-        this.#tool_bar.set_for('modified', !is_neutral);
-        this.#menubar.set_menu_state('save', { enabled: !is_neutral });
+        this.#tool_bar.set_for('modified', !neutral);
+        this.#menubar.set_menu_state('save', { enabled: !neutral });
     }
 
 
