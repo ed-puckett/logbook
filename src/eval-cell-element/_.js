@@ -156,11 +156,9 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     #output_element_pointerdown_handler(event) {
-        if (!this.contains(document.activeElement)) {
-            this.focus();
-            event.preventDefault();
-            event.stopPropagation();
-        }
+        this.focus();
+        event.preventDefault();
+        event.stopPropagation();
     }
     #output_element_pointerdown_handler_bound;  // initialized in constructor
 
