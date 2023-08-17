@@ -231,18 +231,6 @@ export class LogbookManager {
                 }
             });  //!!! event handler never removed
 
-//!!!!!!!!!!!!!!!!!!!
-            // redirect focus to document.body back to the active cell
-            document.body.addEventListener('focus', (event) => {
-console.log('FOCUS EVENT', event, 'ACTIVECELL', this.active_cell);//!!!
-                if (event.target === document.body) {
-                    this.active_cell?.focus();
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            });  //!!! event handler never removed
-//!!!!!!!!!!!!!!!!!!!
-
             // set baseline for undo/redo
             // it is important that all async operations have finished before getting here
             this.#global_change_manager.set_neutral();
