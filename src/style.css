@@ -1,5 +1,51 @@
 /* all other stylesheets have been incorporated into this one (except editor-cell-element) */
 
+/*
+  ELEMENT:
+  bd -- body
+  hd -- header
+  tl -- tool-bar
+  cl -- eval-cell/editor-cell
+  ts -- toggle-switch
+  ou -- output element
+  mu -- menu
+  mi -- menuitem
+  dg -- dialog
+  ic -- indicator
+  tp -- tool-bar type selector
+  st -- settings dialog
+
+  STYLE FEATURE:
+  bg -- background
+  fg -- foreground
+  br -- border
+  hl -- highlight
+
+  STYLE FEATURE ATTRIBUTE:
+  c -- color
+  w -- width
+  s -- style
+  r -- radius
+
+  METRIC FEATURE:
+  w -- width
+  h -- height
+  m -- margin
+  p -- padding
+  g -- gap
+
+  OTHER FEATURE:
+  ff -- font-family
+  lh -- line-height
+  sh -- shadow
+
+  ---
+
+  {ELEMENT}-{STYLE FEATURE}{STYLE FEATURE ATTRIBUTE}
+  {ELEMENT}-{METRIC FEATURE}
+  {ELEMENT}-{OTHER FEATURE}
+*/
+
 :root {
     /* metrics */
 
@@ -50,7 +96,6 @@
     --color-type-markdown:                                hsl(205deg 100%  94% / 100%);
     --color-type-tex:                                     hsl( 45deg  81%  87% / 100%);
     --color-type-javascript:                              hsl( 85deg 100%  85% / 100%);
-
 
     --color-tool-toggle-fill-editable:                    transparent;
     --color-tool-toggle-stroke-editable:                  hsl(  0deg   9%  82% / 100%);
@@ -110,9 +155,9 @@
 
     /* active output element highlight */
 
-    --active-output-highlight-width: 4px;
-    --active-output-highlight-color: hsl(190deg 100%  15% / 100%);
-    --active-output-highlight-style: dotted;
+    --active-output-highlight-width: 2px;
+    --active-output-highlight-color: black;
+    --active-output-highlight-style: dashed;
 
 
     /* focus transition */
