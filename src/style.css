@@ -1,24 +1,27 @@
 /* all other stylesheets have been incorporated into this one (except editor-cell-element) */
 
 /*
+  === THEME VARIABLES ===
+
   ELEMENT:
-  bd -- body
+  by -- body
   hd -- header
   tl -- tool-bar
+  ts -- tool-bar toggle-switch
+  ty -- tool-bar type selector
+  ti -- tool-bar indicator
   cl -- eval-cell/editor-cell
-  ts -- toggle-switch
   ou -- output element
   mu -- menu
   mi -- menuitem
+  ms -- menuitem separator
   dg -- dialog
-  ic -- indicator
-  tp -- tool-bar type selector
   st -- settings dialog
 
   STYLE FEATURE:
   bg -- background
   fg -- foreground
-  br -- border
+  bd -- border
   hl -- highlight
 
   STYLE FEATURE ATTRIBUTE:
@@ -41,147 +44,148 @@
 
   ---
 
-  {ELEMENT}-{STYLE FEATURE}{STYLE FEATURE ATTRIBUTE}
-  {ELEMENT}-{METRIC FEATURE}
-  {ELEMENT}-{OTHER FEATURE}
+  VARIABLES:
+  --theme-{ELEMENT}-{STYLE FEATURE}{STYLE FEATURE ATTRIBUTE}
+  --theme-{ELEMENT}-{METRIC FEATURE}
+  --theme-{ELEMENT}-{OTHER FEATURE}
 */
 
 :root {
     /* metrics */
 
-    --height-header:        1.5rem;
+    --theme-hd-h:                           1.5rem;
 
-    --padding-tool:         0 0.5em;
-    --gap-tool:             0.5em;
+    --theme-tl-p:                           0 0.5em;
+    --theme-tl-g:                           0.5em;
 
-    --padding-cell:         0 0.5em;
-    --line-height-cell:     140%;
-    --font-family-cell:     monospace;
+    --theme-cl-p:                           0 0.5em;
+    --theme-cl-lh:                          140%;
+    --theme-cl-ff:                          monospace;
 
-    --padding-output:       0.5em;
-    --padding-intercell:    1em;
+    --theme-ou-p:                           0.5em;
+    --theme-cl-p-inter:                     1em;
 
-    --width-toggle-switch:  1.5rem;
-    --height-toggle-switch: 1.5rem;
+    --theme-ts-w:                           1.5rem;
+    --theme-ts-h:                           1.5rem;
 
 
     /* border */
 
-    --border-radius-header:    0.125em;
-    --border-width-header:     1px;
-    --border-style-header:     solid;
-    --border-color-header:     #ccc;
+    --theme-hd-bdr:                         0.125em;
+    --theme-hd-bdw:                         1px;
+    --theme-hd-bds:                         solid;
+    --theme-hd-bdc:                         #ccc;
 
-    --border-radius-tool:      0;
-    --border-width-tool:       1px;
-    --border-style-tool:       solid;
-    --border-color-tool:       #ccc;
-    --border-color-tool-focus: black;
+    --theme-tl-bdr:                         0;
+    --theme-tl-bdw:                         1px;
+    --theme-tl-bds:                         solid;
+    --theme-tl-bdc:                         #ccc;
+    --theme-tl-bdc-active:                  black;
 
-    --border-radius-cell:      0.125em;
-    --border-width-cell:       1px;
-    --border-style-cell:       solid;
-    --border-color-cell:       #ccc;
-    --border-color-cell-focus: black;
+    --theme-cl-bdr:                         0.125em;
+    --theme-cl-bdw:                         1px;
+    --theme-cl-bds:                         solid;
+    --theme-cl-bdc:                         #ccc;
+    --theme-cl-bdc-active:                  black;
 
 
     /* color */
 
-    --bgcolor-body:                                       #eee;
-    --bgcolor-header:                                     #f8f8f8;
-    --bgcolor-tool:                                       hsl(  0deg   0%  98% / 100%);
-    --bgcolor-cell:                                       hsl(  0deg   0%  99% / 100%);
-    --bgcolor-output:                                     white;
+    --theme-by-bgc:                         #eee;
+    --theme-hd-bgc:                         #f8f8f8;
+    --theme-tl-bgc:                         hsl(  0deg   0%  98% / 100%);
+    --theme-cl-bgc:                         hsl(  0deg   0%  99% / 100%);
+    --theme-ou-bgc:                         white;
 
-    --color-type-markdown:                                hsl(205deg 100%  94% / 100%);
-    --color-type-tex:                                     hsl( 45deg  81%  87% / 100%);
-    --color-type-javascript:                              hsl( 85deg 100%  85% / 100%);
+    --theme-ty-bgc-markdown:                hsl(205deg 100%  94% / 100%);
+    --theme-ty-bgc-tex:                     hsl( 45deg  81%  87% / 100%);
+    --theme-ty-bgc-javascript:              hsl( 85deg 100%  85% / 100%);
 
-    --color-tool-toggle-fill-editable:                    transparent;
-    --color-tool-toggle-stroke-editable:                  hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-editable-checked:            hsl(  0deg 100%  50% / 100%);
-    --color-tool-toggle-stroke-editable-checked:          hsl( 53deg 100%  50% / 100%);
+    --theme-ts-bgc-fill-editable:           transparent;
+    --theme-ts-bgc-stroke-editable:         hsl(  0deg   9%  82% / 100%);
+    --theme-ts-bgc-fill-editable-checked:   hsl(  0deg 100%  50% / 100%);
+    --theme-ts-bgc-stroke-editable-checked: hsl( 53deg 100%  50% / 100%);
 
-    --color-tool-toggle-fill-visible:                     transparent;
-    --color-tool-toggle-stroke-visible:                   hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-visible-checked:             hsl(205deg 100%  83% / 100%);
-    --color-tool-toggle-stroke-visible-checked:           hsl(  0deg 100%  45% / 100%);
+    --theme-ts-bgc-fill-visible:            transparent;
+    --theme-ts-bgc-stroke-visible:          hsl(  0deg   9%  82% / 100%);
+    --theme-ts-bgc-fill-visible-checked:    hsl(205deg 100%  83% / 100%);
+    --theme-ts-bgc-stroke-visible-checked:  hsl(  0deg 100%  45% / 100%);
 
-    --color-tool-toggle-fill-autoeval:                    transparent;
-    --color-tool-toggle-stroke-autoeval:                  hsl(  0deg   9%  82% / 100%);
-    --color-tool-toggle-fill-autoeval-checked:            transparent;
-    --color-tool-toggle-stroke-autoeval-checked:          hsl(  0deg  60%  70% / 100%);
+    --theme-ts-bgc-fill-autoeval:           transparent;
+    --theme-ts-bgc-stroke-autoeval:         hsl(  0deg   9%  82% / 100%);
+    --theme-ts-bgc-fill-autoeval-checked:   transparent;
+    --theme-ts-bgc-stroke-autoeval-checked: hsl(  0deg  60%  70% / 100%);
 
-    --border-color-tool-indicator:                        hsl(  0deg   9%  82% / 100%);
-    --color-tool-indicator:                               hsl(  0deg   0%  97% / 100%);
+    --theme-ti-bdc:                         hsl(  0deg   9%  82% / 100%);
+    --theme-ti-bgc:                         hsl(  0deg   0%  97% / 100%);
 
-    --border-color-tool-indicator-running:                black;
-    --color-tool-indicator-running:                       hsl(120deg  94%  40% / 100%);
+    --theme-ti-bdc-running:                 black;
+    --theme-ti-bgc-running:                 hsl(120deg  94%  40% / 100%);
 
-    --border-color-tool-indicator-modified:               black;
-    --color-tool-indicator-modified:                      hsl(  0deg  60%  85% / 100%);
+    --theme-ti-bdc-modified:                black;
+    --theme-ti-bgc-modified:                hsl(  0deg  60%  85% / 100%);
 
-    --color-tool-type-select:                             hsl(  0deg   0%  97% / 100%);
+    --theme-ty-bgc:                         hsl(  0deg   0%  97% / 100%);
 
-    --bgcolor-menu:                                       #f0f0f0;
-    --color-menu-border:                                  grey;
-    --color-menu-border-shadow:                           lightgrey;
-    --color-menuitem-text:                                black;
-    --color-menuitem-text-disabled:                       #bbb;
-    --bgcolor-menuitem-selected:                          #0004;
-    --color-menuitem-separator:                           #3334;
+    --theme-mu-bgc:                         #f0f0f0;
+    --theme-mu-bdc:                         grey;
+    --theme-mu-sh:                          lightgrey;
+    --theme-mi-fgc:                         black;
+    --theme-mi-fgc-disabled:                #bbb;
+    --theme-mi-bgc-selected:                #0004;
+    --theme-mi-msc:                         #3334;
 
-    --color-dialog-shadow:                                grey;
+    --theme-dg-sh:                          grey;
 
-    --bgcolor-settings:                                   hsl(  0deg   0%  98% / 100%);
-    --color-border-settings-data-section:                 hsl(  0deg   0%   0% / 100%);
-    --bgcolor-settings-data-section:                      hsl(  0deg   0%  95% / 100%);
-    --color-settings-data-section:                        hsl(  0deg   0%   0% / 100%);
-    --color-border-settings-data-section-heading:         #aaa;
-    --bgcolor-settings-data-section-heading:              hsl(  0deg   0%  98% / 100%);
-    --color-settings-data-section-heading:                hsl(  0deg   0%   0% / 100%);
+    --theme-st-bgc:                         hsl(  0deg   0%  98% / 100%);
+    --theme-st-bdc-section:                 hsl(  0deg   0%   0% / 100%);
+    --theme-st-bgc-section:                 hsl(  0deg   0%  95% / 100%);
+    --theme-st-fgc-section:                 hsl(  0deg   0%   0% / 100%);
+    --theme-st-bdc-section-heading:         #aaa;
+    --theme-st-bgc-section-heading:         hsl(  0deg   0%  98% / 100%);
+    --theme-st-fgc-section-heading:         hsl(  0deg   0%   0% / 100%);
 
-    --color-settings-data-section-data-setting-control:   hsl(  0deg   0%   0% / 100%);
-    --bgcolor-settings-data-section-data-setting-control: hsl(  0deg   0%  96% / 100%);
+    --theme-st-fgc-section-setting:         hsl(  0deg   0%   0% / 100%);
+    --theme-st-bgc-section-setting:         hsl(  0deg   0%  96% / 100%);
 
-    --color-border-settings-warning:                      hsl(  0deg   0%   0% / 100%);
-    --color-settings-warning:                             hsl(  0deg   0%   0% / 100%);
-    --bgcolor-settings-warning:                           hsl( 60deg  80%  50% / 100%);
+    --theme-st-bdc-warning:                 hsl(  0deg   0%   0% / 100%);
+    --theme-st-fgc-warning:                 hsl(  0deg   0%   0% / 100%);
+    --theme-st-bgc-warning:                 hsl( 60deg  80%  50% / 100%);
 
-    --color-border-settings-error:                        hsl(  0deg   0%   0% / 100%);
-    --color-settings-error:                               hsl(  0deg   0% 100% / 100%);
-    --bgcolor-settings-error:                             hsl(  0deg  60%  50% / 100%);
+    --theme-st-bdc-error:                   hsl(  0deg   0%   0% / 100%);
+    --theme-st-fgc-error:                   hsl(  0deg   0% 100% / 100%);
+    --theme-st-bgc-error:                   hsl(  0deg  60%  50% / 100%);
 
 
     /* active output element highlight */
 
-    --active-output-highlight-width: 2px;
-    --active-output-highlight-color: black;
-    --active-output-highlight-style: dashed;
+    --theme-ou-hlw:                         2px;
+    --theme-ou-hlc:                         black;
+    --theme-ou-hls:                         dashed;
 
 
     /* focus transition */
 
-    --focus-x1-delay:    0s;
-    --focus-x1-duration: 0.2s;
-    --focus-x1-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x1-delay:                       0s;
+    --focus-x1-duration:                    0.2s;
+    --focus-x1-easing:                      cubic-bezier(0.42, 0.0, 0.0, 1.0);
 
-    --focus-x2-delay:    calc(var(--focus-x1-duration) / 4);
-    --focus-x2-duration: 0.1s;
-    --focus-x2-easing:   cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x2-delay:                       calc(var(--focus-x1-duration) / 4);
+    --focus-x2-duration:                    0.1s;
+    --focus-x2-easing:                      cubic-bezier(0.42, 0.0, 0.0, 1.0);
 }
 
 
 body {
     overflow: hidden;  /* inhibit scrolling for body */
     margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
-    background-color: var(--bgcolor-body);
+    background-color: var(--by-bgc);
 }
 
 main {
     /* enable scrolling for main element */
     overflow: auto;
-    max-height: calc(100vh - var(--height-header));
+    max-height: calc(100vh - var(--theme-hd-h));
     max-width:  100vw;
 }
 
@@ -190,9 +194,10 @@ header {
     align-items: flex-end;
     justify-content: flex-start;
 
-    height: var(--height-header);
-    background-color: var(--bgcolor-header);
-    border-bottom: var(--border-width-header) var(--border-style-header) var(--border-color-header);
+    height: var(--theme-hd-h);
+    background-color: var(--theme-hd-bgc);
+    border-bottom: var(--theme-hd-bdw) var(--theme-hd-bds) var(--theme-hd-bdc);
+    border-radius: var(--theme-hd-bdr);
 }
 
 header > tool-bar {  /* next to menu */
@@ -211,25 +216,25 @@ header > tool-bar {  /* next to menu */
     white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
 
-    padding: var(--padding-output);
-    background-color: var(--bgcolor-output);
+    padding: var(--theme-ou-p);
+    background-color: var(--theme-ou-bgc);
 
     /* no highlight */
-    border-width: 0 0 0 var(--active-output-highlight-width);
+    border-width: 0 0 0 var(--theme-ou-hlw);
     border-color: transparent;
-    border-style: var(--active-output-highlight-style);
+    border-style: var(--theme-ou-hls);
 }
 .eval-cell-output:has(+ tool-bar),
 .eval-cell-output:has(+ eval-cell) {
-    padding-bottom: var(--padding-intercell);
+    padding-bottom: var(--theme-cl-p-inter);
 }
 
 
 /* output element active highlight */
 eval-cell[data-active] + .eval-cell-output {
-    border-width: 0 0 0 var(--active-output-highlight-width);
-    border-color: transparent transparent transparent var(--active-output-highlight-color);
-    border-style: var(--active-output-highlight-style);
+    border-width: 0 0 0 var(--theme-ou-hlw);
+    border-color: transparent transparent transparent var(--theme-ou-hlc);
+    border-style: var(--theme-ou-hls);
 }
 
 
@@ -243,29 +248,29 @@ tool-bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--gap-tool);
+    gap: var(--theme-tl-g);
 
-    background-color: var(--bgcolor-tool);
+    background-color: var(--theme-tl-bgc);
 
     /* prevent tabbing to contained controls by setting visibility:hidden */
     /* this is necessary because we don't set display:none because we want to animate the transition */
     visibility: hidden;
 
     max-height:   0;
-    padding:      var(--padding-tool);
+    padding:      var(--theme-tl-p);
     border-width: 0;
     /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
-    border-top-color:   var(--border-color-tool);
-    border-right-color: var(--border-color-tool);
-    border-left-color:  var(--border-color-tool);
+    border-top-color:   var(--theme-tl-bdc);
+    border-right-color: var(--theme-tl-bdc);
+    border-left-color:  var(--theme-tl-bdc);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-radius: var(--border-radius-cell) var(--border-radius-cell) 0 0;
-    border-style:  var(--border-style-tool);
+    border-radius: var(--theme-cl-bdr) var(--theme-cl-bdr) 0 0;
+    border-style:  var(--theme-tl-bds);
 
 }
 
@@ -278,23 +283,23 @@ eval-cell {
     outline: 0px solid transparent;  /* disable default contenteditable outline */
 
     white-space: pre-wrap;  /* properly display white-space */
-    font-family: var(--font-family-cell);
-    line-height: var(--line-height-cell);
+    font-family: var(--theme-cl-ff);
+    line-height: var(--theme-cl-lh);
 
-    background-color: var(--bgcolor-cell);
+    background-color: var(--theme-cl-bgc);
 
     max-height:   0;
-    padding:      var(--padding-cell);
+    padding:      var(--theme-cl-p);
     border-width: 0;
-    border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell);
+    border-color: transparent var(--theme-cl-bdc) var(--theme-cl-bdc) var(--theme-cl-bdc);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
     transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
-    border-radius: 0 0 var(--border-radius-cell) var(--border-radius-cell);
-    border-style:  var(--border-style-cell);
+    border-radius: 0 0 var(--theme-cl-bdr) var(--theme-cl-bdr);
+    border-style:  var(--theme-cl-bds);
 }
 
 /* tool-bar and eval-cell visible but not active */
@@ -302,24 +307,25 @@ tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
     visibility:   visible;
     max-height:   100vh;
-    border-width: var(--border-width-tool);
+    border-width: var(--theme-tl-bdw);
+    border-radius: var(--theme-tl-bdr);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
     max-height:   100vh;
-    border-width: var(--border-width-cell);
+    border-width: var(--theme-cl-bdw);
 }
 
 /* tool-bar and eval-cell visible and active */
 tool-bar:has(+ eval-cell[data-visible][data-active]),
 tool-bar:has(+ eval-cell[contenteditable][data-active]) {
-    border-top-color:   var(--border-color-tool-focus);
-    border-right-color: var(--border-color-tool-focus);
-    border-left-color:  var(--border-color-tool-focus);
+    border-top-color:   var(--theme-tl-bdc-active);
+    border-right-color: var(--theme-tl-bdc-active);
+    border-left-color:  var(--theme-tl-bdc-active);
 }
 eval-cell[data-visible][data-active],
 eval-cell[contenteditable][data-active] {
-    border-color: transparent var(--border-color-cell-focus) var(--border-color-cell-focus) var(--border-color-cell-focus);
+    border-color: transparent var(--theme-cl-bdc-active) var(--theme-cl-bdc-active) var(--theme-cl-bdc-active);
 }
 
 
@@ -327,30 +333,30 @@ eval-cell[contenteditable][data-active] {
 
 tool-bar option,
 tool-bar select {
-    background-color: var(--color-type-markdown);
+    background-color: var(--theme-ty-bgc-markdown);
 }
 
 tool-bar option[value="javascript"],
 tool-bar > select:has(> option[value="javascript"]:checked) {
-    background-color: var(--color-type-javascript);
+    background-color: var(--theme-ty-bgc-javascript);
 }
 
 tool-bar option[value="tex"],
 tool-bar > select:has(> option[value="tex"]:checked) {
-    background-color: var(--color-type-tex);
+    background-color: var(--theme-ty-bgc-tex);
 }
 
 
 tool-bar:has(option) {
-    border-bottom-color: var(--color-type-markdown);
+    border-bottom-color: var(--theme-ty-bgc-markdown);
 }
 
 tool-bar:has(option[value="javascript"]:checked) {
-    border-bottom-color: var(--color-type-javascript);
+    border-bottom-color: var(--theme-ty-bgc-javascript);
 }
 
 tool-bar:has(option[value="tex"]:checked) {
-    border-bottom-color: var(--color-type-tex);
+    border-bottom-color: var(--theme-ty-bgc-tex);
 }
 
 
@@ -358,7 +364,7 @@ tool-bar:has(option[value="tex"]:checked) {
 
 tool-bar > * {
     margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
-    background-color: var(--bgcolor-tool);  /* same "default" color as parent tool-bar */
+    background-color: var(--theme-tl-bgc);  /* same "default" color as parent tool-bar */
 }
 
 .tool-bar-indicator {
@@ -368,21 +374,21 @@ tool-bar > * {
     margin: 0;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid var(--border-color-tool-indicator);
-    background-color: var(--color-tool-indicator);
+    border: 1px solid var(--theme-ti-bdc);
+    background-color: var(--theme-ti-bgc);
 }
 
 .tool-bar-indicator.running[data-indicator-value="on"] {
-    border: 1px solid var(--border-color-tool-indicator-running);
-    background-color: var(--color-tool-indicator-running);
+    border: 1px solid var(--theme-ti-bdc-running);
+    background-color: var(--theme-ti-bgc-running);
 }
 .tool-bar-indicator.modified[data-indicator-value="on"] {
-    border: 1px solid var(--border-color-tool-indicator-modified);
-    background-color: var(--color-tool-indicator-modified);
+    border: 1px solid var(--theme-ti-bdc-modified);
+    background-color: var(--theme-ti-bgc-modified);
 }
 
 tool-bar > select > option {
-    background-color: var(--color-tool-type-select);
+    background-color: var(--theme-ty-bgc);
 }
 
 
@@ -391,8 +397,8 @@ tool-bar > select > option {
 toggle-switch {
     appearance: none;
     border: 0;
-    width:  var(--width-toggle-switch);
-    height: var(--height-toggle-switch);
+    width:  var(--theme-ts-w);
+    height: var(--theme-ts-h);
 }
 
 toggle-switch svg {
@@ -400,20 +406,20 @@ toggle-switch svg {
     height: 100%;
 }
 
-toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--color-tool-toggle-fill-editable); }
-toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-editable); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--color-tool-toggle-fill-editable-checked); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-editable-checked); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-editable); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-editable); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-editable-checked); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-editable-checked); }
 
-toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--color-tool-toggle-fill-visible); }
-toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-visible); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--color-tool-toggle-fill-visible-checked); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-visible-checked); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-visible); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-visible); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-visible-checked); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-visible-checked); }
 
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--color-tool-toggle-fill-autoeval); }
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval); }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--color-tool-toggle-fill-autoeval-checked); }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--color-tool-toggle-stroke-autoeval-checked); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-autoeval-checked); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-autoeval-checked); }
 
 
 /* === menu === */
@@ -459,11 +465,11 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
 .menu {
     position: absolute;
     z-index: 999;
-    background-color: var(--bgcolor-menu);
+    background-color: var(--theme-mu-bgc);
     padding: 0.25rem 0 0.25rem 0;  /* override standard ul/li padding */
     border-radius: 0.25rem;
-    border: 1px solid var(--color-menu-border);
-    box-shadow: 3px 3px 16px var(--color-menu-border-shadow);
+    border: 1px solid var(--theme-mu-bdc);
+    box-shadow: 3px 3px 16px var(--theme-mu-sh);
 
     /* eliminate default styling for menu elements */
     margin-block-start:   0;
@@ -474,15 +480,15 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
 }
 
 .menuitem {
-    color: var(--color-menuitem-text);
+    color: var(--theme-mi-fgc);
 }
 
 .menuitem.disabled {
-    color: var(--color-menuitem-text-disabled);
+    color: var(--theme-mi-fgc-disabled);
 }
 
 .menuitem.selected {
-    background-color: var(--bgcolor-menuitem-selected);
+    background-color: var(--theme-mi-bgc-selected);
 }
 
 .menu .menuitem:not(.menuitem-separator) {
@@ -493,7 +499,7 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
     margin: 0.2rem 0 0.2rem 0;
     height: 0px;
     color: transparent;
-    border-bottom: 1px solid var(--color-menuitem-separator);
+    border-bottom: 1px solid var(--theme-mi-msc);
 }
 
 .menu .menuitem .menuitem-annotation {
@@ -510,7 +516,7 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
 
 dialog {
     border-radius: 0.5rem;
-    box-shadow: 3px 3px 16px var(--color-dialog-shadow);
+    box-shadow: 3px 3px 16px var(--theme-dg-sh);
 }
 
 dialog .dialog_text {
@@ -543,7 +549,7 @@ dialog .dialog_accept {
 }
 
 .settings-dialog {
-    background-color: var(--bgcolor-settings);
+    background-color: var(--theme-st-bgc);
 }
 
 .settings-dialog [data-section] {
@@ -553,9 +559,9 @@ dialog .dialog_accept {
     padding: 1rem;
     height: max-content;
     border-radius: 8px;
-    border: 1px solid var(--color-border-settings-data-section);
-    color:            var(--color-settings-data-section);
-    background-color: var(--bgcolor-settings-data-section);
+    border: 1px solid var(--theme-st-bdc-section);
+    color:            var(--theme-st-fgc-section);
+    background-color: var(--theme-st-bgc-section);
 }
 
 .settings-dialog [data-section]::before {  /* named section heading */
@@ -565,9 +571,9 @@ dialog .dialog_accept {
     top: -0.7rem;
     padding: 0 1rem;
     border-radius: 4px;
-    border: 1px solid var(--color-border-settings-data-section-heading);
-    color:            var(--color-settings-data-section-heading);
-    background-color: var(--bgcolor-settings-data-section-heading);
+    border: 1px solid var(--theme-st-bdc-section-heading);
+    color:            var(--theme-st-fgc-section-heading);
+    background-color: var(--theme-st-bgc-section-heading);
     font-style: italic;
 }
 
@@ -582,8 +588,8 @@ dialog .dialog_accept {
 
 .settings-dialog [data-section] [data-setting] input,
 .settings-dialog [data-section] [data-setting] select {
-    color:            var(--color-settings-data-section-data-setting-control);
-    background-color: var(--bgcolor-settings-data-section-data-setting-control);
+    color:            var(--theme-st-fgc-section-setting);
+    background-color: var(--theme-st-bgc-section-setting);
     margin: 0.25rem;
 }
 
@@ -598,9 +604,9 @@ dialog .dialog_accept {
     padding: 1rem;
     height: max-content;
     border-radius: 8px;
-    border: 1px solid var(--color-border-settings-warning);
-    color:            var(--color-settings-warning);
-    background-color: var(--bgcolor-settings-warning);
+    border: 1px solid var(--theme-st-bdc-warning);
+    color:            var(--theme-st-fgc-warning);
+    background-color: var(--theme-st-bgc-warning);
 }
 .settings-dialog .warning p:first-child {
     margin-block-start: 0;
@@ -623,9 +629,9 @@ dialog .dialog_accept {
     height: fit-content;
     padding: 0.5rem;
     border-radius: 5pt;
-    border: 1px solid var(--color-border-settings-error);
-    color:            var(--color-settings-error);
-    background-color: var(--bgcolor-settings-error);
+    border: 1px solid var(--theme-st-bdc-error);
+    color:            var(--theme-st-fgc-error);
+    background-color: var(--theme-st-bgc-error);
 }
 .settings-dialog .error-message.active {
     display: block;
@@ -646,13 +652,13 @@ dialog .dialog_accept {
 
     eval-cell: {
         /* no highlighted border */
-        border-color: transparent var(--border-color-cell) var(--border-color-cell) var(--border-color-cell) !important;
+        border-color: transparent var(--theme-cl-bdc) var(--theme-cl-bdc) var(--theme-cl-bdc) !important;
     }
 
     .eval-cell-output {
         /* no highlight */
-        border-width: 0 0 0 var(--active-output-highlight-width) !important;
+        border-width: 0 0 0 var(--theme-ou-hlw) !important;
         border-color: transparent !important;
-        border-style: var(--active-output-highlight-style) !important;
+        border-style: var(--theme-ou-hls) !important;
     }
 }
