@@ -18,17 +18,11 @@
   dg -- dialog
   st -- settings dialog
 
-  STYLE FEATURE:
-  bg -- background
-  fg -- foreground
-  bd -- border
-  hl -- highlight
-
-  STYLE FEATURE ATTRIBUTE:
-  c -- color
-  w -- width
-  s -- style
-  r -- radius
+  STYLE FEATURE:          STYLE FEATURE ATTRIBUTE:
+  bg -- background        c -- color
+  fg -- foreground        w -- width
+  bd -- border            s -- style (e.g., dashed)
+  hl -- highlight         r -- radius
 
   METRIC FEATURE:
   w -- width
@@ -45,12 +39,13 @@
   ---
 
   VARIABLES:
-  --theme-{ELEMENT}-{STYLE FEATURE}{STYLE FEATURE ATTRIBUTE}
-  --theme-{ELEMENT}-{METRIC FEATURE}
-  --theme-{ELEMENT}-{OTHER FEATURE}
+  --theme-{ELEMENT}-{STYLE FEATURE}{STYLE FEATURE ATTRIBUTE}...
+  --theme-{ELEMENT}-{METRIC FEATURE}...
+  --theme-{ELEMENT}-{OTHER FEATURE}...
 */
 
 :root {
+    --xxx: light;
     /* metrics */
 
     --theme-hd-h:                           1.5rem;
@@ -138,9 +133,11 @@
     --theme-dg-sh:                          grey;
 
     --theme-st-bgc:                         hsl(  0deg   0%  98% / 100%);
+
     --theme-st-bdc-section:                 hsl(  0deg   0%   0% / 100%);
     --theme-st-bgc-section:                 hsl(  0deg   0%  95% / 100%);
     --theme-st-fgc-section:                 hsl(  0deg   0%   0% / 100%);
+
     --theme-st-bdc-section-heading:         #aaa;
     --theme-st-bgc-section-heading:         hsl(  0deg   0%  98% / 100%);
     --theme-st-fgc-section-heading:         hsl(  0deg   0%   0% / 100%);
