@@ -1,25 +1,28 @@
+rationalize use of LocalStorage and IndexedDB for config, recents, settings and theme_settings (use IndexedDB instead of LocalStorage)
 rationalize style settings in preparation for dark/light mode
+implement dark/light mode setting in ui
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
-set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
-Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
-fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
+set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
+fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for
 maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 make toggle-switch more ui-aware (press space to click, aria stuff, etc)
 toggle-menu command (for keyboard)
-implement and use LogbookManager.singleton.update_menu_state()
 implement recents
 implement go/stop control in tool-bar
 improve saving
 save can cause disconnect between current document and its "file_handle" if the user saves to a different file
-make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste")
 replace make with grunt (or similar)?
+update examples / convert old esbook examples
+Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
 
 
 --- DONE ---
+make KeySpec, etc events fire directly so they do not lose the "trusted" aspect (e.g., for "paste") (good enough now?)
+implement and use LogbookManager.singleton.update_menu_state()
 new cell should be set to "visible" (ended up instead requiring "contenteditable" for document in command handlers)
 content->main, controls->header
 dblclick handler in ToolBarElement is improper when ToolBarElement is used in the top-level menu, and not a cell

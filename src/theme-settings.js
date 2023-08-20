@@ -1,12 +1,6 @@
-const current_script_url = import.meta.url;  // save for later
-
 import {
     Subscribable,
 } from '../lib/sys/subscribable.js';
-
-import {
-    assets_server_url,
-} from './assets-server-url.js';
 
 
 // === THEME SETTINGS INTERFACE ===

@@ -42,8 +42,6 @@ const dynamic_import = new Function('path', 'return import(path);');
 //     println:        prints its argument followed by newline
 //     printf:         implementation of std C printf()
 //     sprintf:        implementation of std C sprintf()
-//     settings:       current settings
-//     theme_settings: current theme_settings
 //     import_lib:     import other libraries from the lib/ directory
 //     vars:           export new "global" properties
 //     is_stopped:     determine if the evaluation has been stopped
@@ -80,14 +78,6 @@ import {
 import {
     sprintf,
 } from '../../../lib/sys/sprintf.js';
-
-import {
-    get_settings,
-} from '../../settings.js';
-
-import {
-    get_theme_settings,
-} from '../../theme-settings.js';
 
 import {
     delay_ms        as util_delay_ms,
@@ -293,8 +283,6 @@ export class JavaScriptRenderer extends Renderer {
 
         const ephemeral_eval_context = {
             // external
-            settings:        get_settings(),
-            theme_settings:  get_theme_settings(),
             sprintf:         AIS(sprintf),
             // functions defined above
             is_stopped,

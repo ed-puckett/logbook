@@ -1,10 +1,10 @@
 import {
     Subscribable,
-} from '../../lib/sys/subscribable.js';
+} from '../lib/sys/subscribable.js';
 
 import {
     IndexedDBInterface,
-} from './idb.js';
+} from '../lib/sys/idb.js';
 
 
 const config_database_key = 'config';

@@ -93,7 +93,7 @@ export class EvalCellElement extends EditorCellElement {
         } else {
             const element = document.getElementById(oid);
             if (!element || !(element instanceof HTMLElement)) {
-                console.warn('bad configuration of EvalCellElement: id does not specify an HTMLElement');
+                console.warn('bad configuration for EvalCellElement: id does not specify an HTMLElement');
                 return null;
             } else {
                 return element;

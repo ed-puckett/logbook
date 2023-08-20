@@ -19,6 +19,11 @@ import {
 } from '../lib/sys/subscribable.js';
 
 import {
+    get_config,
+    set_config,
+} from './config.js';
+
+import {
     show_initialization_failed,
     create_element,
     clear_element,
@@ -129,6 +134,9 @@ export class LogbookManager {
     reset_global_eval_context() {
         this.#global_eval_context = {};
     }
+
+    async get_config()       { return get_config(); }
+    async set_config(config) { return set_config(config); }
 
     /** reset the document, meaning that all cells will be reset,
      *  and this.global_eval_context will be reset.  Also, the

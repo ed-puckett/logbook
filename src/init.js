@@ -9,6 +9,7 @@ import {
     LogbookManager,
 } from './logbook-manager.js';
 
+
 if (document.readyState === 'interactive') {
     trigger_document_initialization();
 } else {
