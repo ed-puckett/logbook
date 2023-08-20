@@ -29,6 +29,7 @@ const webpack_config = {
         new CycloneDxWebpackPlugin({
             specVersion: '1.4',
             outputLocation: './cyclonedx-sbom',
+            reproducibleResults: true,
         }),
     ],
 
