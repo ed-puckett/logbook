@@ -1,5 +1,4 @@
 .settings-dialog .dialog-text {
-    font-size: x-large;
     font-style: italic;
 }
 
@@ -8,8 +7,8 @@
     display: grid;
     grid-template-columns: min-content min-content;
     min-width: max-content;
-    margin: 2rem 0 0 0;
-    padding: 1rem 0.5em;
+    margin: 1.75em 0 0 0;
+    padding: 1em 0.5em 0.5em;
     height: max-content;
     border: 1px solid black;
     border-radius: 8px;
@@ -20,9 +19,9 @@
 .settings-dialog [data-section]::before {
     position: absolute;
     content: attr(data-section);
-    left: 0.8rem;
-    top: -0.7rem;
-    padding: 0 1rem;
+    left: 0.8em;
+    top: -0.7em;
+    padding: 0 1em;
     border: 1px solid #aaa;
     border-radius: 4px;
     color: hsl(  0deg   0%   0% / 100%);
@@ -43,18 +42,18 @@
     justify-self: start;
     color: hsl(  0deg   0%   0% / 100%);
     background-color: hsl(  0deg   0%  96% / 100%);
-    margin: 0.25rem;
+    margin: 0.25em;
 }
 
 .settings-dialog [data-section] input[type="text"] {
-    width: 5rem;
+    width: 5em;
 }
 
 .settings-dialog .warning {
     display: none;
-    width: 13rem;
-    margin: 2rem 0 0 1rem;
-    padding: 0.5rem;
+    width: 13em;
+    margin: 1.75em 0 0 1em;
+    padding: 0.5em;
     border: 1px solid black;
     border-radius: 8px;
     color: hsl(  0deg   0%   0% / 100%);
@@ -71,14 +70,14 @@
 }
 
 .settings-dialog input[type="submit"] {
-    margin-top: 1rem;
+    margin-top: 1em;
 }
 
 .settings-dialog .error-message {
     display: none;
-    width: 13rem;
-    margin: 2rem 0 0 1rem;
-    padding: 0.5rem;
+    width: 13em;
+    margin: 1.75em 0 0 1em;
+    padding: 0.5em;
     border-radius: 5pt;
     background-color: hsl(  0deg  60%  50% / 100%);
     color: hsl(  0deg   0% 100% / 100%);

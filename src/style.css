@@ -135,7 +135,7 @@
 
     --theme-dg-sh:                          grey;
 
-    --theme-st-bgc:                         hsl(  0deg   0%  98% / 100%);
+    --theme-st-bgc:                         canvas;
 
     --theme-st-bdc-section:                 hsl(  0deg   0%   0% / 100%);
     --theme-st-bgc-section:                 hsl(  0deg   0%  95% / 100%);
@@ -515,17 +515,13 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke {
 /* === dialog === */
 
 dialog {
-    border-radius: 0.5rem;
+    border-radius: 0.5em;
     box-shadow: 3px 3px 16px var(--theme-dg-sh);
-}
-
-dialog .dialog-text {
-    margin: 0.5rem 0.5rem 0.5rem 0;
 }
 
 dialog button,
 dialog input[type="button"] {
-    margin: 2rem 0 0 0;
+    margin: 1.75em 0 0 0;
 }
 
 dialog .dialog_decline {
@@ -544,7 +540,6 @@ dialog .dialog_accept {
 }
 
 .settings-dialog .dialog-text {
-    font-size: x-large;
     font-style: italic;
 }
 
@@ -553,8 +548,8 @@ dialog .dialog_accept {
     display: grid;
     grid-template-columns: min-content min-content;
     min-width: max-content;
-    margin: 2rem 0 0 0;
-    padding: 1rem 0.5em;
+    margin: 1.75em 0 0 0;
+    padding: 1em 0.5em 0.5em;
     height: max-content;
     border-radius: 8px;
     border: 1px solid var(--theme-st-bdc-section);
@@ -565,9 +560,9 @@ dialog .dialog_accept {
 .settings-dialog [data-section]::before {  /* named section heading */
     position: absolute;
     content: attr(data-section);
-    left: 0.8rem;
-    top: -0.7rem;
-    padding: 0 1rem;
+    left: 0.8em;
+    top: -0.7em;
+    padding: 0 1em;
     border-radius: 4px;
     border: 1px solid var(--theme-st-bdc-section-heading);
     color:            var(--theme-st-fgc-section-heading);
@@ -588,18 +583,18 @@ dialog .dialog_accept {
     justify-self: start;
     color:            var(--theme-st-fgc-section-setting);
     background-color: var(--theme-st-bgc-section-setting);
-    margin: 0.25rem;
+    margin: 0.25em;
 }
 
 .settings-dialog [data-section] input[type="text"] {
-    width: 5rem;
+    width: 5em;
 }
 
 .settings-dialog .warning {
     display: none;
-    width: 13rem;
-    margin: 2rem 0 0 1rem;
-    padding: 0.5rem;
+    width: 13em;
+    margin: 1.75em 0 0 1em;
+    padding: 0.5em;
     border-radius: 8px;
     border: 1px solid var(--theme-st-bdc-warning);
     color:            var(--theme-st-fgc-warning);
@@ -617,9 +612,9 @@ dialog .dialog_accept {
 
 .settings-dialog .error-message {
     display: none;
-    width: 13rem;
-    margin: 2rem 0 0 1rem;
-    padding: 0.5rem;
+    width: 13em;
+    margin: 1.75em 0 0 1em;
+    padding: 0.5em;
     border-radius: 5pt;
     border: 1px solid var(--theme-st-bdc-error);
     color:            var(--theme-st-fgc-error);
@@ -634,8 +629,8 @@ dialog .dialog_accept {
 
 body > .error-message {
     display: block;
-    margin: 2rem;
-    padding: 0.5rem;
+    margin: 1.75em;
+    padding: 0.5em;
     border-radius: 5pt;
     border: 1px solid var(--theme-by-bdc-error);
     color:            var(--theme-by-fgc-error);
