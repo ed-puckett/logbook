@@ -455,21 +455,26 @@ export class EditorCellElement extends HTMLElement {
 
     get active (){ return !!this.hasAttribute(this.constructor.attribute__active); }
     set_active(state=false) {
-        if (state) {
-            this.setAttribute(this.constructor.attribute__active, true);
-        } else {
-            this.removeAttribute(this.constructor.attribute__active);
+        state = !!state;
+        if (this.active !== state) {  // avoid creating an unnecessary dom mutation
+            if (state) {
+                this.setAttribute(this.constructor.attribute__active, true);
+            } else {
+                this.removeAttribute(this.constructor.attribute__active);
+            }
         }
     }
 
     get visible (){ return !!this.hasAttribute(this.constructor.attribute__visible); }
     set_visible(state=false) {
         state = !!state;
-        this._tool_bar.set_for('visible', state);
-        if (state) {
-            this.setAttribute(this.constructor.attribute__visible, true);
-        } else {
-            this.removeAttribute(this.constructor.attribute__visible);
+        if (this.visible !== state) {  // avoid creating an unnecessary dom mutation
+            this._tool_bar.set_for('visible', state);
+            if (state) {
+                this.setAttribute(this.constructor.attribute__visible, true);
+            } else {
+                this.removeAttribute(this.constructor.attribute__visible);
+            }
         }
     }
 

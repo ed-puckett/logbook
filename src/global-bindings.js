@@ -4,7 +4,7 @@ import {
 
 import {
     SettingsDialog,
-} from './settings-dialog/_.js';
+} from './settings/_.js';
 
 
 /** return the initial menu specification

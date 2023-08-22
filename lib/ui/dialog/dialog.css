@@ -3,13 +3,13 @@ dialog {
     box-shadow: 3px 3px 16px grey;
 }
 
-dialog .dialog_text {
+dialog .dialog-text {
     margin: 0.5rem 0.5rem 0.5rem 0;
 }
 
 dialog button,
 dialog input[type="button"] {
-    margin: 0.5rem 0.5rem 0.5rem 0;
+    margin: 2rem 0 0 0;
 }
 
 dialog .dialog_decline {

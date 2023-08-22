@@ -19,12 +19,6 @@ import {
 } from '../lib/sys/subscribable.js';
 
 import {
-    get_config,
-    set_config,
-} from './config.js';
-
-import {
-    show_initialization_failed,
     create_element,
     clear_element,
 } from '../lib/ui/dom-util.js';
@@ -40,10 +34,6 @@ import {
 import {
     fs_interface,
 } from '../lib/sys/fs-interface.js';
-
-import {
-    SettingsDialog,
-} from './settings-dialog/_.js';
 
 import {
     beep,
@@ -108,7 +98,6 @@ export class LogbookManager {
     #file_handle;
 
     get editable (){ return this.#editable }
-
     set_editable(editable) {
         editable = !!editable;
         this.#editable = editable;
@@ -127,16 +116,13 @@ export class LogbookManager {
         }
     }
 
-    get header_element (){ return this.#header_element; }
-    get main_element   (){ return this.#main_element; }
-
     get global_eval_context (){ return this.#global_eval_context; }
     reset_global_eval_context() {
         this.#global_eval_context = {};
     }
 
-    async get_config()       { return get_config(); }
-    async set_config(config) { return set_config(config); }
+    get header_element (){ return this.#header_element; }
+    get main_element   (){ return this.#main_element; }
 
     /** reset the document, meaning that all cells will be reset,
      *  and this.global_eval_context will be reset.  Also, the
@@ -152,10 +138,11 @@ export class LogbookManager {
         return this;
     }
 
-    /** clear the current document
+    /** clear the current document and set "editable"
      */
     clear() {
         clear_element(this.main_element);
+        this.set_editable(true);
         const first_cell = this.create_cell();
         first_cell.focus();
     }
@@ -244,9 +231,7 @@ export class LogbookManager {
             this.#global_change_manager.set_neutral();
 
         } catch (error) {
-
             show_initialization_failed(error);
-
         }
     }
 
@@ -757,4 +742,19 @@ recents
     command_handler__redo(command_context) {
         return this.#global_change_manager?.perform_redo();
     }
+}
+
+
+// === INITIALIZATION FAILED DISPLAY ===
+
+export function show_initialization_failed(error) {
+    console.error('initialization failed', error.stack);
+    document.body.innerText = '';  // completely reset body
+    const error_h1 = document.createElement('h1');
+    error_h1.textContent = 'Initialization Failed';
+    const error_pre = document.createElement('pre');
+    error_pre.classList.add('error-message');
+    error_pre.textContent = error.stack;
+    document.body.appendChild(error_h1);
+    document.body.appendChild(error_pre);
 }

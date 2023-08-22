@@ -2,19 +2,19 @@ const current_script_url = import.meta.url;  // save for later
 
 import {
     create_element,
-} from '../../lib/ui/dom-util.js';
+} from '../../../lib/ui/dom-util.js';
 
 import {
     Dialog,
     AlertDialog,
     create_control_element,
     create_select_element,
-} from '../../lib/ui/dialog/_.js';
+} from '../../../lib/ui/dialog/_.js';
 
 import {
     get_obj_path,
     set_obj_path,
-} from '../../lib/sys/obj-path.js';
+} from '../../../lib/sys/obj-path.js';
 
 import {
     get_settings,
@@ -33,16 +33,16 @@ import {
 
 import {
     beep,
-} from '../../lib/ui/beep.js';
+} from '../../../lib/ui/beep.js';
 
 import {
     assets_server_url,
-} from '../assets-server-url.js';
+} from '../../assets-server-url.js';
 
 
 // import {
 //     create_stylesheet_link,
-// } from '../../lib/ui/dom-util.js';
+// } from '../../../lib/ui/dom-util.js';
 export async function load_stylesheet() {
     // create_stylesheet_link(document.head, new URL('./settings-dialog.css', assets_server_url(current_script_url)));
     await import('./settings-dialog.css');  // webpack implementation
@@ -51,40 +51,38 @@ export async function load_stylesheet() {
 
 // dialog definitiion
 
-const sections = [{
-    section: {
+const sections = [
+    {
         name: 'Editor',
         settings: [{
             id: 'editor_options_indentUnit',
             label: 'Indent',
             type: 'text',
             settings_path: [ 'editor_options', 'indentUnit' ],
-            analyze: (value) => analyze_editor_options_indentUnit(value, 'Indent'),
+            analyze: analyze_editor_options_indentUnit,  // (value, label) => complaint
             convert_to_number: true,
         }, {
             id: 'editor_options_tabSize',
             label: 'Tab size',
             type: 'text',
             settings_path: [ 'editor_options', 'tabSize' ],
-            analyze: (value) => analyze_editor_options_tabSize(value, 'Tab size'),
+            analyze: analyze_editor_options_tabSize,  // (value, label) => complaint
             convert_to_number: true,
         }, {
             id: 'editor_options_indentWithTabs',
             label: 'Indent with tabs',
             type: 'checkbox',
             settings_path: [ 'editor_options', 'indentWithTabs' ],
-            analyze: (value) => analyze_editor_options_indentWithTabs(value, 'Indent with tabs'),
+            analyze: analyze_editor_options_indentWithTabs,  // (value, label) => complaint
         }, {
             id: 'editor_options_keyMap',
             label: 'Key map',
             type: 'select',
             options: valid_editor_options_keyMap_values.map(value => ({ value, label: value })),
             settings_path: [ 'editor_options', 'keyMap' ],
-            analyze: (value) => analyze_editor_options_keyMap(value, 'Key map'),
+            analyze: analyze_editor_options_keyMap,  // (value, label) => complaint
         }],
-    },
-}, {
-    section: {
+    }, {
         name: 'TeX Formatting',
         settings: [{
             id: 'formatting_options_align',
@@ -92,17 +90,15 @@ const sections = [{
             type: 'select',
             options: valid_formatting_options_align_values.map(value => ({ value, label: value })),
             settings_path: [ 'formatting_options', 'align' ],
-            analyze: (value) => analyze_formatting_options_align(value, 'Align'),
+            analyze: analyze_formatting_options_align,  // (value, label) => complaint
         }, {
             id: 'formatting_options_indent',
             label: 'Indentation',
             type: 'text',
             settings_path: [ 'formatting_options', 'indent' ],
-            analyze: (value) => analyze_formatting_options_indent(value, 'Indentation'),
+            analyze: analyze_formatting_options_indent,  // (value, label) => complaint
         }],
-    },
-}, {
-    section: {
+    }, {
         name: 'Appearance',
         settings: [{
             id: 'theme_colors',
@@ -110,10 +106,10 @@ const sections = [{
             type: 'select',
             options: valid_theme_colors_values.map(value =>({ value, label: value })),
             settings_path: [ 'theme_colors' ],
-            analyze: (value) => analyze_theme_colors(value, 'Theme colors'),
+            analyze: analyze_theme_colors,  // (value, label) => complaint
         }],
     },
-}];
+];
 
 
 export class SettingsDialog extends Dialog {
@@ -141,16 +137,16 @@ export class SettingsDialog extends Dialog {
 
         this._dialog_text_container.innerText = 'Settings';
 
-        for (const { section } of sections) {
+        for (const section of sections) {
             const { name, settings } = section;
-            const section_div = create_element({ parent: this._dialog_form, attrs: { class: 'section' } });
+            const section_div = this._dialog_form;
 
             const named_section_div = create_element({ parent: section_div, attrs: { 'data-section': name } });
             const error_div = create_element({ parent: section_div, attrs: { class: `error-message` } });
 
             for (const setting of settings) {
                 const { id, label, type, settings_path, options, analyze, convert_to_number } = setting;
-                const setting_div = create_element({ parent: named_section_div, attrs: { 'data-setting': undefined } });
+                const setting_div = named_section_div;
                 let control;
                 if (type === 'select') {
                     control = create_select_element(setting_div, id, {
@@ -190,7 +186,7 @@ export class SettingsDialog extends Dialog {
 
                     const value = (type === 'checkbox') ? control.checked : control.value;
                     if (analyze) {
-                        const complaint = analyze(value)
+                        const complaint = analyze(value, label);
                         if (complaint) {
                             await handle_error(complaint);
                             return;

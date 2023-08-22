@@ -1,15 +1,15 @@
 import {
     Subscribable,
-} from '../lib/sys/subscribable.js';
+} from '../../lib/sys/subscribable.js';
 
 import {
     deep_freeze,
-} from '../lib/sys/util.js';
+} from '../../lib/sys/util.js';
 
 import {
     db_key_settings,
     storage_db,
-} from './storage.js';
+} from '../storage.js';
 
 
 // === INITIAL SETTINGS ===

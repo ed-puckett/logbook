@@ -1,17 +1,15 @@
-.settings-dialog .dialog_text {
+.settings-dialog .dialog-text {
     font-size: x-large;
     font-style: italic;
 }
 
-.settings-dialog .section {
-    display: flex;
-}
-
 .settings-dialog [data-section] {
     position: relative;
+    display: grid;
+    grid-template-columns: min-content min-content;
     min-width: max-content;
-    margin: 2rem 0 0 1rem;
-    padding: 1rem;
+    margin: 2rem 0 0 0;
+    padding: 1rem 0.5em;
     height: max-content;
     border: 1px solid black;
     border-radius: 8px;
@@ -32,32 +30,31 @@
     font-style: italic;
 }
 
-.settings-dialog [data-section] [data-setting] label {
-    display: inline-block;
-    width: 9rem;
-    text-align: right;
-    font-family: sans-serif;
-    font-size: small;
+.settings-dialog [data-section] label {
+    align-self: center;
+    justify-self: end;
+    white-space: nowrap;
     user-select: none;
 }
 
-.settings-dialog [data-section] [data-setting] input,
-.settings-dialog [data-section] [data-setting] select {
+.settings-dialog [data-section] input,
+.settings-dialog [data-section] select {
+    align-self: center;
+    justify-self: start;
     color: hsl(  0deg   0%   0% / 100%);
     background-color: hsl(  0deg   0%  96% / 100%);
     margin: 0.25rem;
 }
 
-.settings-dialog [data-section] [data-setting] input[type="text"] {
+.settings-dialog [data-section] input[type="text"] {
     width: 5rem;
 }
 
 .settings-dialog .warning {
     display: none;
-    width: 18rem;
+    width: 13rem;
     margin: 2rem 0 0 1rem;
-    padding: 1rem;
-    height: max-content;
+    padding: 0.5rem;
     border: 1px solid black;
     border-radius: 8px;
     color: hsl(  0deg   0%   0% / 100%);
@@ -79,8 +76,8 @@
 
 .settings-dialog .error-message {
     display: none;
+    width: 13rem;
     margin: 2rem 0 0 1rem;
-    max-width: 25vx;
     padding: 0.5rem;
     border-radius: 5pt;
     background-color: hsl(  0deg  60%  50% / 100%);
