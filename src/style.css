@@ -145,8 +145,8 @@
     --theme-st-bgc-section-heading:         hsl(  0deg   0%  98% / 100%);
     --theme-st-fgc-section-heading:         hsl(  0deg   0%   0% / 100%);
 
-    --theme-st-fgc-section-setting:         hsl(  0deg   0%   0% / 100%);
-    --theme-st-bgc-section-setting:         hsl(  0deg   0%  96% / 100%);
+    --theme-st-fgc-section-setting:         fieldtext;
+    --theme-st-bgc-section-setting:         field;
 
     --theme-st-bdc-warning:                 hsl(  0deg   0%   0% / 100%);
     --theme-st-fgc-warning:                 hsl(  0deg   0%   0% / 100%);
@@ -550,7 +550,6 @@ dialog .dialog_accept {
     min-width: max-content;
     margin: 1.75em 0 0 0;
     padding: 1em 0.5em 0.5em;
-    height: max-content;
     border-radius: 8px;
     border: 1px solid var(--theme-st-bdc-section);
     color:            var(--theme-st-fgc-section);

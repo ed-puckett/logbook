@@ -9,7 +9,6 @@
     min-width: max-content;
     margin: 1.75em 0 0 0;
     padding: 1em 0.5em 0.5em;
-    height: max-content;
     border: 1px solid black;
     border-radius: 8px;
     color: hsl(  0deg   0%   0% / 100%);
@@ -40,8 +39,8 @@
 .settings-dialog [data-section] select {
     align-self: center;
     justify-self: start;
-    color: hsl(  0deg   0%   0% / 100%);
-    background-color: hsl(  0deg   0%  96% / 100%);
+    color:            fieldtext;
+    background-color: field;
     margin: 0.25em;
 }
 
