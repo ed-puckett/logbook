@@ -138,11 +138,11 @@
     --theme-st-bgc:                         canvas;
 
     --theme-st-bdc-section:                 hsl(  0deg   0%   0% / 100%);
-    --theme-st-bgc-section:                 hsl(  0deg   0%  95% / 100%);
+    --theme-st-bgc-section:                 hsl(  0deg   0%  98% / 100%);
     --theme-st-fgc-section:                 hsl(  0deg   0%   0% / 100%);
 
     --theme-st-bdc-section-heading:         #aaa;
-    --theme-st-bgc-section-heading:         hsl(  0deg   0%  98% / 100%);
+    --theme-st-bgc-section-heading:         hsl(  0deg   0% 100% / 100%);
     --theme-st-fgc-section-heading:         hsl(  0deg   0%   0% / 100%);
 
     --theme-st-fgc-section-setting:         fieldtext;

@@ -9,7 +9,7 @@ import {
 import {
     db_key_settings,
     storage_db,
-} from '../storage.js';
+} from './storage.js';
 
 
 // === INITIAL SETTINGS ===
