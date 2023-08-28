@@ -27,8 +27,8 @@ import {
     valid_formatting_options_align_values,
     analyze_formatting_options_align,
     analyze_formatting_options_indent,
-    valid_theme_colors_values,
-    analyze_theme_colors,
+    get_valid_theme_values,
+    analyze_theme,
 } from '../settings.js';
 
 import {
@@ -53,6 +53,16 @@ export async function load_stylesheet() {
 
 const sections = [
     {
+        name: 'Appearance',
+        settings: [{
+            id: 'theme',
+            label: 'Theme',
+            type: 'select',
+            options: get_valid_theme_values().map(value =>({ value, label: value })),
+            settings_path: [ 'theme' ],
+            analyze: analyze_theme,  // (value, label) => complaint
+        }],
+    }, {
         name: 'Editor',
         settings: [{
             id: 'editor_options_indentUnit',
@@ -97,16 +107,6 @@ const sections = [
             type: 'text',
             settings_path: [ 'formatting_options', 'indent' ],
             analyze: analyze_formatting_options_indent,  // (value, label) => complaint
-        }],
-    }, {
-        name: 'Appearance',
-        settings: [{
-            id: 'theme_colors',
-            label: 'Theme',
-            type: 'select',
-            options: valid_theme_colors_values.map(value =>({ value, label: value })),
-            settings_path: [ 'theme_colors' ],
-            analyze: analyze_theme_colors,  // (value, label) => complaint
         }],
     },
 ];

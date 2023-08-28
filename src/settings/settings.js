@@ -3,10 +3,6 @@ import {
 } from '../../lib/sys/subscribable.js';
 
 import {
-    deep_freeze,
-} from '../../lib/sys/util.js';
-
-import {
     db_key_settings,
     storage_db,
 } from './storage.js';
@@ -14,7 +10,13 @@ import {
 
 // === INITIAL SETTINGS ===
 
-export const initial_settings = {
+
+export const theme_system = 'system';
+export const theme_light  = 'light';
+export const theme_dark   = 'dark';
+
+const initial_settings = {
+    theme: theme_system,
     editor_options: {
         indentUnit:     2,
         tabSize:        4,
@@ -25,9 +27,7 @@ export const initial_settings = {
         align:  'left',
         indent: '0em',
     },
-    theme_colors: 'system',
 };
-deep_freeze(initial_settings);
 
 
 // === EVENT INTERFACE ===
@@ -215,9 +215,14 @@ export function analyze_formatting_options(formatting_options, name) {
     return undefined;
 }
 
-export const valid_theme_colors_values = ['system', 'dark', 'light'];
-export function analyze_theme_colors(value, name) {
-    return analyze_contained(value, valid_theme_colors_values, (name ?? 'theme_colors'));
+const valid_theme_values = [ theme_system, theme_light, theme_dark ];
+
+export function get_valid_theme_values() {
+    return [ ...valid_theme_values ];
+}
+
+export function analyze_theme(value, name) {
+    return analyze_contained(value, valid_theme_values, (name ?? 'theme'));
 }
 
 export function analyze_settings(settings, name) {
@@ -225,11 +230,11 @@ export function analyze_settings(settings, name) {
         return `${name ?? 'settings'} must be an object`;
     }
     const keys = Object.keys(settings);
-    if (!keys.every(k => ['editor_options', 'formatting_options', 'theme_colors'].includes(k))) {
-        return `${name ?? 'settings'} may only have the keys "editor_options", "formatting_options" and "theme_colors"`;
+    if (!keys.every(k => ['editor_options', 'formatting_options', 'theme'].includes(k))) {
+        return `${name ?? 'settings'} may only have the keys "editor_options", "formatting_options" and "theme"`;
     }
     if (!('editor_options' in settings)) {
-        return `${name ?? 'settings'} must contain an editor_options property`;
+        return `${name ?? 'settings'} must contain an "editor_options" property`;
     } else {
         const complaint = analyze_editor_options(settings.editor_options);
         if (complaint) {
@@ -237,17 +242,17 @@ export function analyze_settings(settings, name) {
         }
     }
     if (!('formatting_options' in settings)) {
-        return `${name ?? 'settings'} must contain an formmating_options property`;
+        return `${name ?? 'settings'} must contain a "formmating_options" property`;
     } else {
         const complaint = analyze_formatting_options(settings.formatting_options);
         if (complaint) {
             return complaint;
         }
     }
-    if (!('theme_colors' in settings)) {
-        return `${name ?? 'settings'} must contain an theme_colors property`;
+    if (!('theme' in settings)) {
+        return `${name ?? 'settings'} must contain a "theme" property`;
     } else {
-        const complaint = analyze_theme_colors(settings.theme_colors);
+        const complaint = analyze_theme(settings.theme);
         if (complaint) {
             return complaint;
         }
