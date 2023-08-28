@@ -213,6 +213,19 @@ const standard_themes = standard_theme_names.map((theme_name, theme_idx) => {
     };
 });
 
+export async function get_theme_settings_from_storage() {
+    return storage_db.get(db_key_themes)
+        .then((themes_from_db) => {
+            validate_themes_array(themes_from_db);
+            return themes_from_db;
+        });
+}
+
+export async function put_theme_settings_to_storage(theme_settings) {
+    validate_themes_array(theme_settings);
+    return storage_db.put(db_key_themes, theme_settings);
+}
+
 
 export const theme_style_element_id = `themes-${generate_uuid()}`;
 
@@ -223,24 +236,23 @@ function get_theme_style_element() {
 const theme_name_validation_re      = /^[A-Za-z_-][A-Za-z0-9_-]*$/;
 const theme_prop_name_validation_re = /^--theme-[A-Za-z_-][A-Za-z0-9_-]*$/;
 
+const root_element = document.documentElement;
+export const root_element_theme_attribute = 'data-theme';
+
 // initialize themes in db if necessary, and write theme styles to the theme_style_element
 await new Promise((resolve, reject) => {
     if (!document.head) {
         reject(new Error('document.head missing'));
     } else {
-        return storage_db.get(db_key_themes)
-            .then((themes_from_db) => {
-                try {
-                    validate_themes_array(themes_from_db);  // throws error if invalid
-                    return themes_from_db;
-                } catch (_) {
-                    console.log('initializing themes in storage_db');
-                    const themes = standard_themes;
-                    return storage_db.put(db_key_themes, themes)
-                        .then(() => {
-                            return themes;
-                        });
-                }
+        return get_theme_settings_from_storage()
+            .catch((_) => {
+                console.log('initializing themes in storage_db');
+                // initialize/reset database from standard_themes
+                const themes = standard_themes;
+                return put_theme_settings_to_storage(themes)
+                    .then(() => {
+                        return themes;
+                    });
             })
             .catch(reject)
             .then((themes) => {
@@ -303,7 +315,7 @@ async function write_themes_to_style_element(themes, theme_style_element) {
 function create_theme_properties_section(theme, default_mode=false) {
     const { name, props } = theme;
     return `\
-:root${default_mode ? '' : `[data-theme="${name}"]`} {
+:root${default_mode ? '' : `[${root_element_theme_attribute}="${name}"]`} {
 ${ Object.entries(props)
        .map(([ prop_name, prop_value ]) => {
            return `    ${prop_name}: ${prop_value};`;
@@ -314,16 +326,9 @@ ${ Object.entries(props)
 }
 
 
-// === THEME SETTINGS INTERFACE ===
+// === SYSTEM THEME SETTINGS INTERFACE ===
 
-const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme: dark)");
-
-export function get_theme_settings() {
-    // return a new copy to insulate receivers from each others' modifications
-    return {
-        shouldUseDarkColors: dark_mode_media_query_list.matches,
-    };
-}
+export const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme: dark)");
 
 dark_mode_media_query_list.addEventListener('change', function (event) {
     theme_settings_updated_events.dispatch();
@@ -337,14 +342,30 @@ export const theme_settings_updated_events = new Subscribable();
 
 // === DOCUMENT DARK THEME SETTING ===
 
-const dark_mode_class = 'dark';
-
-const root_element = document.documentElement;
-
 export function update_document_dark_state(dark_state) {
     if (dark_state) {
-        root_element.classList.add(dark_mode_class);
+        root_element.setAttribute(root_element_theme_attribute, 'dark');
     } else {
-        root_element.classList.remove(dark_mode_class);
+        root_element.removeAttribute(root_element_theme_attribute);
     }
+}
+
+
+// === GET/UPDATE INTERFACE ===
+
+function copy_theme_settings(theme_settings) {
+    return JSON.parse(JSON.stringify(theme_settings));
+}
+
+let current_theme_settings = await get_theme_settings_from_storage();
+
+export function get_theme_settings() {
+    return copy_theme_settings(current_theme_settings);
+}
+
+export async function update_theme_settings(new_theme_settings) {
+    new_theme_settings = copy_theme_settings(new_theme_settings);
+    await put_theme_settings_to_storage(new_theme_settings);  // also validates
+    current_theme_settings = new_theme_settings;
+    theme_settings_updated_events.dispatch();
 }
