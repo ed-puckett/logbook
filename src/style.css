@@ -18,7 +18,7 @@
 body {
     overflow: hidden;  /* inhibit scrolling for body */
     margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
-    background-color: var(--by-bgc);
+    background-color: var(--theme-by-bgc);
 }
 
 main {
@@ -175,16 +175,19 @@ eval-cell[contenteditable][data-active] {
 
 tool-bar option,
 tool-bar select {
+    color:            var(--theme-ty-fgc-markdown);
     background-color: var(--theme-ty-bgc-markdown);
 }
 
 tool-bar option[value="javascript"],
 tool-bar > select:has(> option[value="javascript"]:checked) {
+    color:            var(--theme-ty-fgc-javascript);
     background-color: var(--theme-ty-bgc-javascript);
 }
 
 tool-bar option[value="tex"],
 tool-bar > select:has(> option[value="tex"]:checked) {
+    color:            var(--theme-ty-fgc-tex);
     background-color: var(--theme-ty-bgc-tex);
 }
 

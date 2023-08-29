@@ -100,38 +100,35 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-cl-lh":                          [ '140%',                          '140%' ],
     "--theme-cl-ff":                          [ 'monospace',                     'monospace' ],
 
-    "--theme-ou-p":                           [ '0.5em',                         '0.5em' ],
-    "--theme-cl-p-inter":                     [ '1em',                           '1em' ],
-    "--theme-ou-hlw":                         [ '2px',                           '2px' ],
-    "--theme-ou-hlc":                         [ 'black',                         'black' ],
-    "--theme-ou-hls":                         [ 'dashed',                        'dashed' ],
-    "--theme-ou-fgc":                         [ 'black',                         '#eee' ],
-    "--theme-ou-bgc":                         [ 'white',                         '#080808' ],
-
     "--theme-ts-w":                           [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                           [ '1.5rem',                        '1.5rem' ],
 
     "--theme-hd-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-hd-bdw":                         [ '1px',                           '1px' ],
     "--theme-hd-bds":                         [ 'solid',                         'solid' ],
-    "--theme-hd-bdc":                         [ '#ccc',                          '#444' ],
+    "--theme-hd-bdc":                         [ '#ccc',                          '#666' ],
 
     "--theme-tl-bdr":                         [ '0',                             '0' ],
     "--theme-tl-bdw":                         [ '1px',                           '1px' ],
     "--theme-tl-bds":                         [ 'solid',                         'solid' ],
     "--theme-tl-bdc":                         [ '#ccc',                          '#444' ],
-    "--theme-tl-bdc-active":                  [ 'black',                         '#ccc' ],
+    "--theme-tl-bdc-active":                  [ 'black',                         '#666' ],
 
     "--theme-cl-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-cl-bdw":                         [ '1px',                           '1px' ],
     "--theme-cl-bds":                         [ 'solid',                         'solid' ],
     "--theme-cl-bdc":                         [ '#ccc',                          '#444' ],
-    "--theme-cl-bdc-active":                  [ 'black',                         '#ccc' ],
+    "--theme-cl-bdc-active":                  [ 'black',                         '#555' ],
     "--theme-cl-fgc":                         [ 'black',                         '#eee' ],
-    "--theme-cl-bgc":                         [ 'hsl(  0deg   0%  99% / 100%)',  '#080808' ],
+    "--theme-cl-bgc":                         [ 'hsl(  0deg   0%  99% / 100%)',  '#111' ],
+    "--theme-cl-p-inter":                     [ '1em',                           '1em' ],
 
-
-    /* color */
+    "--theme-ou-p":                           [ '0.5em',                         '0.5em' ],
+    "--theme-ou-hlw":                         [ '2px',                           '2px' ],
+    "--theme-ou-hlc":                         [ 'black',                         'hsl( 54deg  40%  60% / 100%)' ],
+    "--theme-ou-hls":                         [ 'dashed',                        'dashed' ],
+    "--theme-ou-fgc":                         [ 'black',                         '#eee' ],
+    "--theme-ou-bgc":                         [ 'white',                         'black' ],
 
     "--theme-by-bgc":                         [ '#eee',                          '#222' ],
     "--theme-hd-bgc":                         [ '#f8f8f8',                       '#080808' ],
@@ -141,9 +138,12 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-by-fgc-error":                   [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-by-bgc-error":                   [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
-    "--theme-ty-bgc-markdown":                [ 'hsl(205deg 100%  94% / 100%)',  'hsl(205deg 100%  94% / 100%)' ],
-    "--theme-ty-bgc-tex":                     [ 'hsl( 45deg  81%  87% / 100%)',  'hsl( 45deg  81%  87% / 100%)' ],
-    "--theme-ty-bgc-javascript":              [ 'hsl( 85deg 100%  85% / 100%)',  'hsl( 85deg 100%  85% / 100%)' ],
+    "--theme-ty-fgc-markdown":                [ 'black',                         '#efeeee' ],
+    "--theme-ty-bgc-markdown":                [ 'hsl(205deg 100%  94% / 100%)',  'hsl(205deg  20%  70% /  65%)' ],
+    "--theme-ty-fgc-tex":                     [ 'black',                         '#eee' ],
+    "--theme-ty-bgc-tex":                     [ 'hsl( 45deg  81%  87% / 100%)',  'hsl( 45deg  40%  40% /  65%)' ],
+    "--theme-ty-fgc-javascript":              [ 'black',                         'black' ],
+    "--theme-ty-bgc-javascript":              [ 'hsl( 85deg 100%  85% / 100%)',  'hsl( 85deg  25%  40% /  65%)' ],
 
     "--theme-ts-bgc-fill-editable":           [ 'transparent',                   'transparent' ],
     "--theme-ts-bgc-stroke-editable":         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
@@ -167,7 +167,7 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-ti-bgc-running":                 [ 'hsl(120deg  94%  40% / 100%)',  'hsl(120deg  94%  40% / 100%)' ],
 
     "--theme-ti-bdc-modified":                [ 'black',                         '#d5d5d5' ],
-    "--theme-ti-bgc-modified":                [ 'hsl(  0deg  60%  85% / 100%)',  'hsl(  0deg  60%  85% / 100%)' ],
+    "--theme-ti-bgc-modified":                [ 'hsl(  0deg  60%  85% / 100%)',  'hsl(  0deg  55%  45% / 100%)' ],
 
     "--theme-ty-bgc":                         [ 'hsl(  0deg   0%  97% / 100%)',  'hsl(  0deg   0%  97% / 100%)' ],
 
