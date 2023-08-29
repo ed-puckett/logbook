@@ -56,6 +56,7 @@ header > tool-bar {  /* next to menu */
     line-height: 140%;
 
     padding: var(--theme-ou-p);
+    color:            var(--theme-ou-fgc);
     background-color: var(--theme-ou-bgc);
 
     /* no highlight */
@@ -102,6 +103,7 @@ tool-bar {
     border-top-color:   var(--theme-tl-bdc);
     border-right-color: var(--theme-tl-bdc);
     border-left-color:  var(--theme-tl-bdc);
+    background-color:   var(--theme-tl-bgc);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
@@ -125,6 +127,7 @@ eval-cell {
     font-family: var(--theme-cl-ff);
     line-height: var(--theme-cl-lh);
 
+    color:            var(--theme-cl-fgc);
     background-color: var(--theme-cl-bgc);
 
     max-height:   0;

@@ -91,8 +91,6 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
 
     //                                          === LIGHT ===                    === DARK ===
 
-    /* metrics */
-
     "--theme-hd-h":                           [ '1.5rem',                        '1.5rem' ],
 
     "--theme-tl-p":                           [ '0 0.5em',                       '0 0.5em' ],
@@ -104,41 +102,43 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
 
     "--theme-ou-p":                           [ '0.5em',                         '0.5em' ],
     "--theme-cl-p-inter":                     [ '1em',                           '1em' ],
+    "--theme-ou-hlw":                         [ '2px',                           '2px' ],
+    "--theme-ou-hlc":                         [ 'black',                         'black' ],
+    "--theme-ou-hls":                         [ 'dashed',                        'dashed' ],
+    "--theme-ou-fgc":                         [ 'black',                         '#eee' ],
+    "--theme-ou-bgc":                         [ 'white',                         '#080808' ],
 
     "--theme-ts-w":                           [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                           [ '1.5rem',                        '1.5rem' ],
 
-
-    /* border */
-
     "--theme-hd-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-hd-bdw":                         [ '1px',                           '1px' ],
     "--theme-hd-bds":                         [ 'solid',                         'solid' ],
-    "--theme-hd-bdc":                         [ '#ccc',                          '#ccc' ],
+    "--theme-hd-bdc":                         [ '#ccc',                          '#444' ],
 
     "--theme-tl-bdr":                         [ '0',                             '0' ],
     "--theme-tl-bdw":                         [ '1px',                           '1px' ],
     "--theme-tl-bds":                         [ 'solid',                         'solid' ],
-    "--theme-tl-bdc":                         [ '#ccc',                          '#ccc' ],
-    "--theme-tl-bdc-active":                  [ 'black',                         'black' ],
+    "--theme-tl-bdc":                         [ '#ccc',                          '#444' ],
+    "--theme-tl-bdc-active":                  [ 'black',                         '#ccc' ],
 
     "--theme-cl-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-cl-bdw":                         [ '1px',                           '1px' ],
     "--theme-cl-bds":                         [ 'solid',                         'solid' ],
-    "--theme-cl-bdc":                         [ '#ccc',                          '#ccc' ],
-    "--theme-cl-bdc-active":                  [ 'black',                         'black' ],
+    "--theme-cl-bdc":                         [ '#ccc',                          '#444' ],
+    "--theme-cl-bdc-active":                  [ 'black',                         '#ccc' ],
+    "--theme-cl-fgc":                         [ 'black',                         '#eee' ],
+    "--theme-cl-bgc":                         [ 'hsl(  0deg   0%  99% / 100%)',  '#080808' ],
 
 
     /* color */
 
-    "--theme-by-bgc":                         [ '#eee',                          '#eee' ],
-    "--theme-hd-bgc":                         [ '#f8f8f8',                       'chartreuse' ],
-    "--theme-tl-bgc":                         [ 'hsl(  0deg   0%  98% / 100%)',  'hsl(  0deg   0%  98% / 100%)' ],
-    "--theme-cl-bgc":                         [ 'hsl(  0deg   0%  99% / 100%)',  'hsl(  0deg   0%  99% / 100%)' ],
-    "--theme-ou-bgc":                         [ 'white',                         'white' ],
+    "--theme-by-bgc":                         [ '#eee',                          '#222' ],
+    "--theme-hd-bgc":                         [ '#f8f8f8',                       '#080808' ],
+    "--theme-tl-bgc":                         [ 'transparent',                   '#080808' ],
 
     "--theme-by-bdc-error":                   [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
-    "--theme-by-fgc-error":                   [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0% 100% / 100%)' ],
+    "--theme-by-fgc-error":                   [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-by-bgc-error":                   [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
     "--theme-ty-bgc-markdown":                [ 'hsl(205deg 100%  94% / 100%)',  'hsl(205deg 100%  94% / 100%)' ],
@@ -163,21 +163,21 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-ti-bdc":                         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
     "--theme-ti-bgc":                         [ 'hsl(  0deg   0%  97% / 100%)',  'hsl(  0deg   0%  97% / 100%)' ],
 
-    "--theme-ti-bdc-running":                 [ 'black',                         'black' ],
+    "--theme-ti-bdc-running":                 [ 'black',                         '#d5d5d5' ],
     "--theme-ti-bgc-running":                 [ 'hsl(120deg  94%  40% / 100%)',  'hsl(120deg  94%  40% / 100%)' ],
 
-    "--theme-ti-bdc-modified":                [ 'black',                         'black' ],
+    "--theme-ti-bdc-modified":                [ 'black',                         '#d5d5d5' ],
     "--theme-ti-bgc-modified":                [ 'hsl(  0deg  60%  85% / 100%)',  'hsl(  0deg  60%  85% / 100%)' ],
 
     "--theme-ty-bgc":                         [ 'hsl(  0deg   0%  97% / 100%)',  'hsl(  0deg   0%  97% / 100%)' ],
 
-    "--theme-mu-bgc":                         [ '#f0f0f0',                       '#f0f0f0' ],
+    "--theme-mu-bgc":                         [ '#f0f0f0',                       '#202020' ],
     "--theme-mu-bdc":                         [ 'grey',                          'grey' ],
-    "--theme-mu-shc":                         [ 'lightgrey',                     'lightgrey' ],
-    "--theme-mi-fgc":                         [ 'black',                         'black' ],
-    "--theme-mi-fgc-disabled":                [ '#bbb',                          '#bbb' ],
-    "--theme-mi-bgc-selected":                [ '#0004',                         '#0004' ],
-    "--theme-mi-msc":                         [ '#3334',                         '#3334' ],
+    "--theme-mu-shc":                         [ 'lightgrey',                     'darkgrey' ],
+    "--theme-mi-fgc":                         [ 'black',                         '#eee' ],
+    "--theme-mi-fgc-disabled":                [ '#bbb',                          '#666' ],
+    "--theme-mi-bgc-selected":                [ '#0004',                         '#fff4' ],
+    "--theme-mi-msc":                         [ '#3334',                         '#ccc4' ],
 
     "--theme-dg-shc":                         [ 'grey',                          'grey' ],
 
@@ -201,13 +201,6 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-st-bdc-error":                   [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-st-fgc-error":                   [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0% 100% / 100%)' ],
     "--theme-st-bgc-error":                   [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
-
-
-    /* active output element highlight */
-
-    "--theme-ou-hlw":                         [ '2px',                           '2px' ],
-    "--theme-ou-hlc":                         [ 'black',                         'black' ],
-    "--theme-ou-hls":                         [ 'dashed',                        'dashed' ],
 };
 
 const standard_theme_prop_names = Object.keys(standard_themes_spec);
@@ -284,7 +277,7 @@ export function validate_theme(theme) {
                       typeof(v) === 'string' );
          })
        ) {
-        throw new Error('theme props must have valid CSS property names starting with --theme- and string values');
+        throw new Error('theme props must have valid CSS property names starting with --theme- and with string values');
     }
 }
 
@@ -351,16 +344,24 @@ await new Promise((resolve, reject) => {
 
 // === SYSTEM THEME SETTINGS INTERFACE ===
 
-export const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme: dark)");
+const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme: dark)");
 
+/** set the document attribute specified by root_element_theme_attribute
+ *  according to the given state
+ * @param {Boolean} dark_state
+ */
 function set_document_dark_state(dark_state) {
     if (dark_state) {
         root_element.setAttribute(root_element_theme_attribute, 'dark');
     } else {
-        root_element.removeAttribute(root_element_theme_attribute);
+        root_element.removeAttribute(root_element_theme_attribute);  // default: light
     }
 }
 
+/** update the dark state for the document according to the current system-level
+ *  "prefers" setting (light, dark), but with priority to the user's setting for
+ *  this program (system, light, dark).
+ */
 function update_document_dark_state() {
     switch (get_settings().theme) {
         default:
@@ -389,7 +390,7 @@ settings_updated_events.subscribe(update_document_dark_state);
 update_document_dark_state();  // initialize now from current settings/theme_settings
 
 
-// === GET/UPDATE INTERFACE ===
+// === THEME SETTINGS GET/UPDATE INTERFACE ===
 
 function copy_theme_settings(theme_settings) {
     return JSON.parse(JSON.stringify(theme_settings));
@@ -407,4 +408,11 @@ export async function update_theme_settings(new_theme_settings) {
     write_themes_to_style_element(new_theme_settings, get_theme_style_element());
     current_theme_settings = new_theme_settings;
     theme_settings_updated_events.dispatch();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+
+function get_standard_themes_spec_from_document() {
+    //!!!
 }

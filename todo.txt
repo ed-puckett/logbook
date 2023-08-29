@@ -1,3 +1,4 @@
+handle (prefers-color-scheme: light)
 update dark theme in src/settings/theme-settings.js
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
