@@ -1,4 +1,5 @@
-handle (prefers-color-scheme: light)
+graphviz (and other?) formats do not respect dark mode
+when in dark mode, document flashes white momentarily when loading document
 update dark theme in src/settings/theme-settings.js
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
@@ -20,6 +21,7 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+handle (prefers-color-scheme: light) [it's just the default]
 implement dark/light mode setting in ui
 rationalize style settings in preparation for dark/light mode
 rationalize use of LocalStorage and IndexedDB for config, recents, settings and theme_settings (use IndexedDB instead of LocalStorage)

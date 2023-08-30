@@ -91,29 +91,27 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
 
     //                                          === LIGHT ===                    === DARK ===
 
+    "--theme-by-bgc":                         [ '#eee',                          '#222' ],
+
     "--theme-hd-h":                           [ '1.5rem',                        '1.5rem' ],
-
-    "--theme-tl-p":                           [ '0 0.5em',                       '0 0.5em' ],
-    "--theme-tl-g":                           [ '0.5em',                         '0.5em' ],
-
-    "--theme-cl-p":                           [ '0 0.5em',                       '0 0.5em' ],
-    "--theme-cl-lh":                          [ '140%',                          '140%' ],
-    "--theme-cl-ff":                          [ 'monospace',                     'monospace' ],
-
-    "--theme-ts-w":                           [ '1.5rem',                        '1.5rem' ],
-    "--theme-ts-h":                           [ '1.5rem',                        '1.5rem' ],
-
     "--theme-hd-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-hd-bdw":                         [ '1px',                           '1px' ],
     "--theme-hd-bds":                         [ 'solid',                         'solid' ],
     "--theme-hd-bdc":                         [ '#ccc',                          '#666' ],
+    "--theme-hd-bgc":                         [ '#f8f8f8',                       '#080808' ],
 
+    "--theme-tl-p":                           [ '0 0.5em',                       '0 0.5em' ],
+    "--theme-tl-g":                           [ '0.5em',                         '0.5em' ],
     "--theme-tl-bdr":                         [ '0',                             '0' ],
     "--theme-tl-bdw":                         [ '1px',                           '1px' ],
     "--theme-tl-bds":                         [ 'solid',                         'solid' ],
     "--theme-tl-bdc":                         [ '#ccc',                          '#444' ],
     "--theme-tl-bdc-active":                  [ 'black',                         '#666' ],
+    "--theme-tl-bgc":                         [ 'transparent',                   '#080808' ],
 
+    "--theme-cl-p":                           [ '0 0.5em',                       '0 0.5em' ],
+    "--theme-cl-lh":                          [ '140%',                          '140%' ],
+    "--theme-cl-ff":                          [ 'monospace',                     'monospace' ],
     "--theme-cl-bdr":                         [ '0.125em',                       '0.125em' ],
     "--theme-cl-bdw":                         [ '1px',                           '1px' ],
     "--theme-cl-bds":                         [ 'solid',                         'solid' ],
@@ -130,10 +128,6 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-ou-fgc":                         [ 'black',                         '#eee' ],
     "--theme-ou-bgc":                         [ 'white',                         'black' ],
 
-    "--theme-by-bgc":                         [ '#eee',                          '#222' ],
-    "--theme-hd-bgc":                         [ '#f8f8f8',                       '#080808' ],
-    "--theme-tl-bgc":                         [ 'transparent',                   '#080808' ],
-
     "--theme-by-bdc-error":                   [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-by-fgc-error":                   [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-by-bgc-error":                   [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
@@ -145,6 +139,8 @@ const standard_themes_spec = {  // first entry defines standard_theme_prop_names
     "--theme-ty-fgc-javascript":              [ 'black',                         'black' ],
     "--theme-ty-bgc-javascript":              [ 'hsl( 85deg 100%  85% / 100%)',  'hsl( 85deg  25%  40% /  65%)' ],
 
+    "--theme-ts-w":                           [ '1.5rem',                        '1.5rem' ],
+    "--theme-ts-h":                           [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-bgc-fill-editable":           [ 'transparent',                   'transparent' ],
     "--theme-ts-bgc-stroke-editable":         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
     "--theme-ts-bgc-fill-editable-checked":   [ 'hsl(  0deg 100%  50% / 100%)',  'hsl(  0deg 100%  50% / 100%)' ],

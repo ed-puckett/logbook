@@ -18,8 +18,8 @@ export async function render(element_selector, dot, options) {
     const {
         transition = "main",
         ease       = d3.easeLinear,
-        delay      = 500,
-        duration   = 1500,
+        delay      = 0,
+        duration   = 0,
         logEvents  = true,
     } = (options ?? {});
     return new Promise((resolve, reject) => {
