@@ -267,6 +267,21 @@ toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   {
 toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-autoeval-checked); }
 
 
+/* theme-aware graphics */
+
+[data-type="graphviz"] svg polygon {
+    fill:   var(--theme-gr-bgc);
+    stroke: var(--theme-gr-fgc);
+}
+[data-type="graphviz"] svg path,
+[data-type="graphviz"] svg ellipse {
+    stroke: var(--theme-gr-fgc);
+}
+[data-type="graphviz"] svg text {
+    fill: var(--theme-gr-fgc);
+}
+
+
 /* === menu === */
 
 .menu:not(.active) {

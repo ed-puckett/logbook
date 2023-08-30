@@ -1,3 +1,6 @@
+remove border from rendered graphviz objects
+validate that themes from storage define the correct properties
+empty cell does not show anything visible unless editable
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
 update dark theme in src/settings/theme-settings.js
