@@ -44,7 +44,7 @@ header > tool-bar {  /* next to menu */
     margin-left: auto;  /* push to far right */
 
     visibility: visible;
-    max-height: 100vh;
+    max-height: fit-content;
     padding: 0 0.5em;
     border: 0;
     background-color: transparent;
@@ -148,13 +148,13 @@ eval-cell {
 tool-bar:has(+ eval-cell[data-visible]),
 tool-bar:has(+ eval-cell[contenteditable]) {
     visibility:   visible;
-    max-height:   100vh;
+    max-height:   fit-content;
     border-width: var(--theme-tl-bdw);
     border-radius: var(--theme-tl-bdr);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
-    max-height:   100vh;
+    max-height:   fit-content;
     border-width: var(--theme-cl-bdw);
 }
 

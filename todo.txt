@@ -1,3 +1,6 @@
+fix css overrides for graphviz, one problem being that arrowhead fill is wrong
+graphviz graphics flash black when reloading examples/test.html
+save is broken
 remove border from rendered graphviz objects
 validate that themes from storage define the correct properties
 empty cell does not show anything visible unless editable
@@ -24,7 +27,7 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
-handle (prefers-color-scheme: light) [it's just the default]
+handle (prefers-color-scheme: light) [nothing to do, it's just the default]
 implement dark/light mode setting in ui
 rationalize style settings in preparation for dark/light mode
 rationalize use of LocalStorage and IndexedDB for config, recents, settings and theme_settings (use IndexedDB instead of LocalStorage)

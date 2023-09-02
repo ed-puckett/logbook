@@ -79,7 +79,7 @@ export const root_element_theme_attribute = 'data-theme';
   --theme-{ELEMENT}-{OTHER FEATURE}...
 */
 
-// note that theme names may come from user input, so do not use them as keys in objects
+// NOTE THAT THEME NAMES MAY COME FROM USER INPUT, SO DO NOT USE THEM AS KEYS IN OBJECTS
 
 // the first standard theme is the default theme which will be used if no other theme is specified
 const standard_theme_names = [ 'light', 'dark' ];  // array length must match array length of values in standard_themes_spec
@@ -89,7 +89,6 @@ export function get_standard_theme_names() {
 }
 
 const standard_themes_spec = {
-
     //                                          === LIGHT ===                    === DARK ===
 
     "--theme-by-bgc":                         [ '#eee',                          '#222' ],
@@ -351,8 +350,6 @@ async function initialize_themes(options=null) {
           })
 }
 
-await initialize_themes({ create_style_element_if_needed: true });
-
 
 // === SYSTEM THEME SETTINGS INTERFACE ===
 
@@ -397,10 +394,6 @@ function update_document_dark_state() {
 
 export const themes_settings_updated_events = new Subscribable();
 
-dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
-settings_updated_events.subscribe(update_document_dark_state);
-update_document_dark_state();  // initialize now from current settings/themes_settings
-
 
 // === THEME SETTINGS GET/UPDATE INTERFACE ===
 
@@ -433,3 +426,12 @@ globalThis.reset_to_standard_themes_settings = reset_to_standard_themes_settings
 function get_standard_themes_spec_from_document() {
     //!!!
 }
+
+
+// === INITIALIZATION ===
+
+dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
+settings_updated_events.subscribe(update_document_dark_state);
+update_document_dark_state();  // initialize now from current settings/themes_settings
+
+await initialize_themes({ create_style_element_if_needed: true });

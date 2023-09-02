@@ -321,9 +321,9 @@ export class LogbookManager {
             throw new Error('bad format for document: this.main_element not set');
         }
         const query_selector = [
-            EvalCellElement.custom_element_name,
-            `.${EvalCellElement.output_element_class}`,
-        ].join(' ');
+            EvalCellElement.custom_element_name,         // html tag
+            `.${EvalCellElement.output_element_class}`,  // css class
+        ].join(',');
         const contents = [ ...this.main_element.querySelectorAll(query_selector) ]
               .map(e => e.outerHTML)
               .join('\n');
@@ -332,7 +332,7 @@ export class LogbookManager {
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <script type="module" src="../src/init.js"></script>
+    <script type="module" src="../dist/main.js"></script>
 </head>
 <body>
 ${contents}
