@@ -1,3 +1,4 @@
+visible indicator shows "not visible" (may be only when visible is set on loaded element)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 save is broken

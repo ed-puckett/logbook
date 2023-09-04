@@ -418,7 +418,6 @@ export async function update_themes_settings(new_themes_settings) {
 export async function reset_to_standard_themes_settings() {
     return update_themes_settings(standard_themes);
 }
-globalThis.reset_to_standard_themes_settings = reset_to_standard_themes_settings;//!!!
 
 
 //////////////////////////////////////////////////////////////////////
@@ -435,3 +434,4 @@ settings_updated_events.subscribe(update_document_dark_state);
 update_document_dark_state();  // initialize now from current settings/themes_settings
 
 await initialize_themes({ create_style_element_if_needed: true });
+globalThis.reset_to_standard_themes_settings = reset_to_standard_themes_settings;//!!!
