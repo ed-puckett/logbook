@@ -5,11 +5,11 @@
     <script type="module" src="../dist/main.js"></script>
 </head>
 <body>
-<eval-cell tabindex="0" id="id-71b248fd-90c9-4fae-a13b-9359c7ec9f05" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true"><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y_divergent = (f) =&gt; ( ((q) =&gt; f( q(q) ))</span><br></div>                             ((q) =&gt; f( q(q) )) );<div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);"><br></span></div><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y = (f_thunk) =&gt; ( ((q) =&gt; () =&gt; f_thunk( q(q) ))</span><br></div><div>                         ((q) =&gt; () =&gt; f_thunk( q(q) )) );
+<eval-cell tabindex="0" id="id-71b248fd-90c9-4fae-a13b-9359c7ec9f05" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true"><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y_divergent = (f) =&gt; ( ((q) =&gt; f( q(q) )) (</span><br></div>                             ((q) =&gt; f( q(q) )) ) );<div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);"><br></span></div><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y = (f_thunk) =&gt; ( ((q) =&gt; () =&gt; f_thunk( q(q) )) (</span><br></div><div>                         ((q) =&gt; () =&gt; f_thunk( q(q) )) ) );
 
 const FactorialPattern = (factorial_thunk) =&gt; (n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1);</div><div><br></div><div>const factorial_thunk = Y(FactorialPattern);</div><div>const factorial = factorial_thunk();<br></div><div><br></div><div>await delay_ms(1);
 <div>await println(factorial(6));  // 720</div></div></eval-cell>
-<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-51cf3859-10b5-4e23-91ee-fd093d51feb8">720
+<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-6f1b9596-5911-48a5-b0ae-837f7541d5d9">720
 </div></output>
 </body>
 </html>

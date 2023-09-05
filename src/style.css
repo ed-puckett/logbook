@@ -40,14 +40,15 @@ header {
 }
 
 header > tool-bar {  /* next to menu */
+    visibility: visible;
+
     align-self: center;
     margin-left: auto;  /* push to far right */
 
-    visibility: visible;
     max-height: fit-content;
     padding: 0 0.5em;
     border: 0;
-    background-color: transparent;
+    background-color: transparent;  /* use underlying color from header */
 }
 
 .eval-cell-output {
@@ -85,16 +86,14 @@ eval-cell[data-active] + .eval-cell-output {
 tool-bar {
     overflow: hidden;
 
+    /* prevent tabbing to contained controls by setting visibility:hidden */
+    /* this is necessary because we don't set display:none because we want to animate the transition */
+    visibility: hidden;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: var(--theme-tl-g);
-
-    background-color: var(--theme-tl-bgc);
-
-    /* prevent tabbing to contained controls by setting visibility:hidden */
-    /* this is necessary because we don't set display:none because we want to animate the transition */
-    visibility: hidden;
 
     max-height:   0;
     padding:      var(--theme-tl-p);
@@ -103,7 +102,8 @@ tool-bar {
     border-top-color:   var(--theme-tl-bdc);
     border-right-color: var(--theme-tl-bdc);
     border-left-color:  var(--theme-tl-bdc);
-    background-color:   var(--theme-tl-bgc);
+
+    background-color: var(--theme-tl-bgc);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
@@ -209,7 +209,6 @@ tool-bar:has(option[value="tex"]:checked) {
 
 tool-bar > * {
     margin: 0;  /* pack controls within tool-bar; let flex gap handle spacing */
-    background-color: var(--theme-tl-bgc);  /* same "default" color as parent tool-bar */
 }
 
 .tool-bar-indicator {
@@ -249,22 +248,23 @@ toggle-switch {
 toggle-switch svg {
     width:  auto;
     height: 100%;
+    background-color: transparent;
 }
 
-toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-editable); }
-toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-editable); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-editable-checked); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-editable-checked); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--theme-ts-flc-editable); }
+toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--theme-ts-stc-editable); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-flc-editable-checked); }
+toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-stc-editable-checked); }
 
-toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-visible); }
-toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-visible); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-visible-checked); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-visible-checked); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--theme-ts-flc-visible); }
+toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--theme-ts-stc-visible); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--theme-ts-flc-visible-checked); }
+toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--theme-ts-stc-visible-checked); }
 
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-autoeval); }
-toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-autoeval); }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-bgc-fill-autoeval-checked); }
-toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-bgc-stroke-autoeval-checked); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--theme-ts-flc-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--theme-ts-stc-autoeval); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-flc-autoeval-checked); }
+toggle-switch.tool-bar-toggle-autoeval[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-stc-autoeval-checked); }
 
 
 /* theme-aware graphics */
