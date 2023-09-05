@@ -93,7 +93,7 @@ export function get_standard_theme_names() {
 const standard_themes_spec = {
     //                                   === LIGHT ===                    === DARK ===
 
-    "--theme-by-bgc":                  [ '#eee',                          '#222' ],
+    "--theme-by-bgc":                  [ '#fcfcfc',                       '#0e0e0e' ],
 
     "--theme-hd-h":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-hd-bdr":                  [ '0.125em',                       '0.125em' ],
