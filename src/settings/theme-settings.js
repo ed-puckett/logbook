@@ -86,7 +86,7 @@ const theme_property_name_documentation = `\
 // NOTE THAT THEME NAMES MAY COME FROM USER INPUT, SO DO NOT USE THEM AS KEYS IN OBJECTS
 
 // the first standard theme is the default theme which will be used if no other theme is specified
-const standard_theme_names = [ 'light', 'dark' ];  // array length must match array length of values in standard_themes_spec
+const standard_theme_names = [ theme_light, theme_dark ];  // array length must match array length of values in standard_themes_spec
 
 export function get_standard_theme_names() {
     return [ ...standard_theme_names ];
@@ -102,7 +102,7 @@ const standard_themes_spec = {
     "--theme-hd-bdw":                  [ '1px',                           '1px' ],
     "--theme-hd-bds":                  [ 'solid',                         'solid' ],
     "--theme-hd-bdc":                  [ '#ccc',                          '#666' ],
-    "--theme-hd-bgc":                  [ '#f8f8f8',                       '#080808' ],
+    "--theme-hd-bgc":                  [ '#f8f8f8',                       '#4a4a4a' ],
 
     "--theme-tl-p":                    [ '0 0.5em',                       '0 0.5em' ],
     "--theme-tl-g":                    [ '0.5em',                         '0.5em' ],
@@ -112,7 +112,7 @@ const standard_themes_spec = {
     "--theme-tl-bdc":                  [ '#ccc',                          '#444' ],
     "--theme-tl-bdc-active":           [ 'black',                         '#666' ],
     "--theme-tl-bgc":                  [ '#f8f8f8',                       '#080808' ],
-    "--theme-tl-bgc-mix":              [ '10%',                           '36%' ],
+    "--theme-tl-bgc-mix":              [ '10%',                           '20%' ],
 
     "--theme-cl-p":                    [ '0 0.5em',                       '0 0.5em' ],
     "--theme-cl-lh":                   [ '140%',                          '140%' ],
@@ -138,7 +138,7 @@ const standard_themes_spec = {
     "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
     "--theme-ty-fgc-markdown":         [ 'black',                         'white' ],
-    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  65%  85% / 100%)',  'hsl(205deg  20%  60% / 100%)' ],
+    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  73%  77% / 100%)',  'hsl(205deg  30%  60% / 100%)' ],
     "--theme-ty-fgc-tex":              [ 'black',                         'white' ],
     "--theme-ty-bgc-tex":              [ 'hsl( 45deg  68%  66% / 100%)',  'hsl( 45deg  35%  50% / 100%)' ],
     "--theme-ty-fgc-javascript":       [ 'black',                         'white' ],
@@ -272,6 +272,9 @@ function create_themes_style_element() {
 
 export function validate_theme(theme) {
     const { name, props } = theme;
+    if (name === theme_system) {
+        throw new Error(`"${theme_system}" is a reserved theme name`);
+    }
     if (typeof name !== 'string' || !name.match(theme_name_validation_re)) {
         throw new Error('invalid theme name');
     }
@@ -292,10 +295,11 @@ function validate_themes_array(themes) {
     }
     const names = new Set();
     for (const theme of themes) {
-        validate_theme(theme);
         if (names.has(theme.name)) {
-            throw new Error('themes must not contain entries with duplicate names');
+            throw new Error('themes must not contain entries with duplicated names');
         }
+        names.add(theme.name);
+        validate_theme(theme);
     }
 }
 
@@ -368,7 +372,7 @@ const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme:
  */
 function set_document_dark_state(dark_state) {
     if (dark_state) {
-        root_element.setAttribute(root_element_theme_attribute, 'dark');
+        root_element.setAttribute(root_element_theme_attribute, theme_dark);
     } else {
         root_element.removeAttribute(root_element_theme_attribute);  // default: light
     }
@@ -424,13 +428,6 @@ export async function update_themes_settings(new_themes_settings) {
 
 export async function reset_to_standard_themes_settings() {
     return update_themes_settings(standard_themes);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-
-function get_standard_themes_spec_from_document() {
-    //!!!
 }
 
 

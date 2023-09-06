@@ -188,7 +188,7 @@ export class LogbookManager {
                 neutral_changes_observer: this.#neutral_changes_observer.bind(this),
             });
 
-            // add "save before quit" prompt for when document is being closed while modified
+            // add "changes may not be saved" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
                 if (!this.#global_change_manager.is_neutral()) {
                     event.preventDefault();
@@ -198,16 +198,21 @@ export class LogbookManager {
 
             // make dblclick on top-level tool-bar toggle editable
             document.body.addEventListener('dblclick', (event) => {
+                const target_is_body     = (event.target === document.body);
+                const target_is_header   = (event.target === this.header_element);
                 const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly a the tool-bar, not one of its children
-                const target_is_header = (event.target === this.header_element);
-                if (target_is_tool_bar || target_is_header) {
+                if (target_is_body || target_is_header || target_is_tool_bar) {
                     // event will be handled
-                    const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.header_element);
-                    if (target_is_header || target_is_top_level_tool_bar) {
-                        this.set_editable(!this.editable);
-                    } else {  // !target_is_header && !target_is_top_level_tool_bar && target_is_tool_bar
-                        const cell = event.target.target;
-                        cell.set_visible(!cell.visible);
+                    if (target_is_body) {
+                        this.active_cell.focus();
+                    } else {
+                        const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.header_element);
+                        if (target_is_header || target_is_top_level_tool_bar) {
+                            this.set_editable(!this.editable);
+                        } else {  // !target_is_body && !target_is_header && !target_is_top_level_tool_bar && target_is_tool_bar
+                            const cell = event.target.target;
+                            cell.set_visible(!cell.visible);
+                        }
                     }
 
                     event.preventDefault();
@@ -216,6 +221,19 @@ export class LogbookManager {
             }, {
                 capture: true,
             });  //!!! event handler never removed
+
+            // make click and dblclick in document.body or document.documentElement focus active cell
+            for (const click_event of [ 'click', 'dblclick' ]) {
+                document.documentElement.addEventListener(click_event, (event) => {
+                    if (event.target === document.body || event.target.contains(document.body)) {
+                        this.active_cell.focus();
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                }, {
+                    capture: true,
+                });  //!!! event handler never removed
+            }
 
             // send keydown events destined for document.body to the active cell's key_event_manager
             document.body.addEventListener('keydown', (event) => {

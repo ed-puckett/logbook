@@ -1,14 +1,16 @@
+f11, ctrl-alt-I, etc do not work when e.g., body is focused
+click on body leave body selected (want: select active cell)
+key bindings do not work when tool-bar elements (e.g., type selector) are focused
+lazy-load the support files for renderers (esp. Plotly which is so large)
 when theme css variables change, the user's stored theme-settings are no longer valid
 visible indicator shows "not visible" (may be only when visible is set on loaded element)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
-save is broken
 remove border from rendered graphviz objects
 validate that themes from storage define the correct properties
 empty cell does not show anything visible unless editable
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
-update dark theme in src/settings/theme-settings.js
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
 set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
@@ -29,6 +31,8 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+save is broken
+update dark theme in src/settings/theme-settings.js
 handle (prefers-color-scheme: light) [nothing to do, it's just the default]
 implement dark/light mode setting in ui
 rationalize style settings in preparation for dark/light mode

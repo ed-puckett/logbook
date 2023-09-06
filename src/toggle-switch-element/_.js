@@ -39,6 +39,7 @@ export class ToggleSwitchElement extends HTMLElement {
                 class: cls,
                 role: 'switch',
                 "aria-checked": false,
+                "tabindex": "0",
                 title: title_for_off,
             },
         });
