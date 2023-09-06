@@ -173,35 +173,38 @@ eval-cell[contenteditable][data-active] {
 
 /* color selected by eval-cell input-type */
 
-tool-bar option,
 tool-bar select {
     color:            var(--theme-ty-fgc-markdown);
     background-color: var(--theme-ty-bgc-markdown);
 }
 
-tool-bar option[value="javascript"],
 tool-bar > select:has(> option[value="javascript"]:checked) {
     color:            var(--theme-ty-fgc-javascript);
     background-color: var(--theme-ty-bgc-javascript);
 }
 
-tool-bar option[value="tex"],
 tool-bar > select:has(> option[value="tex"]:checked) {
     color:            var(--theme-ty-fgc-tex);
     background-color: var(--theme-ty-bgc-tex);
 }
 
+tool-bar option {
+    color: initial;  /* setting other color causes poor drop-down list display; seen in Chromium 116 */
+}
 
 tool-bar:has(option) {
     border-bottom-color: var(--theme-ty-bgc-markdown);
+    background-color: color-mix(in srgb, var(--theme-tl-bgc), var(--theme-ty-bgc-markdown) var(--theme-tl-bgc-mix));
 }
 
 tool-bar:has(option[value="javascript"]:checked) {
     border-bottom-color: var(--theme-ty-bgc-javascript);
+    background-color: color-mix(in srgb, var(--theme-tl-bgc), var(--theme-ty-bgc-javascript) var(--theme-tl-bgc-mix));
 }
 
 tool-bar:has(option[value="tex"]:checked) {
     border-bottom-color: var(--theme-ty-bgc-tex);
+    background-color: color-mix(in srgb, var(--theme-tl-bgc), var(--theme-ty-bgc-tex) var(--theme-tl-bgc-mix));
 }
 
 

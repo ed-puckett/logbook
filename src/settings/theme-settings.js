@@ -34,6 +34,7 @@ export const root_element_theme_attribute = 'data-theme';
 
 // === THEME STYLES ===
 
+const theme_property_name_documentation = `\
 /*
   --- THEME PROPERTIES ---
 
@@ -80,6 +81,7 @@ export const root_element_theme_attribute = 'data-theme';
   --theme-{ELEMENT}-{METRIC FEATURE}...
   --theme-{ELEMENT}-{OTHER FEATURE}...
 */
+`;
 
 // NOTE THAT THEME NAMES MAY COME FROM USER INPUT, SO DO NOT USE THEM AS KEYS IN OBJECTS
 
@@ -110,6 +112,7 @@ const standard_themes_spec = {
     "--theme-tl-bdc":                  [ '#ccc',                          '#444' ],
     "--theme-tl-bdc-active":           [ 'black',                         '#666' ],
     "--theme-tl-bgc":                  [ '#f8f8f8',                       '#080808' ],
+    "--theme-tl-bgc-mix":              [ '10%',                           '36%' ],
 
     "--theme-cl-p":                    [ '0 0.5em',                       '0 0.5em' ],
     "--theme-cl-lh":                   [ '140%',                          '140%' ],
@@ -210,17 +213,18 @@ export function get_standard_theme_prop_names() {
     return [ ...standard_theme_prop_names ];
 }
 
-const standard_themes = standard_theme_names.map((theme_name, theme_idx) => {
-    return {
-        name: theme_name,
-        props: Object.fromEntries(
-            Object.entries(standard_themes_spec)
-                .map(([ prop_name, mode_values ]) => {
-                    return [ prop_name, mode_values[theme_idx] ];
-                })
-        ),
-    };
-});
+const standard_themes = standard_theme_names
+      .map((theme_name, theme_idx) => {
+          return {
+              name: theme_name,
+              props: Object.fromEntries(
+                  Object.entries(standard_themes_spec)
+                      .map(([ prop_name, mode_values ]) => {
+                          return [ prop_name, mode_values[theme_idx] ];
+                      })
+              ),
+          };
+      });
 
 
 // === TO/FROM STORAGE ===
@@ -319,6 +323,7 @@ async function write_themes_to_style_element(themes, themes_style_element) {
         throw new Error('invalid themes_style_element');
     }
     const sections = [];
+    sections.push(theme_property_name_documentation);
     sections.push(create_theme_properties_section(themes[0], true));  // default/unspecfied theme
     for (const theme of themes) {
         sections.push(create_theme_properties_section(theme));
@@ -403,7 +408,7 @@ function copy_themes_settings(themes_settings) {
     return JSON.parse(JSON.stringify(themes_settings));
 }
 
-let _current_themes_settings = await get_themes_settings_from_storage();
+let _current_themes_settings;  // initialized below
 
 export function get_themes_settings() {
     return copy_themes_settings(_current_themes_settings);
@@ -431,9 +436,10 @@ function get_standard_themes_spec_from_document() {
 
 // === INITIALIZATION ===
 
+_current_themes_settings = await initialize_themes({ create_style_element_if_needed: true });
+
 dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
 settings_updated_events.subscribe(update_document_dark_state);
 update_document_dark_state();  // initialize now from current settings/themes_settings
 
-await initialize_themes({ create_style_element_if_needed: true });
 globalThis.reset_to_standard_themes_settings = reset_to_standard_themes_settings;//!!!
