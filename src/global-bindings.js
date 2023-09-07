@@ -216,6 +216,10 @@ export function command_handler__show_settings_dialog(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_and_refocus(command_context) {
+    if (!LogbookManager.singleton.editable) {
+        beep();
+        return false;
+    }
     return LogbookManager.singleton.command_handler__eval_and_refocus(command_context);
 }
 
@@ -224,6 +228,10 @@ export async function command_handler__eval_and_refocus(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_before(command_context) {
+    if (!LogbookManager.singleton.editable) {
+        beep();
+        return false;
+    }
     return LogbookManager.singleton.command_handler__eval_before(command_context);
 }
 
@@ -232,6 +240,10 @@ export async function command_handler__eval_before(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_all(command_context) {
+    if (!LogbookManager.singleton.editable) {
+        beep();
+        return false;
+    }
     return LogbookManager.singleton.command_handler__eval_all(command_context);
 }
 

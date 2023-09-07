@@ -55,8 +55,6 @@ export class EditorCellElement extends HTMLElement {
 
     constructor() {
         super();
-        this.setAttribute('spellcheck', 'false');
-
         this.#event_listener_manager = new EventListenerManager();
 
         this.#key_event_manager = new KeyEventManager(this, this.#command_observer.bind(this));
