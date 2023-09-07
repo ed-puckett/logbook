@@ -152,7 +152,7 @@ const standard_themes_spec = {
     "--theme-ts-stc-editable-checked": [ 'hsl( 53deg 100%  50% / 100%)',  'hsl( 53deg 100%  50% / 100%)' ],
 
     "--theme-ts-flc-visible":          [ 'transparent',                   'transparent' ],
-    "--theme-ts-stc-visible":          [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
+    "--theme-ts-stc-visible":          [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   0%  60% / 100%)' ],
     "--theme-ts-flc-visible-checked":  [ 'hsl(205deg 100%  83% / 100%)',  'hsl(205deg 100%  83% / 100%)' ],
     "--theme-ts-stc-visible-checked":  [ 'hsl(  0deg 100%  45% / 100%)',  'hsl(  0deg 100%  45% / 100%)' ],
 
@@ -161,8 +161,8 @@ const standard_themes_spec = {
     "--theme-ts-flc-autoeval-checked": [ 'transparent',                   'transparent' ],
     "--theme-ts-stc-autoeval-checked": [ 'hsl(  0deg  60%  70% / 100%)',  'hsl(  0deg  60%  70% / 100%)' ],
 
-    "--theme-ti-bdc":                  [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
-    "--theme-ti-bgc":                  [ 'hsl(  0deg   0%  97% / 100%)',  'hsl(  0deg   0%  97% / 100%)' ],
+    "--theme-ti-bdc":                  [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   0%  60% / 100%)' ],
+    "--theme-ti-bgc":                  [ 'transparent',                   'transparent' ],
 
     "--theme-ti-bdc-running":          [ 'black',                         '#d5d5d5' ],
     "--theme-ti-bgc-running":          [ 'hsl(120deg  94%  40% / 100%)',  'hsl(120deg  94%  40% / 100%)' ],

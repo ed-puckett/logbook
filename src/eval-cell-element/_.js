@@ -27,6 +27,10 @@ import {
 } from '../tool-bar-element/_.js';
 
 import {
+    beep,
+} from '../../lib/ui/beep.js';
+
+import {
     assets_server_url,
 } from '../assets-server-url.js';
 
@@ -163,6 +167,10 @@ export class EvalCellElement extends EditorCellElement {
     #output_element_pointerdown_handler_bound;  // initialized in constructor
 
     #output_element_dblclick_handler(event) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.set_visible(!this.visible);
         event.preventDefault();
         event.stopPropagation();
@@ -297,9 +305,29 @@ export class EvalCellElement extends EditorCellElement {
             let initial_type = this.input_type || undefined;
             this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
-                visible:  { initial: this.visible,  on: (event) => this.set_visible(event.target.get_state()) },
+                visible:  {
+                    initial: this.visible,
+                    on: (event) => {
+                        if (!this.editable) {
+                            beep();
+                            return false;
+                        }
+                        this.set_visible(event.target.get_state());
+                        return true;
+                    },
+                },
                 autoeval: false,
-                type:     { ...(initial_type ? { initial: initial_type } : {}),  on: (event) => { this.input_type = event.target.value } },//!!!
+                type: {
+                    ...(initial_type ? { initial: initial_type } : {}),
+                    on: (event) => {
+                        if (!this.editable) {
+                            beep();
+                            return false;
+                        }
+                        this.input_type = event.target.value;
+                        return true;
+                    },
+                },
                 running:  true,
                 modified: false,
                 run:      false,
@@ -368,6 +396,10 @@ export class EvalCellElement extends EditorCellElement {
     /** @return {Boolean} true iff command successfully handled
      */
     async command_handler__eval(command_context) {
+        if (!this.editable) {
+            await beep();
+            return false;
+        }
         await this.eval({
             eval_context: LogbookManager.singleton.global_eval_context,
         });
@@ -375,14 +407,26 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     command_handler__set_mode_markdown(command_context) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.input_type = 'markdown';
         return true;
     }
     command_handler__set_mode_tex(command_context) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.input_type = 'tex';
         return true;
     }
     command_handler__set_mode_javascript(command_context) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.input_type = 'javascript';
         return true;
     }

@@ -6,6 +6,10 @@ import {
     SettingsDialog,
 } from './settings/_.js';
 
+import {
+    beep,
+} from '../lib/ui/beep.js';
+
 
 /** return the initial menu specification
  *  @return {Object} menu specification
@@ -17,8 +21,8 @@ export function get_menubar_spec() {
                 // ...
             ] },
             '---',
-            { label: 'Reset cells',    item: { command: 'reset',               } },
-            { label: 'Clear document', item: { command: 'clear',               } },
+            { label: 'Reset cells',    item: { command: 'reset',               }, id: 'reset' },
+            { label: 'Clear document', item: { command: 'clear',               }, id: 'clear' },
             '---',
             { label: 'Editable',       item: { command: 'toggle-editable',     }, id: 'toggle-editable' },
             '---',
@@ -42,7 +46,7 @@ export function get_menubar_spec() {
             { label: 'Stop cell',      item: { command: 'stop',                }, id: 'stop' },
             { label: 'Stop all',       item: { command: 'stop-all',            }, id: 'stop-all' },
             '---',
-            { label: 'Reset cell',     item: { command: 'reset-cell',          } },
+            { label: 'Reset cell',     item: { command: 'reset-cell',          }, id: 'reset-cell' },
             { label: 'Visible',        item: { command: 'toggle-cell-visible', }, id: 'toggle-cell-visible' },
             '---',
             { label: 'Focus up',       item: { command: 'focus-up',            }, id: 'focus-up' },
@@ -50,8 +54,8 @@ export function get_menubar_spec() {
             '---',
             { label: 'Move up',        item: { command: 'move-up',             }, id: 'move-up' },
             { label: 'Move down',      item: { command: 'move-down',           }, id: 'move-down' },
-            { label: 'Add before',     item: { command: 'add-before',          } },
-            { label: 'Add after',      item: { command: 'add-after',           } },
+            { label: 'Add before',     item: { command: 'add-before',          }, id: 'add-before' },
+            { label: 'Add after',      item: { command: 'add-after',           }, id: 'add-after' },
             { label: 'Delete',         item: { command: 'delete',              }, id: 'delete' },
         ] },
 
@@ -163,6 +167,10 @@ export function command_handler__create_cell(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__reset(command_context) {
+    if (!LogbookManager.singleton.editable) {
+        beep();
+        return false;
+    }
     LogbookManager.singleton.reset();
     return true;
 }
@@ -170,6 +178,10 @@ export function command_handler__reset(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__clear(command_context) {
+    if (!LogbookManager.singleton.editable) {
+        beep();
+        return false;
+    }
     LogbookManager.singleton.clear();
     return true;
 }

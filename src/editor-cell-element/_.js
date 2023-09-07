@@ -89,8 +89,12 @@ export class EditorCellElement extends HTMLElement {
     set_editable(editable) {
         if (editable) {
             this.setAttribute('contenteditable', true.toString());
+            this._tool_bar.enable_for('visible', true);
+            this._tool_bar.enable_for('type',    true);
         } else {
             this.removeAttribute('contenteditable');
+            this._tool_bar.enable_for('visible', false);
+            this._tool_bar.enable_for('type',    false);
         }
     }
 
@@ -121,7 +125,17 @@ export class EditorCellElement extends HTMLElement {
         if (!this._tool_bar) {
             this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
-                visible:  { initial: this.visible,  on: (event) => this.set_visible(!this.visible) },
+                visible:  {
+                    initial: this.visible,
+                    on: (event) => {
+                        if (!this.editable) {
+                            beep();
+                            return false;
+                        }
+                        this.set_visible(!this.visible);
+                        return false;
+                    },
+                },
                 autoeval: false,
                 modified: true,
             });
@@ -443,11 +457,19 @@ export class EditorCellElement extends HTMLElement {
     }
 
     command_handler__reset_cell(command_context) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.reset();
         return true;
     }
 
     command_handler__toggle_visible(command_context) {
+        if (!this.editable) {
+            beep();
+            return false;
+        }
         this.set_visible(!this.visible);
         return true;
     }

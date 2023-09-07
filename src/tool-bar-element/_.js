@@ -121,6 +121,12 @@ export class ToolBarElement extends HTMLElement {
         }
         this.#controls[name].set(value);
     }
+    enable_for(name, value) {
+        if (!(name in this.#controls)) {
+            throw new Error('unknown name');
+        }
+        this.#controls[name].enable(value);
+    }
 
 
     // === CONFIGURATION ===
@@ -132,7 +138,7 @@ export class ToolBarElement extends HTMLElement {
         options ??= {};
         this.#reset_configuration();
         try {
-            for (const [ name, create, getter, setter ] of this.#get_control_setup()) {
+            for (const [ name, create, getter, setter, enable ] of this.#get_control_setup()) {
                 let control_options = options[name];
                 if (control_options) {
                     if (typeof control_options !== 'object') {
@@ -147,8 +153,9 @@ export class ToolBarElement extends HTMLElement {
                     this.#controls[name] = {
                         name,
                         control,
-                        get: getter.bind(ToolBarElement, control),
-                        set: setter.bind(ToolBarElement, control),
+                        get:    getter.bind(ToolBarElement, control),
+                        set:    setter.bind(ToolBarElement, control),
+                        enable: enable.bind(ToolBarElement, control),
                     };
                 }
             }
@@ -173,20 +180,21 @@ export class ToolBarElement extends HTMLElement {
         this.#controls = {};
     }
 
-    /** @return array of { name, create, getter, setter }
+    /** @return array of arrays of [ name, create, getter, setter, enable ]
      */
     #get_control_setup() {
+        const cons = this.constructor;
         return [
             // the order of this array determines order of control creation
 
-            // NAME       CREATE_FN,                         GETTER_FN                           SETTER_FN
-            [ 'running',  this.#create__running.bind(this),  this.constructor.#getter__running,  this.constructor.#setter__running  ],
-            [ 'modified', this.#create__modified.bind(this), this.constructor.#getter__modified, this.constructor.#setter__modified ],
-            [ 'editable', this.#create__editable.bind(this), this.constructor.#getter__editable, this.constructor.#setter__editable ],
-            [ 'visible',  this.#create__visible.bind(this),  this.constructor.#getter__visible,  this.constructor.#setter__visible  ],
-            [ 'autoeval', this.#create__autoeval.bind(this), this.constructor.#getter__autoeval, this.constructor.#setter__autoeval ],
-            [ 'run',      this.#create__run.bind(this),      this.constructor.#getter__run,      this.constructor.#setter__run      ],
-            [ 'type',     this.#create__type.bind(this),     this.constructor.#getter__type,     this.constructor.#setter__type     ],
+            // NAME       CREATE_FN,                         GETTER_FN               SETTER_FN               ENABLE_FN
+            [ 'running',  this.#create__running.bind(this),  cons.#getter__running,  cons.#setter__running,  cons.#enable__running  ],
+            [ 'modified', this.#create__modified.bind(this), cons.#getter__modified, cons.#setter__modified, cons.#enable__modified ],
+            [ 'editable', this.#create__editable.bind(this), cons.#getter__editable, cons.#setter__editable, cons.#enable__editable ],
+            [ 'visible',  this.#create__visible.bind(this),  cons.#getter__visible,  cons.#setter__visible,  cons.#enable__visible  ],
+            [ 'autoeval', this.#create__autoeval.bind(this), cons.#getter__autoeval, cons.#setter__autoeval, cons.#enable__autoeval ],
+            [ 'run',      this.#create__run.bind(this),      cons.#getter__run,      cons.#setter__run,      cons.#enable__run      ],
+            [ 'type',     this.#create__type.bind(this),     cons.#getter__type,     cons.#setter__type,     cons.#enable__type     ],
         ];
     }
 
@@ -225,6 +233,7 @@ export class ToolBarElement extends HTMLElement {
     }
     static #getter__editable(control)        { return control.get_state(); }
     static #setter__editable(control, value) { control.set_state(value); }
+    static #enable__editable(control, value) { /* nothing */ }
 
     #create__visible(on_change_handler=null) {
         const control = ToggleSwitchElement.create({
@@ -253,12 +262,19 @@ export class ToolBarElement extends HTMLElement {
 </svg>
 `;
         if (on_change_handler) {
-            this.#event_listener_manager.add(control, 'change', on_change_handler);
+            this.#event_listener_manager.add(control, 'change', (event) => {
+                if (!on_change_handler(event)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                }
+            });
         }
         return control;
     }
     static #getter__visible(control)        { return control.get_state(); }
     static #setter__visible(control, value) { control.set_state(value); }
+    static #enable__visible(control, value) { control.enable(value); }
 
     #create__autoeval(on_change_handler=null) {
         const control = create_element({
@@ -270,7 +286,13 @@ export class ToolBarElement extends HTMLElement {
             },
         });
         if (on_change_handler) {
-            this.#event_listener_manager.add(control, 'change', on_change_handler);
+            this.#event_listener_manager.add(control, 'change', (event) => {
+                if (!on_change_handler(event)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                }
+            });
         }
         this.#event_listener_manager.add(control, 'change', (event) => {
             control.title = control.checked ? 'autoeval off...' : 'autoeval on...';
@@ -279,6 +301,7 @@ export class ToolBarElement extends HTMLElement {
     }
     static #getter__autoeval(control)        { return control.checked; }
     static #setter__autoeval(control, value) { control.checked = !!value; }
+    static #enable__autoeval(control, value) { control.enable(value); }
 
     #create__type(on_change_handler=null) {
         const control = create_element({
@@ -306,7 +329,13 @@ export class ToolBarElement extends HTMLElement {
         }
 
         if (on_change_handler) {
-            this.#event_listener_manager.add(control, 'change', on_change_handler);
+            this.#event_listener_manager.add(control, 'change', (event) => {
+                if (!on_change_handler(event)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                }
+            });
         }
         this.#event_listener_manager.add(control, 'change', (event) => {
             control.title = `type ${control.value}`;
@@ -320,18 +349,29 @@ export class ToolBarElement extends HTMLElement {
         }
         control.value = value;
     }
+    static #enable__type(control, value) {
+        if (value) {
+            control.removeAttribute('disabled');
+            control.removeAttribute('aria-disabled');
+        } else {
+            control.setAttribute('disabled', true);
+            control.setAttribute('aria-disabled', true);
+        }
+    }
 
     #create__running(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('running', 'running...', 'done...', on_change_handler);
     }
     static #getter__running(control)        { return this.#indicator_control__getter(control); }
     static #setter__running(control, value) { this.#indicator_control__setter(control, value); }
+    static #enable__running(control, value) { /* nothing */ }
 
     #create__modified(on_change_handler=null) {
         return this.#indicator_control__create_with_class_and_title('modified', 'modified...', 'not modified...', on_change_handler);
     }
     static #getter__modified(control)        { return this.#indicator_control__getter(control); }
     static #setter__modified(control, value) { this.#indicator_control__setter(control, value); }
+    static #enable__modified(control, value)  { /* nothing */ }
 
     #create__run(on_change_handler=null) {
         //!!!
@@ -340,6 +380,9 @@ export class ToolBarElement extends HTMLElement {
         //!!!
     }
     static #setter__run(control, value) {
+        //!!!
+    }
+    static #enable__run(control, value) {
         //!!!
     }
 

@@ -1,3 +1,14 @@
+/*!!! autoeval: {
+                initial: this.autoeval,
+                on: (event) => {
+                    if (!this.editable) {
+                        beep();
+                        return false;
+                    }
+                    this.set_autoeval(!this.autoeval);
+                    return true;
+                }, !!!*/
+
 //!!!
 
 //!!! Also, the following does not work on Firefox:
@@ -35,5 +46,3 @@
 //!!! this.#menubar_selects_subscription is never unsubscribed
 
 //!!! what a kludge...
-
-//!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!

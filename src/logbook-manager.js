@@ -211,7 +211,11 @@ export class LogbookManager {
                             this.set_editable(!this.editable);
                         } else {  // !target_is_body && !target_is_header && !target_is_top_level_tool_bar && target_is_tool_bar
                             const cell = event.target.target;
-                            cell.set_visible(!cell.visible);
+                            if (!this.editable) {
+                                beep();
+                            } else {
+                                cell.set_visible(!cell.visible);
+                            }
                         }
                     }
 
@@ -401,31 +405,41 @@ ${contents}
         const active_index = cells.indexOf(active_cell);
         const can_undo     = this.#global_change_manager.can_perform_undo;
         const can_redo     = this.#global_change_manager.can_perform_redo;
-/*
-'toggle-editable'  // directly handled in this.set_editable()
-'save'  // directly handled in this.#neutral_changes_observer()
-*/
+        const editable     = this.editable;
+
+        /*
+          'toggle-editable'  // directly handled in this.set_editable()
+          'save'  // directly handled in this.#neutral_changes_observer()
+        */
+
+        this.#menubar.set_menu_state('clear',      { enabled: editable });
+        this.#menubar.set_menu_state('reset',      { enabled: editable });
+        this.#menubar.set_menu_state('reset-cell', { enabled: editable });
+
         this.#menubar.set_menu_state('undo', { enabled: can_undo });
         this.#menubar.set_menu_state('redo', { enabled: can_redo });
 
-        this.#menubar.set_menu_state('toggle-cell-visible', { checked: active_cell?.visible });
+        this.#menubar.set_menu_state('toggle-cell-visible', { enabled: editable, checked: active_cell?.visible });
 
         this.#menubar.set_menu_state('focus-up',   { enabled: (active_cell && active_index > 0) });
         this.#menubar.set_menu_state('focus-down', { enabled: (active_cell && active_index < cells.length-1) });
         this.#menubar.set_menu_state('move-up',    { enabled: (active_cell && active_index > 0) });
         this.#menubar.set_menu_state('move-down',  { enabled: (active_cell && active_index < cells.length-1) });
-        this.#menubar.set_menu_state('delete',     { enabled: !!active_cell });
+        this.#menubar.set_menu_state('add-before', { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('add-after',  { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('delete',     { enabled: editable && active_cell });
 
-        this.#menubar.set_menu_state('eval-and-refocus', { enabled: !!active_cell });
-        this.#menubar.set_menu_state('eval',             { enabled: !!active_cell });
-        this.#menubar.set_menu_state('eval-before',      { enabled: !!active_cell });
-        this.#menubar.set_menu_state('eval-all',         { enabled: !!active_cell });
-        this.#menubar.set_menu_state('stop',             { enabled: active_cell?.can_stop });
-        this.#menubar.set_menu_state('stop-all',         { enabled: cells.some(cell => cell.can_stop) });
-/*
-recents
-*/
-        //!!!
+        this.#menubar.set_menu_state('eval-and-refocus', { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('eval',             { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('eval-before',      { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('eval-all',         { enabled: editable && active_cell });
+
+        this.#menubar.set_menu_state('stop',     { enabled: active_cell?.can_stop });
+        this.#menubar.set_menu_state('stop-all', { enabled: cells.some(cell => cell.can_stop) });
+
+        /*
+          recents
+        */
     }
 
     #setup_header() {
@@ -442,8 +456,17 @@ recents
 
         // add a tool-bar element to the header document
         this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
-            editable: { initial: this.editable,  on: (event) => this.set_editable(event.target.get_state()) },
-            //!!!autoeval: { initial: this.autoeval,  on: (event) => this.set_autoeval(!this.autoeval) },//!!!
+            editable: { initial: this.editable,  on: (event) => { this.set_editable(event.target.get_state()); return true; } },
+            /*!!! autoeval: {
+                initial: this.autoeval,
+                on: (event) => {
+                    if (!this.editable) {
+                        beep();
+                        return false;
+                    }
+                    this.set_autoeval(!this.autoeval);
+                    return true;
+                }, !!!*/
             modified: true,
             running:  true,
         });
@@ -767,7 +790,7 @@ recents
 
 export function show_initialization_failed(error) {
     console.error('initialization failed', error.stack);
-    document.body.innerText = '';  // completely reset body
+    clear_element(document.body);
     const error_h1 = document.createElement('h1');
     error_h1.textContent = 'Initialization Failed';
     const error_pre = document.createElement('pre');

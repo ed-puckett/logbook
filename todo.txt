@@ -1,13 +1,12 @@
+visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
-click on body leave body selected (want: select active cell)
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
 lazy-load the support files for renderers (esp. Plotly which is so large)
 when theme css variables change, the user's stored theme-settings are no longer valid
-visible indicator shows "not visible" (may be only when visible is set on loaded element)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
-validate that themes from storage define the correct properties
+validate that themes from storage define the correct properties when first loading from storage
 empty cell does not show anything visible unless editable
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
@@ -19,7 +18,6 @@ maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
-make toggle-switch more ui-aware (press space to click, aria stuff, etc)
 toggle-menu command (for keyboard)
 implement recents
 implement go/stop control in tool-bar
@@ -31,6 +29,11 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+disable eval* menu options when not editable
+handle disabled display state for toggle-switch
+need enabled state for tool-bar controls like "visible" and "type", and this needs to control whether or no the control can be changed (use "readonly" property?)
+click on body leaves body selected (want: select active cell)
+make toggle-switch more ui-aware (press space to click, aria stuff, etc)
 save is broken
 update dark theme in src/settings/theme-settings.js
 handle (prefers-color-scheme: light) [nothing to do, it's just the default]

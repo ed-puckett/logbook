@@ -9,6 +9,10 @@ import {
 } from '../../lib/ui/dom-util.js';
 
 import {
+    beep,
+} from '../../lib/ui/beep.js';
+
+import {
     assets_server_url,
 } from '../assets-server-url.js';
 
@@ -55,10 +59,46 @@ export class ToggleSwitchElement extends HTMLElement {
 //        this.setAttribute('aria-checked', this.get_state());  // ensure 'aria-checked' is set
         this.#event_listener_manager = new EventListenerManager();
         this.#event_listener_manager.add(this, 'click', (event) => {
-            this.set_state();
+            if (!this.is_enabled()) {
+                beep();
+            } else {
+                this.set_state();
+            }
+        });
+        this.#event_listener_manager.add(this, 'keydown', (event) => {
+            if ([' ', 'Enter'].includes(event.key)) {
+                if (!this.is_enabled()) {
+                    beep();
+                } else {
+                    this.set_state();
+                }
+            }
         });
     }
     #event_listener_manager;
+
+    is_enabled() {
+        if (!this.hasAttribute('disabled')) {
+            return true;
+        } else {
+            const disabled_value = this.getAttribute('disabled');
+            return (disabled_value === false.toString());
+        }
+    }
+
+    enable(state) {
+        if (state) {
+            this.removeAttribute('disabled');
+            this.removeAttribute('aria-disabled');
+            this.setAttribute('tabindex', '0');
+            this.style.removeProperty('filter');//!!! hacky way of setting "disabled" display state
+        } else {
+            this.setAttribute('disabled', true);
+            this.setAttribute('aria-disabled', true);
+            this.removeAttribute('tabindex');
+            this.style.setProperty('filter', 'opacity(0.45)');//!!! hacky way of setting "disabled" display state
+        }
+    }
 
     get_state() {
         return (this.getAttribute('aria-checked') === 'true');
