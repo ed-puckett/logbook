@@ -229,16 +229,18 @@ const standard_themes = standard_theme_names
 
 // === TO/FROM STORAGE ===
 
-export async function put_themes_settings_to_storage(themes_settings) {
+async function put_themes_settings_to_storage(themes_settings) {
     validate_themes_array(themes_settings);
     return storage_db.put(db_key_themes, themes_settings);
 }
 
-export async function get_themes_settings_from_storage() {
+async function get_themes_settings_from_storage() {
     return storage_db.get(db_key_themes)
-        .then((themes_from_db) => {
-            validate_themes_array(themes_from_db);
-            return themes_from_db;
+        .then((themes_settings) => {
+            if (!themes_settings) {
+                throw new Error('themes_settings not found');
+            }
+            return themes_settings;
         });
 }
 
@@ -270,7 +272,19 @@ function create_themes_style_element() {
 
 // === VALIDATION AND INITIALIZATION ===
 
-export function validate_theme(theme) {
+function validate_theme_props(theme_props) {
+    if ( typeof theme_props !== 'object' ||
+         !Object.entries(theme_props).every(([ k, v ]) => {
+             return ( typeof(k) === 'string' &&
+                      k.match(theme_prop_name_validation_re) &&
+                      typeof(v) === 'string' );
+         })
+       ) {
+        throw new Error('theme_props must have valid CSS property names starting with --theme- and with string values');
+    }
+}
+
+function validate_theme(theme) {
     const { name, props } = theme;
     if (name === theme_system) {
         throw new Error(`"${theme_system}" is a reserved theme name`);
@@ -278,14 +292,11 @@ export function validate_theme(theme) {
     if (typeof name !== 'string' || !name.match(theme_name_validation_re)) {
         throw new Error('invalid theme name');
     }
-    if ( typeof props !== 'object' ||
-         !Object.entries(props).every(([ k, v ]) => {
-             return ( typeof(k) === 'string' &&
-                      k.match(theme_prop_name_validation_re) &&
-                      typeof(v) === 'string' );
-         })
-       ) {
-        throw new Error('theme props must have valid CSS property names starting with --theme- and with string values');
+    validate_theme_props(props);
+    for (const prop_name of standard_theme_prop_names) {
+        if (!(prop_name in props)) {
+            throw new Error('theme is missing expected properties');
+        }
     }
 }
 
@@ -301,6 +312,43 @@ function validate_themes_array(themes) {
         names.add(theme.name);
         validate_theme(theme);
     }
+}
+
+function adjust_theme(theme) {
+    const { name, props } = theme;
+    validate_theme_props(props);
+
+    let adjustment_made = false;
+    const adjusted_props = { ...props }
+    for (const required_prop_name of standard_theme_prop_names) {
+        if (!(required_prop_name in props)) {
+            adjustment_made = true;
+            const value = (name in standard_themes)
+                  ? standard_themes[name][required_prop_name]
+                  : (standard_themes[0][required_prop_name]);  // fall back to first theme if name not found
+            adjusted_props[required_prop_name] = value ?? 'unset';
+        }
+    }
+    // note that props that do no appear in standard_theme_prop_names are left intact
+
+    return adjustment_made ? { name, props: adjusted_props } : null;
+}
+
+function adjust_themes_array(themes) {
+    if (!Array.isArray(themes) || themes.length <= 0) {
+        throw new Error('themes must be an array of valid themes with at least one element');
+    }
+    let adjustment_made = false;
+    const adjusted_themes = themes.map((theme) => {
+        const adjusted_theme = adjust_theme(theme);
+        if (!adjusted_theme) {
+            return theme;
+        } else {
+            adjustment_made = true;
+            return adjusted_theme;
+        }
+    });
+    return adjustment_made ? adjusted_themes : null;
 }
 
 function create_theme_properties_section(theme, default_mode=false) {
@@ -336,27 +384,37 @@ async function write_themes_to_style_element(themes, themes_style_element) {
 }
 
 /** initialize themes in db if necessary, and write theme styles to the themes_style_element
- * @param {Object|null|undefined} options: {
- *     create_style_element_if_needed?: Boolean,
- * }
  * @return {Array} newly-established theme_settings
  */
-async function initialize_themes(options=null) {
-    const {
-        create_style_element_if_needed,
-    } = (options ?? {});
+async function initialize_themes() {
     const themes_settings = await get_themes_settings_from_storage()
           .catch((_) => {
               const themes_settings = standard_themes;
-              return put_themes_settings_to_storage(themes_settings)
-                .then(() => {
-                    return themes_settings;
-                });
+              return put_themes_settings_to_storage(themes_settings)  // also validates
+                  .then(() => themes_settings);
           })
           .then((themes_settings) => {
-              const themes_style_element = get_themes_style_element()
-                    ?? (!create_style_element_if_needed ? null : create_themes_style_element());
+              const adjusted = adjust_themes_array(themes_settings);
+              if (!adjusted) {
+                  validate_themes_array(themes_settings);
+                  return themes_settings;
+              } else {
+                  return put_themes_settings_to_storage(adjusted)  // also validates
+                      .catch((error) => {
+                          console.error(error);
+                          throw new Error('unable to rewrite adjusted themes');
+                      })
+                      .then(() => adjusted);
+              }
+          })
+          .then((themes_settings) => {
+              // themes_settings is now fully validated and synchronized with storage
+              const themes_style_element = get_themes_style_element() ?? create_themes_style_element();
               return write_themes_to_style_element(themes_settings, themes_style_element)
+                  .catch((error) => {
+                      console.error(error);
+                      throw new Error('unable to write to style element');
+                  })
                   .then(() => themes_settings);
           })
 }
@@ -433,7 +491,7 @@ export async function reset_to_standard_themes_settings() {
 
 // === INITIALIZATION ===
 
-_current_themes_settings = await initialize_themes({ create_style_element_if_needed: true });
+_current_themes_settings = await initialize_themes();
 
 dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
 settings_updated_events.subscribe(update_document_dark_state);

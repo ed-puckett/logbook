@@ -1,8 +1,8 @@
+when theme css variables change, the user's stored theme-settings are no longer valid and the user is stuck with old (and/or missing) variables
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
 lazy-load the support files for renderers (esp. Plotly which is so large)
-when theme css variables change, the user's stored theme-settings are no longer valid
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
