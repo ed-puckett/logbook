@@ -63,6 +63,8 @@ export class ToggleSwitchElement extends HTMLElement {
                 beep();
             } else {
                 this.set_state();
+                event.preventDefault();
+                event.stopPropagation();
             }
         });
         this.#event_listener_manager.add(this, 'keydown', (event) => {
@@ -71,6 +73,8 @@ export class ToggleSwitchElement extends HTMLElement {
                     beep();
                 } else {
                     this.set_state();
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
             }
         });

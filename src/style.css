@@ -5,27 +5,20 @@
 :root {
     /* focus transition */
 
-    --focus-x1-delay:                       0s;
-    --focus-x1-duration:                    0.2s;
-    --focus-x1-easing:                      cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x1-delay:     0s;
+    --focus-x1-duration:  0.2s;
+    --focus-x1-easing:    cubic-bezier(0.42, 0.0, 0.0, 1.0);
 
-    --focus-x2-delay:                       calc(var(--focus-x1-duration) / 4);
-    --focus-x2-duration:                    0.1s;
-    --focus-x2-easing:                      cubic-bezier(0.42, 0.0, 0.0, 1.0);
+    --focus-x2-delay:     calc(var(--focus-x1-duration) / 4);
+    --focus-x2-duration:  0.1s;
+    --focus-x2-easing:    cubic-bezier(0.42, 0.0, 0.0, 1.0);
 }
 
 
 body {
     overflow: hidden;  /* inhibit scrolling for body */
-    margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser window frame */
+    margin: 0;
     background-color: var(--theme-by-bgc);
-}
-
-main {
-    /* enable scrolling for main element */
-    overflow: auto;
-    max-height: calc(100vh - var(--theme-hd-h));
-    max-width:  100vw;
 }
 
 header {
@@ -35,8 +28,6 @@ header {
 
     height: var(--theme-hd-h);
     background-color: var(--theme-hd-bgc);
-    border-bottom: var(--theme-hd-bdw) var(--theme-hd-bds) var(--theme-hd-bdc);
-    border-radius: var(--theme-hd-bdr);
 }
 
 header > tool-bar {  /* next to menu */
@@ -49,6 +40,14 @@ header > tool-bar {  /* next to menu */
     padding: 0 0.5em;
     border: 0;
     background-color: transparent;  /* use underlying color from header */
+}
+
+main {
+    /* enable scrolling for main element */
+    overflow: auto;
+    max-height: calc(100vh - var(--theme-hd-h));
+    max-width:  100vw;
+    margin: 0 0 0 1px;  /* prevent left border from getting absorbed into browser surrounding frame */
 }
 
 .eval-cell-output {
@@ -101,9 +100,10 @@ tool-bar {
     padding:      var(--theme-tl-p);
     border-width: 0;
     /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
-    border-top-color:   var(--theme-tl-bdc);
-    border-right-color: var(--theme-tl-bdc);
-    border-left-color:  var(--theme-tl-bdc);
+    border-top-color:    var(--theme-tl-bdc);
+    border-right-color:  var(--theme-tl-bdc);
+    border-bottom-color: transparent;
+    border-left-color:   var(--theme-tl-bdc);
 
     background-color: var(--theme-tl-bgc);
 
@@ -135,7 +135,10 @@ eval-cell {
     max-height:   0;
     padding:      var(--theme-cl-p);
     border-width: 0;
-    border-color: transparent var(--theme-cl-bdc) var(--theme-cl-bdc) var(--theme-cl-bdc);
+    border-top-color:    transparent;
+    border-left-color:   var(--theme-cl-bdc);
+    border-bottom-color: var(--theme-cl-bdc);
+    border-right-color:  var(--theme-cl-bdc);
 
     transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
     transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
@@ -152,7 +155,6 @@ tool-bar:has(+ eval-cell[contenteditable]) {
     visibility:   visible;
     max-height:   fit-content;
     border-width: var(--theme-tl-bdw);
-    border-radius: var(--theme-tl-bdr);
 }
 eval-cell[data-visible],
 eval-cell[contenteditable] {
@@ -161,21 +163,28 @@ eval-cell[contenteditable] {
 }
 
 /* tool-bar and eval-cell visible and active */
-tool-bar:has(+ eval-cell[data-visible][data-active]),
-tool-bar:has(+ eval-cell[contenteditable][data-active]) {
-    border-top-color:   var(--theme-tl-bdc-active);
-    border-right-color: var(--theme-tl-bdc-active);
-    border-left-color:  var(--theme-tl-bdc-active);
+eval-cell[data-visible][data-active]:focus-within,
+eval-cell[contenteditable][data-active]:focus-within,
+tool-bar:focus-within + eval-cell[data-visible][data-active],
+tool-bar:focus-within + eval-cell[contenteditable][data-active] {
+    border-right-color:  var(--theme-tl-bdc-active);
+    border-bottom-color: var(--theme-tl-bdc-active);
+    border-left-color:   var(--theme-tl-bdc-active);
 }
-eval-cell[data-visible][data-active],
-eval-cell[contenteditable][data-active] {
-    border-color: transparent var(--theme-cl-bdc-active) var(--theme-cl-bdc-active) var(--theme-cl-bdc-active);
+tool-bar:has(+ eval-cell[data-visible][data-active]):focus-within,
+tool-bar:has(+ eval-cell[contenteditable][data-active]):focus-within,
+tool-bar:has(+ eval-cell[data-visible][data-active]:focus-within),
+tool-bar:has(+ eval-cell[contenteditable][data-active]:focus-within) {
+    border-top-color:   var(--theme-cl-bdc-active);
+    border-right-color: var(--theme-cl-bdc-active);
+    border-left-color:  var(--theme-cl-bdc-active);
 }
 
 
 /* color selected by eval-cell input-type */
 
-tool-bar select {
+tool-bar select,  /* markdown is default */
+tool-bar > select:has(> option[value="markdown"]:checked) {
     color:            var(--theme-ty-fgc-markdown);
     background-color: var(--theme-ty-bgc-markdown);
 }
@@ -194,7 +203,8 @@ tool-bar option {
     color: initial;  /* setting other color causes poor drop-down list display; seen in Chromium 116 */
 }
 
-tool-bar:has(option) {
+tool-bar:has(option),  /* markdown is default */
+tool-bar:has(option[value="markdown"]:checked) {
     border-bottom-color: var(--theme-ty-bgc-markdown);
     background-color: color-mix(in srgb, var(--theme-tl-bgc), var(--theme-ty-bgc-markdown) var(--theme-tl-bgc-mix));
 }
