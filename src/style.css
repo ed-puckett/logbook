@@ -73,9 +73,11 @@ header > tool-bar {  /* next to menu */
 
 /* output element active highlight */
 eval-cell[data-active] + .eval-cell-output {
-    border-width: 0 0 0 var(--theme-ou-hlw);
+    border-color: transparent transparent transparent color-mix(in srgb, var(--theme-ou-bgc), var(--theme-ou-hlc) var(--theme-ou-hlc-mix));
+}
+eval-cell[data-active]:focus-within + .eval-cell-output,
+eval-cell[data-active] + .eval-cell-output:focus-within {
     border-color: transparent transparent transparent var(--theme-ou-hlc);
-    border-style: var(--theme-ou-hls);
 }
 
 

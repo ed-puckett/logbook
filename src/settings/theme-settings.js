@@ -129,6 +129,7 @@ const standard_themes_spec = {
     "--theme-ou-p":                    [ '0.5em',                         '0.5em' ],
     "--theme-ou-hlw":                  [ '2px',                           '2px' ],
     "--theme-ou-hlc":                  [ 'hsl( 10deg  70%  60% / 100%)',  'hsl( 54deg  40%  60% / 100%)' ],
+    "--theme-ou-hlc-mix":              [ '50%',                           '50%' ],
     "--theme-ou-hls":                  [ 'dashed',                        'dashed' ],
     "--theme-ou-fgc":                  [ 'black',                         '#eee' ],
     "--theme-ou-bgc":                  [ 'white',                         'black' ],
