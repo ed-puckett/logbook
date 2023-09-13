@@ -55,8 +55,6 @@ export class ToggleSwitchElement extends HTMLElement {
 
     constructor() {
         super();
-//        this.setAttribute('role', 'switch');
-//        this.setAttribute('aria-checked', this.get_state());  // ensure 'aria-checked' is set
         this.#event_listener_manager = new EventListenerManager();
         this.#event_listener_manager.add(this, 'click', (event) => {
             if (!this.is_enabled()) {
@@ -126,6 +124,10 @@ export class ToggleSwitchElement extends HTMLElement {
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
+        // attributes are not allowed to be set in the constructor so set these here instead
+        this.setAttribute('role', 'switch');
+        this.setAttribute('aria-checked', this.get_state());  // ensure 'aria-checked' is set
+
         this.#event_listener_manager.attach();
     }
 

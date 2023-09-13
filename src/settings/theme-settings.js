@@ -108,7 +108,7 @@ const standard_themes_spec = {
     "--theme-tl-bdc":                  [ '#ccc',                          '#444' ],
     "--theme-tl-bdc-active":           [ 'black',                         'hsl(  0deg   0%  65% / 100%)' ],
     "--theme-tl-bgc":                  [ '#f8f8f8',                       '#080808' ],
-    "--theme-tl-bgc-mix":              [ '10%',                           '20%' ],
+    "--theme-tl-bgc-mix":              [ '10%',                           '25%' ],
 
     "--theme-cl-p":                    [ '0 0.5em',                       '0 0.5em' ],
     "--theme-cl-lh":                   [ '140%',                          '140%' ],
@@ -124,7 +124,7 @@ const standard_themes_spec = {
 
     "--theme-ou-p":                    [ '0.5em',                         '0.5em' ],
     "--theme-ou-hlw":                  [ '2px',                           '2px' ],
-    "--theme-ou-hlc":                  [ 'hsl( 10deg  70%  60% / 100%)',  'hsl( 54deg  40%  60% / 100%)' ],
+    "--theme-ou-hlc":                  [ 'hsl( 10deg  70%  60% / 100%)',  'hsl( 54deg  40%  50% / 100%)' ],
     "--theme-ou-hlc-mix":              [ '50%',                           '50%' ],
     "--theme-ou-hls":                  [ 'dashed',                        'dashed' ],
     "--theme-ou-fgc":                  [ 'black',                         '#eee' ],
@@ -135,11 +135,11 @@ const standard_themes_spec = {
     "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
     "--theme-ty-fgc-markdown":         [ 'black',                         'white' ],
-    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  73%  77% / 100%)',  'hsl(205deg  30%  60% / 100%)' ],
+    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  73%  77% / 100%)',  'hsl(205deg  80%  30% / 100%)' ],
     "--theme-ty-fgc-tex":              [ 'black',                         'white' ],
-    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  68%  66% / 100%)',  'hsl( 45deg  35%  50% / 100%)' ],
+    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  68%  66% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
     "--theme-ty-fgc-javascript":       [ 'black',                         'white' ],
-    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  65%  50% / 100%)',  'hsl( 85deg  45%  40% / 100%)' ],
+    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  65%  50% / 100%)',  'hsl( 85deg  45%  20% / 100%)' ],
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
