@@ -61,8 +61,7 @@ export class EvalCellElement extends EditorCellElement {
         // create a single bound handler function so that
         // we have a consistent handler function for add
         // and remove
-        this.#output_element_pointerdown_handler_bound = this.#output_element_pointerdown_handler.bind(this);
-        this.#output_element_dblclick_handler_bound    = this.#output_element_dblclick_handler.bind(this);
+        this.#output_element_dblclick_handler_bound = this.#output_element_dblclick_handler.bind(this);
     }
 
 
@@ -115,12 +114,10 @@ export class EvalCellElement extends EditorCellElement {
         const current_output_element = this.output_element;
         if (current_output_element !== element) {
             if (current_output_element) {
-                current_output_element.removeEventListener('dblclick',    this.#output_element_dblclick_handler_bound);
-                current_output_element.removeEventListener('pointerdown', this.#output_element_pointerdown_handler_bound);
+                current_output_element.removeEventListener('dblclick', this.#output_element_dblclick_handler_bound);
             }
             if (element) {
-                element.addEventListener('pointerdown', this.#output_element_pointerdown_handler_bound);
-                element.addEventListener('dblclick',    this.#output_element_dblclick_handler_bound);
+                element.addEventListener('dblclick', this.#output_element_dblclick_handler_bound);
             }
         }
 
@@ -158,13 +155,6 @@ export class EvalCellElement extends EditorCellElement {
         }
         return this;
     }
-
-    #output_element_pointerdown_handler(event) {
-        this.focus();
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    #output_element_pointerdown_handler_bound;  // initialized in constructor
 
     #output_element_dblclick_handler(event) {
         if (!this.editable) {

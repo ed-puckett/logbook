@@ -135,11 +135,11 @@ const standard_themes_spec = {
     "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
     "--theme-ty-fgc-markdown":         [ 'black',                         'white' ],
-    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  73%  77% / 100%)',  'hsl(205deg  80%  30% / 100%)' ],
+    "--theme-ty-bgc-markdown":         [ 'hsl(205deg  85%  90% / 100%)',  'hsl(205deg  80%  30% / 100%)' ],
     "--theme-ty-fgc-tex":              [ 'black',                         'white' ],
-    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  68%  66% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
+    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  60%  80% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
     "--theme-ty-fgc-javascript":       [ 'black',                         'white' ],
-    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  65%  50% / 100%)',  'hsl( 85deg  45%  20% / 100%)' ],
+    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  55%  80% / 100%)',  'hsl( 85deg  45%  20% / 100%)' ],
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
