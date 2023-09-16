@@ -47,6 +47,7 @@ const theme_property_name_documentation = `\
   ti -- tool-bar indicator
   cl -- eval-cell/editor-cell
   ou -- output element
+  mb -- menubar
   mu -- menu
   mi -- menuitem
   ms -- menuitem separator
@@ -98,16 +99,16 @@ const standard_themes_spec = {
     "--theme-by-bgc":                  [ '#fcfcfc',                       '#0e0e0e' ],
 
     "--theme-hd-h":                    [ '1.5rem',                        '1.5rem' ],
-    "--theme-hd-bgc":                  [ '#f8f8f8',                       '#4a4a4a' ],
+    "--theme-hd-bgc":                  [ '#f8f8f8',                       '#2e2e2e' ],
 
     "--theme-tl-p":                    [ '0 0.5em',                       '0 0.5em' ],
     "--theme-tl-g":                    [ '0.5em',                         '0.5em' ],
     "--theme-tl-bdr":                  [ '0.5em',                         '0.5em' ],
     "--theme-tl-bdw":                  [ '1px',                           '1px' ],
     "--theme-tl-bds":                  [ 'solid',                         'solid' ],
-    "--theme-tl-bdc":                  [ '#ccc',                          '#444' ],
+    "--theme-tl-bdc":                  [ '#ccc',                          '#4a4a4a' ],
     "--theme-tl-bdc-active":           [ 'black',                         'hsl(  0deg   0%  65% / 100%)' ],
-    "--theme-tl-bgc":                  [ '#f8f8f8',                       '#080808' ],
+    "--theme-tl-bgc":                  [ '#f8f8f8',                       '#1e1e1e' ],
     "--theme-tl-bgc-mix":              [ '10%',                           '25%' ],
 
     "--theme-cl-p":                    [ '0 0.5em',                       '0 0.5em' ],
@@ -116,7 +117,7 @@ const standard_themes_spec = {
     "--theme-cl-bdr":                  [ '0.5em',                         '0.5em' ],
     "--theme-cl-bdw":                  [ '1px',                           '1px' ],
     "--theme-cl-bds":                  [ 'solid',                         'solid' ],
-    "--theme-cl-bdc":                  [ '#ccc',                          '#444' ],
+    "--theme-cl-bdc":                  [ '#ccc',                          '#4a4a4a' ],
     "--theme-cl-bdc-active":           [ 'black',                         'hsl(  0deg   0%  65% / 100%)' ],
     "--theme-cl-fgc":                  [ 'black',                         '#eee' ],
     "--theme-cl-bgc":                  [ 'hsl(  0deg   0%  98% / 100%)',  '#111' ],
@@ -139,7 +140,7 @@ const standard_themes_spec = {
     "--theme-ty-fgc-tex":              [ 'black',                         'white' ],
     "--theme-ty-bgc-tex":              [ 'hsl( 45deg  60%  80% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
     "--theme-ty-fgc-javascript":       [ 'black',                         'white' ],
-    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  55%  80% / 100%)',  'hsl( 85deg  45%  20% / 100%)' ],
+    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  55%  80% / 100%)',  'hsl(120deg  50%  30% / 100%)' ],
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
@@ -169,13 +170,13 @@ const standard_themes_spec = {
 
     "--theme-ty-bgc":                  [ 'hsl(  0deg   0%  97% / 100%)',  'hsl(  0deg   0%  97% / 100%)' ],
 
-    "--theme-mu-bgc":                  [ '#f0f0f0',                       '#202020' ],
+    "--theme-mu-bgc":                  [ '#f8f8f8',                       '#2e2e2e' ],
     "--theme-mu-bdc":                  [ 'grey',                          'grey' ],
-    "--theme-mu-shc":                  [ 'lightgrey',                     'darkgrey' ],
+    "--theme-mu-shc":                  [ 'lightgrey',                     '#343434' ],
     "--theme-mi-fgc":                  [ 'black',                         '#eee' ],
     "--theme-mi-fgc-disabled":         [ '#bbb',                          '#666' ],
     "--theme-mi-bgc-selected":         [ '#0004',                         '#fff4' ],
-    "--theme-mi-msc":                  [ '#3334',                         '#ccc4' ],
+    "--theme-ms-bgc":                  [ '#3334',                         '#ccc4' ],
 
     "--theme-dg-shc":                  [ 'grey',                          'grey' ],
 
