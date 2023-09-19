@@ -9,7 +9,6 @@ import { MarkdownRenderer   } from './markdown-renderer.js';
 import { TeXRenderer        } from './tex-renderer.js';
 import { JavaScriptRenderer } from './javascript-renderer/_.js';
 import { ImageDataRenderer  } from './image-data-renderer.js';
-import { ChartRenderer      } from './chart-renderer.js';
 import { GraphvizRenderer   } from './graphviz-renderer.js';
 import { PlotlyRenderer     } from './plotly-renderer.js';
 
@@ -21,7 +20,6 @@ export function get_renderer_classes() {
         TeXRenderer,
         JavaScriptRenderer,
         ImageDataRenderer,
-        ChartRenderer,
         GraphvizRenderer,
         PlotlyRenderer,
     ];

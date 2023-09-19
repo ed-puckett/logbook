@@ -1,4 +1,4 @@
-confirm before clear document in modified document
+confirm before clear document from a modified document
 provide way to reset themes in settings
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused

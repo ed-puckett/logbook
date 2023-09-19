@@ -304,7 +304,6 @@ export class JavaScriptRenderer extends Renderer {
             markdown:        AIS(render.bind(null, 'markdown')),
             tex:             AIS(render.bind(null, 'tex')),
             image_data:      AIS(render.bind(null, 'image-data')),
-            chart:           AIS(render.bind(null, 'chart')),
             graphviz:        AIS(render.bind(null, 'graphviz')),
             plotly:          AIS(render.bind(null, 'plotly')),
             // code

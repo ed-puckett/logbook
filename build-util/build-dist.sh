@@ -18,7 +18,6 @@ declare -a FILES_TO_COPY=(
     'node_modules/texzilla/TeXZilla.js'
     'node_modules/rxjs/dist/bundles/rxjs.umd.min.js'
     'node_modules/rxjs/dist/bundles/rxjs.umd.min.js.map'
-    'node_modules/chart.js/dist/Chart.bundle.min.js'
     'node_modules/d3/dist/d3.min.js'
     'node_modules/plotly.js-dist/plotly.js'
     'node_modules/@hpcc-js/wasm/dist/graphviz.umd.js'

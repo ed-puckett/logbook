@@ -47,7 +47,6 @@ export class Renderer extends StoppableObjectsManager {
         './tex-renderer.js',
         './javascript-renderer/_.js',
         './image-data-renderer.js',
-        './chart-renderer.js',
         './graphviz-renderer.js',
         './plotly-renderer.js',
     ];
