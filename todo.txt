@@ -1,3 +1,4 @@
+replace beep() with LogbookManager.singleton.notify(message)
 confirm before clear document from a modified document
 provide way to reset themes in settings
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
@@ -30,10 +31,11 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+remove icons from top of Plotly plots
 when theme css variables change, the user's stored theme-settings are no longer valid and the user is stuck with old (and/or missing) variables
 disable eval* menu options when not editable
 handle disabled display state for toggle-switch
-need enabled state for tool-bar controls like "visible" and "type", and this needs to control whether or no the control can be changed (use "readonly" property?)
+need enabled state for tool-bar controls like "visible" and "type", and this needs to control whether or not the control can be changed (use "readonly" property?)
 click on body leaves body selected (want: select active cell)
 make toggle-switch more ui-aware (press space to click, aria stuff, etc)
 save is broken
