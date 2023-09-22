@@ -24,7 +24,6 @@ async function load_modules() {
 
 export async function render(element_selector, dot, options) {
     const d3 = await load_modules();
-console.log(d3);//!!!
     const {
         transition = "main",
         ease       = d3.easeLinear,

@@ -54,6 +54,7 @@ main {
     display: block;
     white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
+    overflow: hidden;
 
     padding: var(--theme-ou-p);
     color:            var(--theme-ou-fgc);

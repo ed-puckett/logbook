@@ -1,3 +1,4 @@
+Plotly output causes subsequent cells to not be selectable, behave badly, etc
 pluggable evaluators
 pluggable renderers
 replace beep() with LogbookManager.singleton.notify(message)
