@@ -1,5 +1,5 @@
 import {
-    d3,
+    load_d3,
 } from './d3.js';
 
 import {
@@ -11,10 +11,20 @@ import {
 } from '../assets-server-url.js';
 
 
-await load_script(document.head, assets_server_url('dist/graphviz.umd.js'));
-await load_script(document.head, assets_server_url('dist/d3-graphviz.min.js'));
+let loaded = false;
+async function load_modules() {
+    const d3 = await load_d3();
+    if (!loaded) {
+        await load_script(document.head, assets_server_url('dist/graphviz.umd.js'));
+        await load_script(document.head, assets_server_url('dist/d3-graphviz.min.js'));
+        loaded = true;
+    }
+    return d3;
+}
 
 export async function render(element_selector, dot, options) {
+    const d3 = await load_modules();
+console.log(d3);//!!!
     const {
         transition = "main",
         ease       = d3.easeLinear,
