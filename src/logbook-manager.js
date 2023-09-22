@@ -514,6 +514,7 @@ ${contents}
             eval_state,
         } = data;
         const something_foreground = this.constructor.get_cells().some(cell => cell.evaluator_foreground);
+console.log('eval_states_observer: something_foreground', something_foreground);//!!!
         this.#tool_bar.set_for('running', something_foreground);
     }
 

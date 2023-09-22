@@ -14,7 +14,7 @@ export class Renderer extends StoppableObjectsManager {
 
     async render(output_context, value, options) {
         // to be implemented by subclasses
-        throw new Error('NOT UNIMPLEMENTED');
+        throw new Error('NOT IMPLEMENTED');
     }
 
     static class_from_type(type) {

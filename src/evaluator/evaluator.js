@@ -78,7 +78,7 @@ export class Evaluator extends StoppableObjectsManager {
     async _perform_eval() {
         // to be implemented by subclasses
         // exceptions thrown out of this function will be handled in this.constructor.eval()
-        throw new Error('NOT UNIMPLEMENTED');
+        throw new Error('NOT IMPLEMENTED');
     }
 
 

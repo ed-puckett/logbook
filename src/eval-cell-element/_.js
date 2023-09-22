@@ -253,6 +253,9 @@ export class EvalCellElement extends EditorCellElement {
         this._tool_bar?.set_for('running', true);
         LogbookManager.singleton.emit_eval_state(this, true);
 
+        // yield momentarily so that running indicator ui will be drawn before we eval
+        await new Promise(resolve => setTimeout(resolve));
+
         return evaluator._perform_eval()
             .then(() => {
                 this.#evaluator_foreground = undefined;
