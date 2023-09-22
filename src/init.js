@@ -10,7 +10,7 @@ import {
 } from './logbook-manager.js';
 
 
-if (document.readyState === 'interactive') {
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
     trigger_document_initialization();
 } else {
     window.addEventListener('load', (load_event) => {

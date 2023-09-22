@@ -3,7 +3,7 @@ import {
 } from './renderer.js';
 
 import {
-    Plotly,
+    load_Plotly,
 } from './plotly.js';
 
 
@@ -43,6 +43,7 @@ export class PlotlyRenderer extends Renderer {
         const output_element = output_context.constructor.create_element_child(parent, {
             style,
         });
+        const Plotly = await load_Plotly();
         await Plotly.newPlot(output_element, { data, layout, config, frames });  // render to the output_element
 
         return parent;

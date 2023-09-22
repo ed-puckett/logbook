@@ -7,6 +7,14 @@ import {
 } from '../assets-server-url.js';
 
 
-await load_script(document.head, assets_server_url('dist/plotly.js'));  // defines globalThis.Plotly
+let Plotly;  // loaded on demand
 
-export const Plotly = globalThis.Plotly;
+/** return the Plotly object which will be lazily loaded because Plotly is large
+ */
+export async function load_Plotly() {
+    if (!Plotly) {
+        await load_script(document.head, assets_server_url('dist/plotly.js'));  // defines globalThis.Plotly
+        Plotly = globalThis.Plotly;
+    }
+    return Plotly;
+}
