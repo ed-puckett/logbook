@@ -97,18 +97,19 @@ marked.use({
                 return `<p>${TeXZilla.toMathMLString(token.text, !inline, rtl, exc_on_err)}</p>`;
             },
         },
-
         {
             name: extension_name__eval_code,
             level: 'block',
             start(src) { return src.match(/^[`]{3}[ ]*[!]/)?.index; },
             tokenizer(src, tokens) {
-                const match = src.match(/^[`]{3}[ ]*[!](.*?)[`]{3}/s);
+                const match = src.match(/^[`]{3}[ ]*[!]([ \t]*[^\n]*[ \t]*)?[\n](.*?)[`]{3}/s);
                 if (match) {
+                    const output_type = (match[1]?.trim() ?? '') || 'javascript';
                     return {
                         type: extension_name__eval_code,
+                        output_type,
                         raw:  match[0],
-                        text: match[1],
+                        text: match[2],
                         html: '',  // filled in later by walkTokens
                     };
                 }
@@ -124,13 +125,20 @@ marked.use({
         if (token.type === extension_name__eval_code) {
             const output_element = document.createElement('div');
             const output_context = new OutputContext(output_element);
-            const options = {
-                //!!!
-            };
-            const renderer = output_context.renderer_for_type('javascript');
-            await output_context.invoke_renderer(renderer, token.text, options)
-                .catch(error => output_context.invoke_renderer_for_type('error', error));
-            renderer?.stop();  // stop background processing, if any
+            let renderer;
+            try {
+                renderer = output_context.renderer_for_type(token.output_type);
+            } catch (error) {
+                await output_context.invoke_renderer_for_type('error', error);
+            }
+            if (renderer) {
+                const options = {
+                    //!!!
+                };
+                await output_context.invoke_renderer(renderer, token.text, options)
+                    .catch(error => output_context.invoke_renderer_for_type('error', error));
+                renderer?.stop();  // stop background processing, if any
+            }
             token.html = output_element.innerHTML;
         }
     }

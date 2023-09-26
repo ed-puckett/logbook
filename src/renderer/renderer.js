@@ -7,6 +7,7 @@ import {
     get_renderer_classes,
     set_renderer_classes,
     add_renderer_class,
+    remove_renderer_class,
 } from './_.js';
 
 
@@ -24,4 +25,5 @@ export class Renderer extends StoppableObjectsManager {
     static get_classes()            { return get_renderer_classes(); }
     static set_classes(new_classes) { set_renderer_classes(new_classes); }
     static add_class(rc)            { add_renderer_class(rc); }
+    static remove_class(rc)         { remove_renderer_class(rc); }
 }

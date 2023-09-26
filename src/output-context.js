@@ -199,7 +199,7 @@ export class OutputContext {
     renderer_for_type(type) {
         const renderer_class = Renderer.class_from_type(type);
         if (!renderer_class) {
-            throw new Error(`unknown output type: ${type}`);
+            throw new Error(`unknown output type "${type}"`);
         } else {
             return new renderer_class();
         }
