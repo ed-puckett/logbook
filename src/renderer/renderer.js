@@ -3,7 +3,10 @@ import {
 } from '../../lib/sys/stoppable.js';
 
 import {
+    renderer_class_from_type,
     get_renderer_classes,
+    set_renderer_classes,
+    add_renderer_class,
 } from './_.js';
 
 
@@ -17,37 +20,8 @@ export class Renderer extends StoppableObjectsManager {
         throw new Error('NOT IMPLEMENTED');
     }
 
-    static class_from_type(type) {
-        return this.#establish_type_to_class_mapping()[type];
-    }
-
-
-    // === TYPE TO RENDERER MAPPING ===
-
-    // importing the classes is deferred until this function is called to avoid dependency cycles
-    static #establish_type_to_class_mapping() {
-        if (!this.#type_to_class_mapping) {
-            this.#type_to_class_mapping =
-                Object.fromEntries(
-                    get_renderer_classes().map(renderer_class => {
-                        return [ renderer_class.type, renderer_class ];
-                    })
-                );
-        }
-        return this.#type_to_class_mapping;
-    }
-    static #type_to_class_mapping;  // memoization
-
-    // paths to known renderer class implementations, default-exported
-    static #renderer_paths = [
-
-        './text-renderer.js',
-        './error-renderer.js',
-        './markdown-renderer.js',
-        './tex-renderer.js',
-        './javascript-renderer/_.js',
-        './image-data-renderer.js',
-        './graphviz-renderer.js',
-        './plotly-renderer.js',
-    ];
+    static class_from_type(type)    { return renderer_class_from_type(type); }
+    static get_classes()            { return get_renderer_classes(); }
+    static set_classes(new_classes) { set_renderer_classes(new_classes); }
+    static add_class(rc)            { add_renderer_class(rc); }
 }

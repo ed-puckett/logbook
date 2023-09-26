@@ -282,6 +282,8 @@ export class JavaScriptRenderer extends Renderer {
         }
 
         const ephemeral_eval_context = {
+            // Renderer class
+            Renderer,
             // external
             sprintf:         AIS(sprintf),
             // functions defined above

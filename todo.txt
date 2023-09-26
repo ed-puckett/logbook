@@ -1,6 +1,4 @@
-Plotly output causes subsequent cells to not be selectable, behave badly, etc
 pluggable evaluators
-pluggable renderers
 replace beep() with LogbookManager.singleton.notify(message)
 confirm before clear document from a modified document
 provide way to reset themes in settings
@@ -34,6 +32,8 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+Plotly output causes subsequent cells to not be selectable, behave badly, etc
+pluggable renderers
 remove icons from top of Plotly plots
 when theme css variables change, the user's stored theme-settings are no longer valid and the user is stuck with old (and/or missing) variables
 disable eval* menu options when not editable
