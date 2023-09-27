@@ -1,4 +1,5 @@
 // Renderer is defined in a separate file to break dependency cycle in get_renderer_classes()
+
 import {
     Renderer as imported_Renderer,
 } from './renderer.js';
@@ -34,7 +35,7 @@ function is_renderer_subclass(thing) {
 }
 
 
-// === STATE (INITIALIZED BELOW) ===
+// === RENDERER CLASSES STATE (INITIALIZED BELOW) ===
 
 let renderer_classes;            // Array of Renderer subclasses, priority order, all with unique type properties
 let type_to_renderer_class_map;  // Map type->RendererClass, derived from current renderer_classes

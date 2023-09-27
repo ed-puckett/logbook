@@ -1,3 +1,5 @@
+make active_cell determination ephemeral (and not part of saved document structure)
+make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 replace beep() with LogbookManager.singleton.notify(message)
 confirm before clear document from a modified document
 provide way to reset themes in settings
@@ -19,7 +21,6 @@ fix sbom -- packages loaded dynamically and loaded via load_script (which is tru
 maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
-make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 toggle-menu command (for keyboard)
 implement recents
 implement go/stop control in tool-bar
