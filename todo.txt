@@ -118,11 +118,20 @@ OutputContext
 
 Renderers
 - render specific type of content with use of an output_context
-- Renderer.from_id(id)
-- Renderer.from_type(type)
+- main
+- various renderer classes represent various formats
+- renderer instances: main method: async render(output_context, value, options)
+- Renderer class management:
+  -- Renderer.class_from_type(type)
+  -- Renderer.get_classes()
+  -- Renderer.set_classes(new_classes)
+  -- Renderer.add_class(rc)
+  -- Renderer.remove_class(rc)
+  -- Renderer.get_class_types()
+  -- Renderer.remove_class_for_type(type)
 
 KeyEventManager
-- maintains key map stack
+- maintains key map stack (support for emacs-like modes)
 - listens for keyboard events and through the use of the key map stack emits commands
 
 MenuBar
