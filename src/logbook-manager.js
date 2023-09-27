@@ -175,6 +175,11 @@ export class LogbookManager {
                 //!!! improve this !!!
             }
 
+            // ensure all incoming cells have output elements (for layout coherence)
+            for (const cell of cells) {
+                cell.establish_output_element();
+            }
+
             // set up active cell
             // ... find the first incoming "active" cell, or the first cell, or create a new cell
             const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? this.create_cell();

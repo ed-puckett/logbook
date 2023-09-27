@@ -202,9 +202,10 @@ export class EvalCellElement extends EditorCellElement {
     reset() {
         super.reset();
         const output_element = this.output_element;
-        if (output_element) {
-            this.output_element = null;  // unhook from cell
-            output_element.remove();
+        if (!output_element) {
+            this.establish_output_element();
+        } else {
+            clear_element(output_element);
         }
         return this;
     }
@@ -213,9 +214,8 @@ export class EvalCellElement extends EditorCellElement {
 
     /** evaluate the contents of this element
      *  @param {null|undefined|Object} options: {
-     *      evaluator_class?: Evaluator,    // evaluator class to use
-     *      output_element?:  HTMLElement,  // output_element for eval(); if given, will be set as this.output_element
-     *      eval_context?:    Object,       // default: a new {}; will be "this" during expression evaluation.
+     *      evaluator_class?: Evaluator,  // evaluator class to use
+     *      eval_context?:    Object,     // default: a new {}; will be "this" during expression evaluation.
      *  }
      *  @return {Promise} promise returned by evaluator_class eval method
      * If evaluator_class is not given, then Evaluator.class_for_content() is called to get one.
@@ -223,7 +223,6 @@ export class EvalCellElement extends EditorCellElement {
     async eval(options=null) {  // options: { evaluator_class?, output_element?, eval_context? }
         const {
             evaluator_class: evaluator_class_from_options,
-            output_element:  output_element_from_options,
             eval_context,
         } = (options ?? {});
 
@@ -235,14 +234,8 @@ export class EvalCellElement extends EditorCellElement {
 
         // stop current evaluator, if any
         this.stop();  // clears this.#evaluator_stoppable
-
-        let output_element;
-        if (output_element_from_options) {
-            output_element = output_element_from_options;
-            this.output_element = output_element;
-        } else {
-            output_element = this.establish_output_element();
-        }
+        
+        const output_element = this.establish_output_element();  // return existing or create
         clear_element(output_element);
 
         // allocate the evaluator, store it, then eval
@@ -330,6 +323,12 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     // === DOM ===
+
+    static create_cell(options=null) {
+        const cell = super.create_cell(options);
+        cell.establish_output_element();  // ensure all cells have output elements (for layout coherence)
+        return cell;
+    }
 
     /** return the first and last elements in the DOM that are associated with this eval-cell
      *  @return {Object|null} null if this is not in the DOM body, otherwise { first: Element, last: Element }

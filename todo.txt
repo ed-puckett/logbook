@@ -1,5 +1,7 @@
 make active_cell determination ephemeral (and not part of saved document structure)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
+empty cell does not show anything visible unless editable
+set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 replace beep() with LogbookManager.singleton.notify(message)
 confirm before clear document from a modified document
 provide way to reset themes in settings
@@ -11,12 +13,10 @@ fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
 validate that themes from storage define the correct properties when first loading from storage
-empty cell does not show anything visible unless editable
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
-set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for
 maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
