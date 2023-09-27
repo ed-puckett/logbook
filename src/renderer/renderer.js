@@ -12,11 +12,15 @@ import {
 
 
 export class Renderer extends StoppableObjectsManager {
-    static type = undefined;  // type which instances handle; to be overridden in subclasses
+    /** type which instances handle, to be overridden in subclasses
+     */
+    static type;
 
-    get type (){ return this.constructor.type }
+    /** get the type specified by the class
+     */
+    get type (){ return this.constructor.type; }
 
-    /** to be implemented by subclasses
+    /** implementation of rendering, to be implemented by subclasses
      */
     async render(output_context, value, options) {
         throw new Error('NOT IMPLEMENTED');
