@@ -138,9 +138,9 @@ const standard_themes_spec = {
     "--theme-ty-fgc-markdown":         [ 'black',                         'white' ],
     "--theme-ty-bgc-markdown":         [ 'hsl(205deg  85%  90% / 100%)',  'hsl(205deg  80%  30% / 100%)' ],
     "--theme-ty-fgc-tex":              [ 'black',                         'white' ],
-    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  60%  80% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
+    "--theme-ty-bgc-tex":              [ 'hsl( 45deg  55%  80% / 100%)',  'hsl( 45deg  35%  30% / 100%)' ],
     "--theme-ty-fgc-javascript":       [ 'black',                         'white' ],
-    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  55%  80% / 100%)',  'hsl(120deg  50%  30% / 100%)' ],
+    "--theme-ty-bgc-javascript":       [ 'hsl( 85deg  55%  80% / 100%)',  'hsl(120deg  45%  25% / 100%)' ],
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
