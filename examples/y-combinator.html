@@ -5,11 +5,50 @@
     <script type="module" src="../dist/main.js"></script>
 </head>
 <body>
-<eval-cell tabindex="0" id="id-71b248fd-90c9-4fae-a13b-9359c7ec9f05" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true"><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y_divergent = (f) =&gt; ( ((q) =&gt; f( q(q) )) (</span><br></div>                             ((q) =&gt; f( q(q) )) ) );<div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);"><br></span></div><div><span style="background-color: var(--theme-cl-bgc); color: var(--theme-cl-fgc); font-family: var(--theme-cl-ff);">const Y = (f_thunk) =&gt; ( ((q) =&gt; () =&gt; f_thunk( q(q) )) (</span><br></div><div>                         ((q) =&gt; () =&gt; f_thunk( q(q) )) ) );
+<eval-cell tabindex="0" id="id-71b248fd-90c9-4fae-a13b-9359c7ec9f05" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true">// Definition of a Fixed-Point "Y" Operator.
+// To understand its operation, note that q is always equivalent to the function:
+//
+//     ((q) =&gt; F( q(q) ))
+//
+// This expression keeps passing itself into itself at each recursive call,
+// each time wrapping a F(*) around the next intermediate result.
+//
+// Unwrapping one invocation, Y(F) becomes F(q(q)) which is equivalent to F(Y(F))
+// because q is equivalent to ((q) =&gt; F( q(q) )).
+//
+// However, this implementation does not work with an applicative-order calling
+// convention like that of JavaScript.  It endlessly recurses.
 
-const FactorialPattern = (factorial_thunk) =&gt; (n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1);</div><div><br></div><div>const factorial_thunk = Y(FactorialPattern);</div><div>const factorial = factorial_thunk();<br></div><div><br></div><div>await delay_ms(1);
-<div>await println(factorial(6));  // 720</div></div></eval-cell>
-<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-6f1b9596-5911-48a5-b0ae-837f7541d5d9">720
+const Y_divergent = (F) =&gt; ( ((q) =&gt; F( q(q) )) (
+                             ((q) =&gt; F( q(q) )) ) );
+
+// This next definition works under an applicative-order calling convention as in
+// JavaScript.  Here, Y's F argument is treated as a function whose parameter will
+// be handled in call-by-name way as in Algol.  Call-by-name works equivalently to
+// how "calling" works in the Lamda Calculus, like substitution.  In Algol,
+// call-by-name is implemented by wrapping a "thunk", i.e., a 0-parameter function,
+// around the call-by-name expression, and then applying this thunk whenever the value
+// of the underlying expression is required.  This wrapping and unwrapping is performed
+// implicitly in Algol, but in JavaScript we must make the mechanism explicit.
+//
+// Therefore, Y returns a thunk, and the argument F passed to Y must accept a thunk and
+// then explicitly apply it to get the actual value.
+//
+// Because the returned fixed-point t is a thunk and because the function F accepts
+// a thunk, the conditional logic in F can terminate the calculation by simply
+// returning a value, or can recurse by applying t and calling that value with the
+// recursive arguments.
+
+const Y = (F) =&gt; ( ((q) =&gt; () =&gt; F( q(q) )) (
+                   ((q) =&gt; () =&gt; F( q(q) )) ) );
+
+const FactorialPattern = (factorial_thunk) =&gt; (n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1);
+
+const factorial_thunk = Y(FactorialPattern);
+const factorial = factorial_thunk();
+
+await println(factorial(6));  // 720<br></eval-cell>
+<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-a444e3f1-7f84-4190-a4b6-f49c73e15364">720
 </div></output>
 </body>
 </html>
