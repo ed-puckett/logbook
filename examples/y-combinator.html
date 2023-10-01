@@ -47,13 +47,16 @@ const Y = (F) =&gt; ( ((q) =&gt; F( () =&gt; q(q) )) (
                    ((q) =&gt; F( () =&gt; q(q) )) ) );
 
 const FactorialPattern = (factorial_thunk) =&gt; (n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1);
-
 const factorial = Y(FactorialPattern);
 await println(factorial);
+await println(factorial(6));  // 720
 
-await println(factorial(6));  // 720</eval-cell>
-<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-5ff56455-e485-41ff-ab31-4e10c7259fe6">(n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1)
+const FibonacciPattern = (f_t) =&gt; (n) =&gt; (n &lt; 1) ? 0 : (n &lt; 2) ? 1 : f_t()(n-1) + f_t()(n-2);
+const fibonacci = Y(FibonacciPattern);
+await println(fibonacci(10));  // 55<br></eval-cell>
+<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-ab37c544-f8b2-47b3-95ca-85b332455542">(n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1)
 720
+55
 </div></output>
 </body>
 </html>
