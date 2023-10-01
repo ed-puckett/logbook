@@ -15,8 +15,8 @@ const Y_divergent = (F) =&gt; ( ((q) =&gt; F( q(q) )) (
 //
 //     ((q) =&gt; F( q(q) ))
 //
-// This expression keeps passing itself into itself at each recursive call, each time wrapping
-// F(*) around the previous intermediate result.
+// q(q) is the fixed-point, and q keeps passing itself into itself at each recursive call, each
+// time wrapping F(*) around the previous intermediate result.
 //
 // Unwrapping one invocation, Y(F) becomes F(q(q)) which is equivalent to F(Y(F)) because q is
 // equivalent to ((q) =&gt; F( q(q) )).
