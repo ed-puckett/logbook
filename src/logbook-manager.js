@@ -1,8 +1,4 @@
 import {
-    EditorCellElement,
-} from './editor-cell-element/_.js';
-
-import {
     EvalCellElement,
 } from './eval-cell-element/_.js';
 
@@ -205,7 +201,7 @@ export class LogbookManager {
             document.body.addEventListener('dblclick', (event) => {
                 const target_is_body     = (event.target === document.body);
                 const target_is_header   = (event.target === this.header_element);
-                const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly a the tool-bar, not one of its children
+                const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly the tool-bar, not one of its children
                 if (target_is_body || target_is_header || target_is_tool_bar) {
                     // event will be handled
                     if (target_is_body) {
@@ -275,14 +271,14 @@ export class LogbookManager {
         });
     }
 
-    /** return an ordered list of the cells in the document
-     *  @return {Array} all cells in the document
+    /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
+     *  @return {Array} the cells in the document
+     * Note that EditorCellElement elements are not returned even though
+     * EditorCellElement is a base class of EvalCellElement.  This is not ambiguous
+     * because they have different tag names (editor-cell vs eval-cell).
      */
     static get_cells() {
-        return [
-            ...document.getElementsByTagName(EditorCellElement.custom_element_name),
-            ...document.getElementsByTagName(EvalCellElement.custom_element_name),
-        ];
+        return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
     }
 
 
@@ -300,6 +296,11 @@ export class LogbookManager {
             throw new Error(`bad format for document: element with id ${this.constructor.main_element_tag} already exists`);
         }
 
+        // establish head element if not already present
+        if (!document.head) {
+            document.documentElement.insertBefore(document.createElement('head'), document.documentElement.firstChild);
+            // document.head is now set
+        }
         // establish favicon
         if (!document.querySelector('link[rel="icon"]')) {
             create_element({
@@ -339,6 +340,11 @@ export class LogbookManager {
     #assets_server_root;
     #local_server_root;
 
+    static #essential_elements_selector = [
+        EvalCellElement.custom_element_name,         // html tag (i.e., type)
+        `.${EvalCellElement.output_element_class}`,  // css class
+    ].join(',');
+
     #save_serializer() {
         const queried_main_element = document.querySelector(this.constructor.main_element_tag);
         if (!queried_main_element || queried_main_element !== this.main_element) {
@@ -347,11 +353,7 @@ export class LogbookManager {
         if (!this.main_element) {
             throw new Error('bad format for document: this.main_element not set');
         }
-        const query_selector = [
-            EvalCellElement.custom_element_name,         // html tag
-            `.${EvalCellElement.output_element_class}`,  // css class
-        ].join(',');
-        const contents = [ ...this.main_element.querySelectorAll(query_selector) ]
+        const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
               .map(e => e.outerHTML)
               .join('\n');
         return `\
@@ -482,7 +484,7 @@ ${contents}
         const target = this.active_cell;
         if (!target) {
             beep();
-        } else if (!(target instanceof EditorCellElement)) {
+        } else if (!(target instanceof EvalCellElement)) {
             beep();
         } else {
             // set target in command_context to be the active cell

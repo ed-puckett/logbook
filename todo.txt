@@ -1,3 +1,4 @@
+favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 make active_cell determination ephemeral (and not part of saved document structure)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 empty cell does not show anything visible unless editable
