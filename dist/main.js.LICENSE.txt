@@ -35,6 +35,8 @@
 
 //!!! options is not copied, and yet is used later
 
+//!!! plaintext-only not supported in Firefox as of version 118
+
 //!!! should be configurable
 
 //!!! should other members of options be checked (e.g., "once")?

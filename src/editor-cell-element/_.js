@@ -86,7 +86,7 @@ export class EditorCellElement extends HTMLElement {
 
     set_editable(editable) {
         if (editable) {
-            this.setAttribute('contenteditable', true.toString());
+            this.setAttribute('contenteditable', true.toString());  //!!! plaintext-only not supported in Firefox as of version 118
             this._tool_bar.enable_for('visible', true);
             this._tool_bar.enable_for('type',    true);
         } else {

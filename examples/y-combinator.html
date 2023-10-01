@@ -32,10 +32,10 @@ const Y_divergent = (F) =&gt; ( ((q) =&gt; F( q(q) )) (
 // way as in Algol.  Call-by-name works similarly to how "calling" works in the Lamda Calculus,
 // like substitution.  In Algol, call-by-name is implemented by wrapping a "thunk", i.e. a
 // 0-parameter function, around a call-by-name argument expression, and then applying this thunk
-// whenever the value of the argument is required.  This wrapping and unwrapping is performed
+// whenever the value of the argument is needed.  This wrapping and unwrapping is performed
 // implicitly in Algol, but in JavaScript the mechanism must be made explicit.
 //
-// Therefore, Y's argument F must accept a thunk and then when needed explicitly apply that thunk
+// Therefore, Y's argument F must accept a thunk and then, when needed, explicitly apply that thunk
 // to get the represented value.  Thus Y computes the fixed-point in the following sense:
 // Y(F) is equivalent to F(() =&gt; Y(F)).  Y(F) returns the "unthunked" value of the fixed-point.
 //
