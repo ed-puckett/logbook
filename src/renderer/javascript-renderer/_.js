@@ -113,7 +113,7 @@ export class JavaScriptRenderer extends Renderer {
             output_context = new OutputContext(parent);
         }
 
-        const ephemeral_eval_context = this.#create_ephemeral_eval_context(eval_context, output_context);
+        const ephemeral_eval_context = this.#create_ephemeral_eval_context(eval_context, output_context, code);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
         // create an async generator with the given code as the heart of its
@@ -160,7 +160,7 @@ export class JavaScriptRenderer extends Renderer {
         }
     }
 
-    #create_ephemeral_eval_context(eval_context, output_context) {
+    #create_ephemeral_eval_context(eval_context, output_context, source_code='') {
         const self = this;
 
         function is_stopped() {
@@ -310,6 +310,7 @@ export class JavaScriptRenderer extends Renderer {
             plotly:          AIS(render.bind(null, 'plotly')),
             // code
             javascript:      AIS(javascript),
+            source_code,  // this evaluation's source code
         };
 
         return ephemeral_eval_context;
