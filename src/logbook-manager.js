@@ -369,7 +369,9 @@ export class LogbookManager {
         while (document.body.firstChild) {
             const node = document.body.firstChild;
             node.parentNode.removeChild(node);
-            console.warn('removed extraneous node from incoming document', node);
+            if (node.nodeType !== Node.TEXT_NODE || node.nodeValue.trim().length > 0) {  // don't warn when removing empty-ish TEXT nodes
+                console.warn('removed extraneous node from incoming document', node);
+            }
         }
         // create header element
         this.#header_element = document.createElement(this.constructor.header_element_tag);
