@@ -74,6 +74,9 @@ export class EvalCellElement extends EditorCellElement {
         return this.getAttribute(this.constructor.#attribute__output_element_id);
     }
 
+    // note: handlers are not set or removed, use the output_element() setter
+    // instead if this is required.
+    // if id is not undefined or null, then an element with that id must exist in the DOM
     set output_element_id (id){
         if (id === null || typeof id === 'undefined' || id === '') {
             this.setAttribute(this.constructor.#attribute__output_element_id, '');
@@ -104,24 +107,55 @@ export class EvalCellElement extends EditorCellElement {
         }
     }
 
+    // element must exist in the dom
     set output_element (element){
         element ??= null;
         if (element && (!element.id || !(element instanceof HTMLElement))) {
             throw new Error('element must be null, undefined, or an instance of HTMLElement with an id');
         }
-
-        // remove handler from old output_element and add handler to new output_element
-        const current_output_element = this.output_element;
-        if (current_output_element !== element) {
-            if (current_output_element) {
-                current_output_element.removeEventListener('dblclick', this.#output_element_dblclick_handler_bound);
-            }
-            if (element) {
-                element.addEventListener('dblclick', this.#output_element_dblclick_handler_bound);
+        if (element) {
+            const element_with_element_id = document.getElementById(element.id);
+            if (element_with_element_id !== element) {
+                throw new Error('another element already exists with the same id as element');
             }
         }
 
+        // remove handler from old output_element and add handler to new output_element
+        // note: carefully access output_element in case this.output_element_id is not valid
+        const current_output_element_id = this.output_element_id;
+        const current_output_element = current_output_element_id ? document.getElementById(current_output_element_id) : null;
+        // remove handlers from current_output_element (if any) and add handlers to element (if any)
+        // this is done even if current_output_element === element in order to ensure
+        // that the handlers have been established even if current_output_element
+        // was pre-existing but had no handlers (for example, when loading a document).
+        if (current_output_element) {
+            current_output_element.removeEventListener('dblclick', this.#output_element_dblclick_handler_bound);
+        }
+        if (element) {
+            element.addEventListener('dblclick', this.#output_element_dblclick_handler_bound);
+        }
         this.output_element_id = element ? element.id : null;
+    }
+
+    /** create a new output element suitable for instances of this class
+     *  @param {null|undefined|Object} options: {
+     *      parent?: Node,
+     *      before?: Node,
+     *  }
+     *  @return {HTMLElement} new output element
+     */
+    static create_output_element(options=null) {
+        const {
+            parent,
+            before,
+        } = (options ?? {});
+        const output_element = create_element({
+            parent,
+            before,
+            tag: 'output',
+        });
+        output_element.classList.add(this.output_element_class);
+        return output_element;
     }
 
     /** create an output element, if necessary, and set its standard attributes
@@ -133,14 +167,9 @@ export class EvalCellElement extends EditorCellElement {
             const dom_extent = this.get_dom_extent();
             const before = dom_extent ? dom_extent.last.nextSibling : this.nextSibling;
             const parent = before?.parentElement ?? this.parentElement;
-            output_element = create_element({
-                tag: 'output',
-                parent,
-                before,
-            });
-            this.output_element = output_element;
+            this.output_element = this.constructor.create_output_element({ parent, before });
         }
-        output_element.classList.add(this.constructor.output_element_class);
+        output_element.classList.add(this.constructor.output_element_class);  // ensure that required class is set
         return output_element;
     }
 
@@ -324,9 +353,31 @@ export class EvalCellElement extends EditorCellElement {
 
     // === DOM ===
 
+    /** create a new EvalCellElement instance with standard settings
+     *  @param {null|undefined|Object} options: {
+     *      // options for EditorCellElement.create_cell()
+     *      parent?:   Node,     // default: document.body
+     *      before?:   Node,     // default: null
+     *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
+     *      visible:   Boolean,  // set visible?  default: false
+     *      innerText: String,   // cell.innerText to set
+     *
+     *      // options for this.create_cell()
+     *      output_element: {HTMLElement} output_element to use
+     *  }
+     *  @return {EvalCellElement} new cell
+     */
     static create_cell(options=null) {
+        const {
+            output_element,
+        } = (options ?? {});
         const cell = super.create_cell(options);
-        cell.establish_output_element();  // ensure all cells have output elements (for layout coherence)
+        // all cells are ensured to have output elements (for layout coherence)
+        if (output_element) {
+            cell.output_element = output_element;
+        } else {
+            cell.establish_output_element();
+        }
         return cell;
     }
 

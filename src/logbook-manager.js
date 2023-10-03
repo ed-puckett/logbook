@@ -17,6 +17,7 @@ import {
 import {
     create_element,
     clear_element,
+    move_node,
 } from '../lib/ui/dom-util.js';
 
 import {
@@ -168,11 +169,12 @@ export class LogbookManager {
             // validate structure of document
             const cells = this.constructor.get_cells();
             if (cells.length > 0) {
-                //!!! improve this !!!
+//!!! improve this or eliminate !!!
             }
 
             // ensure all incoming cells have output elements (for layout coherence)
             for (const cell of cells) {
+//!!! review this !!!
                 cell.establish_output_element();
             }
 
@@ -258,17 +260,47 @@ export class LogbookManager {
         }
     }
 
+
+    // === DOCUMENT UTILITIES ===
+
+    static header_element_tag = 'header';
+    static main_element_tag   = 'main';
+
     /** create a new cell in the document
      *  @param (Object|null|undefined} options
      *  @return {EvalCellElement} cell
      * options is passed to EvalCellElement.create_cell() but
-     * with parent overridden to this.main_element.
+     * with "parent", "before" and "output_element" overridden.
+     * The new cell is put within an element structure.
+     * "parent" and "before" are used to create the cell structure,
+     * and "output_element" is ignored.
      */
     create_cell(options=null) {
-        return EvalCellElement.create_cell({
-            ...(options ?? {}),
-            parent: this.main_element,
+        options ??= {};
+        if (options.output_element) {
+            console.warn('options.output_element ignored');
+        }
+        const {
+            parent,
+            before,
+        } = options;
+        const {
+            cell_parent,
+            cell_before,
+            output_element_parent,
+            output_element_before,
+        } = this.#create_cell_element_structure({ parent, before });
+        const output_element = EvalCellElement.create_output_element({
+            parent: output_element_parent,
+            before: output_element_before,
         });
+        const cell = EvalCellElement.create_cell({
+            ...options,
+            parent: cell_parent,
+            before: cell_before,
+            output_element,
+        });
+        return cell;
     }
 
     /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
@@ -280,12 +312,6 @@ export class LogbookManager {
     static get_cells() {
         return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
     }
-
-
-    // === DOCUMENT UTILITIES ===
-
-    static header_element_tag = 'header';
-    static main_element_tag   = 'main';
 
     // put everything in the body into a new top-level main element
     #initialize_document_structure() {
@@ -319,8 +345,31 @@ export class LogbookManager {
         }
         // create the main element and move the current children of the body to it
         this.#main_element = document.createElement(this.constructor.main_element_tag);
+        // move the cells and their associated output_elements (if any)
+        for (const cell of document.querySelectorAll(EvalCellElement.custom_element_name)) {
+            const {
+                cell_parent,
+                cell_before,
+                output_element_parent,
+                output_element_before,
+            } = this.#create_cell_element_structure({ parent: this.#main_element });
+            cell_parent.insertBefore(cell, cell_before);  // moves cell
+            const output_element = cell.output_element;
+            if (output_element) {
+                output_element_parent.insertBefore(output_element, output_element_before);  // moves output_element
+            } else {
+                // create output_element if none exists
+                cell.output_element = EvalCellElement.create_output_element({
+                    parent: output_element_parent,
+                    before: output_element_before,
+                });
+            }
+        }
+        // now remove any remaining (extraneous) nodes from the document
         while (document.body.firstChild) {
-            this.#main_element.appendChild(document.body.firstChild);  // moves document.body.firstChild
+            const node = document.body.firstChild;
+            node.parentNode.removeChild(node);
+            console.warn('removed extraneous node from incoming document', node);
         }
         // create header element
         this.#header_element = document.createElement(this.constructor.header_element_tag);
@@ -401,6 +450,57 @@ ${contents}
 
     get_suggested_file_name() {
         return window.location.pathname.split('/').slice(-1)[0];
+    }
+
+
+    // === CELL ELEMENT STRUCTURE ===
+
+    static cell_container_class       = 'cell-container';
+    static cell_input_container_class = 'cell-input-container';
+
+    /** create the element structure to contain a cell and its output_element
+     *  @param {null|undefined|Object} options: {
+     *      parent?: Node,  // default: this.main_element
+     *      before?: Node,  // default: null
+     *  }
+     *  @return {Object} structure_details: {
+     *      outer:                 HTMLElement,  // the outermost element of the structure
+     *      cell_parent:           HTMLElement,  // parent for cell
+     *      cell_before:           HTMLElement,  // null or element before which to put cell
+     *      output_element_parent: HTMLElement,  // parent for output_element
+     *      output_element_before: HTMLElement,  // null or element before which to put output_element
+     *  }
+     */
+    #create_cell_element_structure(options=null) {
+        const {
+            parent = this.main_element,
+            before = null,
+        } = (options ?? {});
+        const outer = create_element({ parent, before });
+        outer.classList.add(this.constructor.cell_container_class);
+        const cell_parent = create_element({ parent: outer });
+        cell_parent.classList.add(this.constructor.cell_input_container_class);
+        const cell_before = null;  // i.e., append
+        const output_element_parent = outer;
+        const output_element_before = null;  // i.e., append
+        return {
+            outer,
+            cell_parent,
+            cell_before,
+            output_element_parent,
+            output_element_before,
+        };
+    }
+
+    #cell_outer_element(cell) {
+        if (!(cell instanceof EvalCellElement)) {
+            throw new Error('cell must be an instance of EvalCellElement');
+        }
+        const outer = cell.parentElement?.parentElement;
+        if (!outer || !outer.parentElement) {
+            throw new Error('incorrent cell structure');
+        }
+        return outer;
     }
 
 
@@ -536,7 +636,7 @@ ${contents}
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
-            before = next_cell.get_dom_extent().first;
+            before = this.#cell_outer_element(next_cell);
         }
         const cell = this.create_cell({ before });
         if (!cell) {
@@ -667,9 +767,13 @@ ${contents}
             if (!previous) {
                 return false;
             } else {
-                cell.move_cell({
-                    before: previous.get_dom_extent().first,
-                });
+                // beacause we are storing the cell, toolbar and output element
+                // in an element structure, just move the entire structure instead
+                // of using cell.move_cell()
+                const outer = this.#cell_outer_element(cell);
+                const parent = outer.parentElement;
+                const before = this.#cell_outer_element(previous);
+                move_node(outer, { parent, before });
                 cell.focus();
                 return true;
             }
@@ -690,11 +794,13 @@ ${contents}
             if (!next) {
                 return false;
             } else {
-                cell.move_cell({
-                    before: next.get_dom_extent().last.nextSibling,
-                    parent: cell.parentElement,  // necessary if before is null
-                });
-                cell.focus();
+                // beacause we are storing the cell, toolbar and output element
+                // in an element structure, just move the entire structure instead
+                // of using cell.move_cell()
+                const outer = this.#cell_outer_element(cell);
+                const parent = outer.parentElement;
+                const before = this.#cell_outer_element(next).nextSibling;
+                move_node(outer, { parent, before });
                 return true;
             }
         }
@@ -707,8 +813,12 @@ ${contents}
             return false;
         }
         const cell = command_context.target;
+        if (!cell) {
+            return false;
+        }
+        const outer = this.#cell_outer_element(cell);
         const new_cell = this.create_cell({
-            before: cell.get_dom_extent().first,
+            before: outer,
         });
         new_cell.focus();
         return true;
@@ -721,9 +831,13 @@ ${contents}
             return false;
         }
         const cell = command_context.target;
+        if (!cell) {
+            return false;
+        }
+        const outer = this.#cell_outer_element(cell);
         const new_cell = this.create_cell({
-            before: cell.get_dom_extent().last.nextSibling,
-            parent: cell.parentElement,  // necessary if before is null
+            before: outer.nextSibling,
+            parent: outer.parentElement,  // necessary if before is null
         });
         new_cell.focus();
         return true;
@@ -737,7 +851,10 @@ ${contents}
         }
         const cell = command_context.target;
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
-        cell.remove_cell();
+        // beacause we are storing the cell, toolbar and output element
+        // in an element structure, just remove the entire structure instead
+        // of using cell.remove_cell()
+        this.#cell_outer_element(cell).remove();
         if (!next_cell) {
             next_cell = this.create_cell();
         }

@@ -153,6 +153,8 @@ export class EditorCellElement extends HTMLElement {
 
     /** return the first and last elements in the DOM that are associated with this editor-cell
      *  @return {Object|null} null if this is not in the DOM body, otherwise { first: Element, last: Element }
+     * This is useful if the cell and associated elements like a tool-bar are just "loose"
+     * in the document without any enclosing structure.
      */
     get_dom_extent() {
         if (document.body === this || !document.body?.contains(this)) {
@@ -172,7 +174,7 @@ export class EditorCellElement extends HTMLElement {
         }
     }
 
-    /** create a new EditorCellElement instance with standard settings
+    /** create a new element instance for tag this.custom_element_name with standard settings
      *  @param {null|undefined|Object} options: {
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
@@ -180,7 +182,7 @@ export class EditorCellElement extends HTMLElement {
      *      visible:   Boolean,  // set visible?  default: false
      *      innerText: String,   // cell.innerText to set
      *  }
-     *  @return {EditorCellElement} new cell
+     *  @return {EditorCellElement} new cell  // may be a subclass of EditorCellElement depending on this.custom_element_name
      */
     static create_cell(options=null) {
         const {

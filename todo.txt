@@ -1,3 +1,5 @@
+create_element(): sending "style" option with a "class" property does not work as expected
+confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 make active_cell determination ephemeral (and not part of saved document structure)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
