@@ -392,9 +392,9 @@ export class ToolBarElement extends HTMLElement {
             parent: this,
             attrs: {
                 title: title_for_off,
-                class: `${this.constructor.indicator_control__class} ${css_class}`,
             },
         });
+        control.classList.add(this.constructor.indicator_control__class, css_class);
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', on_change_handler);
         }

@@ -153,6 +153,7 @@ export class EvalCellElement extends EditorCellElement {
             parent,
             before,
             tag: 'output',
+            set_id: true,  // output_element needs an id for reference by its eval-cell
         });
         output_element.classList.add(this.output_element_class);
         return output_element;

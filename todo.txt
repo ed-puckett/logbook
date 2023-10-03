@@ -1,4 +1,4 @@
-create_element(): sending "style" option with a "class" property does not work as expected
+create_element(): sending "attrs" option with a "class" property does not work as expected
 confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 make active_cell determination ephemeral (and not part of saved document structure)
@@ -21,7 +21,6 @@ when in dark mode, document flashes white momentarily when loading document
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
 fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for
-maybe prevent default generation of element ids by create_element()
 menu navigation with mouse is sluggish
 review uses of addEventListener() (maybe use EventListenerManager instead)
 toggle-menu command (for keyboard)
@@ -35,6 +34,8 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+prevent default generation of element ids by create_element()
+fix class: in attrs in lib/ui/menu/_.js (need to explicitly add classes to classList)
 make sure that "error" renderer is always available
 Plotly output causes subsequent cells to not be selectable, behave badly, etc
 pluggable renderers

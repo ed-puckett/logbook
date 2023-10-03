@@ -142,7 +142,8 @@ export class SettingsDialog extends Dialog {
             const section_div = this._dialog_form;
 
             const named_section_div = create_element({ parent: section_div, attrs: { 'data-section': name } });
-            const error_div = create_element({ parent: section_div, attrs: { class: `error-message` } });
+            const error_div = create_element({ parent: section_div });
+            error_div.classList.add('error-message');
 
             for (const setting of settings) {
                 const { id, label, type, settings_path, options, analyze, convert_to_number } = setting;

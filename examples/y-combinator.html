@@ -5,7 +5,7 @@
     <script type="module" src="../dist/main.js"></script>
 </head>
 <body>
-<eval-cell tabindex="0" id="id-71b248fd-90c9-4fae-a13b-9359c7ec9f05" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true">// Basic Definition of a Fixed-Point "Y" Operator
+<eval-cell tabindex="0" data-active="true" data-output-element-id="id-a8ae0df3-6655-4360-b443-feb695599f4a" data-input-type="javascript" data-visible="true" spellcheck="false" contenteditable="true">// Basic Definition of a Fixed-Point "Y" Operator
 
 const Y_divergent = (F) =&gt; ( ((q) =&gt; F( q(q) )) (
                              ((q) =&gt; F( q(q) )) ) );
@@ -54,7 +54,7 @@ await println(factorial(6));  // 720
 const FibonacciPattern = (f_t) =&gt; (n) =&gt; (n &lt; 1) ? 0 : (n &lt; 2) ? 1 : f_t()(n-1) + f_t()(n-2);
 const fibonacci = Y(FibonacciPattern);
 await println(fibonacci(10));  // 55<br></eval-cell>
-<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript" id="id-ab37c544-f8b2-47b3-95ca-85b332455542">(n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1)
+<output id="id-a8ae0df3-6655-4360-b443-feb695599f4a" class="eval-cell-output"><div data-type="javascript">(n) =&gt; (n &lt;= 1) ? 1 : n*factorial_thunk()(n-1)
 720
 55
 </div></output>

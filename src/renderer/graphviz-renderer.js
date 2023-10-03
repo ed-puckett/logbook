@@ -25,6 +25,7 @@ export class GraphvizRenderer extends Renderer {
                 'data-type': this.type,
             },
             style,
+            set_id: true,
         });
         const element_selector = `#${element.id}`;
 
