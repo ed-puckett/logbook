@@ -80,6 +80,10 @@ import {
 } from '../../../lib/sys/sprintf.js';
 
 import {
+    load_d3,
+} from '../d3.js';
+
+import {
     delay_ms        as util_delay_ms,
     next_tick       as util_next_tick,
     next_micro_tick as util_next_micro_tick,
@@ -113,7 +117,7 @@ export class JavaScriptRenderer extends Renderer {
             output_context = new OutputContext(parent);
         }
 
-        const ephemeral_eval_context = this.#create_ephemeral_eval_context(eval_context, output_context, code);
+        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, output_context, code);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
         // create an async generator with the given code as the heart of its
@@ -160,8 +164,10 @@ export class JavaScriptRenderer extends Renderer {
         }
     }
 
-    #create_ephemeral_eval_context(eval_context, output_context, source_code='') {
+    async #create_ephemeral_eval_context(eval_context, output_context, source_code='') {
         const self = this;
+
+        const d3 = await load_d3();
 
         function is_stopped() {
             return self.stopped;
@@ -308,6 +314,7 @@ export class JavaScriptRenderer extends Renderer {
             image_data:      AIS(render.bind(null, 'image-data')),
             graphviz:        AIS(render.bind(null, 'graphviz')),
             plotly:          AIS(render.bind(null, 'plotly')),
+            d3,  // for use with Plotly
             // code
             javascript:      AIS(javascript),
             source_code,  // this evaluation's source code

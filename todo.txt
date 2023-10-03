@@ -1,13 +1,14 @@
+validate that themes from storage define the correct properties when first loading from storage
+provide way to reset themes in settings
+make active_cell determination ephemeral (and not part of saved document structure)
+make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
+set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 create_element(): sending "attrs" option with a "class" property does not work as expected
 confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
-make active_cell determination ephemeral (and not part of saved document structure)
-make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 empty cell does not show anything visible unless editable
-set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
 replace beep() with LogbookManager.singleton.notify(message)
 confirm before clear document from a modified document
-provide way to reset themes in settings
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
@@ -15,7 +16,6 @@ lazy-load the support files for renderers (esp. Plotly which is so large)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
-validate that themes from storage define the correct properties when first loading from storage
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
 filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.

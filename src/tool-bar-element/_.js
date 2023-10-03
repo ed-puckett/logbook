@@ -310,6 +310,7 @@ export class ToolBarElement extends HTMLElement {
             attrs: {
                 title: 'type...',
             },
+            set_id: true,  // prevent warning: "A form field element should have an id or name attribute"
         });
 
         const types = new Set(get_evaluator_classes().map(e => e.handled_input_types).flat()).values();
