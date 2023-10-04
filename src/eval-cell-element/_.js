@@ -56,15 +56,6 @@ export class EvalCellElement extends EditorCellElement {
     }
 
 
-    constructor() {
-        super();
-        // create a single bound handler function so that
-        // we have a consistent handler function for add
-        // and remove
-        this.#output_element_dblclick_handler_bound = this.#output_element_dblclick_handler.bind(this);
-    }
-
-
     // === OUTPUT ELEMENT ===
 
     // CSS class for output elements created by establish_output_element()
@@ -119,21 +110,6 @@ export class EvalCellElement extends EditorCellElement {
                 throw new Error('another element already exists with the same id as element');
             }
         }
-
-        // remove handler from old output_element and add handler to new output_element
-        // note: carefully access output_element in case this.output_element_id is not valid
-        const current_output_element_id = this.output_element_id;
-        const current_output_element = current_output_element_id ? document.getElementById(current_output_element_id) : null;
-        // remove handlers from current_output_element (if any) and add handlers to element (if any)
-        // this is done even if current_output_element === element in order to ensure
-        // that the handlers have been established even if current_output_element
-        // was pre-existing but had no handlers (for example, when loading a document).
-        if (current_output_element) {
-            current_output_element.removeEventListener('dblclick', this.#output_element_dblclick_handler_bound);
-        }
-        if (element) {
-            element.addEventListener('dblclick', this.#output_element_dblclick_handler_bound);
-        }
         this.output_element_id = element ? element.id : null;
     }
 
@@ -185,17 +161,6 @@ export class EvalCellElement extends EditorCellElement {
         }
         return this;
     }
-
-    #output_element_dblclick_handler(event) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
-        this.set_visible(!this.visible);
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    #output_element_dblclick_handler_bound;  // initialized in constructor
 
 
     // === OUTPUT ELEMENT AWARE OVERRIDES ===
@@ -321,17 +286,6 @@ export class EvalCellElement extends EditorCellElement {
             let initial_type = this.input_type || undefined;
             this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
-                visible:  {
-                    initial: this.visible,
-                    on: (event) => {
-                        if (!this.editable) {
-                            beep();
-                            return false;
-                        }
-                        this.set_visible(event.target.get_state());
-                        return true;
-                    },
-                },
                 autoeval: false,
                 type: {
                     ...(initial_type ? { initial: initial_type } : {}),
@@ -360,7 +314,6 @@ export class EvalCellElement extends EditorCellElement {
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
      *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
-     *      visible:   Boolean,  // set visible?  default: false
      *      innerText: String,   // cell.innerText to set
      *
      *      // options for this.create_cell()

@@ -3,6 +3,8 @@ provide way to reset themes in settings
 make active_cell determination ephemeral (and not part of saved document structure)
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 set contenteditable for empty document (so that not just a blank page is displayed), or indicate that the document is empty
+examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
+notify user of initialization warnings (e.g., ignored extraneous elements)
 create_element(): sending "attrs" option with a "class" property does not work as expected
 confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
@@ -12,7 +14,6 @@ confirm before clear document from a modified document
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
-lazy-load the support files for renderers (esp. Plotly which is so large)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
@@ -34,6 +35,7 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+lazy-load the support files for renderers (esp. Plotly which is so large)
 prevent default generation of element ids by create_element()
 fix class: in attrs in lib/ui/menu/_.js (need to explicitly add classes to classList)
 make sure that "error" renderer is always available

@@ -51,7 +51,6 @@ export class EditorCellElement extends HTMLElement {
     static custom_element_name = 'editor-cell';
 
     static attribute__active  = 'data-active';
-    static attribute__visible = 'data-visible';
 
     constructor() {
         super();
@@ -87,12 +86,10 @@ export class EditorCellElement extends HTMLElement {
     set_editable(editable) {
         if (editable) {
             this.setAttribute('contenteditable', true.toString());  //!!! plaintext-only not supported in Firefox as of version 118
-            this._tool_bar.enable_for('visible', true);
-            this._tool_bar.enable_for('type',    true);
+            this._tool_bar.enable_for('type', true);
         } else {
             this.removeAttribute('contenteditable');
-            this._tool_bar.enable_for('visible', false);
-            this._tool_bar.enable_for('type',    false);
+            this._tool_bar.enable_for('type', false);
         }
     }
 
@@ -123,17 +120,6 @@ export class EditorCellElement extends HTMLElement {
         if (!this._tool_bar) {
             this._tool_bar = ToolBarElement.create_for(this, {
                 editable: false,
-                visible:  {
-                    initial: this.visible,
-                    on: (event) => {
-                        if (!this.editable) {
-                            beep();
-                            return false;
-                        }
-                        this.set_visible(!this.visible);
-                        return false;
-                    },
-                },
                 autoeval: false,
                 modified: true,
             });
@@ -179,7 +165,6 @@ export class EditorCellElement extends HTMLElement {
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
      *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
-     *      visible:   Boolean,  // set visible?  default: false
      *      innerText: String,   // cell.innerText to set
      *  }
      *  @return {EditorCellElement} new cell  // may be a subclass of EditorCellElement depending on this.custom_element_name
@@ -189,7 +174,6 @@ export class EditorCellElement extends HTMLElement {
             parent   = document.body,
             before   = null,
             editable = LogbookManager.singleton.editable,
-            visible,
             innerText,
         } = (options ?? {});
 
@@ -210,7 +194,6 @@ export class EditorCellElement extends HTMLElement {
 
         // these settings must be done after the tool-bar is established
         cell.set_editable(editable);
-        cell.set_visible(visible);
 
         return cell;
     }
@@ -351,8 +334,6 @@ export class EditorCellElement extends HTMLElement {
             'paste':               this.command_handler__paste.bind(this),
 
             'reset-cell':          this.command_handler__reset_cell.bind(this),
-
-            'toggle-cell-visible': this.command_handler__toggle_visible.bind(this),
         };
 
         return command_bindings;
@@ -465,17 +446,8 @@ export class EditorCellElement extends HTMLElement {
         return true;
     }
 
-    command_handler__toggle_visible(command_context) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
-        this.set_visible(!this.visible);
-        return true;
-    }
 
-
-    // === ACTIVE/VISIBLE ATTRIBUTES ===
+    // === ACTIVE ATTRIBUTE ===
 
     get active (){ return !!this.hasAttribute(this.constructor.attribute__active); }
     set_active(state=false) {
@@ -485,19 +457,6 @@ export class EditorCellElement extends HTMLElement {
                 this.setAttribute(this.constructor.attribute__active, true);
             } else {
                 this.removeAttribute(this.constructor.attribute__active);
-            }
-        }
-    }
-
-    get visible (){ return !!this.hasAttribute(this.constructor.attribute__visible); }
-    set_visible(state=false) {
-        state = !!state;
-        if (this.visible !== state) {  // avoid creating an unnecessary dom mutation
-            this._tool_bar.set_for('visible', state);
-            if (state) {
-                this.setAttribute(this.constructor.attribute__visible, true);
-            } else {
-                this.removeAttribute(this.constructor.attribute__visible);
             }
         }
     }

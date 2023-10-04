@@ -2,19 +2,6 @@
 
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
-:root {
-    /* focus transition */
-
-    --focus-x1-delay:     0s;
-    --focus-x1-duration:  0.2s;
-    --focus-x1-easing:    cubic-bezier(0.42, 0.0, 0.0, 1.0);
-
-    --focus-x2-delay:     calc(var(--focus-x1-duration) / 4);
-    --focus-x2-duration:  0.1s;
-    --focus-x2-easing:    cubic-bezier(0.42, 0.0, 0.0, 1.0);
-}
-
-
 body {
     overflow: hidden;  /* inhibit scrolling for body */
     margin: 0;
@@ -82,7 +69,7 @@ eval-cell[data-active] + .eval-cell-output {
 }
 
 
-/* === visible/active - animated attributes === */
+/* === active - animated attributes === */
 
 /* bare tool-bar and eval-cell base definitions: they define a collapsed state */
 
@@ -91,14 +78,14 @@ tool-bar {
 
     /* prevent tabbing to contained controls by setting visibility:hidden */
     /* this is necessary because we don't set display:none because we want to animate the transition */
-    visibility: hidden;
+    visibility: visible;/*!!!*/
 
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: var(--theme-tl-g);
 
-    max-height:   0;
+    max-height:   fit-content;/*!!!*/;
     padding:      var(--theme-tl-p);
     border-width: 0;
     /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
@@ -108,11 +95,6 @@ tool-bar {
     border-left-color:   var(--theme-tl-bdc);
 
     background-color: var(--theme-tl-bgc);
-
-    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
-    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
-    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
-    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
 
     border-radius: var(--theme-cl-bdr) var(--theme-cl-bdr) 0 0;
     border-style:  var(--theme-tl-bds);
@@ -134,7 +116,7 @@ eval-cell {
     color:            var(--theme-cl-fgc);
     background-color: var(--theme-cl-bgc);
 
-    max-height:   0;
+    max-height:   fit-content;/*!!!*/
     padding:      var(--theme-cl-p);
     border-width: 0;
     border-top-color:    transparent;
@@ -142,44 +124,8 @@ eval-cell {
     border-bottom-color: var(--theme-cl-bdc);
     border-right-color:  var(--theme-cl-bdc);
 
-    transition: max-height   var(--focus-x1-duration) var(--focus-x1-easing) var(--focus-x1-delay);
-    transition: padding      var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
-    transition: border-width var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
-    transition: border-color var(--focus-x2-duration) var(--focus-x2-easing) var(--focus-x2-delay);
-
     border-radius: 0 0 var(--theme-cl-bdr) var(--theme-cl-bdr);
     border-style:  var(--theme-cl-bds);
-}
-
-/* tool-bar and eval-cell visible but not active */
-tool-bar:has(+ eval-cell[data-visible]),
-tool-bar:has(+ eval-cell[contenteditable]) {
-    visibility:   visible;
-    max-height:   fit-content;
-    border-width: var(--theme-tl-bdw);
-}
-eval-cell[data-visible],
-eval-cell[contenteditable] {
-    max-height:   fit-content;
-    border-width: var(--theme-cl-bdw);
-}
-
-/* tool-bar and eval-cell visible and active */
-eval-cell[data-visible][data-active]:focus-within,
-eval-cell[contenteditable][data-active]:focus-within,
-tool-bar:focus-within + eval-cell[data-visible][data-active],
-tool-bar:focus-within + eval-cell[contenteditable][data-active] {
-    border-right-color:  var(--theme-tl-bdc-active);
-    border-bottom-color: var(--theme-tl-bdc-active);
-    border-left-color:   var(--theme-tl-bdc-active);
-}
-tool-bar:has(+ eval-cell[data-visible][data-active]):focus-within,
-tool-bar:has(+ eval-cell[contenteditable][data-active]):focus-within,
-tool-bar:has(+ eval-cell[data-visible][data-active]:focus-within),
-tool-bar:has(+ eval-cell[contenteditable][data-active]:focus-within) {
-    border-top-color:   var(--theme-cl-bdc-active);
-    border-right-color: var(--theme-cl-bdc-active);
-    border-left-color:  var(--theme-cl-bdc-active);
 }
 
 
@@ -272,11 +218,6 @@ toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   {
 toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--theme-ts-stc-editable); }
 toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-flc-editable-checked); }
 toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-stc-editable-checked); }
-
-toggle-switch.tool-bar-toggle-visible                       svg .accent-fill   { fill:   var(--theme-ts-flc-visible); }
-toggle-switch.tool-bar-toggle-visible                       svg .accent-stroke { stroke: var(--theme-ts-stc-visible); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-fill   { fill:   var(--theme-ts-flc-visible-checked); }
-toggle-switch.tool-bar-toggle-visible[aria-checked="true"]  svg .accent-stroke { stroke: var(--theme-ts-stc-visible-checked); }
 
 toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--theme-ts-flc-autoeval); }
 toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--theme-ts-stc-autoeval); }

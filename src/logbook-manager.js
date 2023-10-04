@@ -199,58 +199,6 @@ export class LogbookManager {
                 }
             });  //!!! event handler never removed
 
-            // make dblclick on top-level tool-bar toggle editable
-            document.body.addEventListener('dblclick', (event) => {
-                const target_is_body     = (event.target === document.body);
-                const target_is_header   = (event.target === this.header_element);
-                const target_is_tool_bar = event.target instanceof ToolBarElement;  // handle only if target is directly the tool-bar, not one of its children
-                if (target_is_body || target_is_header || target_is_tool_bar) {
-                    // event will be handled
-                    if (target_is_body) {
-                        this.active_cell.focus();
-                    } else {
-                        const target_is_top_level_tool_bar = target_is_tool_bar && (event.target.parentElement === this.header_element);
-                        if (target_is_header || target_is_top_level_tool_bar) {
-                            this.set_editable(!this.editable);
-                        } else {  // !target_is_body && !target_is_header && !target_is_top_level_tool_bar && target_is_tool_bar
-                            const cell = event.target.target;
-                            if (!this.editable) {
-                                beep();
-                            } else {
-                                cell.set_visible(!cell.visible);
-                            }
-                        }
-                    }
-
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            }, {
-                capture: true,
-            });  //!!! event handler never removed
-
-            // make click and dblclick in document.body or document.documentElement focus active cell
-            for (const click_event of [ 'click', 'dblclick' ]) {
-                document.documentElement.addEventListener(click_event, (event) => {
-                    if (event.target === document.body || event.target.contains(document.body)) {
-                        this.active_cell.focus();
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                }, {
-                    capture: true,
-                });  //!!! event handler never removed
-            }
-
-            // send keydown events destined for document.body to the active cell's key_event_manager
-            document.body.addEventListener('keydown', (event) => {
-                if (event.target === document.body) {
-                    this.active_cell?.inject_key_event(event);
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            });  //!!! event handler never removed
-
             // set baseline for undo/redo
             // it is important that all async operations have finished before getting here
             this.#global_change_manager.set_neutral();
@@ -527,8 +475,6 @@ ${contents}
 
         this.#menubar.set_menu_state('undo', { enabled: can_undo });
         this.#menubar.set_menu_state('redo', { enabled: can_redo });
-
-        this.#menubar.set_menu_state('toggle-cell-visible', { enabled: editable, checked: active_cell?.visible });
 
         this.#menubar.set_menu_state('focus-up',   { enabled: (active_cell && active_index > 0) });
         this.#menubar.set_menu_state('focus-down', { enabled: (active_cell && active_index < cells.length-1) });

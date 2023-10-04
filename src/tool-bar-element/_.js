@@ -37,7 +37,6 @@ export class ToolBarElement extends HTMLElement {
     static indicator_control__attribute__value = 'data-indicator-value';
 
     static toggle_switch__editable__class = 'tool-bar-toggle-editable';
-    static toggle_switch__visible__class  = 'tool-bar-toggle-visible';
     static toggle_switch__autoeval__class = 'tool-bar-toggle-autoeval';
 
     /** create a new ToolBarElement in the document, then set target with options
@@ -85,7 +84,6 @@ export class ToolBarElement extends HTMLElement {
      *  @param {any} target
      *  @param {Object|null|undefined} options: {
      *      editable?: { initial?, on? },
-     *      visible?,  { initial?, on? },
      *      autoeval?, { initial?, on? },
      *      type?,     { initial?, on? },
      *      running?,  { initial?, on? },
@@ -191,7 +189,6 @@ export class ToolBarElement extends HTMLElement {
             [ 'running',  this.#create__running.bind(this),  cons.#getter__running,  cons.#setter__running,  cons.#enable__running  ],
             [ 'modified', this.#create__modified.bind(this), cons.#getter__modified, cons.#setter__modified, cons.#enable__modified ],
             [ 'editable', this.#create__editable.bind(this), cons.#getter__editable, cons.#setter__editable, cons.#enable__editable ],
-            [ 'visible',  this.#create__visible.bind(this),  cons.#getter__visible,  cons.#setter__visible,  cons.#enable__visible  ],
             [ 'autoeval', this.#create__autoeval.bind(this), cons.#getter__autoeval, cons.#setter__autoeval, cons.#enable__autoeval ],
             [ 'run',      this.#create__run.bind(this),      cons.#getter__run,      cons.#setter__run,      cons.#enable__run      ],
             [ 'type',     this.#create__type.bind(this),     cons.#getter__type,     cons.#setter__type,     cons.#enable__type     ],
@@ -234,47 +231,6 @@ export class ToolBarElement extends HTMLElement {
     static #getter__editable(control)        { return control.get_state(); }
     static #setter__editable(control, value) { control.set_state(value); }
     static #enable__editable(control, value) { /* nothing */ }
-
-    #create__visible(on_change_handler=null) {
-        const control = ToggleSwitchElement.create({
-            parent: this,
-            class:  this.constructor.toggle_switch__visible__class,
-            title_for_on:  'visible',
-            title_for_off: 'not visible',
-        });
-        control.innerHTML = `\
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Adapted from: https://commons.wikimedia.org/wiki/File:ISO_7000_-_Ref-No_2030.svg
-    Vectorization:  Mrmw, CC0, via Wikimedia Commons
--->
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  version="1.1"
-  viewBox="0 0 200 170"
->
-  <path class="accent-stroke" stroke="#000" stroke-width="10" fill="transparent"
-    d="m100 49.738 a97.452 97.452 0 0 0 -78.246 39.775 97.452 97.452 0 0 0 78.246 39.773 97.452 97.452 0 0 0 78.396 -39.975 97.452 97.452 0 0 0 -78.396 -39.574z"
-  />
-  <circle class="accent-stroke accent-fill" stroke="#000" stroke-width="5"
-    cx="100" cy="89.438" r="19.85"
-  />
-</svg>
-`;
-        if (on_change_handler) {
-            this.#event_listener_manager.add(control, 'change', (event) => {
-                if (!on_change_handler(event)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
-                }
-            });
-        }
-        return control;
-    }
-    static #getter__visible(control)        { return control.get_state(); }
-    static #setter__visible(control, value) { control.set_state(value); }
-    static #enable__visible(control, value) { control.enable(value); }
 
     #create__autoeval(on_change_handler=null) {
         const control = create_element({
