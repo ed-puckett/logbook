@@ -36,12 +36,29 @@ main {
     max-height: calc(100vh - var(--theme-hd-h));
     max-width:  100vw;
 }
+main > :first-child {
+    padding-top: 0;
+}
+main > :not(:first-child) {
+    padding-top: var(--theme-cl-p-inter);
+}
+
+.cell-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.cell-input-container {
+    min-width: 50%;
+    max-width: 50%;
+}
 
 .eval-cell-output {
     display: block;
+    overflow: auto;  /* enable h/v scrolling */
+
     white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
-    overflow: hidden;
 
     padding: var(--theme-ou-p);
     color:            var(--theme-ou-fgc);
@@ -52,11 +69,6 @@ main {
     border-color: transparent;
     border-style: var(--theme-ou-hls);
 }
-.eval-cell-output:has(+ tool-bar),
-.eval-cell-output:has(+ eval-cell) {
-    padding-bottom: var(--theme-cl-p-inter);
-}
-
 
 /* output element active highlight */
 eval-cell[data-active]:focus-within + .eval-cell-output,
@@ -68,11 +80,6 @@ eval-cell[data-active] + .eval-cell-output {
     border-color: transparent transparent transparent color-mix(in srgb, var(--theme-ou-bgc), var(--theme-ou-hlc) var(--theme-ou-hlc-mix));
 }
 
-
-/* === active - animated attributes === */
-
-/* bare tool-bar and eval-cell base definitions: they define a collapsed state */
-
 tool-bar {
     overflow: hidden;
 
@@ -82,10 +89,10 @@ tool-bar {
 
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: var(--theme-tl-g);
 
-    max-height:   fit-content;/*!!!*/;
+    max-height:   fit-content;/*!!!*/
     padding:      var(--theme-tl-p);
     border-width: 0;
     /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
@@ -213,11 +220,6 @@ toggle-switch svg {
     height: 100%;
     background-color: transparent;
 }
-
-toggle-switch.tool-bar-toggle-editable                      svg .accent-fill   { fill:   var(--theme-ts-flc-editable); }
-toggle-switch.tool-bar-toggle-editable                      svg .accent-stroke { stroke: var(--theme-ts-stc-editable); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-fill   { fill:   var(--theme-ts-flc-editable-checked); }
-toggle-switch.tool-bar-toggle-editable[aria-checked="true"] svg .accent-stroke { stroke: var(--theme-ts-stc-editable-checked); }
 
 toggle-switch.tool-bar-toggle-autoeval                      svg .accent-fill   { fill:   var(--theme-ts-flc-autoeval); }
 toggle-switch.tool-bar-toggle-autoeval                      svg .accent-stroke { stroke: var(--theme-ts-stc-autoeval); }

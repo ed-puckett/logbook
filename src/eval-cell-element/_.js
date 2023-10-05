@@ -285,15 +285,10 @@ export class EvalCellElement extends EditorCellElement {
         if (!this._tool_bar) {
             let initial_type = this.input_type || undefined;
             this._tool_bar = ToolBarElement.create_for(this, {
-                editable: false,
                 autoeval: false,
                 type: {
                     ...(initial_type ? { initial: initial_type } : {}),
                     on: (event) => {
-                        if (!this.editable) {
-                            beep();
-                            return false;
-                        }
                         this.input_type = event.target.value;
                         return true;
                     },
@@ -313,7 +308,6 @@ export class EvalCellElement extends EditorCellElement {
      *      // options for EditorCellElement.create_cell()
      *      parent?:   Node,     // default: document.body
      *      before?:   Node,     // default: null
-     *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
      *      innerText: String,   // cell.innerText to set
      *
      *      // options for this.create_cell()
@@ -393,10 +387,6 @@ export class EvalCellElement extends EditorCellElement {
     /** @return {Boolean} true iff command successfully handled
      */
     async command_handler__eval(command_context) {
-        if (!this.editable) {
-            await beep();
-            return false;
-        }
         await this.eval({
             eval_context: LogbookManager.singleton.global_eval_context,
         });
@@ -404,26 +394,14 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     command_handler__set_mode_markdown(command_context) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
         this.input_type = 'markdown';
         return true;
     }
     command_handler__set_mode_tex(command_context) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
         this.input_type = 'tex';
         return true;
     }
     command_handler__set_mode_javascript(command_context) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
         this.input_type = 'javascript';
         return true;
     }

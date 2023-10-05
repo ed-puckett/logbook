@@ -1,10 +1,6 @@
 /*!!! autoeval: {
                 initial: this.autoeval,
                 on: (event) => {
-                    if (!this.editable) {
-                        beep();
-                        return false;
-                    }
                     this.set_autoeval(!this.autoeval);
                     return true;
                 }, !!!*/

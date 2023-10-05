@@ -70,7 +70,7 @@ export class LogbookManager {
     static #singleton;
 
     constructor() {
-        this.#editable = false;
+        this.#editable = true;
         this.#active_cell = null;
         this.#initialize_called = false;
         this.reset_global_eval_context();
@@ -96,10 +96,8 @@ export class LogbookManager {
 
     get editable (){ return this.#editable }
     set_editable(editable) {
-        editable = !!editable;
+        editable = !!editable;  // ensure Boolean
         this.#editable = editable;
-        this.#menubar.set_menu_state('toggle-editable', { checked: editable });
-        this.#tool_bar.set_for('editable', editable);
         for (const cell of this.constructor.get_cells()) {
             cell.set_editable(editable);
         }
@@ -135,11 +133,10 @@ export class LogbookManager {
         return this;
     }
 
-    /** clear the current document and set "editable"
+    /** clear the current document
      */
     clear() {
         clear_element(this.main_element);
-        this.set_editable(true);
         const first_cell = this.create_cell();
         first_cell.focus();
     }
@@ -221,12 +218,15 @@ export class LogbookManager {
      * with "parent", "before" and "output_element" overridden.
      * The new cell is put within an element structure.
      * "parent" and "before" are used to create the cell structure,
-     * and "output_element" is ignored.
+     * and "output_element" and "active_element_mapper" are ignored.
      */
     create_cell(options=null) {
         options ??= {};
         if (options.output_element) {
             console.warn('options.output_element ignored');
+        }
+        if (options.active_element_mapper) {
+            console.warn('options.active_element_mapper ignored');
         }
         const {
             parent,
@@ -243,10 +243,12 @@ export class LogbookManager {
             before: output_element_before,
         });
         const cell = EvalCellElement.create_cell({
+            editable: this.editable,
             ...options,
             parent: cell_parent,
             before: cell_before,
             output_element,
+            active_element_mapper: this.constructor.active_element_mapper.bind(this.constructor),
         });
         return cell;
     }
@@ -312,6 +314,8 @@ export class LogbookManager {
                     before: output_element_before,
                 });
             }
+            // don't call cell.set_active_element_mapper() before the cell's structure is established
+            cell.set_active_element_mapper(this.constructor.active_element_mapper.bind(this.constructor));
         }
         // now remove any remaining (extraneous) nodes from the document
         while (document.body.firstChild) {
@@ -442,7 +446,7 @@ ${contents}
         };
     }
 
-    #cell_outer_element(cell) {
+    static #cell_outer_element(cell) {
         if (!(cell instanceof EvalCellElement)) {
             throw new Error('cell must be an instance of EvalCellElement');
         }
@@ -451,6 +455,11 @@ ${contents}
             throw new Error('incorrent cell structure');
         }
         return outer;
+    }
+
+    // mapping from this editor cell element to the element on which "data-active" will be set
+    static active_element_mapper(editor_element) {
+        return this.#cell_outer_element(editor_element);
     }
 
 
@@ -465,7 +474,6 @@ ${contents}
         const editable     = this.editable;
 
         /*
-          'toggle-editable'  // directly handled in this.set_editable()
           'save'  // directly handled in this.#neutral_changes_observer()
         */
 
@@ -511,14 +519,9 @@ ${contents}
 
         // add a tool-bar element to the header document
         this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
-            editable: { initial: this.editable,  on: (event) => { this.set_editable(event.target.get_state()); return true; } },
             /*!!! autoeval: {
                 initial: this.autoeval,
                 on: (event) => {
-                    if (!this.editable) {
-                        beep();
-                        return false;
-                    }
                     this.set_autoeval(!this.autoeval);
                     return true;
                 }, !!!*/
@@ -578,13 +581,10 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__create_cell(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
-            before = this.#cell_outer_element(next_cell);
+            before = this.constructor.#cell_outer_element(next_cell);
         }
         const cell = this.create_cell({ before });
         if (!cell) {
@@ -704,9 +704,6 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__move_up(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -718,9 +715,9 @@ ${contents}
                 // beacause we are storing the cell, toolbar and output element
                 // in an element structure, just move the entire structure instead
                 // of using cell.move_cell()
-                const outer = this.#cell_outer_element(cell);
+                const outer = this.constructor.#cell_outer_element(cell);
                 const parent = outer.parentElement;
-                const before = this.#cell_outer_element(previous);
+                const before = this.constructor.#cell_outer_element(previous);
                 move_node(outer, { parent, before });
                 cell.focus();
                 return true;
@@ -731,9 +728,6 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__move_down(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const cell = command_context.target;
         if (!cell) {
             return false;
@@ -745,10 +739,11 @@ ${contents}
                 // beacause we are storing the cell, toolbar and output element
                 // in an element structure, just move the entire structure instead
                 // of using cell.move_cell()
-                const outer = this.#cell_outer_element(cell);
+                const outer = this.constructor.#cell_outer_element(cell);
                 const parent = outer.parentElement;
-                const before = this.#cell_outer_element(next).nextSibling;
+                const before = this.constructor.#cell_outer_element(next).nextSibling;
                 move_node(outer, { parent, before });
+                cell.focus();
                 return true;
             }
         }
@@ -757,14 +752,11 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__add_before(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const cell = command_context.target;
         if (!cell) {
             return false;
         }
-        const outer = this.#cell_outer_element(cell);
+        const outer = this.constructor.#cell_outer_element(cell);
         const new_cell = this.create_cell({
             before: outer,
         });
@@ -775,14 +767,11 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__add_after(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const cell = command_context.target;
         if (!cell) {
             return false;
         }
-        const outer = this.#cell_outer_element(cell);
+        const outer = this.constructor.#cell_outer_element(cell);
         const new_cell = this.create_cell({
             before: outer.nextSibling,
             parent: outer.parentElement,  // necessary if before is null
@@ -794,15 +783,12 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__delete(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const cell = command_context.target;
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
         // beacause we are storing the cell, toolbar and output element
         // in an element structure, just remove the entire structure instead
         // of using cell.remove_cell()
-        this.#cell_outer_element(cell).remove();
+        this.constructor.#cell_outer_element(cell).remove();
         if (!next_cell) {
             next_cell = this.create_cell();
         }

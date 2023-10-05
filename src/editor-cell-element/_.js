@@ -94,6 +94,34 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
+    // === ACTIVE ===
+
+    get active (){
+        const attribute_element = this.#active_element_mapper ? this.#active_element_mapper(this) : this;
+        return !!attribute_element.hasAttribute(this.constructor.attribute__active);
+    }
+
+    set_active(state=false) {
+        state = !!state;
+        const attribute_element = this.#active_element_mapper ? this.#active_element_mapper(this) : this;
+        if (attribute_element.active !== state) {  // avoid creating an unnecessary dom mutation
+            if (state) {
+                attribute_element.setAttribute(this.constructor.attribute__active, true);
+            } else {
+                attribute_element.removeAttribute(this.constructor.attribute__active);
+            }
+        }
+    }
+
+    set_active_element_mapper(mapper=null) {
+        const current_active_state = this.active;
+        this.set_active(false);  // remove attribute from prior mapped element
+        this.#active_element_mapper = mapper ?? undefined;
+        this.set_active(current_active_state);  // set current state on newly-mapped element
+    }
+    #active_element_mapper;  // initially undefined
+
+
     // === KEY MAP STACK ===
 
     reset_key_map_stack() {
@@ -119,7 +147,6 @@ export class EditorCellElement extends HTMLElement {
     establish_tool_bar() {
         if (!this._tool_bar) {
             this._tool_bar = ToolBarElement.create_for(this, {
-                editable: false,
                 autoeval: false,
                 modified: true,
             });
@@ -162,19 +189,21 @@ export class EditorCellElement extends HTMLElement {
 
     /** create a new element instance for tag this.custom_element_name with standard settings
      *  @param {null|undefined|Object} options: {
-     *      parent?:   Node,     // default: document.body
-     *      before?:   Node,     // default: null
-     *      editable:  Boolean,  // set contenteditable?  default: current logbook editable setting
-     *      innerText: String,   // cell.innerText to set
+     *      parent?:                Node,                   // default: document.body
+     *      before?:                Node,                   // default: null
+     *      editable:               Boolean,                // set contenteditable?  default: current logbook editable setting
+     *      innerText:              String,                 // cell.innerText to set
+     *      active_element_mapper?: null|Element=>Element,  // mapper from an EditorCellElement to the element on which "data-active" will be set
      *  }
      *  @return {EditorCellElement} new cell  // may be a subclass of EditorCellElement depending on this.custom_element_name
      */
     static create_cell(options=null) {
         const {
-            parent   = document.body,
-            before   = null,
+            parent = document.body,
+            before = null,
             editable = LogbookManager.singleton.editable,
             innerText,
+            active_element_mapper,
         } = (options ?? {});
 
         const cell = create_element({
@@ -188,6 +217,9 @@ export class EditorCellElement extends HTMLElement {
 
         if (innerText) {
             cell.innerText = innerText;
+        }
+        if (active_element_mapper) {
+            cell.set_active_element_mapper(active_element_mapper);
         }
 
         cell.establish_tool_bar();
@@ -374,9 +406,6 @@ export class EditorCellElement extends HTMLElement {
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__insert_self(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         const key_spec = command_context.key_spec;
         const text = key_spec?.key ?? key_spec?.canonical ?? '';
         if (!text) {
@@ -388,9 +417,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
     command_handler__insert_line_break(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         return manage_selection_for_insert(
 //            (point) => insert_at(point, document.createElement('br'))
             (point) => insert_at(point, '\n')
@@ -398,9 +424,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
     create_command_handler___delete(options) {
-        if (!this.editable) {
-            return false;
-        }
         return (command_context) => {
             return manage_selection_for_delete(
                 (point) => delete_nearest_leaf(point, options)
@@ -409,9 +432,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
     command_handler__cut(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         document.execCommand('cut');  // updates selection
         return true;
     }
@@ -422,9 +442,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
     async command_handler__paste(command_context) {
-        if (!this.editable) {
-            return false;
-        }
         //!!! THIS NO LONGER WORKS: return document.execCommand('paste');  // updates selection
         //!!! Also, the following does not work on Firefox:
         const text = await navigator.clipboard.readText();
@@ -438,28 +455,10 @@ export class EditorCellElement extends HTMLElement {
     }
 
     command_handler__reset_cell(command_context) {
-        if (!this.editable) {
-            beep();
-            return false;
-        }
         this.reset();
         return true;
     }
 
-
-    // === ACTIVE ATTRIBUTE ===
-
-    get active (){ return !!this.hasAttribute(this.constructor.attribute__active); }
-    set_active(state=false) {
-        state = !!state;
-        if (this.active !== state) {  // avoid creating an unnecessary dom mutation
-            if (state) {
-                this.setAttribute(this.constructor.attribute__active, true);
-            } else {
-                this.removeAttribute(this.constructor.attribute__active);
-            }
-        }
-    }
 
 
     // === FOCUS LISTENERS / ACTIVE ===

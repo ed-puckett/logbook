@@ -144,10 +144,6 @@ const standard_themes_spec = {
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
-    "--theme-ts-flc-editable":         [ 'transparent',                   'transparent' ],
-    "--theme-ts-stc-editable":         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
-    "--theme-ts-flc-editable-checked": [ 'hsl(  0deg 100%  50% / 100%)',  'hsl(  0deg 100%  50% / 100%)' ],
-    "--theme-ts-stc-editable-checked": [ 'hsl( 53deg 100%  50% / 100%)',  'hsl( 53deg 100%  50% / 100%)' ],
 
     "--theme-ts-flc-autoeval":         [ 'transparent',                   'transparent' ],
     "--theme-ts-stc-autoeval":         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],

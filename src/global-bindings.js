@@ -24,8 +24,6 @@ export function get_menubar_spec() {
             { label: 'Reset cells',    item: { command: 'reset',            }, id: 'reset' },
             { label: 'Clear document', item: { command: 'clear',            }, id: 'clear' },
             '---',
-            { label: 'Editable',       item: { command: 'toggle-editable',  }, id: 'toggle-editable' },
-            '---',
             { label: 'Save',           item: { command: 'save',             }, id: 'save' },
             { label: 'Save as...',     item: { command: 'save-as',          } },
             '---',
@@ -100,8 +98,6 @@ export function get_global_initial_key_map_bindings() {
         'set-mode-tex':        [ 'Alt-M t' ],
         'set-mode-javascript': [ 'Alt-M j' ],
 
-        'toggle-editable':     [ 'Alt-M e' ],
-
         'undo':                [ 'CmdOrCtrl-Z' ],
         'redo':                [ 'CmdOrCtrl-Shift-Z' ],
     };
@@ -121,8 +117,6 @@ export function get_global_command_bindings() {
 
         'save':             command_handler__save,
         'save-as':          command_handler__save_as,
-
-        'toggle-editable':  command_handler__toggle_editable,
 
         'settings':         command_handler__show_settings_dialog,
 
@@ -165,10 +159,6 @@ export function command_handler__create_cell(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__reset(command_context) {
-    if (!LogbookManager.singleton.editable) {
-        beep();
-        return false;
-    }
     LogbookManager.singleton.reset();
     return true;
 }
@@ -176,10 +166,6 @@ export function command_handler__reset(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__clear(command_context) {
-    if (!LogbookManager.singleton.editable) {
-        beep();
-        return false;
-    }
     LogbookManager.singleton.clear();
     return true;
 }
@@ -198,13 +184,6 @@ export async function command_handler__save_as(command_context) {
 
 /** @return {Boolean} true iff command successfully handled
  */
-export function command_handler__toggle_editable(command_context) {
-    LogbookManager.singleton.set_editable(!LogbookManager.singleton.editable);
-    return true;
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
 export function command_handler__show_settings_dialog(command_context) {
     SettingsDialog.run();
     return true;
@@ -214,10 +193,6 @@ export function command_handler__show_settings_dialog(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_and_refocus(command_context) {
-    if (!LogbookManager.singleton.editable) {
-        beep();
-        return false;
-    }
     return LogbookManager.singleton.command_handler__eval_and_refocus(command_context);
 }
 
@@ -226,10 +201,6 @@ export async function command_handler__eval_and_refocus(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_before(command_context) {
-    if (!LogbookManager.singleton.editable) {
-        beep();
-        return false;
-    }
     return LogbookManager.singleton.command_handler__eval_before(command_context);
 }
 
@@ -238,10 +209,6 @@ export async function command_handler__eval_before(command_context) {
  *  @return {Boolean} true iff command successfully handled
  */
 export async function command_handler__eval_all(command_context) {
-    if (!LogbookManager.singleton.editable) {
-        beep();
-        return false;
-    }
     return LogbookManager.singleton.command_handler__eval_all(command_context);
 }
 

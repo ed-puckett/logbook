@@ -36,7 +36,6 @@ export class ToolBarElement extends HTMLElement {
     static indicator_control__class            = 'tool-bar-indicator';
     static indicator_control__attribute__value = 'data-indicator-value';
 
-    static toggle_switch__editable__class = 'tool-bar-toggle-editable';
     static toggle_switch__autoeval__class = 'tool-bar-toggle-autoeval';
 
     /** create a new ToolBarElement in the document, then set target with options
@@ -83,7 +82,6 @@ export class ToolBarElement extends HTMLElement {
     /** set the target for this tool bar
      *  @param {any} target
      *  @param {Object|null|undefined} options: {
-     *      editable?: { initial?, on? },
      *      autoeval?, { initial?, on? },
      *      type?,     { initial?, on? },
      *      running?,  { initial?, on? },
@@ -186,24 +184,25 @@ export class ToolBarElement extends HTMLElement {
             // the order of this array determines order of control creation
 
             // NAME       CREATE_FN,                         GETTER_FN               SETTER_FN               ENABLE_FN
+            [ 'type',     this.#create__type.bind(this),     cons.#getter__type,     cons.#setter__type,     cons.#enable__type     ],
             [ 'running',  this.#create__running.bind(this),  cons.#getter__running,  cons.#setter__running,  cons.#enable__running  ],
             [ 'modified', this.#create__modified.bind(this), cons.#getter__modified, cons.#setter__modified, cons.#enable__modified ],
-            [ 'editable', this.#create__editable.bind(this), cons.#getter__editable, cons.#setter__editable, cons.#enable__editable ],
             [ 'autoeval', this.#create__autoeval.bind(this), cons.#getter__autoeval, cons.#setter__autoeval, cons.#enable__autoeval ],
             [ 'run',      this.#create__run.bind(this),      cons.#getter__run,      cons.#setter__run,      cons.#enable__run      ],
-            [ 'type',     this.#create__type.bind(this),     cons.#getter__type,     cons.#setter__type,     cons.#enable__type     ],
         ];
     }
 
 
     // === CONTROL HANDLING ===
 
-    #create__editable(on_change_handler=null) {
-        const control = ToggleSwitchElement.create({
+    #create__autoeval(on_change_handler=null) {
+        const control = create_element({
             parent: this,
-            class:  this.constructor.toggle_switch__editable__class,
-            title_for_on:  'edit mode on',
-            title_for_off: 'edit mode off',
+            tag: 'input',
+            attrs: {
+                type: 'checkbox',
+                title: 'autoeval...',
+            },
         });
         control.innerHTML = `\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -223,24 +222,6 @@ export class ToolBarElement extends HTMLElement {
   <path class="accent-stroke accent-fill" fill="#0000" d="M35 22.4 L27.6 15 l3-3 .5.1 c3.6 .5 6.4 3.3 6.9 6.9 l.1 .5 -3.1 2.9z M30.4 15 l4.6 4.6 .9 -.9 c-.5 -2.3 -2.3 -4.1 -4.6 -4.6 l-.9 .9z"/>
 </svg>
 `;
-        if (on_change_handler) {
-            this.#event_listener_manager.add(control, 'change', on_change_handler);
-        }
-        return control;
-    }
-    static #getter__editable(control)        { return control.get_state(); }
-    static #setter__editable(control, value) { control.set_state(value); }
-    static #enable__editable(control, value) { /* nothing */ }
-
-    #create__autoeval(on_change_handler=null) {
-        const control = create_element({
-            parent: this,
-            tag: 'input',
-            attrs: {
-                type: 'checkbox',
-                title: 'autoeval...',
-            },
-        });
         if (on_change_handler) {
             this.#event_listener_manager.add(control, 'change', (event) => {
                 if (!on_change_handler(event)) {
