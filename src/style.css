@@ -19,9 +19,7 @@ header {
 
 header > tool-bar {  /* next to menu */
     visibility: visible;
-
     align-self: center;
-    margin-left: auto;  /* push to far right */
 
     max-height: fit-content;
     padding: 0 0.5em;
@@ -30,7 +28,7 @@ header > tool-bar {  /* next to menu */
 }
 
 main {
-    margin: 2px 0 0 1px;  /* prevent top and left borders from getting absorbed into browser surrounding frame */
+    margin: 2px 0 0 1px;  /* prevent top and left borders from getting absorbed into surrounding element */
     /* enable scrolling for main element */
     overflow: auto;
     max-height: calc(100vh - var(--theme-hd-h));
@@ -46,6 +44,22 @@ main > :not(:first-child) {
 .cell-container {
     display: flex;
     flex-direction: row;
+    overflow: hidden;
+}
+
+.cell-input-container {
+    overflow: hidden;
+
+    border-width:  var(--theme-cl-bdw);
+    border-radius: var(--theme-cl-bdr);
+    border-style:  var(--theme-cl-bds);
+    border-color:  var(--theme-cl-bdc);
+}
+.cell-container[data-active] .cell-input-container {
+    border-color:  var(--theme-cl-bdc-active);
+}
+.cell-container[data-active]:focus-within .cell-input-container {
+    border-color:  var(--theme-cl-bdc-focus);
 }
 
 .cell-input-container {
@@ -59,6 +73,7 @@ main > :not(:first-child) {
 
     white-space: pre-wrap;  /* display white-space properly */
     line-height: 140%;
+    height: fit-content;
 
     padding: var(--theme-ou-p);
     color:            var(--theme-ou-fgc);
@@ -68,16 +83,6 @@ main > :not(:first-child) {
     border-width: 0 0 0 var(--theme-ou-hlw);
     border-color: transparent;
     border-style: var(--theme-ou-hls);
-}
-
-/* output element active highlight */
-eval-cell[data-active]:focus-within + .eval-cell-output,
-eval-cell[data-active] + .eval-cell-output:focus-within,
-:focus-within eval-cell[data-active] + .eval-cell-output {
-    border-color: transparent transparent transparent var(--theme-ou-hlc);
-}
-eval-cell[data-active] + .eval-cell-output {
-    border-color: transparent transparent transparent color-mix(in srgb, var(--theme-ou-bgc), var(--theme-ou-hlc) var(--theme-ou-hlc-mix));
 }
 
 tool-bar {
@@ -92,20 +97,11 @@ tool-bar {
     justify-content: flex-start;
     gap: var(--theme-tl-g);
 
-    max-height:   fit-content;/*!!!*/
-    padding:      var(--theme-tl-p);
-    border-width: 0;
-    /* split border-color into the three specific sides; the bottom side is controlled separately by the input type selector */
-    border-top-color:    var(--theme-tl-bdc);
-    border-right-color:  var(--theme-tl-bdc);
-    border-bottom-color: transparent;
-    border-left-color:   var(--theme-tl-bdc);
+    max-height: fit-content;/*!!!*/
+    padding: var(--theme-tl-p);
+    border: 0;
 
     background-color: var(--theme-tl-bgc);
-
-    border-radius: var(--theme-cl-bdr) var(--theme-cl-bdr) 0 0;
-    border-style:  var(--theme-tl-bds);
-
 }
 
 eval-cell {
@@ -137,6 +133,11 @@ eval-cell {
 
 
 /* color selected by eval-cell input-type */
+
+tool-bar select {
+    border-radius: 0.5rem 0.5rem 0 0 / 30% 30% 0 0;
+    border-width: 0;
+}
 
 tool-bar select,  /* markdown is default */
 tool-bar > select:has(> option[value="markdown"]:checked) {
@@ -470,15 +471,8 @@ body > .error-message {
         display: none;
     }
 
-    eval-cell: {
-        /* no highlighted border */
-        border-color: transparent var(--theme-cl-bdc) var(--theme-cl-bdc) var(--theme-cl-bdc) !important;
+    main {
+        overflow: visible;
     }
 
-    .eval-cell-output {
-        /* no highlight */
-        border-width: 0 0 0 var(--theme-ou-hlw) !important;
-        border-color: transparent !important;
-        border-style: var(--theme-ou-hls) !important;
-    }
 }

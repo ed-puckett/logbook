@@ -185,10 +185,10 @@ export class ToolBarElement extends HTMLElement {
 
             // NAME       CREATE_FN,                         GETTER_FN               SETTER_FN               ENABLE_FN
             [ 'type',     this.#create__type.bind(this),     cons.#getter__type,     cons.#setter__type,     cons.#enable__type     ],
-            [ 'running',  this.#create__running.bind(this),  cons.#getter__running,  cons.#setter__running,  cons.#enable__running  ],
-            [ 'modified', this.#create__modified.bind(this), cons.#getter__modified, cons.#setter__modified, cons.#enable__modified ],
-            [ 'autoeval', this.#create__autoeval.bind(this), cons.#getter__autoeval, cons.#setter__autoeval, cons.#enable__autoeval ],
             [ 'run',      this.#create__run.bind(this),      cons.#getter__run,      cons.#setter__run,      cons.#enable__run      ],
+            [ 'autoeval', this.#create__autoeval.bind(this), cons.#getter__autoeval, cons.#setter__autoeval, cons.#enable__autoeval ],
+            [ 'modified', this.#create__modified.bind(this), cons.#getter__modified, cons.#setter__modified, cons.#enable__modified ],
+            [ 'running',  this.#create__running.bind(this),  cons.#getter__running,  cons.#setter__running,  cons.#enable__running  ],
         ];
     }
 
