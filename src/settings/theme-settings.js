@@ -32,6 +32,39 @@ const root_element = document.documentElement;
 export const root_element_theme_attribute = 'data-theme';
 
 
+/*
+  === THEMES STRATEGY ===
+
+  Custom Themes Issues
+  - THEME NAMES MAY COME FROM USER INPUT, SO DO NOT USE THEM AS KEYS IN OBJECTS
+  - storage is segregated by different document URLs, so custom themes will not be shared
+    among different pages.
+
+  Storage
+  - themes with standard theme names should not be stored because that would prevent
+    future updates to the standard themes from being seen by the user
+  - themes with standard theme names are stored if they have been modified
+  - storage is read once at initialization.  This means that other instances'
+    subsequent modifications will not be seen until re-initialization.  //!!!
+  - themes read from storage are "adjusted" by filling in missing (standard) props
+    from default_standard_theme.  This clumsily brings old themes forward
+    when the standard theme properties extended.  Note that "obsolete" theme
+    properties are left alone in case the omission is temporary.
+
+  External Interface
+  - themes returned to the user via get_themes_settings() start with the themes
+    specified by standard_theme_names first, then any remaining themes.  Themes
+    from storage override standard themes.
+  - themes sent to update_themes_settings() will be filtered to remove unmodified
+    standard themes before putting them storage.
+
+  Style Element
+  - a <style> element with definitions for the theme variables for each different
+    theme setting.  When the root element's root_element_theme_attribute attribute
+    is changed, the CSS custom variables are automatically adjusted.
+*/
+
+
 // === THEME STYLES ===
 
 const theme_property_name_documentation = `\
@@ -84,10 +117,10 @@ const theme_property_name_documentation = `\
 */
 `;
 
-// NOTE THAT THEME NAMES MAY COME FROM USER INPUT, SO DO NOT USE THEM AS KEYS IN OBJECTS
-
 // the first standard theme is the default theme which will be used if no other theme is specified
 const standard_theme_names = [ theme_light, theme_dark ];  // array length must match array length of values in standard_themes_spec
+
+export const default_theme_name = standard_theme_names[0];
 
 export function get_standard_theme_names() {
     return [ ...standard_theme_names ];
@@ -211,10 +244,48 @@ const standard_themes = standard_theme_names
           };
       });
 
+const default_standard_theme = standard_themes[0];
+
+
+// === COPY/EQUIVALENCE ===
+
+function copy_theme(theme) {
+    return JSON.parse(JSON.stringify(theme));
+}
+
+function copy_themes_settings(themes_settings) {
+    return themes_settings.map(theme => copy_theme(theme));
+}
+
+/** compare two theme specifications
+ * @param {Object} theme1
+ * @param {Object} theme2
+ * @return {Boolean} result
+ * Equivalence requires:
+ * - both themes contain all standard_theme_prop_names
+ * - both themes agree on values for standard_theme_prop_names
+ */
+function equivalent_themes(theme1, theme2) {
+    if (typeof theme1 !== 'object' || typeof theme2 !== 'object') {
+        throw new Error('specified themes must be objects');
+    }
+    if (theme1 === theme2) {
+        return true;
+    } else {
+        for (const prop of standard_theme_prop_names) {
+            if (!(prop in theme1) || !(prop in theme2) || theme1[prop] !== theme2[prop]) {
+                return false;
+            }
+        }
+        return true;  // all standard_theme_prop_names present and matched
+    }
+}
+
 
 // === TO/FROM STORAGE ===
 
-async function put_themes_settings_to_storage(themes_settings) {
+async function put_themes_settings_to_storage(themes_settings=null) {
+    themes_settings ??= [];
     validate_themes_array(themes_settings);
     return storage_db.put(db_key_themes, themes_settings);
 }
@@ -310,7 +381,7 @@ function adjust_theme(theme) {
             adjustment_made = true;
             const value = (name in standard_themes)
                   ? standard_themes[name][required_prop_name]
-                  : (standard_themes[0][required_prop_name]);  // fall back to first theme if name not found
+                  : (default_standard_theme[required_prop_name]);  // fall back to first theme if name not found
             adjusted_props[required_prop_name] = value ?? 'unset';
         }
     }
@@ -336,7 +407,7 @@ function adjust_themes_array(themes) {
     return adjustment_made ? adjusted_themes : null;
 }
 
-function create_theme_properties_section(theme, default_mode=false) {
+function create_theme_style_element_section(theme, default_mode=false) {
     const { name, props } = theme;
     return `\
 :root${default_mode ? '' : `[${root_element_theme_attribute}="${name}"]`} {
@@ -350,7 +421,7 @@ ${ Object.entries(props)
 }
 
 /** write the given themes into the themes_style_element.
-    both inputs are validated
+ *  both inputs are validated
  * @param {Array} themes
  * @param {HTMLElement} themes_style_element
  */
@@ -361,9 +432,9 @@ async function write_themes_to_style_element(themes, themes_style_element) {
     }
     const sections = [];
     sections.push(theme_property_name_documentation);
-    sections.push(create_theme_properties_section(themes[0], true));  // default/unspecfied theme
+    sections.push(create_theme_style_element_section(themes[0], true));  // default/unspecfied theme
     for (const theme of themes) {
-        sections.push(create_theme_properties_section(theme));
+        sections.push(create_theme_style_element_section(theme));
     }
     themes_style_element.textContent = sections.join('\n');
 }
@@ -372,36 +443,36 @@ async function write_themes_to_style_element(themes, themes_style_element) {
  * @return {Array} newly-established theme_settings
  */
 async function initialize_themes() {
-    const themes_settings = await get_themes_settings_from_storage()
-          .catch((_) => {
-              const themes_settings = standard_themes;
-              return put_themes_settings_to_storage(themes_settings)  // also validates
-                  .then(() => themes_settings);
-          })
-          .then((themes_settings) => {
-              const adjusted = adjust_themes_array(themes_settings);
-              if (!adjusted) {
-                  validate_themes_array(themes_settings);
-                  return themes_settings;
-              } else {
-                  return put_themes_settings_to_storage(adjusted)  // also validates
-                      .catch((error) => {
-                          console.error(error);
-                          throw new Error('unable to rewrite adjusted themes');
-                      })
-                      .then(() => adjusted);
-              }
-          })
-          .then((themes_settings) => {
-              // themes_settings is now fully validated and synchronized with storage
-              const themes_style_element = get_themes_style_element() ?? create_themes_style_element();
-              return write_themes_to_style_element(themes_settings, themes_style_element)
-                  .catch((error) => {
-                      console.error(error);
-                      throw new Error('unable to write to style element');
-                  })
-                  .then(() => themes_settings);
-          })
+    return get_themes_settings_from_storage()
+        .catch((_) => {
+            const themes_settings = standard_themes;
+            return put_themes_settings_to_storage(null)  // initialize empty
+                .then(() => themes_settings);
+        })
+        .then((themes_settings) => {
+            const adjusted = adjust_themes_array(themes_settings);
+            if (!adjusted) {
+                validate_themes_array(themes_settings);
+                return themes_settings;
+            } else {
+                return put_themes_settings_to_storage(adjusted)  // also validates
+                    .catch((error) => {
+                        console.error(error);
+                        throw new Error('unable to rewrite adjusted themes');
+                    })
+                    .then(() => adjusted);
+            }
+        })
+        .then((themes_settings) => {
+            // themes_settings is now fully validated and synchronized with storage
+            const themes_style_element = get_themes_style_element() ?? create_themes_style_element();
+            return write_themes_to_style_element(themes_settings, themes_style_element)
+                .catch((error) => {
+                    console.error(error);
+                    throw new Error('unable to write to style element');
+                })
+                .then(() => themes_settings);
+        });
 }
 
 
@@ -414,6 +485,7 @@ const dark_mode_media_query_list = globalThis.matchMedia("(prefers-color-scheme:
  * @param {Boolean} dark_state
  */
 function set_document_dark_state(dark_state) {
+    //!!! this will reset the user's theme setting if not dark or light (the default)
     if (dark_state) {
         root_element.setAttribute(root_element_theme_attribute, theme_dark);
     } else {
@@ -450,10 +522,6 @@ export const themes_settings_updated_events = new Subscribable();
 
 
 // === THEME SETTINGS GET/UPDATE INTERFACE ===
-
-function copy_themes_settings(themes_settings) {
-    return JSON.parse(JSON.stringify(themes_settings));
-}
 
 let _current_themes_settings;  // initialized below
 

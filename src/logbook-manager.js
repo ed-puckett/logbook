@@ -25,6 +25,10 @@ import {
 } from '../lib/ui/menu/_.js';
 
 import {
+    ConfirmDialog,
+} from '../lib/ui/dialog/_.js';
+
+import {
     ChangeManager,
 } from '../lib/ui/change-manager.js';
 
@@ -782,8 +786,17 @@ ${contents}
 
     /** @return {Boolean} true iff command successfully handled
      */
-    command_handler__delete(command_context) {
+    async command_handler__delete(command_context) {
         const cell = command_context.target;
+        if (!cell) {
+            return false;
+        }
+        if (cell.textContent.trim().length > 0 || cell.output_element?.firstChild) {
+            if (!await ConfirmDialog.run('Cannot undo delete of non-empty cell.\nContinue?')) {
+                cell.focus();
+                return false;
+            }
+        }
         let next_cell = cell.adjacent_cell(true) ?? cell.adjacent_cell(false);
         // beacause we are storing the cell, toolbar and output element
         // in an element structure, just remove the entire structure instead
@@ -792,6 +805,7 @@ ${contents}
         if (!next_cell) {
             next_cell = this.create_cell();
         }
+        // this will re-set this.active_cell
         next_cell.focus();
         return true;
     }

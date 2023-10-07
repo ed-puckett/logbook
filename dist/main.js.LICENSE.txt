@@ -39,6 +39,8 @@
 
 //!!! should other members of options be checked (e.g., "once")?
 
+//!!! this will reset the user's theme setting if not dark or light (the default)
+
 //!!! this.#eval_states_subscription is never unsubscribed
 
 //!!! this.#menubar_commands_subscription is never unsubscribed
