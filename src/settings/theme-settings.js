@@ -41,27 +41,30 @@ export const root_element_theme_attribute = 'data-theme';
     among different pages.
 
   Storage
-  - themes with standard theme names should not be stored because that would prevent
-    future updates to the standard themes from being seen by the user
+  - themes with standard theme names should not be stored because that would
+    prevent future updates to the standard themes from being seen by the user
   - themes with standard theme names are stored if they have been modified
   - storage is read once at initialization.  This means that other instances'
     subsequent modifications will not be seen until re-initialization.  //!!!
-  - themes read from storage are "adjusted" by filling in missing (standard) props
-    from default_standard_theme.  This clumsily brings old themes forward
+  - the values read from storage (and subsequent updates) are stored in the
+    variable _current_themes_settings.
+  - themes read from storage are "adjusted" by filling in missing (standard)
+    props from default_standard_theme.  This clumsily brings old themes forward
     when the standard theme properties extended.  Note that "obsolete" theme
     properties are left alone in case the omission is temporary.
 
   External Interface
-  - themes returned to the user via get_themes_settings() start with the themes
-    specified by standard_theme_names first, then any remaining themes.  Themes
-    from storage override standard themes.
-  - themes sent to update_themes_settings() will be filtered to remove unmodified
-    standard themes before putting them storage.
+  - themes returned to the user via get_themes_settings() start with the
+    themes specified by standard_theme_names first, then any remaining themes.
+    Themes from storage override standard themes.
+  - themes sent to update_themes_settings() will be filtered to remove
+    unmodified standard themes before putting them storage.
 
   Style Element
-  - a <style> element with definitions for the theme variables for each different
-    theme setting.  When the root element's root_element_theme_attribute attribute
-    is changed, the CSS custom variables are automatically adjusted.
+  - a <style> element with definitions for the theme variables for each
+    different theme setting.  When the root element's theme attribute
+    (root_element_theme_attribute) is changed, the CSS custom variables
+    are automatically adjusted.
 */
 
 
@@ -284,12 +287,23 @@ function equivalent_themes(theme1, theme2) {
 
 // === TO/FROM STORAGE ===
 
+// theme_settings, if given, is validated.
+// theme_settings, if not given, defaults to [].
+// Unmodified standard themes are filtered from what is stored.
 async function put_themes_settings_to_storage(themes_settings=null) {
     themes_settings ??= [];
     validate_themes_array(themes_settings);
-    return storage_db.put(db_key_themes, themes_settings);
+    // filter out unmodified standard themes
+    const filtered_themes_settings = themes_settings.filter(theme => {
+        const corresponding_standard_theme = standard_themes.find(st => (st.name === theme.name));
+        // true -> keep
+        return !corresponding_standard_theme || !equivalent_themes(corresponding_standard_theme, theme);
+    });
+    return storage_db.put(db_key_themes, filtered_themes_settings);
 }
 
+// the returned theme_settings is not validated.
+// the returned theme_settings will not contain any (unmodified) standard theme settings.
 async function get_themes_settings_from_storage() {
     return storage_db.get(db_key_themes)
         .then((themes_settings) => {
@@ -357,8 +371,8 @@ function validate_theme(theme) {
 }
 
 function validate_themes_array(themes) {
-    if (!Array.isArray(themes) || themes.length <= 0) {
-        throw new Error('themes must be an array of valid themes with at least one element');
+    if (!Array.isArray(themes)) {
+        throw new Error('themes must be an array of valid themes');
     }
     const names = new Set();
     for (const theme of themes) {
@@ -439,17 +453,36 @@ async function write_themes_to_style_element(themes, themes_style_element) {
     themes_style_element.textContent = sections.join('\n');
 }
 
-/** initialize themes in db if necessary, and write theme styles to the themes_style_element
+/** initialize themes in db if necessary, writing theme styles to the themes_style_element,
+ *  and return a value for _current_themes_settings
  * @return {Array} newly-established theme_settings
  */
 async function initialize_themes() {
     return get_themes_settings_from_storage()
         .catch((_) => {
-            const themes_settings = standard_themes;
             return put_themes_settings_to_storage(null)  // initialize empty
-                .then(() => themes_settings);
+                .catch((error) => {
+                    console.error(error);
+                    throw new Error('unable to initialize themes storage');
+                })
+                .then(() => []);
         })
-        .then((themes_settings) => {
+        .then((themes_settings_from_storage) => {
+            // themes_settings_from_storage is now an array of themes from storage.
+            // However, these themes do not include any unmodified standard themes.
+            const themes_settings = [];  // accumulated below
+            // accumulate standard themes, in order, into the beginning of themes_settings
+            for (const standard_theme of standard_themes) {
+                const theme_from_storage = themes_settings_from_storage.find(t => (t.name === standard_theme.name));
+                const theme = theme_from_storage ?? standard_theme
+                themes_settings.push(theme);
+            }
+            // then append the remaining themes from storage
+            for (const theme_from_storage of themes_settings_from_storage) {
+                if (!standard_theme_names.includes(theme_from_storage.name)) {
+                    themes_settings.push(theme_from_storage);
+                }
+            }
             const adjusted = adjust_themes_array(themes_settings);
             if (!adjusted) {
                 validate_themes_array(themes_settings);
