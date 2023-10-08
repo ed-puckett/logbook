@@ -361,7 +361,7 @@ export class LogbookManager {
             throw new Error('bad format for document: this.main_element not set');
         }
         const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
-              .map(e => e.outerHTML)
+              .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
               .join('\n');
         return `\
 <!DOCTYPE html>

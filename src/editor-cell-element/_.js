@@ -1,12 +1,13 @@
 const current_script_url = import.meta.url;  // save for later
 
 import {
+    create_element,
+    escape_for_html,
     manage_selection_for_insert,
     manage_selection_for_delete,
     insert_at,
     delete_nearest_leaf,
     validate_parent_and_before_from_options,
-    create_element,
 } from '../../lib/ui/dom-util.js';
 
 import {
@@ -75,10 +76,33 @@ export class EditorCellElement extends HTMLElement {
     // === CONTENTS ===
 
     get_text() {
-        return this.innerText;
+        return this.#get_text_container().innerText;
     }
     set_text(text) {
-        this.innerText = text;
+        this.#get_text_container().innerText = text;
+    }
+
+    /** @return {String} an HTML representation of the current state of this cell
+     * The 'contenteditable' and this.constructor.attribute__active are ignored
+     * and the text container element, if it exists, is omitted and the text
+     * made a direct child of the cell.
+     */
+    get_outer_html() {
+        const tag = this.tagName.toLowerCase();
+        const attr_segments = [];
+        for (const name of this.getAttributeNames()) {
+            if (name !== 'contenteditable' && name !== this.constructor.attribute__active) {
+                const value = this.getAttribute(name);
+                const encoded_value = escape_for_html(value).replaceAll('"', '&quot;');//!!!
+                attr_segments.push(`${name}="${encoded_value}"`);
+            }
+        }
+        const text_content = escape_for_html(this.get_text());
+        return `<${tag} ${attr_segments.join(' ')}>${text_content}</${tag}>`;
+    }
+
+    #get_text_container() {
+        return this;
     }
 
 
