@@ -1,9 +1,5 @@
+ChangeManager does not work well with the textarea implementation
 textarea does not resize correctly when parent cell resizes
-textarea does not shrink when content shrinks
-use CodeMirror, and elimniate ChangeManager
-- after using CodeMirror, elimniate Key* stuff, ChangeManager
-- after using CodeMirror, rewire key bindings through CodeMirror
-- after using CodeMirror, confirm before deleting cell with non-empty undo/redo history
 provide way to reset themes in settings
 create dark mode colors for dialogs
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
@@ -33,8 +29,14 @@ replace make with npm, grunt, or similar (?)
 update examples / convert old esbook examples
 Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
 
+use CodeMirror
+- after using CodeMirror, elimniate Key* stuff, ChangeManager
+- after using CodeMirror, rewire key bindings through CodeMirror
+- after using CodeMirror, confirm before deleting cell with non-empty undo/redo history
+
 
 --- DONE ---
+textarea does not shrink when content shrinks
 baby step: use textarea for eval-cell contents (maybe CodeMirror is not completely necessary?)
 validate that themes from storage define the correct properties when first loading from storage
 confirm before clear document from a modified document
