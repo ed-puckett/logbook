@@ -73,6 +73,7 @@ export class EditorCellElement extends HTMLElement {
     #event_listener_manager;
     #key_event_manager;
     #command_bindings;
+    #editable;
 
 
     // === TEXT CONTENT ===
@@ -82,6 +83,8 @@ export class EditorCellElement extends HTMLElement {
             ? this.#get_text_container().value
             : this.textContent;
     }
+
+    // this works even if the cell is not editable
     set_text(text) {
         if (this.#has_editable_text_container()) {
             this.#get_text_container().value = text;
@@ -126,6 +129,7 @@ export class EditorCellElement extends HTMLElement {
             const editable_element = create_element({
                 parent: this,
                 tag: 'textarea',
+                set_id: true,  // prevent warning: "A form field element should have an id or name attribute"
             });
             setup_textarea_auto_resize(editable_element);
             this.#trigger_text_container_resize();
@@ -152,12 +156,7 @@ export class EditorCellElement extends HTMLElement {
     // === EDITABLE ===
 
     get editable (){
-        if (!this.hasAttribute('contenteditable')) {
-            return false;
-        } else {
-            const contenteditable_value = this.getAttribute('contenteditable');
-            return (contenteditable_value !== false.toString());
-        }
+        return this.#has_editable_text_container();
     }
 
     set_editable(editable) {
