@@ -1,5 +1,4 @@
-ChangeManager does not work well with the textarea implementation
-textarea does not resize correctly when parent cell resizes
+ChangeManager does not work well with the textarea implementation in EditorCellElement
 provide way to reset themes in settings
 create dark mode colors for dialogs
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
@@ -36,6 +35,8 @@ use CodeMirror
 
 
 --- DONE ---
+prevent spellcheck in text areas
+textarea does not resize correctly when parent cell resizes
 textarea does not shrink when content shrinks
 baby step: use textarea for eval-cell contents (maybe CodeMirror is not completely necessary?)
 validate that themes from storage define the correct properties when first loading from storage

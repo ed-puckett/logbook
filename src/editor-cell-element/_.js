@@ -5,6 +5,7 @@ import {
     clear_element,
     escape_for_html,
     setup_textarea_auto_resize,
+    trigger_textarea_auto_resize,
     manage_selection_for_insert,
     manage_selection_for_delete,
     insert_at,
@@ -69,24 +70,27 @@ export class EditorCellElement extends HTMLElement {
 
         // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
         this._tool_bar = null;
+
+        this.#resize_observer = new ResizeObserver(this.#resize_observer_handler.bind(this));
+        this.#resize_observer.observe(this);
     }
     #event_listener_manager;
     #key_event_manager;
     #command_bindings;
-    #editable;
+    #resize_observer;
 
 
     // === TEXT CONTENT ===
 
     get_text() {
-        return this.#has_editable_text_container()
+        return this.#has_text_container()
             ? this.#get_text_container().value
             : this.textContent;
     }
 
     // this works even if the cell is not editable
     set_text(text) {
-        if (this.#has_editable_text_container()) {
+        if (this.#has_text_container()) {
             this.#get_text_container().value = text;
         } else {
             this.textContent = text;
@@ -114,22 +118,25 @@ export class EditorCellElement extends HTMLElement {
 
     #get_text_container() {
         const first_child = this.firstChild;
-        return this.#has_editable_text_container() ? first_child : this;
+        return this.#has_text_container() ? first_child : this;
     }
 
-    #has_editable_text_container() {
+    #has_text_container() {
         const first_child = this.firstChild;
         return (first_child instanceof HTMLTextAreaElement) && !first_child.nextSibling;
     }
 
     #establish_editable_text_container() {
-        if (!this.#has_editable_text_container()) {
+        if (!this.#has_text_container()) {
             const text = this.get_text();
             clear_element(this);
             const editable_element = create_element({
                 parent: this,
                 tag: 'textarea',
                 set_id: true,  // prevent warning: "A form field element should have an id or name attribute"
+                attrs: {
+                    spellcheck: false,
+                },
             });
             setup_textarea_auto_resize(editable_element);
             this.#trigger_text_container_resize();
@@ -138,25 +145,29 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #trigger_text_container_resize() {
-        if (this.#has_editable_text_container()) {
+        if (this.#has_text_container()) {
             const editable_element = this.#get_text_container();
-            editable_element.dispatchEvent(new Event('input'));  // trigger resize
+            trigger_textarea_auto_resize(editable_element);
         }
     }
 
-    #remove_editable_text_container() {
-        if (this.#has_editable_text_container()) {
+    #remove_text_container() {
+        if (this.#has_text_container()) {
             const text = this.get_text();
             clear_element(this);
-            this.set_text(text);  // will be added directly to this because no editable_text_container
+            this.set_text(text);  // will be added directly to this because no text_container
         }
+    }
+
+    #resize_observer_handler() {
+        this.#trigger_text_container_resize();
     }
 
 
     // === EDITABLE ===
 
     get editable (){
-        return this.#has_editable_text_container();
+        return this.#has_text_container();
     }
 
     set_editable(editable) {
@@ -165,7 +176,7 @@ export class EditorCellElement extends HTMLElement {
             this.#establish_editable_text_container();
             this._tool_bar.enable_for('type', true);
         } else {
-            this.#remove_editable_text_container();
+            this.#remove_text_container();
             this._tool_bar.enable_for('type', false);
         }
     }
@@ -450,6 +461,15 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #command_observer(command_context) {
+        if (command_context.target instanceof HTMLTextAreaElement) {
+            // patch command_context.target to be the cell itself
+            // this is a kludge, but is necessary when key bindings
+            // are activated on the contained textarea
+            command_context = {
+                ...command_context,
+                target: command_context.target.parentElement,
+            };
+        }
         try {
             const success = this.perform_command(command_context);
             if (!success) {
@@ -545,6 +565,9 @@ export class EditorCellElement extends HTMLElement {
         function focus_handler(event) {
             // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
             LogbookManager.singleton.set_active_cell(this);
+            if (this.#has_text_container()) {
+                this.#get_text_container().focus();
+            }
         }
         const listener_specs = [
             [ this, 'focus', focus_handler, { capture: true } ],
