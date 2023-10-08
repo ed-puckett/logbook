@@ -2,7 +2,9 @@ const current_script_url = import.meta.url;  // save for later
 
 import {
     create_element,
+    clear_element,
     escape_for_html,
+    setup_textarea_auto_resize,
     manage_selection_for_insert,
     manage_selection_for_delete,
     insert_at,
@@ -62,7 +64,7 @@ export class EditorCellElement extends HTMLElement {
 
         this.#command_bindings = this.get_command_bindings();
 
-        const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings(), this.constructor.key_map_insert_self_recognizer);
+        const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings(), /*!!! this.constructor.key_map_insert_self_recognizer*/);
         this.push_key_map(key_map);
 
         // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
@@ -73,13 +75,19 @@ export class EditorCellElement extends HTMLElement {
     #command_bindings;
 
 
-    // === CONTENTS ===
+    // === TEXT CONTENT ===
 
     get_text() {
-        return this.#get_text_container().innerText;
+        return this.#has_editable_text_container()
+            ? this.#get_text_container().value
+            : this.textContent;
     }
     set_text(text) {
-        this.#get_text_container().innerText = text;
+        if (this.#has_editable_text_container()) {
+            this.#get_text_container().value = text;
+        } else {
+            this.textContent = text;
+        }
     }
 
     /** @return {String} an HTML representation of the current state of this cell
@@ -102,7 +110,42 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #get_text_container() {
-        return this;
+        const first_child = this.firstChild;
+        return this.#has_editable_text_container() ? first_child : this;
+    }
+
+    #has_editable_text_container() {
+        const first_child = this.firstChild;
+        return (first_child instanceof HTMLTextAreaElement) && !first_child.nextSibling;
+    }
+
+    #establish_editable_text_container() {
+        if (!this.#has_editable_text_container()) {
+            const text = this.get_text();
+            clear_element(this);
+            const editable_element = create_element({
+                parent: this,
+                tag: 'textarea',
+            });
+            setup_textarea_auto_resize(editable_element);
+            this.#trigger_text_container_resize();
+            this.set_text(text);  // will be added to the new editable_element textarea
+        }
+    }
+
+    #trigger_text_container_resize() {
+        if (this.#has_editable_text_container()) {
+            const editable_element = this.#get_text_container();
+            editable_element.dispatchEvent(new Event('input'));  // trigger resize
+        }
+    }
+
+    #remove_editable_text_container() {
+        if (this.#has_editable_text_container()) {
+            const text = this.get_text();
+            clear_element(this);
+            this.set_text(text);  // will be added directly to this because no editable_text_container
+        }
     }
 
 
@@ -118,11 +161,12 @@ export class EditorCellElement extends HTMLElement {
     }
 
     set_editable(editable) {
+        this.removeAttribute('contenteditable');  // editability established by text container element
         if (editable) {
-            this.setAttribute('contenteditable', true.toString());  //!!! plaintext-only not supported in Firefox as of version 118
+            this.#establish_editable_text_container();
             this._tool_bar.enable_for('type', true);
         } else {
-            this.removeAttribute('contenteditable');
+            this.#remove_editable_text_container();
             this._tool_bar.enable_for('type', false);
         }
     }
@@ -225,7 +269,7 @@ export class EditorCellElement extends HTMLElement {
      *  @param {null|undefined|Object} options: {
      *      parent?:                Node,                   // default: document.body
      *      before?:                Node,                   // default: null
-     *      editable:               Boolean,                // set contenteditable?  default: current logbook editable setting
+     *      editable:               Boolean,                // set editable?  default: current logbook editable setting
      *      innerText:              String,                 // cell text to set
      *      active_element_mapper?: null|Element=>Element,  // mapper from an EditorCellElement to the element on which "data-active" will be set
      *  }
@@ -364,7 +408,7 @@ export class EditorCellElement extends HTMLElement {
         return {
             ...get_global_initial_key_map_bindings(),
 
-//!!! the following are "implemented" via setting the contenteditable attribute on the element
+//!!! the following are "implemented" via setting the "editable" mechanism on the cell
 //!!!            'insert-line-break':   [ 'Enter' ],
 
 //!!!            'delete-forward':      [ 'Delete' ],
@@ -387,8 +431,9 @@ export class EditorCellElement extends HTMLElement {
         const command_bindings = {
             ...get_global_command_bindings(),
 
-            'insert-self':         this.command_handler__insert_self.bind(this),
-            'insert-line-break':   this.command_handler__insert_line_break.bind(this),
+//!!! the following are "implemented" via setting the "editable" mechanism on the cell
+//!!!            'insert-self':         this.command_handler__insert_self.bind(this),
+//!!!            'insert-line-break':   this.command_handler__insert_line_break.bind(this),
 
             'delete-text-forward': this.create_command_handler___delete({ element_too: false, reverse: false }),
             'delete-text-reverse': this.create_command_handler___delete({ element_too: false, reverse: true  }),
@@ -520,6 +565,10 @@ export class EditorCellElement extends HTMLElement {
     connectedCallback() {
         this.#event_listener_manager.attach();
         this.#key_event_manager.attach();
+        // trigger resize in case this could not be performed ebfore when "editable" was set,
+        // probably because the element was not yet connected to the DOM at that time.
+        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
+        setTimeout(() => this.#trigger_text_container_resize());
     }
 
     // disconnectedCallback:
@@ -534,6 +583,10 @@ export class EditorCellElement extends HTMLElement {
     adoptedCallback() {
         this.#event_listener_manager.attach();
         this.#key_event_manager.attach();
+        // trigger resize in case this could not be performed ebfore when "editable" was set,
+        // probably because the element was not yet connected to the DOM at that time.
+        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
+        setTimeout(() => this.#trigger_text_container_resize());
     }
 
     // attributeChangedCallback:

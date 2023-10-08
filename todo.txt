@@ -1,4 +1,5 @@
-baby step: use textarea for eval-cell contents
+textarea does not resize correctly when parent cell resizes
+textarea does not shrink when content shrinks
 use CodeMirror, and elimniate ChangeManager
 - after using CodeMirror, elimniate Key* stuff, ChangeManager
 - after using CodeMirror, rewire key bindings through CodeMirror
@@ -34,6 +35,7 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+baby step: use textarea for eval-cell contents (maybe CodeMirror is not completely necessary?)
 validate that themes from storage define the correct properties when first loading from storage
 confirm before clear document from a modified document
 confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element

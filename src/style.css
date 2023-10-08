@@ -131,6 +131,15 @@ eval-cell {
     border-style:  var(--theme-cl-bds);
 }
 
+eval-cell > textarea {
+    resize: none;  /* remove resize control */
+    outline: none;  /* handled by parent eval-cell */
+    width: 100%;
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
 
 /* color selected by eval-cell input-type */
 
