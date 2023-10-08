@@ -72,6 +72,16 @@ export class EditorCellElement extends HTMLElement {
     #command_bindings;
 
 
+    // === CONTENTS ===
+
+    get_text() {
+        return this.innerText;
+    }
+    set_text(text) {
+        this.innerText = text;
+    }
+
+
     // === EDITABLE ===
 
     get editable (){
@@ -192,7 +202,7 @@ export class EditorCellElement extends HTMLElement {
      *      parent?:                Node,                   // default: document.body
      *      before?:                Node,                   // default: null
      *      editable:               Boolean,                // set contenteditable?  default: current logbook editable setting
-     *      innerText:              String,                 // cell.innerText to set
+     *      innerText:              String,                 // cell text to set
      *      active_element_mapper?: null|Element=>Element,  // mapper from an EditorCellElement to the element on which "data-active" will be set
      *  }
      *  @return {EditorCellElement} new cell  // may be a subclass of EditorCellElement depending on this.custom_element_name
@@ -216,7 +226,7 @@ export class EditorCellElement extends HTMLElement {
         });
 
         if (innerText) {
-            cell.innerText = innerText;
+            cell.set_text(innerText);
         }
         if (active_element_mapper) {
             cell.set_active_element_mapper(active_element_mapper);

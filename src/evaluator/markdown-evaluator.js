@@ -18,6 +18,6 @@ export class MarkdownEvaluator extends Evaluator {
         };
         const renderer = this.output_context.renderer_for_type('markdown');
         this.add_stoppable(new Stoppable(renderer));
-        return this.output_context.invoke_renderer(renderer, this.input_element.innerText, options);
+        return this.output_context.invoke_renderer(renderer, this.input_element.get_text(), options);
     }
 }

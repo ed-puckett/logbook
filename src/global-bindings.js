@@ -159,15 +159,13 @@ export function command_handler__create_cell(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__reset(command_context) {
-    LogbookManager.singleton.reset();
-    return true;
+    return LogbookManager.singleton.command_handler__reset(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__clear(command_context) {
-    LogbookManager.singleton.clear();
-    return true;
+    return LogbookManager.singleton.command_handler__clear(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled

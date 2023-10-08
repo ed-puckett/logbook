@@ -1,16 +1,15 @@
-validate that themes from storage define the correct properties when first loading from storage
-provide way to reset themes in settings
-dark mode colors for dialogs
+baby step: use textarea for eval-cell contents
 use CodeMirror, and elimniate ChangeManager
-after using CodeMirror, elimniate Key* stuff, ChangeManager
-after using CodeMirror, rewire key bindings through CodeMirror
-after using CodeMirror, confirm before deleting cell with non-empty undo/redo history
+- after using CodeMirror, elimniate Key* stuff, ChangeManager
+- after using CodeMirror, rewire key bindings through CodeMirror
+- after using CodeMirror, confirm before deleting cell with non-empty undo/redo history
+provide way to reset themes in settings
+create dark mode colors for dialogs
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
+replace beep() with LogbookManager.singleton.notify(message)
 notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
 create_element(): sending "attrs" option with a "class" property does not work as expected
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
-replace beep() with LogbookManager.singleton.notify(message)
-confirm before clear document from a modified document
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
@@ -35,6 +34,8 @@ Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager
 
 
 --- DONE ---
+validate that themes from storage define the correct properties when first loading from storage
+confirm before clear document from a modified document
 confirm before deleting via ui a non-empty cell or a cell with a non-empty output_element
 make sure LogbookManager.singleton.active_cell remains valid when deleting stuff or otherwise modifying document
 empty cell does not show anything visible unless editable

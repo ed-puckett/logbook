@@ -599,6 +599,26 @@ ${contents}
         }
     }
 
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__reset(command_context) {
+        this.reset();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__clear(command_context) {
+        if (!this.#global_change_manager.is_neutral()) {
+            if (!await ConfirmDialog.run('Clearing a modified document.\nContinue?')) {
+                this.active_cell?.focus();
+                return false;
+            }
+        }
+        this.clear();
+        return true;
+    }
+
     /** eval target cell and refocus to next cell (or a new one if at the end of the document)
      *  @return {Boolean} true iff command successfully handled
      */
@@ -791,7 +811,7 @@ ${contents}
         if (!cell) {
             return false;
         }
-        if (cell.textContent.trim().length > 0 || cell.output_element?.firstChild) {
+        if (cell.get_text().trim().length > 0 || cell.output_element?.firstChild) {
             if (!await ConfirmDialog.run('Cannot undo delete of non-empty cell.\nContinue?')) {
                 cell.focus();
                 return false;
@@ -864,10 +884,10 @@ export function show_initialization_failed(error) {
     console.error('initialization failed', error.stack);
     clear_element(document.body);
     const error_h1 = document.createElement('h1');
-    error_h1.textContent = 'Initialization Failed';
+    error_h1.innerText = 'Initialization Failed';
     const error_pre = document.createElement('pre');
     error_pre.classList.add('error-message');
-    error_pre.textContent = error.stack;
+    error_pre.innerText = error.stack;
     document.body.appendChild(error_h1);
     document.body.appendChild(error_pre);
 }

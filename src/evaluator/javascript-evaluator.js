@@ -19,7 +19,7 @@ export class JavaScriptEvaluator extends Evaluator {
         };
         const renderer = this.output_context.renderer_for_type('javascript');
         this.add_stoppable(new Stoppable(renderer));
-        const code = this.input_element.innerText;  // .textContent does not preserve newlines
+        const code = this.input_element.get_text();
         return this.output_context.invoke_renderer(renderer, code, options);
     }
 }

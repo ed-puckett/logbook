@@ -52,6 +52,8 @@ export const root_element_theme_attribute = 'data-theme';
     props from default_standard_theme.  This clumsily brings old themes forward
     when the standard theme properties extended.  Note that "obsolete" theme
     properties are left alone in case the omission is temporary.
+  - this all needs to be reviewed when/if user-modified theme settings are
+    implemented.
 
   External Interface
   - themes returned to the user via get_themes_settings() start with the
