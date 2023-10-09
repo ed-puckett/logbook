@@ -139,6 +139,7 @@ export class EditorCellElement extends HTMLElement {
             });
             setup_textarea_auto_resize(editable_element);
             this.set_text(text);  // will be added to the new editable_element textarea
+            editable_element.setSelectionRange(0, 0);  // move cursor to beginning of text
             this.#trigger_text_container_resize();
         }
     }

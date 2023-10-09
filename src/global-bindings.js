@@ -30,11 +30,6 @@ export function get_menubar_spec() {
             { label: 'Settings...',    item: { command: 'settings',         } },
         ] },
 
-        { label: 'Edit', collection: [
-            { label: 'Undo',           item: { command: 'undo',             }, id: 'undo' },
-            { label: 'Redo',           item: { command: 'redo',             }, id: 'redo' },
-        ] },
-
         { label: 'Cell', collection: [
             { label: 'Eval',           item: { command: 'eval-and-refocus', }, id: 'eval-and-refocus' },
             { label: 'Eval and stay',  item: { command: 'eval',             }, id: 'eval' },
@@ -97,9 +92,6 @@ export function get_global_initial_key_map_bindings() {
         'set-mode-markdown':   [ 'Alt-M m' ],
         'set-mode-tex':        [ 'Alt-M t' ],
         'set-mode-javascript': [ 'Alt-M j' ],
-
-//!!!        'undo':                [ 'CmdOrCtrl-Z' ],
-//!!!        'redo':                [ 'CmdOrCtrl-Shift-Z' ],
     };
 }
 
@@ -136,9 +128,6 @@ export function get_global_command_bindings() {
         'add-before':       command_handler__add_before,
         'add-after':        command_handler__add_after,
         'delete':           command_handler__delete,
-
-        'undo':             command_handler__undo,
-        'redo':             command_handler__redo,
     };
 
     return command_bindings;
@@ -264,17 +253,4 @@ export function command_handler__add_after(command_context) {
  */
 export function command_handler__delete(command_context) {
     return LogbookManager.singleton.command_handler__delete(command_context);
-}
-
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__undo(command_context) {
-    return LogbookManager.singleton.command_handler__undo(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__redo(command_context) {
-    return LogbookManager.singleton.command_handler__redo(command_context);
 }

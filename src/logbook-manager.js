@@ -29,10 +29,6 @@ import {
 } from '../lib/ui/dialog/_.js';
 
 import {
-    ChangeManager,
-} from '../lib/ui/change-manager.js';
-
-import {
     fs_interface,
 } from '../lib/sys/fs-interface.js';
 
@@ -95,7 +91,6 @@ export class LogbookManager {
     #menubar_selects_subscription;
     #tool_bar;
     #global_eval_context;  // persistent eval_context for eval commands
-    #global_change_manager;
     #file_handle;
 
     get editable (){ return this.#editable }
@@ -185,24 +180,13 @@ export class LogbookManager {
             this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
 
-            // Set up this.#global_change_manager now so that it is available
-            // during initialization of cells.  It will be reset when document
-            // initialization is complete.
-//!!!            this.#global_change_manager = new ChangeManager(this.main_element, {
-//!!!                neutral_changes_observer: this.#neutral_changes_observer.bind(this),
-//!!!            });
-
             // add "changes may not be saved" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
-                if (!this.#global_change_manager.is_neutral()) {
+                if (true/*!!! always warn for now !!!*/) {
                     event.preventDefault();
                     return (event.returnValue = '');
                 }
             });  //!!! event handler never removed
-
-            // set baseline for undo/redo
-            // it is important that all async operations have finished before getting here
-//!!!            this.#global_change_manager.set_neutral();
 
         } catch (error) {
             show_initialization_failed(error);
@@ -473,8 +457,6 @@ ${contents}
         const cells        = this.constructor.get_cells();
         const active_cell  = this.active_cell;
         const active_index = cells.indexOf(active_cell);
-        const can_undo     = active_cell.can_perform_undo;
-        const can_redo     = active_cell.can_perform_redo;
         const editable     = this.editable;
 
         /*
@@ -484,9 +466,6 @@ ${contents}
         this.#menubar.set_menu_state('clear',      { enabled: editable });
         this.#menubar.set_menu_state('reset',      { enabled: editable });
         this.#menubar.set_menu_state('reset-cell', { enabled: editable });
-
-        this.#menubar.set_menu_state('undo', { enabled: can_undo });
-        this.#menubar.set_menu_state('redo', { enabled: can_redo });
 
         this.#menubar.set_menu_state('focus-up',   { enabled: (active_cell && active_index > 0) });
         this.#menubar.set_menu_state('focus-down', { enabled: (active_cell && active_index < cells.length-1) });
@@ -848,7 +827,6 @@ ${contents}
         if (!canceled) {
             //!!!
             this.#file_handle = file_handle ?? undefined;
-            this.#global_change_manager.set_neutral();
         }
         return true;
     }
@@ -865,31 +843,6 @@ ${contents}
         return true;
     }
 
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__undo(command_context) {
-document.execCommand('undo');return;//!!!
-/*
-        const cell = command_context.target;
-        if (!cell) {
-            return false;
-        }
-        return cell.perform_undo();
-*/
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__redo(command_context) {
-document.execCommand('redo');return;//!!!
-/*
-        const cell = command_context.target;
-        if (!cell) {
-            return false;
-        }
-        return cell.perform_redo();
-*/
-    }
 }
 
 

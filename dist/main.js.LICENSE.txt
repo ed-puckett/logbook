@@ -1,3 +1,5 @@
+/*!!! always warn for now !!!*/
+
 /*!!! autoeval: {
                 initial: this.autoeval,
                 on: (event) => {
@@ -7,15 +9,9 @@
 
 //!!!
 
-//!!!                neutral_changes_observer: this.#neutral_changes_observer.bind(this),
-
 //!!!            'insert-line-break':   this.command_handler__insert_line_break.bind(this),
 
 //!!!            'insert-self':         this.command_handler__insert_self.bind(this),
-
-//!!!            this.#global_change_manager = new ChangeManager(this.main_element, {
-
-//!!!            });
 
 //!!! Also, the following does not work on Firefox:
 
