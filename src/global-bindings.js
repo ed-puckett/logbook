@@ -98,8 +98,8 @@ export function get_global_initial_key_map_bindings() {
         'set-mode-tex':        [ 'Alt-M t' ],
         'set-mode-javascript': [ 'Alt-M j' ],
 
-        'undo':                [ 'CmdOrCtrl-Z' ],
-        'redo':                [ 'CmdOrCtrl-Shift-Z' ],
+//!!!        'undo':                [ 'CmdOrCtrl-Z' ],
+//!!!        'redo':                [ 'CmdOrCtrl-Shift-Z' ],
     };
 }
 

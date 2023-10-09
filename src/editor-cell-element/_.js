@@ -117,8 +117,7 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #get_text_container() {
-        const first_child = this.firstChild;
-        return this.#has_text_container() ? first_child : this;
+        return this.#has_text_container() ? this.firstChild : this;
     }
 
     #has_text_container() {
@@ -139,8 +138,16 @@ export class EditorCellElement extends HTMLElement {
                 },
             });
             setup_textarea_auto_resize(editable_element);
-            this.#trigger_text_container_resize();
             this.set_text(text);  // will be added to the new editable_element textarea
+            this.#trigger_text_container_resize();
+        }
+    }
+
+    #remove_text_container() {
+        if (this.#has_text_container()) {
+            const text = this.get_text();
+            clear_element(this);  // remove text_container element
+            this.set_text(text);  // will be added directly to this because no text_container
         }
     }
 
@@ -148,14 +155,6 @@ export class EditorCellElement extends HTMLElement {
         if (this.#has_text_container()) {
             const editable_element = this.#get_text_container();
             trigger_textarea_auto_resize(editable_element);
-        }
-    }
-
-    #remove_text_container() {
-        if (this.#has_text_container()) {
-            const text = this.get_text();
-            clear_element(this);
-            this.set_text(text);  // will be added directly to this because no text_container
         }
     }
 

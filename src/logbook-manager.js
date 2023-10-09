@@ -188,9 +188,9 @@ export class LogbookManager {
             // Set up this.#global_change_manager now so that it is available
             // during initialization of cells.  It will be reset when document
             // initialization is complete.
-            this.#global_change_manager = new ChangeManager(this.main_element, {
-                neutral_changes_observer: this.#neutral_changes_observer.bind(this),
-            });
+//!!!            this.#global_change_manager = new ChangeManager(this.main_element, {
+//!!!                neutral_changes_observer: this.#neutral_changes_observer.bind(this),
+//!!!            });
 
             // add "changes may not be saved" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
@@ -202,7 +202,7 @@ export class LogbookManager {
 
             // set baseline for undo/redo
             // it is important that all async operations have finished before getting here
-            this.#global_change_manager.set_neutral();
+//!!!            this.#global_change_manager.set_neutral();
 
         } catch (error) {
             show_initialization_failed(error);
@@ -473,8 +473,8 @@ ${contents}
         const cells        = this.constructor.get_cells();
         const active_cell  = this.active_cell;
         const active_index = cells.indexOf(active_cell);
-        const can_undo     = this.#global_change_manager.can_perform_undo;
-        const can_redo     = this.#global_change_manager.can_perform_redo;
+        const can_undo     = active_cell.can_perform_undo;
+        const can_redo     = active_cell.can_perform_redo;
         const editable     = this.editable;
 
         /*
@@ -609,7 +609,8 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     async command_handler__clear(command_context) {
-        if (!this.#global_change_manager.is_neutral()) {
+        const is_neutral = this.constructor.get_cells().every(cell => cell.is_neutral());
+        if (!is_neutral) {
             if (!await ConfirmDialog.run('Clearing a modified document.\nContinue?')) {
                 this.active_cell?.focus();
                 return false;
@@ -867,13 +868,27 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__undo(command_context) {
-        return this.#global_change_manager?.perform_undo();
+document.execCommand('undo');return;//!!!
+/*
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        }
+        return cell.perform_undo();
+*/
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__redo(command_context) {
-        return this.#global_change_manager?.perform_redo();
+document.execCommand('redo');return;//!!!
+/*
+        const cell = command_context.target;
+        if (!cell) {
+            return false;
+        }
+        return cell.perform_redo();
+*/
     }
 }
 
