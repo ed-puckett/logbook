@@ -93,11 +93,6 @@ main > :not(:first-child) {
     padding: var(--theme-ou-p);
     color:            var(--theme-ou-fgc);
     background-color: var(--theme-ou-bgc);
-
-    /* no highlight */
-    border-width: 0 0 0 var(--theme-ou-hlw);
-    border-color: transparent;
-    border-style: var(--theme-ou-hls);
 }
 
 tool-bar {

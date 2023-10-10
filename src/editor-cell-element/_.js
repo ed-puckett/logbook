@@ -65,7 +65,7 @@ export class EditorCellElement extends HTMLElement {
 
         this.#command_bindings = this.get_command_bindings();
 
-        const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings(), /*!!! this.constructor.key_map_insert_self_recognizer*/);
+        const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings());
         this.push_key_map(key_map);
 
         // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
@@ -240,10 +240,6 @@ export class EditorCellElement extends HTMLElement {
     }
     remove_key_map(key_map, remove_subsequent_too=false) {
         return this.#key_event_manager.remove_key_map(key_map, remove_subsequent_too);
-    }
-
-    static key_map_insert_self_recognizer(key_spec) {
-        return (key_spec.is_printable ? 'insert-self' : false);
     }
 
 

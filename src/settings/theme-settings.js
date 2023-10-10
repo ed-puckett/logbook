@@ -97,8 +97,7 @@ const theme_property_name_documentation = `\
   bg -- background      c -- color
   fg -- foreground      w -- width
   bd -- border          s -- style (e.g., dashed)
-  hl -- highlight       r -- radius
-  sh -- shadow
+  sh -- shadow          r -- radius
   fl -- fill
   st -- stroke
 
@@ -122,7 +121,7 @@ const theme_property_name_documentation = `\
 */
 `;
 
-// the first standard theme is the default theme which will be used if no other theme is specified
+// the first standard theme is the default theme and will be used if no other theme is specified
 const standard_theme_names = [ theme_light, theme_dark ];  // array length must match array length of values in standard_themes_spec
 
 export const default_theme_name = standard_theme_names[0];
@@ -135,6 +134,9 @@ const standard_themes_spec = {
     //                                   === LIGHT ===                    === DARK ===
 
     "--theme-by-bgc":                  [ '#fcfcfc',                       '#0e0e0e' ],
+    "--theme-by-fgc-error":            [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
+    "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
+    "--theme-by-bdc-error":            [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
 
     "--theme-hd-h":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-hd-bgc":                  [ '#f8f8f8',                       '#2e2e2e' ],
@@ -158,16 +160,8 @@ const standard_themes_spec = {
     "--theme-cl-p-inter":              [ '0em',                           '0em' ],
 
     "--theme-ou-p":                    [ '0.5em',                         '0.5em' ],
-    "--theme-ou-hlw":                  [ '3px',                           '3px' ],
-    "--theme-ou-hlc":                  [ 'hsl( 10deg  70%  60% / 100%)',  'hsl( 54deg  40%  50% / 100%)' ],
-    "--theme-ou-hlc-mix":              [ '50%',                           '50%' ],
-    "--theme-ou-hls":                  [ 'dashed',                        'dashed' ],
     "--theme-ou-fgc":                  [ 'black',                         '#eee' ],
     "--theme-ou-bgc":                  [ 'white',                         'black' ],
-
-    "--theme-by-bdc-error":            [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
-    "--theme-by-fgc-error":            [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
-    "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
 
     "--theme-ty-fgc-markdown":         [ 'black',                         'white' ],
     "--theme-ty-bgc-markdown":         [ 'hsl(205deg  85%  90% / 100%)',  'hsl(205deg  80%  30% / 100%)' ],
@@ -178,7 +172,6 @@ const standard_themes_spec = {
 
     "--theme-ts-w":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-ts-h":                    [ '1.5rem',                        '1.5rem' ],
-
     "--theme-ts-flc-autoeval":         [ 'transparent',                   'transparent' ],
     "--theme-ts-stc-autoeval":         [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   9%  82% / 100%)' ],
     "--theme-ts-flc-autoeval-checked": [ 'transparent',                   'transparent' ],
@@ -186,10 +179,8 @@ const standard_themes_spec = {
 
     "--theme-ti-bdc":                  [ 'hsl(  0deg   9%  82% / 100%)',  'hsl(  0deg   0%  60% / 100%)' ],
     "--theme-ti-bgc":                  [ 'transparent',                   'transparent' ],
-
     "--theme-ti-bdc-running":          [ 'black',                         '#d5d5d5' ],
     "--theme-ti-bgc-running":          [ 'hsl(120deg  94%  40% / 100%)',  'hsl(120deg  94%  40% / 100%)' ],
-
     "--theme-ti-bdc-modified":         [ 'black',                         '#d5d5d5' ],
     "--theme-ti-bgc-modified":         [ 'hsl(  0deg  60%  85% / 100%)',  'hsl(  0deg  55%  45% / 100%)' ],
 
@@ -206,22 +197,17 @@ const standard_themes_spec = {
     "--theme-dg-shc":                  [ 'grey',                          'grey' ],
 
     "--theme-st-bgc":                  [ 'canvas',                        'canvas' ],
-
     "--theme-st-bdc-section":          [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-st-bgc-section":          [ 'hsl(  0deg   0%  98% / 100%)',  'hsl(  0deg   0%  98% / 100%)' ],
     "--theme-st-fgc-section":          [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
-
     "--theme-st-bdc-section-heading":  [ '#aaa',                          '#aaa' ],
     "--theme-st-bgc-section-heading":  [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0% 100% / 100%)' ],
     "--theme-st-fgc-section-heading":  [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
-
     "--theme-st-fgc-section-setting":  [ 'fieldtext',                     'fieldtext' ],
     "--theme-st-bgc-section-setting":  [ 'field',                         'field' ],
-
     "--theme-st-bdc-warning":          [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-st-fgc-warning":          [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-st-bgc-warning":          [ 'hsl( 60deg  80%  50% / 100%)',  'hsl( 60deg  80%  50% / 100%)' ],
-
     "--theme-st-bdc-error":            [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-st-fgc-error":            [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0% 100% / 100%)' ],
     "--theme-st-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
@@ -278,7 +264,7 @@ function equivalent_themes(theme1, theme2) {
         return true;
     } else {
         for (const prop of standard_theme_prop_names) {
-            if (!(prop in theme1) || !(prop in theme2) || theme1[prop] !== theme2[prop]) {
+            if (!(prop in theme1.props) || !(prop in theme2.props) || theme1.props[prop] !== theme2.props[prop]) {
                 return false;
             }
         }
@@ -580,6 +566,7 @@ export async function reset_to_standard_themes_settings() {
 // === INITIALIZATION ===
 
 _current_themes_settings = await initialize_themes();
+console.log('_current_themes_settings', _current_themes_settings);//!!!
 
 dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
 settings_updated_events.subscribe(update_document_dark_state);
