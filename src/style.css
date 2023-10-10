@@ -2,6 +2,10 @@
 
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
+:root {
+    --input-output-split: 50%;
+}
+
 body {
     overflow: hidden;  /* inhibit scrolling for body */
     margin: 0;
@@ -63,8 +67,19 @@ main > :not(:first-child) {
 }
 
 .cell-input-container {
-    min-width: 50%;
-    max-width: 50%;
+    min-width: var(--input-output-split);
+    max-width: var(--input-output-split);
+}
+
+@media screen and (max-width: 40em) {
+    .cell-container {
+        flex-direction: column;
+    }
+
+    .cell-input-container {
+        min-width: unset;
+        max-width: unset;
+    }
 }
 
 .eval-cell-output {
@@ -88,16 +103,14 @@ main > :not(:first-child) {
 tool-bar {
     overflow: hidden;
 
-    /* prevent tabbing to contained controls by setting visibility:hidden */
-    /* this is necessary because we don't set display:none because we want to animate the transition */
-    visibility: visible;/*!!!*/
+    visibility: visible;
 
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: var(--theme-tl-g);
 
-    max-height: fit-content;/*!!!*/
+    max-height: fit-content;
     padding: var(--theme-tl-p);
     border: 0;
 
@@ -119,7 +132,7 @@ eval-cell {
     color:            var(--theme-cl-fgc);
     background-color: var(--theme-cl-bgc);
 
-    max-height:   fit-content;/*!!!*/
+    max-height:   fit-content;
     padding:      var(--theme-cl-p);
     border-width: 0;
     border-top-color:    transparent;

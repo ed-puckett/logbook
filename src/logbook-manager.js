@@ -588,12 +588,9 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     async command_handler__clear(command_context) {
-        const is_neutral = this.constructor.get_cells().every(cell => cell.is_neutral());
-        if (!is_neutral) {
-            if (!await ConfirmDialog.run('Clearing a modified document.\nContinue?')) {
-                this.active_cell?.focus();
-                return false;
-            }
+        if (!await ConfirmDialog.run('Clear document?')) {
+            this.active_cell?.focus();
+            return false;
         }
         this.clear();
         return true;

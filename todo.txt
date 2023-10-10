@@ -1,4 +1,4 @@
-ChangeManager does not work well with the textarea implementation in EditorCellElement
+ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
 create dark mode colors for dialogs
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
@@ -25,16 +25,17 @@ implement go/stop control in tool-bar
 improve saving
 save can cause disconnect between current document and its "file_handle" if the user saves to a different file
 replace make with npm, grunt, or similar (?)
-update examples / convert old esbook examples
 Map vs Object (problems: ephemeral_eval_context, vars() in code, logbook_manager.#global_eval_context, fs_interface (?), ...) (https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md)
 
-use CodeMirror
+maybe use CodeMirror
 - after using CodeMirror, elimniate Key* stuff, ChangeManager
 - after using CodeMirror, rewire key bindings through CodeMirror
 - after using CodeMirror, confirm before deleting cell with non-empty undo/redo history
 
 
 --- DONE ---
+update examples / convert old esbook examples
+ChangeManager does not work well with the textarea implementation in EditorCellElement
 prevent spellcheck in text areas
 textarea does not resize correctly when parent cell resizes
 textarea does not shrink when content shrinks

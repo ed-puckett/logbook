@@ -163,6 +163,23 @@ export class EditorCellElement extends HTMLElement {
         this.#trigger_text_container_resize();
     }
 
+    /** override focus() so that we can direct focus to the contained textarea
+     *  if necessary.  Setting a tabindex="0" attribute on this cell solves the
+     *  problem but then causes another: SHIFT-Tab out of a textarea with a
+     *  tabindex="0" parent fails.  So we just have to do it the hard way.
+     */
+    focus() {
+        if (!this.#has_text_container()) {
+            super.focus();  // will most likely fail, but that would be appropriate
+        } else {
+            const text_container = this.#get_text_container();
+            const ss = text_container.selectionStart ?? 0;
+            const se = text_container.selectionEnd   ?? 0;
+            text_container.focus();
+            text_container.setSelectionRange(ss, se);
+        }
+    }
+
 
     // === EDITABLE ===
 
@@ -298,9 +315,6 @@ export class EditorCellElement extends HTMLElement {
             parent,
             before,
             tag: this.custom_element_name,
-            attrs: {
-                tabindex: 0,  // permit focus
-            },
         });
 
         if (innerText) {
@@ -580,35 +594,39 @@ export class EditorCellElement extends HTMLElement {
 
     // === WEB COMPONENT LIFECYCLE ===
 
+    #update_for_connected() {
+        this.#event_listener_manager.attach();
+        this.#key_event_manager.attach();
+        this.removeAttribute('tabindex');  // focusable parent for textarea causes SHIFT-Tab not to work
+        // trigger resize in case this could not be performed ebfore when "editable" was set,
+        // probably because the element was not yet connected to the DOM at that time.
+        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
+        setTimeout(() => this.#trigger_text_container_resize());
+    }
+
+    #update_for_disconnected() {
+        this.#key_event_manager.detach();
+        this.#event_listener_manager.detach();
+    }
+
     // connectedCallback:
     //     Invoked each time the custom element is appended into a document-connected element.
     //     This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
     //     Note: connectedCallback may be called once your element is no longer connected, use Node.isConnected to make sure.
     connectedCallback() {
-        this.#event_listener_manager.attach();
-        this.#key_event_manager.attach();
-        // trigger resize in case this could not be performed ebfore when "editable" was set,
-        // probably because the element was not yet connected to the DOM at that time.
-        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
-        setTimeout(() => this.#trigger_text_container_resize());
+        this.#update_for_connected();
     }
 
     // disconnectedCallback:
     //     Invoked each time the custom element is disconnected from the document's DOM.
     disconnectedCallback() {
-        this.#key_event_manager.detach();
-        this.#event_listener_manager.detach();
+        this.#update_for_disconnected();
     }
 
     // adoptedCallback:
     //     Invoked each time the custom element is moved to a new document.
     adoptedCallback() {
-        this.#event_listener_manager.attach();
-        this.#key_event_manager.attach();
-        // trigger resize in case this could not be performed ebfore when "editable" was set,
-        // probably because the element was not yet connected to the DOM at that time.
-        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
-        setTimeout(() => this.#trigger_text_container_resize());
+        this.#update_for_connected();
     }
 
     // attributeChangedCallback:
