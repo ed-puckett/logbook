@@ -1,3 +1,4 @@
+fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
 create dark mode colors for dialogs

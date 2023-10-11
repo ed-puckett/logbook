@@ -94,6 +94,9 @@ main > :not(:first-child) {
     color:            var(--theme-ou-fgc);
     background-color: var(--theme-ou-bgc);
 }
+.eval-cell-output:empty {
+    padding: 0;
+}
 
 tool-bar {
     overflow: hidden;
