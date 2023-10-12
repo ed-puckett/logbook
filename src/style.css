@@ -3,7 +3,7 @@
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
 :root {
-    --input-output-split: 50%;
+    --input-output-split: 50vw;  /* must specify absolute amount, not %, otherwise .resize-handle will be misaligned */
 }
 
 body {
@@ -64,6 +64,18 @@ main > :not(:first-child) {
 }
 .cell-container[data-active]:focus-within .cell-input-container {
     border-color:  var(--theme-cl-bdc-focus);
+}
+
+.resize-handle {
+    position: absolute;
+    left: var(--input-output-split);
+    /* form a down-pointing arrow with a centered tip */
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+    border-width: 6px 6px 0 6px;
+ }
+.resize-handle:hover {
+    background-color: red;
 }
 
 .cell-input-container {

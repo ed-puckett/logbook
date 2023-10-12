@@ -566,7 +566,6 @@ export async function reset_to_standard_themes_settings() {
 // === INITIALIZATION ===
 
 _current_themes_settings = await initialize_themes();
-console.log('_current_themes_settings', _current_themes_settings);//!!!
 
 dark_mode_media_query_list.addEventListener('change', update_document_dark_state);
 settings_updated_events.subscribe(update_document_dark_state);

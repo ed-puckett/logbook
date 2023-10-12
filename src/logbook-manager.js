@@ -92,6 +92,10 @@ export class LogbookManager {
     #tool_bar;
     #global_eval_context;  // persistent eval_context for eval commands
     #file_handle;
+    #resize_handle_element;  // created in this.#initialize_document_structure()
+    #resize_state;  // used while this.#resize_handle_element is being dragged
+
+    static resize_handle_class = 'resize-handle';
 
     get editable (){ return this.#editable }
     set_editable(editable) {
@@ -283,6 +287,11 @@ export class LogbookManager {
         }
         // create the main element and move the current children of the body to it
         this.#main_element = document.createElement(this.constructor.main_element_tag);
+        // create the this.#resize_handle_element element as the first child of this.#main_element
+        this.#resize_handle_element = create_element({
+            parent: this.#main_element,
+        });
+        this.#resize_handle_element.classList.add(this.constructor.resize_handle_class);
         // move the cells and their associated output_elements (if any)
         for (const cell of document.querySelectorAll(EvalCellElement.custom_element_name)) {
             const {
@@ -406,7 +415,8 @@ ${contents}
      *      before?: Node,  // default: null
      *  }
      *  @return {Object} structure_details: {
-     *      outer:                 HTMLElement,  // the outermost element of the structure
+     *      cell_container:        HTMLElement,  // the container element of the structure
+     *      cell_input_container:  HTMLElement,  // the input subcontainer element of the structure
      *      cell_parent:           HTMLElement,  // parent for cell
      *      cell_before:           HTMLElement,  // null or element before which to put cell
      *      output_element_parent: HTMLElement,  // parent for output_element
@@ -418,15 +428,17 @@ ${contents}
             parent = this.main_element,
             before = null,
         } = (options ?? {});
-        const outer = create_element({ parent, before });
-        outer.classList.add(this.constructor.cell_container_class);
-        const cell_parent = create_element({ parent: outer });
-        cell_parent.classList.add(this.constructor.cell_input_container_class);
+        const cell_container = create_element({ parent, before });
+        cell_container.classList.add(this.constructor.cell_container_class);
+        const cell_input_container = create_element({ parent: cell_container });
+        cell_input_container.classList.add(this.constructor.cell_input_container_class);
+        const cell_parent = cell_input_container;
         const cell_before = null;  // i.e., append
-        const output_element_parent = outer;
+        const output_element_parent = cell_container;
         const output_element_before = null;  // i.e., append
         return {
-            outer,
+            cell_container,
+            cell_input_container,
             cell_parent,
             cell_before,
             output_element_parent,
@@ -434,20 +446,20 @@ ${contents}
         };
     }
 
-    static #cell_outer_element(cell) {
+    static #cell_container_element(cell) {
         if (!(cell instanceof EvalCellElement)) {
             throw new Error('cell must be an instance of EvalCellElement');
         }
-        const outer = cell.parentElement?.parentElement;
-        if (!outer || !outer.parentElement) {
-            throw new Error('incorrent cell structure');
+        const cell_container = cell.parentElement?.parentElement;
+        if (!cell_container || !cell_container.parentElement) {
+            throw new Error('incorrect cell structure');
         }
-        return outer;
+        return cell_container;
     }
 
     // mapping from this editor cell element to the element on which "data-active" will be set
     static active_element_mapper(editor_element) {
-        return this.#cell_outer_element(editor_element);
+        return this.#cell_container_element(editor_element);
     }
 
 
@@ -567,7 +579,7 @@ ${contents}
         let before = null;
         const next_cell = command_context.target?.adjacent_cell?.(true);
         if (next_cell) {
-            before = this.constructor.#cell_outer_element(next_cell);
+            before = this.constructor.#cell_container_element(next_cell);
         }
         const cell = this.create_cell({ before });
         if (!cell) {
@@ -716,10 +728,10 @@ ${contents}
                 // beacause we are storing the cell, toolbar and output element
                 // in an element structure, just move the entire structure instead
                 // of using cell.move_cell()
-                const outer = this.constructor.#cell_outer_element(cell);
-                const parent = outer.parentElement;
-                const before = this.constructor.#cell_outer_element(previous);
-                move_node(outer, { parent, before });
+                const cell_container = this.constructor.#cell_container_element(cell);
+                const parent = cell_container.parentElement;
+                const before = this.constructor.#cell_container_element(previous);
+                move_node(cell_container, { parent, before });
                 cell.focus();
                 return true;
             }
@@ -740,10 +752,10 @@ ${contents}
                 // beacause we are storing the cell, toolbar and output element
                 // in an element structure, just move the entire structure instead
                 // of using cell.move_cell()
-                const outer = this.constructor.#cell_outer_element(cell);
-                const parent = outer.parentElement;
-                const before = this.constructor.#cell_outer_element(next).nextSibling;
-                move_node(outer, { parent, before });
+                const cell_container = this.constructor.#cell_container_element(cell);
+                const parent = cell_container.parentElement;
+                const before = this.constructor.#cell_container_element(next).nextSibling;
+                move_node(cell_container, { parent, before });
                 cell.focus();
                 return true;
             }
@@ -757,9 +769,9 @@ ${contents}
         if (!cell) {
             return false;
         }
-        const outer = this.constructor.#cell_outer_element(cell);
+        const cell_container = this.constructor.#cell_container_element(cell);
         const new_cell = this.create_cell({
-            before: outer,
+            before: cell_container,
         });
         new_cell.focus();
         return true;
@@ -772,10 +784,10 @@ ${contents}
         if (!cell) {
             return false;
         }
-        const outer = this.constructor.#cell_outer_element(cell);
+        const cell_container = this.constructor.#cell_container_element(cell);
         const new_cell = this.create_cell({
-            before: outer.nextSibling,
-            parent: outer.parentElement,  // necessary if before is null
+            before: cell_container.nextSibling,
+            parent: cell_container.parentElement,  // necessary if before is null
         });
         new_cell.focus();
         return true;
@@ -798,7 +810,7 @@ ${contents}
         // beacause we are storing the cell, toolbar and output element
         // in an element structure, just remove the entire structure instead
         // of using cell.remove_cell()
-        this.constructor.#cell_outer_element(cell).remove();
+        this.constructor.#cell_container_element(cell).remove();
         if (!next_cell) {
             next_cell = this.create_cell();
         }
