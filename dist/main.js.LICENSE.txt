@@ -23,6 +23,8 @@
 
 //!!! could use structuredClone(), but would that prevent remove() from finding?
 
+//!!! event handler never removed
+
 //!!! implement this
 
 //!!! improve #ui

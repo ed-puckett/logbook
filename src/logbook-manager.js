@@ -95,7 +95,10 @@ export class LogbookManager {
     #resize_handle_element;  // created in this.#initialize_document_structure()
     #resize_state;  // used while this.#resize_handle_element is being dragged
 
-    static resize_handle_class = 'resize-handle';
+    static resize_handle_class                = 'resize-handle';
+    static resize_handle_dragging_state_class = 'dragging';
+    static collapse_cells_state_class         = 'collapse-cells';
+    static input_output_split_css_variable    = '--input-output-split';
 
     get editable (){ return this.#editable }
     set_editable(editable) {
@@ -183,6 +186,9 @@ export class LogbookManager {
             const active_cell = cells.find(cell => cell.active) ?? cells[0] ?? this.create_cell();
             this.set_active_cell(active_cell);  // also resets "active" tool on all cells except for active_cell
             active_cell.focus();
+
+            // add event handler for this.#resize_handle_element
+            this.#resize_handle_element.addEventListener('mousedown', (event) => this.#enter_resize_mode(event));  //!!! event handler never removed
 
             // add "changes may not be saved" prompt for when document is being closed while modified
             window.addEventListener('beforeunload', (event) => {
@@ -340,6 +346,55 @@ export class LogbookManager {
     #assets_server_root;
     #local_server_root;
 
+    #enter_resize_mode(mousedown_event) {
+        if (!this.active_cell) {
+            // the this.active_cell is used to with getComputedStyle() to retrieve current split in px
+            throw new Error('resize failed: no active cell');
+        }
+        mousedown_event.preventDefault();
+        mousedown_event.stopPropagation();
+
+        const max_split_ratio      = 0.85;  // always leave some room for output elements
+        const collapse_split_ratio = 0.01;  // point at which cell contents collapses, leaving only output showing
+
+        const main_element_computed_style = window.getComputedStyle(this.#main_element);
+        const main_element_margin_left_px = parseFloat(main_element_computed_style.marginLeft);
+        const main_element_width_px       = parseFloat(main_element_computed_style.width);
+        // note: parseFloat() stops at the first non-number character, e.g., the trailing "px"
+        const left_limit_px  = main_element_margin_left_px;
+        const right_limit_px = left_limit_px + max_split_ratio*main_element_width_px;
+
+        // keep showing "hover" state even if mouse moves away from the resize handle
+        this.#resize_handle_element.classList.add(this.constructor.resize_handle_dragging_state_class);
+
+        let current_x = mousedown_event.x
+        const resize_handler = (event) => {
+            const dx = (current_x < left_limit_px || current_x > right_limit_px) ? 0 : (event.x - current_x);
+            current_x = event.x;
+            const active_cell_input_container = this.constructor.#cell_input_container_element(this.active_cell);
+            const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);
+            const new_split_px = current_split_px + dx;
+            const new_split = (new_split_px < 0) ? `0px` : `${new_split_px}px`;
+console.log('dx', dx, 'current_x', current_x, 'current_split_px', current_split_px, 'new_split', new_split);//!!!
+            document.documentElement.style.setProperty(this.constructor.input_output_split_css_variable, new_split);
+            // update collapsed state
+            if (new_split_px <= collapse_split_ratio*main_element_width_px) {
+                this.#main_element.classList.add(this.constructor.collapse_cells_state_class);
+            } else {
+                this.#main_element.classList.remove(this.constructor.collapse_cells_state_class);
+            }
+        }
+        document.addEventListener('mousemove', resize_handler);  // remove in 'mouseup' handler
+        document.addEventListener('mouseup', (event) => {
+            // note: 'mouseup' event is fired if the user switches windows while dragging
+console.log('MOUSEUP');//!!!
+            document.removeEventListener('mousemove', resize_handler);
+            this.#resize_handle_element.classList.remove(this.constructor.resize_handle_dragging_state_class);
+        }, {
+            once: true,
+        });
+    }
+
     static #essential_elements_selector = [
         EvalCellElement.custom_element_name,         // html tag (i.e., type)
         `.${EvalCellElement.output_element_class}`,  // css class
@@ -451,10 +506,19 @@ ${contents}
             throw new Error('cell must be an instance of EvalCellElement');
         }
         const cell_container = cell.parentElement?.parentElement;
-        if (!cell_container || !cell_container.parentElement) {
+        if (!cell_container || !cell_container.parentElement || !cell_container.classList.contains(this.cell_container_class)) {
             throw new Error('incorrect cell structure');
         }
         return cell_container;
+    }
+
+    static #cell_input_container_element(cell) {
+        const cell_container = this.#cell_container_element(cell);
+        const cell_input_container = cell_container.querySelector(`.${this.cell_input_container_class}`);
+        if (!cell_input_container) {
+            throw new Error('incorrect cell structure');
+        }
+        return cell_input_container;
     }
 
     // mapping from this editor cell element to the element on which "data-active" will be set

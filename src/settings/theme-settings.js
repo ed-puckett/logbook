@@ -92,6 +92,7 @@ const theme_property_name_documentation = `\
   dg -- dialog
   st -- settings dialog
   gr -- general graphics element
+  rh -- resize handle
 
   STYLE FEATURE:        STYLE FEATURE ATTRIBUTE:
   bg -- background      c -- color
@@ -140,6 +141,9 @@ const standard_themes_spec = {
 
     "--theme-hd-h":                    [ '1.5rem',                        '1.5rem' ],
     "--theme-hd-bgc":                  [ '#f8f8f8',                       '#2e2e2e' ],
+
+    "--theme-rh-bgc":                  [ 'grey',                          'grey' ],
+    "--theme-rh-bgc-hover":            [ 'black',                         'lightgrey' ],
 
     "--theme-tl-p":                    [ '0',                             '0' ],
     "--theme-tl-g":                    [ '0.5em',                         '0.5em' ],

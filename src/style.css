@@ -3,7 +3,11 @@
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
 :root {
-    --input-output-split: 50vw;  /* must specify absolute amount, not %, otherwise .resize-handle will be misaligned */
+    --input-output-split:          50vw;  /* must specify absolute amount, not %, otherwise .resize-handle will be misaligned */
+    --resize-handle-size:          8px;   /* handle is a downward-pointing triangle with this height and twice this width */
+    --resize-handle-hairline-size: 1px;   /* (half) width of hairline displayed when dragging resize-handle */
+
+    --resize-handle-center-h: calc(var(--input-output-split) + (2 * var(--theme-cl-bdw)));
 }
 
 body {
@@ -68,14 +72,30 @@ main > :not(:first-child) {
 
 .resize-handle {
     position: absolute;
-    left: var(--input-output-split);
+    left: calc(var(--resize-handle-center-h) - var(--resize-handle-size));
     /* form a down-pointing arrow with a centered tip */
     border-style: solid;
-    border-color: black transparent transparent transparent;
-    border-width: 6px 6px 0 6px;
+    border-color: var(--theme-rh-bgc) transparent transparent transparent;
+    border-width: var(--resize-handle-size) var(--resize-handle-size) 0 var(--resize-handle-size);
  }
-.resize-handle:hover {
-    background-color: red;
+.resize-handle:hover,
+.resize-handle.dragging {
+    border-color: var(--theme-rh-bgc-hover) transparent transparent transparent;
+}
+.resize-handle:hover::after,
+.resize-handle.dragging::after {
+    content: " ";
+    position: absolute;
+    left: calc(0px - var(--resize-handle-hairline-size));
+    min-width: calc(2 * var(--resize-handle-hairline-size));
+    max-width: calc(2 * var(--resize-handle-hairline-size));
+    min-height: 100vh;
+    background-color: var(--theme-rh-bgc-hover);
+}
+
+.collapse-cells tool-bar,
+.collapse-cells eval-cell {
+    display: none;
 }
 
 .cell-input-container {
@@ -155,6 +175,8 @@ eval-cell {
 }
 
 eval-cell > textarea {
+    color:            var(--theme-cl-fgc);
+    background-color: var(--theme-cl-bgc);
     resize: none;  /* remove resize control */
     outline: none;  /* handled by parent eval-cell */
     width: 100%;
