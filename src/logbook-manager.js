@@ -82,18 +82,17 @@ export class LogbookManager {
     #editable;
     #active_cell;
     #initialize_called;
-    #header_element;  // element inserted into document by initialize() to hold menus, etc
-    #main_element;    // element wrapped around original body content by initialize()
-    #eval_states;
-    #eval_states_subscription;
+    #header_element;         // element inserted into document by initialize() to hold menus, etc
+    #main_element;           // element wrapped around original body content by initialize()
+    #tool_bar;
+    #resize_handle_element;  // resize element; created in this.#initialize_document_structure()
     #menubar;
     #menubar_commands_subscription;
     #menubar_selects_subscription;
-    #tool_bar;
+    #eval_states;
+    #eval_states_subscription;
     #global_eval_context;  // persistent eval_context for eval commands
     #file_handle;
-    #resize_handle_element;  // created in this.#initialize_document_structure()
-    #resize_state;  // used while this.#resize_handle_element is being dragged
 
     static resize_handle_class                = 'resize-handle';
     static resize_handle_dragging_state_class = 'dragging';
@@ -375,7 +374,6 @@ export class LogbookManager {
             const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);
             const new_split_px = current_split_px + dx;
             const new_split = (new_split_px < 0) ? `0px` : `${new_split_px}px`;
-console.log('dx', dx, 'current_x', current_x, 'current_split_px', current_split_px, 'new_split', new_split);//!!!
             document.documentElement.style.setProperty(this.constructor.input_output_split_css_variable, new_split);
             // update collapsed state
             if (new_split_px <= collapse_split_ratio*main_element_width_px) {
@@ -387,7 +385,6 @@ console.log('dx', dx, 'current_x', current_x, 'current_split_px', current_split_
         document.addEventListener('mousemove', resize_handler);  // remove in 'mouseup' handler
         document.addEventListener('mouseup', (event) => {
             // note: 'mouseup' event is fired if the user switches windows while dragging
-console.log('MOUSEUP');//!!!
             document.removeEventListener('mousemove', resize_handler);
             this.#resize_handle_element.classList.remove(this.constructor.resize_handle_dragging_state_class);
         }, {

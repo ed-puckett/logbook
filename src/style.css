@@ -97,6 +97,9 @@ main > :not(:first-child) {
 .collapse-cells eval-cell {
     display: none;
 }
+.collapse-cells .cell-input-container {
+    border: 0;
+}
 
 .cell-input-container {
     min-width: var(--input-output-split);
@@ -527,6 +530,11 @@ body > .error-message {
 
     main {
         overflow: visible;
+    }
+
+    .resize-handle,
+    .resize-handle::after {
+        display: none;
     }
 
 }
