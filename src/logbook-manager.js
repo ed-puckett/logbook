@@ -124,6 +124,16 @@ export class LogbookManager {
     get header_element (){ return this.#header_element; }
     get main_element   (){ return this.#main_element; }
 
+    /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
+     *  @return {Array} the cells in the document
+     * Note that EditorCellElement elements are not returned even though
+     * EditorCellElement is a base class of EvalCellElement.  This is not ambiguous
+     * because they have different tag names (editor-cell vs eval-cell).
+     */
+    static get_cells() {
+        return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
+    }
+
     /** reset the document, meaning that all cells will be reset,
      *  and this.global_eval_context will be reset.  Also, the
      *  saved file handle this.#file_handle set to undefined.
@@ -203,7 +213,7 @@ export class LogbookManager {
     }
 
 
-    // === DOCUMENT UTILITIES ===
+    // === DOCUMENT STRUCTURE ===
 
     static header_element_tag = 'header';
     static main_element_tag   = 'main';
@@ -248,16 +258,6 @@ export class LogbookManager {
             active_element_mapper: this.constructor.active_element_mapper.bind(this.constructor),
         });
         return cell;
-    }
-
-    /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
-     *  @return {Array} the cells in the document
-     * Note that EditorCellElement elements are not returned even though
-     * EditorCellElement is a base class of EvalCellElement.  This is not ambiguous
-     * because they have different tag names (editor-cell vs eval-cell).
-     */
-    static get_cells() {
-        return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
     }
 
     // put everything in the body into a new top-level main element
@@ -345,6 +345,101 @@ export class LogbookManager {
     #assets_server_root;
     #local_server_root;
 
+    #setup_csp(enabled=false) {
+        if (enabled) {
+
+            // === CONTENT SECURITY POLICY ===
+
+            // set a Content-Security-Policy that will permit us
+            // to dynamically load associated content
+
+            const csp_header_content = [
+                //!!! audit this !!!
+                "default-src 'self' 'unsafe-eval'",
+                "style-src   'self' 'unsafe-inline' *",
+                "script-src  'self' 'unsafe-inline' 'unsafe-eval' *",
+                "img-src     'self' data: blob: *",
+                "media-src   'self' data: blob: *",
+                "connect-src data:",
+            ].join('; ');
+
+            create_element({
+                parent: document.head,
+                tag:    'meta',
+                attrs: {
+                    "http-equiv": "Content-Security-Policy",
+                    "content":    csp_header_content,
+                },
+            });
+        }
+    }
+
+    #setup_header() {
+        if (!this.header_element) {
+            throw new Error(`bad format for document: header element does not exist`);
+        }
+        const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
+        const get_recents = null;//!!! implement this
+        this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_command_bindings, get_recents);
+        //!!! this.#menubar_commands_subscription is never unsubscribed
+        this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
+        //!!! this.#menubar_selects_subscription is never unsubscribed
+        this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
+
+        // add a tool-bar element to the header document
+        this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
+            /*!!! autoeval: {
+                initial: this.autoeval,
+                on: (event) => {
+                    this.set_autoeval(!this.autoeval);
+                    return true;
+                }, !!!*/
+            modified: true,
+            running:  true,
+        });
+        this.#header_element.appendChild(this.#tool_bar);
+    }
+
+
+    // === SAVE HANDLING ====
+
+    static #essential_elements_selector = [
+        EvalCellElement.custom_element_name,         // html tag (i.e., type)
+        `.${EvalCellElement.output_element_class}`,  // css class
+    ].join(',');
+
+    #save_serializer() {
+        const queried_main_element = document.querySelector(this.constructor.main_element_tag);
+        if (!queried_main_element || queried_main_element !== this.main_element) {
+            throw new Error('bad format for document');
+        }
+        if (!this.main_element) {
+            throw new Error('bad format for document: this.main_element not set');
+        }
+        const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
+              .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
+              .join('\n');
+        return `\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script type="module" src="../dist/main.js"></script>
+</head>
+<body>
+${contents}
+</body>
+</html>
+`;
+}
+
+    get_suggested_file_name() {
+        return window.location.pathname.split('/').slice(-1)[0];
+    }
+
+
+    // === RESIZE HANDLING ===
+
     #enter_resize_mode(mousedown_event) {
         if (!this.active_cell) {
             // the this.active_cell is used to with getComputedStyle() to retrieve current split in px
@@ -390,69 +485,6 @@ export class LogbookManager {
         }, {
             once: true,
         });
-    }
-
-    static #essential_elements_selector = [
-        EvalCellElement.custom_element_name,         // html tag (i.e., type)
-        `.${EvalCellElement.output_element_class}`,  // css class
-    ].join(',');
-
-    #save_serializer() {
-        const queried_main_element = document.querySelector(this.constructor.main_element_tag);
-        if (!queried_main_element || queried_main_element !== this.main_element) {
-            throw new Error('bad format for document');
-        }
-        if (!this.main_element) {
-            throw new Error('bad format for document: this.main_element not set');
-        }
-        const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
-              .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
-              .join('\n');
-        return `\
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <script type="module" src="../dist/main.js"></script>
-</head>
-<body>
-${contents}
-</body>
-</html>
-`;
-}
-
-    #setup_csp(enabled=false) {
-        if (enabled) {
-
-            // === CONTENT SECURITY POLICY ===
-
-            // set a Content-Security-Policy that will permit us
-            // to dynamically load associated content
-
-            const csp_header_content = [
-                //!!! audit this !!!
-                "default-src 'self' 'unsafe-eval'",
-                "style-src   'self' 'unsafe-inline' *",
-                "script-src  'self' 'unsafe-inline' 'unsafe-eval' *",
-                "img-src     'self' data: blob: *",
-                "media-src   'self' data: blob: *",
-                "connect-src data:",
-            ].join('; ');
-
-            create_element({
-                parent: document.head,
-                tag:    'meta',
-                attrs: {
-                    "http-equiv": "Content-Security-Policy",
-                    "content":    csp_header_content,
-                },
-            });
-        }
-    }
-
-    get_suggested_file_name() {
-        return window.location.pathname.split('/').slice(-1)[0];
     }
 
 
@@ -559,32 +591,6 @@ ${contents}
         /*
           recents
         */
-    }
-
-    #setup_header() {
-        if (!this.header_element) {
-            throw new Error(`bad format for document: header element does not exist`);
-        }
-        const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
-        const get_recents = null;//!!! implement this
-        this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_command_bindings, get_recents);
-        //!!! this.#menubar_commands_subscription is never unsubscribed
-        this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
-        //!!! this.#menubar_selects_subscription is never unsubscribed
-        this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
-
-        // add a tool-bar element to the header document
-        this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
-            /*!!! autoeval: {
-                initial: this.autoeval,
-                on: (event) => {
-                    this.set_autoeval(!this.autoeval);
-                    return true;
-                }, !!!*/
-            modified: true,
-            running:  true,
-        });
-        this.#header_element.appendChild(this.#tool_bar);
     }
 
     #menubar_commands_observer(command_context) {
