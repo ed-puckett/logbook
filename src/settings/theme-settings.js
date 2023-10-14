@@ -101,6 +101,7 @@ const theme_property_name_documentation = `\
   sh -- shadow          r -- radius
   fl -- fill
   st -- stroke
+  ct -- caret
 
   METRIC FEATURE:
   w -- width
@@ -162,6 +163,7 @@ const standard_themes_spec = {
     "--theme-cl-fgc":                  [ 'black',                         '#eee' ],
     "--theme-cl-bgc":                  [ 'hsl(  0deg   0%  99% / 100%)',  '#111' ],
     "--theme-cl-p-inter":              [ '0em',                           '0em' ],
+    "--theme-cl-ctc":                  [ 'red',                           'red' ],
 
     "--theme-ou-p":                    [ '0.5em',                         '0.5em' ],
     "--theme-ou-fgc":                  [ 'black',                         '#eee' ],

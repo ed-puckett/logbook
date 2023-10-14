@@ -3,7 +3,10 @@
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
 :root {
-    --input-output-split:          50vw;  /* must specify absolute amount, not %, otherwise .resize-handle will be misaligned */
+    --input-output-split: 50vw;  /* must specify absolute amount, not %, otherwise .resize-handle will be misaligned */
+
+    --is-stacked: ;  /* is input/output displayed stacked or side-by-side (default) */
+
     --resize-handle-size:          8px;   /* handle is a downward-pointing triangle with this height and twice this width */
     --resize-handle-hairline-size: 1px;   /* (half) width of hairline displayed when dragging resize-handle */
 
@@ -107,7 +110,11 @@ main > :not(:first-child) {
 }
 
 @media screen and (max-width: 40em) {
-    /* responsive: input/output side-by-side vs stacked */
+    /* responsive: input/output stacked vs side-by-side */
+
+    :root {
+        --is-stacked: yes;
+    }
 
     .cell-container {
         flex-direction: column;
@@ -160,6 +167,7 @@ eval-cell {
     display: block;
     margin:  0;
 
+    caret-color: var(--theme-cl-ctc);
     outline: 0px solid transparent;  /* disable default contenteditable outline */
 
     white-space: pre-wrap;  /* properly display white-space */

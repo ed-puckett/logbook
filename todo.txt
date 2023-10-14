@@ -1,4 +1,4 @@
-add resize commands for key and menu: expand-cell-input, shrink-cell-input, collapse-cell-input
+add resize commands for key and menu: enlarge-inputs, shrink-inputs, collapse-inputs, expand-inputs
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
@@ -10,7 +10,6 @@ create_element(): sending "attrs" option with a "class" property does not work a
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
 f11, ctrl-alt-I, etc do not work when e.g., body is focused
-key bindings do not work when tool-bar elements (e.g., type selector) are focused
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
@@ -36,6 +35,7 @@ maybe use CodeMirror
 
 
 --- DONE ---
+key bindings do not work when tool-bar elements (e.g., type selector) are focused
 update examples / convert old esbook examples
 ChangeManager does not work well with the textarea implementation in EditorCellElement
 prevent spellcheck in text areas

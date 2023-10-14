@@ -121,6 +121,7 @@ export class LogbookManager {
     static resize_handle_dragging_state_class = 'dragging';
     static collapse_cells_state_class         = 'collapse-cells';
     static input_output_split_css_variable    = '--input-output-split';
+    static is_stacked_css_variable            = '--is-stacked';
 
     get editable (){ return this.#editable; }
     set_editable(editable) {
@@ -486,34 +487,24 @@ ${contents}
         mousedown_event.preventDefault();
         mousedown_event.stopPropagation();
 
-        const max_split_ratio      = 0.85;  // always leave some room for output elements
-        const collapse_split_ratio = 0.01;  // point at which cell contents collapses, leaving only output showing
-
-        const main_element_computed_style = window.getComputedStyle(this.#main_element);
-        const main_element_margin_left_px = parseFloat(main_element_computed_style.marginLeft);
-        const main_element_width_px       = parseFloat(main_element_computed_style.width);
-        // note: parseFloat() stops at the first non-number character, e.g., the trailing "px"
-        const left_limit_px  = main_element_margin_left_px;
-        const right_limit_px = left_limit_px + max_split_ratio*main_element_width_px;
-
-        // keep showing "hover" state even if mouse moves away from the resize handle
+        // keep showing "hover" state while dragging even if mouse moves out of the resize handle
         this.#resize_handle_element.classList.add(this.constructor.resize_handle_dragging_state_class);
+
+        const resize_metrics = this.get_resize_metrics();
+        const {
+            left_limit_px,
+            right_limit_px,
+            collapse_point_px,
+        } = resize_metrics;
 
         let current_x = mousedown_event.x;
         const resize_handler = (event) => {
             const dx = (current_x < left_limit_px || current_x > right_limit_px) ? 0 : (event.x - current_x);
             current_x = event.x;
             const active_cell_input_container = this.constructor.#cell_input_container_element(this.active_cell);
-            const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);
+            const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);  // = var(--input-output-split)
             const new_split_px = current_split_px + dx;
-            const new_split = (new_split_px < 0) ? `0px` : `${new_split_px}px`;
-            document.documentElement.style.setProperty(this.constructor.input_output_split_css_variable, new_split);
-            // update collapsed state
-            if (new_split_px <= collapse_split_ratio*main_element_width_px) {
-                this.#main_element.classList.add(this.constructor.collapse_cells_state_class);
-            } else {
-                this.#main_element.classList.remove(this.constructor.collapse_cells_state_class);
-            }
+            this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         };
         document.addEventListener('mousemove', resize_handler);  // remove in 'mouseup' handler
         document.addEventListener('mouseup', (event) => {
@@ -523,6 +514,57 @@ ${contents}
         }, {
             once: true,
         });
+    }
+
+    is_collapsed() {
+        return this.#main_element.classList.contains(this.constructor.collapse_cells_state_class);
+    }
+
+    is_stacked() {
+        const var_value = window.getComputedStyle(document.documentElement).getPropertyValue(this.constructor.is_stacked_css_variable);
+        return (var_value.trim().length > 0);
+    }
+
+    set_input_output_split(new_split_px) {
+        return this.#set_input_output_split_given_resize_metrics(new_split_px, this.get_resize_metrics());
+    }
+
+    #set_input_output_split_given_resize_metrics(new_split_px, resize_metrics) {
+        if (typeof new_split_px !== 'number') {
+            throw new Error('new_split_px must be a number');
+        }
+        if (typeof resize_metrics !== 'object' || typeof resize_metrics.collapse_point_px !== 'number') {
+            throw new Error('resize_metrics must be an object with a numeric-valued preoperty "collapse_point_px"');
+        }
+        const new_split = (new_split_px < 0) ? `0px` : `${new_split_px}px`;
+        document.documentElement.style.setProperty(this.constructor.input_output_split_css_variable, new_split);
+        // update collapsed state
+        if (new_split_px <= resize_metrics.collapse_point_px) {
+            this.#main_element.classList.add(this.constructor.collapse_cells_state_class);
+        } else {
+            this.#main_element.classList.remove(this.constructor.collapse_cells_state_class);
+        }
+    }
+
+    get_resize_metrics() {
+        // these ratios are with respect to main_element_width_px (calculated below)
+        const max_split_ratio      = 0.85;   // always leave some room for output elements
+        const collapse_split_ratio = 0.001;  // point at which cell contents collapses, leaving only output showing
+
+        // note: parseFloat() stops at the first non-number character, e.g., a trailing "px" as in "123px"
+
+        const main_element_computed_style = window.getComputedStyle(this.#main_element);
+        const main_element_margin_left_px = parseFloat(main_element_computed_style.marginLeft);
+        const main_element_width_px       = parseFloat(main_element_computed_style.width);
+        const left_limit_px     = main_element_margin_left_px;
+        const right_limit_px    = left_limit_px + max_split_ratio*main_element_width_px;
+        const collapse_point_px = collapse_split_ratio*main_element_width_px;
+
+        return {
+            left_limit_px,      // mouse position
+            right_limit_px,     // mouse position
+            collapse_point_px,  // split value at which collapse occurs
+        };
     }
 
 
