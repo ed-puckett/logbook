@@ -51,6 +51,10 @@ import {
 } from '../lib/ui/beep.js';
 
 import {
+    open_help_window,
+} from './help-window.js';
+
+import {
     assets_server_url,
 } from './assets-server-url.js';
 
@@ -88,7 +92,7 @@ export class LogbookManager {
         //!!! this.#eval_states_subscription is never unsubscribed
         this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
 
-        this.#command_bindings = get_global_command_bindings();
+        this.#command_bindings = get_global_command_bindings(this);
 
         this.#key_event_manager = new KeyEventManager(window, this.#command_observer.bind(this));
         const key_map = new KeyMap(get_global_initial_key_map_bindings());
@@ -416,9 +420,9 @@ export class LogbookManager {
         const get_recents = null;//!!! implement this
         this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_global_initial_key_map_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
-        this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
+        this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#command_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
-        this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.update_menu_state.bind(this));
+        this.#menubar_selects_subscription = this.#menubar.selects.subscribe(this.#update_menu_state.bind(this));
 
         // add a tool-bar element to the header document
         this.#tool_bar = ToolBarElement.create_for(this.#header_element, {
@@ -622,27 +626,18 @@ ${contents}
     }
 
     #command_observer(command_context) {
-        if (command_context.target instanceof HTMLTextAreaElement) {
-            // patch command_context.target to be the cell itself
-            // this is a kludge, but is necessary when key bindings
-            // are activated on the contained textarea
-            command_context = {
-                ...command_context,
-                target: command_context.target.parentElement,
-            };
-        }
+        let success = false;
         try {
-            const success = this.perform_command(command_context);
-            if (!success) {
-                beep();
-            }
+            success = this.#perform_command(command_context);
         } catch (error) {
             console.error('error processing command', command_context, error);
+        }
+        if (!success) {
             beep();
         }
     }
 
-    perform_command(command_context) {
+    #perform_command(command_context) {
         if (!command_context) {
             return false;  // indicate: command not handled
         } else {
@@ -650,17 +645,21 @@ ${contents}
             if (!target) {
                 return false;  // indicate: command not handled
             } else {
-                const bindings_fn = this.#command_bindings[command_context.command];
+                const updated_command_context = {
+                    ...command_context,
+                    target: this.active_cell,
+                };
+                const bindings_fn = this.#command_bindings[updated_command_context.command];
                 if (!bindings_fn) {
                     return false;  // indicate: command not handled
                 } else {
-                    return bindings_fn(command_context);
+                    return bindings_fn(updated_command_context);
                 }
             }
         }
     }
 
-    update_menu_state() {
+    #update_menu_state() {
         const cells        = this.constructor.get_cells();
         const active_cell  = this.active_cell;
         const active_index = cells.indexOf(active_cell);
@@ -670,45 +669,29 @@ ${contents}
           'save'  // directly handled in this.#neutral_changes_observer()
         */
 
-        this.#menubar.set_menu_state('clear',      { enabled: editable });
-        this.#menubar.set_menu_state('reset',      { enabled: editable });
-        this.#menubar.set_menu_state('reset-cell', { enabled: editable });
+        this.#menubar.set_menu_state('clear',            { enabled: editable });
+        this.#menubar.set_menu_state('reset',            { enabled: editable });
+        this.#menubar.set_menu_state('reset-cell',       { enabled: editable });
 
-        this.#menubar.set_menu_state('focus-up',   { enabled: (active_cell && active_index > 0) });
-        this.#menubar.set_menu_state('focus-down', { enabled: (active_cell && active_index < cells.length-1) });
-        this.#menubar.set_menu_state('move-up',    { enabled: (active_cell && active_index > 0) });
-        this.#menubar.set_menu_state('move-down',  { enabled: (active_cell && active_index < cells.length-1) });
-        this.#menubar.set_menu_state('add-before', { enabled: editable && active_cell });
-        this.#menubar.set_menu_state('add-after',  { enabled: editable && active_cell });
-        this.#menubar.set_menu_state('delete',     { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('focus-up',         { enabled: (active_cell && active_index > 0) });
+        this.#menubar.set_menu_state('focus-down',       { enabled: (active_cell && active_index < cells.length-1) });
+        this.#menubar.set_menu_state('move-up',          { enabled: (active_cell && active_index > 0) });
+        this.#menubar.set_menu_state('move-down',        { enabled: (active_cell && active_index < cells.length-1) });
+        this.#menubar.set_menu_state('add-before',       { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('add-after',        { enabled: editable && active_cell });
+        this.#menubar.set_menu_state('delete',           { enabled: editable && active_cell });
 
         this.#menubar.set_menu_state('eval-and-refocus', { enabled: editable && active_cell });
         this.#menubar.set_menu_state('eval',             { enabled: editable && active_cell });
         this.#menubar.set_menu_state('eval-before',      { enabled: editable && active_cell });
         this.#menubar.set_menu_state('eval-all',         { enabled: editable && active_cell });
 
-        this.#menubar.set_menu_state('stop',     { enabled: active_cell?.can_stop });
-        this.#menubar.set_menu_state('stop-all', { enabled: cells.some(cell => cell.can_stop) });
+        this.#menubar.set_menu_state('stop',             { enabled: active_cell?.can_stop });
+        this.#menubar.set_menu_state('stop-all',         { enabled: cells.some(cell => cell.can_stop) });
 
         /*
           recents
         */
-    }
-
-    #menubar_commands_observer(command_context) {
-        const target = this.active_cell;
-        if (!target) {
-            beep();
-        } else if (!(target instanceof EvalCellElement)) {
-            beep();
-        } else {
-            // set target in command_context to be the active cell
-            const updated_command_context = {
-                ...command_context,
-                target,
-            };
-            this.perform_command(updated_command_context);
-        }
     }
 
 
@@ -819,13 +802,6 @@ ${contents}
                 suggestedName: this.get_suggested_file_name(),//!!!
             },
         });
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__show_settings_dialog(command_context) {
-        SettingsDialog.run();
         return true;
     }
 
@@ -1090,6 +1066,20 @@ ${contents}
         }
         // this will re-set this.active_cell
         next_cell.focus();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__show_settings_dialog(command_context) {
+        SettingsDialog.run();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__show_help(command_context) {
+        open_help_window();
         return true;
     }
 }

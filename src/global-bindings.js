@@ -1,12 +1,3 @@
-import {
-    LogbookManager,
-} from './logbook-manager.js';
-
-import {
-    beep,
-} from '../lib/ui/beep.js';
-
-
 /** return the initial menu specification
  *  @return {Object} menu specification
  */
@@ -68,8 +59,6 @@ export function get_global_initial_key_map_bindings() {
         'save':                [ 'CmdOrCtrl-S' ],
         'save-as':             [ 'CmdOrCtrl-Shift-S' ],
 
-        'settings':            [ 'CmdOrCtrl-,' ],
-
         'eval':                [ 'CmdOrCtrl-Enter' ],
         'eval-and-refocus':    [ 'Shift-Enter' ],
         'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
@@ -90,203 +79,57 @@ export function get_global_initial_key_map_bindings() {
         'add-before':          [ 'CmdOrCtrl-Alt-Shift-Up' ],
         'add-after':           [ 'CmdOrCtrl-Alt-Shift-Down' ],
         'delete':              [ 'CmdOrCtrl-Alt-Backspace' ],
+
+        'settings':            [ 'CmdOrCtrl-,' ],
+        'help':                [ ],
     };
 }
 
 /** return global command bindings
+ *  @param {Object} implementor of command_handlers
  *  @return {Object} mapping from command strings to functions implementing that command
- * The bindings are obtained by merging local command bindings with LogbookManager.singleton
- * command bindings.
+ * The handler functions are taken from the implementor argument.
  */
-export function get_global_command_bindings() {
+export function get_global_command_bindings(implementor) {
     const command_bindings = {
-        'create-cell':         command_handler__create_cell,
+        'create-cell':         implementor.command_handler__create_cell,
 
-        'reset-cell':          command_handler__reset_cell,
-        'reset':               command_handler__reset,
-        'clear':               command_handler__clear,
+        'reset-cell':          implementor.command_handler__reset_cell,
+        'reset':               implementor.command_handler__reset,
+        'clear':               implementor.command_handler__clear,
 
-        'save':                command_handler__save,
-        'save-as':             command_handler__save_as,
+        'save':                implementor.command_handler__save,
+        'save-as':             implementor.command_handler__save_as,
 
-        'settings':            command_handler__show_settings_dialog,
+        'eval':                implementor.command_handler__eval,
+        'eval-and-refocus':    implementor.command_handler__eval_and_refocus,
+        'eval-before':         implementor.command_handler__eval_before,
+        'eval-all':            implementor.command_handler__eval_all,
 
-        'eval':                command_handler__eval,
-        'eval-and-refocus':    command_handler__eval_and_refocus,
-        'eval-before':         command_handler__eval_before,
-        'eval-all':            command_handler__eval_all,
+        'set-mode-markdown':   implementor.command_handler__set_mode_markdown,
+        'set-mode-tex':        implementor.command_handler__set_mode_tex,
+        'set-mode-javascript': implementor.command_handler__set_mode_javascript,
 
-        'set-mode-markdown':   command_handler__set_mode_markdown,
-        'set-mode-tex':        command_handler__set_mode_tex,
-        'set-mode-javascript': command_handler__set_mode_javascript,
+        'stop':                implementor.command_handler__stop,
+        'stop-all':            implementor.command_handler__stop_all,
 
-        'stop':                command_handler__stop,
-        'stop-all':            command_handler__stop_all,
+        'focus-up':            implementor.command_handler__focus_up,
+        'focus-down':          implementor.command_handler__focus_down,
 
-        'focus-up':            command_handler__focus_up,
-        'focus-down':          command_handler__focus_down,
+        'move-up':             implementor.command_handler__move_up,
+        'move-down':           implementor.command_handler__move_down,
+        'add-before':          implementor.command_handler__add_before,
+        'add-after':           implementor.command_handler__add_after,
+        'delete':              implementor.command_handler__delete,
 
-        'move-up':             command_handler__move_up,
-        'move-down':           command_handler__move_down,
-        'add-before':          command_handler__add_before,
-        'add-after':           command_handler__add_after,
-        'delete':              command_handler__delete,
+        'settings':            implementor.command_handler__show_settings_dialog,
+        'help':                implementor.command_handler__show_help,
     };
 
+    // bind "this" for the implemented functions
+    for (const command in command_bindings) {
+        command_bindings[command] = command_bindings[command].bind(implementor);
+    }
+
     return command_bindings;
-}
-
-
-// === COMMAND HANDLERS ===
-
-// Note that these functions prevent us from having to access LogbookManager statically.
-// LogbookManager and this module depend upon each other.
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__create_cell(command_context) {
-    return LogbookManager.singleton.command_handler__create_cell(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__reset_cell(command_context) {
-    return LogbookManager.singleton.command_handler__reset_cell(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__reset(command_context) {
-    return LogbookManager.singleton.command_handler__reset(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__clear(command_context) {
-    return LogbookManager.singleton.command_handler__clear(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__save(command_context) {
-    return LogbookManager.singleton.command_handler__save(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__save_as(command_context) {
-    return LogbookManager.singleton.command_handler__save_as(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__show_settings_dialog(command_context) {
-    return LogbookManager.singleton.command_handler__show_settings_dialog(command_context);
-}
-
-/** eval target cell and refocus to next cell (or a new one if at the end of the document)
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__eval(command_context) {
-    return LogbookManager.singleton.command_handler__eval(command_context);
-}
-
-/** eval target cell and refocus to next cell (or a new one if at the end of the document)
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__eval_and_refocus(command_context) {
-    return LogbookManager.singleton.command_handler__eval_and_refocus(command_context);
-}
-
-/** reset global eval context and then eval all cells in the document
- *  from the beginning up to but not including the target cell.
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__eval_before(command_context) {
-    return LogbookManager.singleton.command_handler__eval_before(command_context);
-}
-
-/** stop all running evaluations, reset global eval context and then eval all cells in the document
- *  from first to last, and set focus to the last.
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__eval_all(command_context) {
-    return LogbookManager.singleton.command_handler__eval_all(command_context);
-}
-
-/** set the active cell's input_type to "markdown"
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__set_mode_markdown(command_context) {
-    return LogbookManager.singleton.command_handler__set_mode_markdown(command_context);
-}
-
-/** set the active cell's input_type to "tex"
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__set_mode_tex(command_context) {
-    return LogbookManager.singleton.command_handler__set_mode_tex(command_context);
-}
-
-/** set the active cell's input_type to "javascript"
- *  @return {Boolean} true iff command successfully handled
- */
-export async function command_handler__set_mode_javascript(command_context) {
-    return LogbookManager.singleton.command_handler__set_mode_javascript(command_context);
-}
-
-/** stop evaluation for the active cell.
- *  @return {Boolean} true iff command successfully handled
- */
-export function command_handler__stop(command_context) {
-    return LogbookManager.singleton.command_handler__stop(command_context);
-}
-
-/** stop all running evaluations.
- *  @return {Boolean} true iff command successfully handled
- */
-export function command_handler__stop_all(command_context) {
-    return LogbookManager.singleton.command_handler__stop_all(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__focus_up(command_context) {
-    return LogbookManager.singleton.command_handler__focus_up(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__focus_down(command_context) {
-    return LogbookManager.singleton.command_handler__focus_down(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__move_up(command_context) {
-    return LogbookManager.singleton.command_handler__move_up(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__move_down(command_context) {
-    return LogbookManager.singleton.command_handler__move_down(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__add_before(command_context) {
-    return LogbookManager.singleton.command_handler__add_before(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__add_after(command_context) {
-    return LogbookManager.singleton.command_handler__add_after(command_context);
-}
-
-/** @return {Boolean} true iff command successfully handled
- */
-export function command_handler__delete(command_context) {
-    return LogbookManager.singleton.command_handler__delete(command_context);
 }
