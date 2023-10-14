@@ -1,3 +1,4 @@
+add resize commands for key and menu: expand-cell-input, shrink-cell-input, collapse-cell-input
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings

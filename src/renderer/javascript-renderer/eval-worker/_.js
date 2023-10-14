@@ -138,7 +138,7 @@ export class EvalWorker {
             if (!this.keepalive) {
                 this.terminate();
             }
-        }
+        };
 
         const handle_result = (result) => {
             if (done) {
@@ -159,7 +159,7 @@ export class EvalWorker {
                     handle_done();
                 }
             }
-        }
+        };
 
         const expression_id = generate_object_id();
 
@@ -203,7 +203,7 @@ export class EvalWorker {
                 return {
                     next() {
                         if (pending_results.length > 0) {
-                            const result = pending_results.shift()
+                            const result = pending_results.shift();
                             if ('value' in result) {
                                 return Promise.resolve({ value: result.value });
                             } else {

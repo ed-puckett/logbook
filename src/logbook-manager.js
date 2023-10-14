@@ -99,7 +99,7 @@ export class LogbookManager {
     static collapse_cells_state_class         = 'collapse-cells';
     static input_output_split_css_variable    = '--input-output-split';
 
-    get editable (){ return this.#editable }
+    get editable (){ return this.#editable; }
     set_editable(editable) {
         editable = !!editable;  // ensure Boolean
         this.#editable = editable;
@@ -461,7 +461,7 @@ ${contents}
         // keep showing "hover" state even if mouse moves away from the resize handle
         this.#resize_handle_element.classList.add(this.constructor.resize_handle_dragging_state_class);
 
-        let current_x = mousedown_event.x
+        let current_x = mousedown_event.x;
         const resize_handler = (event) => {
             const dx = (current_x < left_limit_px || current_x > right_limit_px) ? 0 : (event.x - current_x);
             current_x = event.x;
@@ -476,7 +476,7 @@ ${contents}
             } else {
                 this.#main_element.classList.remove(this.constructor.collapse_cells_state_class);
             }
-        }
+        };
         document.addEventListener('mousemove', resize_handler);  // remove in 'mouseup' handler
         document.addEventListener('mouseup', (event) => {
             // note: 'mouseup' event is fired if the user switches windows while dragging

@@ -196,7 +196,7 @@ export class SettingsDialog extends Dialog {
                     set_obj_path(current_settings, settings_path, (convert_to_number ? +value : value));
 
                     try {
-                        await update_settings(current_settings)
+                        await update_settings(current_settings);
                         error_div.classList.remove('active');
                     } catch (error) {
                         await handle_error(error.message);

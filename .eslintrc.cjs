@@ -12,5 +12,6 @@ module.exports = {
         "no-unused-vars": 0,
         "no-inner-declarations": 0,
         "no-constant-condition": 0,
+        "semi": [2, "always"],
     },
 };

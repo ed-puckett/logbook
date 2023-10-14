@@ -152,17 +152,6 @@ export class EditorCellElement extends HTMLElement {
         }
     }
 
-    #trigger_text_container_resize() {
-        if (this.#has_text_container()) {
-            const editable_element = this.#get_text_container();
-            trigger_textarea_auto_resize(editable_element);
-        }
-    }
-
-    #resize_observer_handler() {
-        this.#trigger_text_container_resize();
-    }
-
     /** override focus() so that we can direct focus to the contained textarea
      *  if necessary.  Setting a tabindex="0" attribute on this cell solves the
      *  problem but then causes another: SHIFT-Tab out of a textarea with a
@@ -178,6 +167,17 @@ export class EditorCellElement extends HTMLElement {
             text_container.focus();
             text_container.setSelectionRange(ss, se);
         }
+    }
+
+    #trigger_text_container_resize() {
+        if (this.#has_text_container()) {
+            const editable_element = this.#get_text_container();
+            trigger_textarea_auto_resize(editable_element);
+        }
+    }
+
+    #resize_observer_handler() {
+        this.#trigger_text_container_resize();
     }
 
 
@@ -337,7 +337,7 @@ export class EditorCellElement extends HTMLElement {
         const cells = [ ...document.querySelectorAll(this.tagName) ];
         const index = cells.indexOf(this);
         if (index === -1) {
-            return null
+            return null;
         } else {
             if (forward) {
                 if (index >= cells.length-1) {

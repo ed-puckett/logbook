@@ -381,7 +381,7 @@ function adjust_theme(theme) {
     validate_theme_props(props);
 
     let adjustment_made = false;
-    const adjusted_props = { ...props }
+    const adjusted_props = { ...props };
     for (const required_prop_name of standard_theme_prop_names) {
         if (!(required_prop_name in props)) {
             adjustment_made = true;
@@ -466,7 +466,7 @@ async function initialize_themes() {
             // accumulate standard themes, in order, into the beginning of themes_settings
             for (const standard_theme of standard_themes) {
                 const theme_from_storage = themes_settings_from_storage.find(t => (t.name === standard_theme.name));
-                const theme = theme_from_storage ?? standard_theme
+                const theme = theme_from_storage ?? standard_theme;
                 themes_settings.push(theme);
             }
             // then append the remaining themes from storage

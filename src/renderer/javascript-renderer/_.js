@@ -273,12 +273,12 @@ export class JavaScriptRenderer extends Renderer {
                 return async (...args) => {
                     abort_if_stopped(f.name ?? 'FUNCTION');
                     return f.apply(this, args);
-                }
+                };
             } else {
                 return (...args) => {
                     abort_if_stopped(f.name ?? 'FUNCTION');
                     return f.apply(this, args);
-                }
+                };
             }
         }
         function abort_if_stopped(operation) {

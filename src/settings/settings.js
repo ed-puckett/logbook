@@ -58,7 +58,7 @@ export function validate_numeric(test_value, options) {
         reject_negative,
         reject_zero,
         reject_positive,
-    } = (options ?? {})
+    } = (options ?? {});
 
     let numeric_value;
     if (typeof test_value === 'number') {
