@@ -3,10 +3,6 @@ import {
 } from './logbook-manager.js';
 
 import {
-    SettingsDialog,
-} from './settings/_.js';
-
-import {
     beep,
 } from '../lib/ui/beep.js';
 
@@ -79,6 +75,10 @@ export function get_global_initial_key_map_bindings() {
         'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
         'eval-all':            [ 'CmdOrCtrl-Shift-Alt-Enter' ],
 
+        'set-mode-markdown':   [ 'Alt-M m' ],
+        'set-mode-tex':        [ 'Alt-M t' ],
+        'set-mode-javascript': [ 'Alt-M j' ],
+
         'stop':                [ 'CmdOrCtrl-Alt-!' ],
         'stop-all':            [ 'CmdOrCtrl-Shift-Alt-!' ],
 
@@ -90,10 +90,6 @@ export function get_global_initial_key_map_bindings() {
         'add-before':          [ 'CmdOrCtrl-Alt-Shift-Up' ],
         'add-after':           [ 'CmdOrCtrl-Alt-Shift-Down' ],
         'delete':              [ 'CmdOrCtrl-Alt-Backspace' ],
-
-        'set-mode-markdown':   [ 'Alt-M m' ],
-        'set-mode-tex':        [ 'Alt-M t' ],
-        'set-mode-javascript': [ 'Alt-M j' ],
     };
 }
 
@@ -185,8 +181,7 @@ export async function command_handler__save_as(command_context) {
 /** @return {Boolean} true iff command successfully handled
  */
 export function command_handler__show_settings_dialog(command_context) {
-    SettingsDialog.run();
-    return true;
+    return LogbookManager.singleton.command_handler__show_settings_dialog(command_context);
 }
 
 /** eval target cell and refocus to next cell (or a new one if at the end of the document)

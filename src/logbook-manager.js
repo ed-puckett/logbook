@@ -35,6 +35,10 @@ import {
 } from '../lib/ui/menu/_.js';
 
 import {
+    SettingsDialog,
+} from './settings/_.js';
+
+import {
     ConfirmDialog,
 } from '../lib/ui/dialog/_.js';
 
@@ -787,6 +791,46 @@ ${contents}
 
     /** @return {Boolean} true iff command successfully handled
      */
+    async command_handler__save(command_context) {
+        const save_result = await fs_interface.save(this.#save_serializer.bind(this), {
+            file_handle: this.#file_handle,
+            prompt_options: {
+                suggestedName: this.get_suggested_file_name(),//!!!
+            },
+        });
+        const {
+            canceled,
+            file_handle,
+            stats,
+        } = save_result;
+        if (!canceled) {
+            //!!!
+            this.#file_handle = file_handle ?? undefined;
+        }
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__save_as(command_context) {
+        this.#file_handle = undefined;
+        await fs_interface.save(this.#save_serializer.bind(this), {
+            prompt_options: {
+                suggestedName: this.get_suggested_file_name(),//!!!
+            },
+        });
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__show_settings_dialog(command_context) {
+        SettingsDialog.run();
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
     async command_handler__eval(command_context) {
         const cell = command_context.target;
         if (!cell || !(cell instanceof EvalCellElement)) {
@@ -860,7 +904,7 @@ ${contents}
         }
     }
 
-    /** stop evaluation for the active cell.
+    /** set the active cell's input_type to "markdown".
      *  @return {Boolean} true iff command successfully handled
      */
     command_handler__set_mode_markdown(command_context) {
@@ -873,7 +917,7 @@ ${contents}
         }
     }
 
-    /** stop evaluation for the active cell.
+    /** set the active cell's input_type to "tex".
      *  @return {Boolean} true iff command successfully handled
      */
     command_handler__set_mode_tex(command_context) {
@@ -886,7 +930,7 @@ ${contents}
         }
     }
 
-    /** stop evaluation for the active cell.
+    /** set the active cell's input_type to "javascript".
      *  @return {Boolean} true iff command successfully handled
      */
     command_handler__set_mode_javascript(command_context) {
@@ -1048,40 +1092,6 @@ ${contents}
         next_cell.focus();
         return true;
     }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__save(command_context) {
-        const save_result = await fs_interface.save(this.#save_serializer.bind(this), {
-            file_handle: this.#file_handle,
-            prompt_options: {
-                suggestedName: this.get_suggested_file_name(),//!!!
-            },
-        });
-        const {
-            canceled,
-            file_handle,
-            stats,
-        } = save_result;
-        if (!canceled) {
-            //!!!
-            this.#file_handle = file_handle ?? undefined;
-        }
-        return true;
-    }
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__save_as(command_context) {
-        this.#file_handle = undefined;
-        await fs_interface.save(this.#save_serializer.bind(this), {
-            prompt_options: {
-                suggestedName: this.get_suggested_file_name(),//!!!
-            },
-        });
-        return true;
-    }
-
 }
 
 
