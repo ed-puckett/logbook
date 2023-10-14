@@ -107,13 +107,17 @@ main > :not(:first-child) {
 }
 
 @media screen and (max-width: 40em) {
+    /* responsive: input/output side-by-side vs stacked */
+
     .cell-container {
         flex-direction: column;
     }
-
     .cell-input-container {
         min-width: unset;
         max-width: unset;
+    }
+    .resize-handle {
+        display: none;
     }
 }
 
