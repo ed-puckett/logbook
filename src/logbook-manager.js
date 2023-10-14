@@ -7,18 +7,28 @@ import {
 } from './tool-bar-element/_.js';
 
 import {
-    get_menubar_spec,
-} from './global-bindings.js';
-
-import {
     Subscribable,
 } from '../lib/sys/subscribable.js';
+
+import {
+    KeyEventManager,
+    KeyMap,
+} from '../lib/ui/key/_.js';
+
+import {
+    get_global_command_bindings,
+    get_global_initial_key_map_bindings,
+} from './global-bindings.js';
 
 import {
     create_element,
     clear_element,
     move_node,
 } from '../lib/ui/dom-util.js';
+
+import {
+    get_menubar_spec,
+} from './global-bindings.js';
 
 import {
     MenuBar,
@@ -53,12 +63,6 @@ import './style.css';        // webpack implementation
 import './style-hacks.css';  // webpack implementation
 
 
-// Note: Each eval-cell maintains its own key_event_manager and key maps.
-// Therefore the (active) eval-cell is the locus for incoming commands,
-// whether from the menu or the keyboard.  The eval-cell in effect "precompiles"
-// command dispatch in eval_cell.get_command_bindings().
-
-
 export class LogbookManager {
     static get singleton() {
         if (!this.#singleton) {
@@ -73,25 +77,36 @@ export class LogbookManager {
         this.#editable = true;
         this.#active_cell = null;
         this.#initialize_called = false;
+
         this.reset_global_eval_context();
+
         this.#eval_states = new Subscribable();
         //!!! this.#eval_states_subscription is never unsubscribed
         this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
+
+        this.#command_bindings = get_global_command_bindings();
+
+        this.#key_event_manager = new KeyEventManager(window, this.#command_observer.bind(this));
+        const key_map = new KeyMap(get_global_initial_key_map_bindings());
+        this.push_key_map(key_map);
+        this.#key_event_manager.attach();
 
     }
     #editable;
     #active_cell;
     #initialize_called;
-    #header_element;         // element inserted into document by initialize() to hold menus, etc
+    #global_eval_context;  // persistent eval_context for eval commands
+    #header_element;  // element inserted into document by initialize() to hold menus, etc
+    #eval_states;
+    #eval_states_subscription;
+    #command_bindings;
+    #key_event_manager;
     #main_element;           // element wrapped around original body content by initialize()
     #tool_bar;
     #resize_handle_element;  // resize element; created in this.#initialize_document_structure()
     #menubar;
     #menubar_commands_subscription;
     #menubar_selects_subscription;
-    #eval_states;
-    #eval_states_subscription;
-    #global_eval_context;  // persistent eval_context for eval commands
     #file_handle;
 
     static resize_handle_class                = 'resize-handle';
@@ -210,6 +225,22 @@ export class LogbookManager {
         } catch (error) {
             show_initialization_failed(error);
         }
+    }
+
+
+    // === KEY MAP STACK ===
+
+    reset_key_map_stack() {
+        this.#key_event_manager.reset_key_map_stack();
+    }
+    push_key_map(key_map) {
+        this.#key_event_manager.push_key_map(key_map);
+    }
+    pop_key_map() {
+        return this.#key_event_manager.pop_key_map();
+    }
+    remove_key_map(key_map, remove_subsequent_too=false) {
+        return this.#key_event_manager.remove_key_map(key_map, remove_subsequent_too);
     }
 
 
@@ -378,9 +409,8 @@ export class LogbookManager {
         if (!this.header_element) {
             throw new Error(`bad format for document: header element does not exist`);
         }
-        const get_command_bindings = () => EvalCellElement.get_initial_key_map_bindings();
         const get_recents = null;//!!! implement this
-        this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_command_bindings, get_recents);
+        this.#menubar = MenuBar.create(this.header_element, get_menubar_spec(), get_global_initial_key_map_bindings, get_recents);
         //!!! this.#menubar_commands_subscription is never unsubscribed
         this.#menubar_commands_subscription = this.#menubar.commands.subscribe(this.#menubar_commands_observer.bind(this));
         //!!! this.#menubar_selects_subscription is never unsubscribed
@@ -558,6 +588,74 @@ ${contents}
 
     // === MENU AND COMMAND CONFIGURATION ===
 
+    // === COMMAND HANDLER INTERFACE ===
+
+    inject_key_event(key_event) {
+        if (!this.contains(key_event.target)) {
+            // try to set target to the currently active cell
+            const active_cell = LogbookManager.singleton.active_cell;
+            if (active_cell) {
+                // this is a clumsy clone of event, but it will only be used internally from this point
+                // the goal is to clone the event but change target and currentTarget
+                key_event = {
+                    ...key_event,  // captures almost nothing, e.g., just the "isTrusted" property
+
+                    key:           key_event.key,       // non-enumerable getter
+                    metaKey:       key_event.metaKey,   // non-enumerable getter
+                    ctrlKey:       key_event.ctrlKey,   // non-enumerable getter
+                    shiftKey:      key_event.shiftKey,  // non-enumerable getter
+                    altKey:        key_event.altKey,    // non-enumerable getter
+
+                    preventDefault:  event.preventDefault.bind(event),
+                    stopPropagation: event.stopPropagation.bind(event),
+
+                    target:        active_cell,
+                    currentTarget: active_cell,
+                };
+            }
+        }
+        this.#key_event_manager.inject_key_event(key_event);
+    }
+
+    #command_observer(command_context) {
+        if (command_context.target instanceof HTMLTextAreaElement) {
+            // patch command_context.target to be the cell itself
+            // this is a kludge, but is necessary when key bindings
+            // are activated on the contained textarea
+            command_context = {
+                ...command_context,
+                target: command_context.target.parentElement,
+            };
+        }
+        try {
+            const success = this.perform_command(command_context);
+            if (!success) {
+                beep();
+            }
+        } catch (error) {
+            console.error('error processing command', command_context, error);
+            beep();
+        }
+    }
+
+    perform_command(command_context) {
+        if (!command_context) {
+            return false;  // indicate: command not handled
+        } else {
+            const target = command_context.target;
+            if (!target) {
+                return false;  // indicate: command not handled
+            } else {
+                const bindings_fn = this.#command_bindings[command_context.command];
+                if (!bindings_fn) {
+                    return false;  // indicate: command not handled
+                } else {
+                    return bindings_fn(command_context);
+                }
+            }
+        }
+    }
+
     update_menu_state() {
         const cells        = this.constructor.get_cells();
         const active_cell  = this.active_cell;
@@ -605,7 +703,7 @@ ${contents}
                 ...command_context,
                 target,
             };
-            target.perform_command(updated_command_context);
+            this.perform_command(updated_command_context);
         }
     }
 
@@ -659,6 +757,18 @@ ${contents}
 
     /** @return {Boolean} true iff command successfully handled
      */
+    command_handler__reset_cell(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.reset();
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
     command_handler__reset(command_context) {
         this.reset();
         return true;
@@ -673,6 +783,20 @@ ${contents}
         }
         this.clear();
         return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    async command_handler__eval(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            await cell.eval({
+                eval_context: LogbookManager.singleton.global_eval_context,
+            });
+            return true;
+        }
     }
 
     /** eval target cell and refocus to next cell (or a new one if at the end of the document)
@@ -732,6 +856,45 @@ ${contents}
                     eval_context: this.global_eval_context,
                 });
             }
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_markdown(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'markdown';
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_tex(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'tex';
+            return true;
+        }
+    }
+
+    /** stop evaluation for the active cell.
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_javascript(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'javascript';
             return true;
         }
     }

@@ -65,6 +65,7 @@ export function get_global_initial_key_map_bindings() {
     return {
         'create-cell':         [ 'CmdOrCtrl-Shift-Alt-N' ],
 
+        'reset-cell':          [ ],
         'reset':               [ ],
         'clear':               [ ],
 
@@ -73,6 +74,7 @@ export function get_global_initial_key_map_bindings() {
 
         'settings':            [ 'CmdOrCtrl-,' ],
 
+        'eval':                [ 'CmdOrCtrl-Enter' ],
         'eval-and-refocus':    [ 'Shift-Enter' ],
         'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
         'eval-all':            [ 'CmdOrCtrl-Shift-Alt-Enter' ],
@@ -102,32 +104,37 @@ export function get_global_initial_key_map_bindings() {
  */
 export function get_global_command_bindings() {
     const command_bindings = {
-        'create-cell':      command_handler__create_cell,
+        'create-cell':         command_handler__create_cell,
 
-        'reset':            command_handler__reset,
-        'clear':            command_handler__clear,
+        'reset-cell':          command_handler__reset_cell,
+        'reset':               command_handler__reset,
+        'clear':               command_handler__clear,
 
-        'save':             command_handler__save,
-        'save-as':          command_handler__save_as,
+        'save':                command_handler__save,
+        'save-as':             command_handler__save_as,
 
-        'settings':         command_handler__show_settings_dialog,
+        'settings':            command_handler__show_settings_dialog,
 
-        // binding for plain old 'eval' is defined by EvalCellElement
-        'eval-and-refocus': command_handler__eval_and_refocus,
-        'eval-before':      command_handler__eval_before,
-        'eval-all':         command_handler__eval_all,
+        'eval':                command_handler__eval,
+        'eval-and-refocus':    command_handler__eval_and_refocus,
+        'eval-before':         command_handler__eval_before,
+        'eval-all':            command_handler__eval_all,
 
-        'stop':             command_handler__stop,
-        'stop-all':         command_handler__stop_all,
+        'set-mode-markdown':   command_handler__set_mode_markdown,
+        'set-mode-tex':        command_handler__set_mode_tex,
+        'set-mode-javascript': command_handler__set_mode_javascript,
 
-        'focus-up':         command_handler__focus_up,
-        'focus-down':       command_handler__focus_down,
+        'stop':                command_handler__stop,
+        'stop-all':            command_handler__stop_all,
 
-        'move-up':          command_handler__move_up,
-        'move-down':        command_handler__move_down,
-        'add-before':       command_handler__add_before,
-        'add-after':        command_handler__add_after,
-        'delete':           command_handler__delete,
+        'focus-up':            command_handler__focus_up,
+        'focus-down':          command_handler__focus_down,
+
+        'move-up':             command_handler__move_up,
+        'move-down':           command_handler__move_down,
+        'add-before':          command_handler__add_before,
+        'add-after':           command_handler__add_after,
+        'delete':              command_handler__delete,
     };
 
     return command_bindings;
@@ -143,6 +150,12 @@ export function get_global_command_bindings() {
  */
 export function command_handler__create_cell(command_context) {
     return LogbookManager.singleton.command_handler__create_cell(command_context);
+}
+
+/** @return {Boolean} true iff command successfully handled
+ */
+export function command_handler__reset_cell(command_context) {
+    return LogbookManager.singleton.command_handler__reset_cell(command_context);
 }
 
 /** @return {Boolean} true iff command successfully handled
@@ -179,6 +192,13 @@ export function command_handler__show_settings_dialog(command_context) {
 /** eval target cell and refocus to next cell (or a new one if at the end of the document)
  *  @return {Boolean} true iff command successfully handled
  */
+export async function command_handler__eval(command_context) {
+    return LogbookManager.singleton.command_handler__eval(command_context);
+}
+
+/** eval target cell and refocus to next cell (or a new one if at the end of the document)
+ *  @return {Boolean} true iff command successfully handled
+ */
 export async function command_handler__eval_and_refocus(command_context) {
     return LogbookManager.singleton.command_handler__eval_and_refocus(command_context);
 }
@@ -197,6 +217,27 @@ export async function command_handler__eval_before(command_context) {
  */
 export async function command_handler__eval_all(command_context) {
     return LogbookManager.singleton.command_handler__eval_all(command_context);
+}
+
+/** set the active cell's input_type to "markdown"
+ *  @return {Boolean} true iff command successfully handled
+ */
+export async function command_handler__set_mode_markdown(command_context) {
+    return LogbookManager.singleton.command_handler__set_mode_markdown(command_context);
+}
+
+/** set the active cell's input_type to "tex"
+ *  @return {Boolean} true iff command successfully handled
+ */
+export async function command_handler__set_mode_tex(command_context) {
+    return LogbookManager.singleton.command_handler__set_mode_tex(command_context);
+}
+
+/** set the active cell's input_type to "javascript"
+ *  @return {Boolean} true iff command successfully handled
+ */
+export async function command_handler__set_mode_javascript(command_context) {
+    return LogbookManager.singleton.command_handler__set_mode_javascript(command_context);
 }
 
 /** stop evaluation for the active cell.

@@ -351,62 +351,6 @@ export class EvalCellElement extends EditorCellElement {
     }
 
 
-    // === COMMAND HANDLER INTERFACE ===
-
-    /** return the initial key map bindings
-     *  @return {Object} mapping from command strings to arrays of triggering key sequences
-     */
-    static get_initial_key_map_bindings() {
-        const key_map_bindings = super.get_initial_key_map_bindings();
-        return {
-            ...key_map_bindings,
-
-            'eval': [ 'CmdOrCtrl-Enter' ],
-        };
-    }
-
-    /** return command bindings for this cell
-     *  @return {Object} mapping from command strings to functions implementing that command
-     */
-    get_command_bindings() {
-        const command_bindings = super.get_command_bindings();
-        return {
-            ...command_bindings,
-
-            'eval':                this.command_handler__eval.bind(this),
-
-            'set-mode-markdown':   this.command_handler__set_mode_markdown.bind(this),
-            'set-mode-tex':        this.command_handler__set_mode_tex.bind(this),
-            'set-mode-javascript': this.command_handler__set_mode_javascript.bind(this),
-        };
-    }
-
-
-    // === COMMAND HANDLERS ===
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    async command_handler__eval(command_context) {
-        await this.eval({
-            eval_context: LogbookManager.singleton.global_eval_context,
-        });
-        return true;
-    }
-
-    command_handler__set_mode_markdown(command_context) {
-        this.input_type = 'markdown';
-        return true;
-    }
-    command_handler__set_mode_tex(command_context) {
-        this.input_type = 'tex';
-        return true;
-    }
-    command_handler__set_mode_javascript(command_context) {
-        this.input_type = 'javascript';
-        return true;
-    }
-
-
     // === INTERNAL ===
 
     // Safari does not support static initialization blocks in classes (at the time of writing), so do it this way:

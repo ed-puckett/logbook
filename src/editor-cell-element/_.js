@@ -22,16 +22,6 @@ import {
 } from '../../lib/sys/event-listener-manager.js';
 
 import {
-    KeyEventManager,
-    KeyMap,
-} from '../../lib/ui/key/_.js';
-
-import {
-    get_global_initial_key_map_bindings,
-    get_global_command_bindings,
-} from '../global-bindings.js';
-
-import {
     ToolBarElement,
 } from '../tool-bar-element/_.js';
 
@@ -60,13 +50,7 @@ export class EditorCellElement extends HTMLElement {
         super();
         this.#event_listener_manager = new EventListenerManager();
 
-        this.#key_event_manager = new KeyEventManager(this, this.#command_observer.bind(this));
         this.#connect_focus_listeners();
-
-        this.#command_bindings = this.get_command_bindings();
-
-        const key_map = new KeyMap(this.constructor.get_initial_key_map_bindings());
-        this.push_key_map(key_map);
 
         // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
         this._tool_bar = null;
@@ -75,8 +59,6 @@ export class EditorCellElement extends HTMLElement {
         this.#resize_observer.observe(this);
     }
     #event_listener_manager;
-    #key_event_manager;
-    #command_bindings;
     #resize_observer;
 
 
@@ -225,22 +207,6 @@ export class EditorCellElement extends HTMLElement {
         this.set_active(current_active_state);  // set current state on newly-mapped element
     }
     #active_element_mapper;  // initially undefined
-
-
-    // === KEY MAP STACK ===
-
-    reset_key_map_stack() {
-        this.#key_event_manager.reset_key_map_stack();
-    }
-    push_key_map(key_map) {
-        this.#key_event_manager.push_key_map(key_map);
-    }
-    pop_key_map() {
-        return this.#key_event_manager.pop_key_map();
-    }
-    remove_key_map(key_map, remove_subsequent_too=false) {
-        return this.#key_event_manager.remove_key_map(key_map, remove_subsequent_too);
-    }
 
 
     // === TOOL BAR ===
@@ -392,183 +358,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
 
-    // === COMMAND HANDLER INTERFACE ===
-
-    inject_key_event(key_event) {
-        if (!this.contains(key_event.target)) {
-            // try to set target to the currently active cell
-            const active_cell = LogbookManager.singleton.active_cell;
-            if (active_cell) {
-                // this is a clumsy clone of event, but it will only be used internally from this point
-                // the goal is to clone the event but change target and currentTarget
-                key_event = {
-                    ...key_event,  // captures almost nothing, e.g., just the "isTrusted" property
-
-                    key:           key_event.key,       // non-enumerable getter
-                    metaKey:       key_event.metaKey,   // non-enumerable getter
-                    ctrlKey:       key_event.ctrlKey,   // non-enumerable getter
-                    shiftKey:      key_event.shiftKey,  // non-enumerable getter
-                    altKey:        key_event.altKey,    // non-enumerable getter
-
-                    preventDefault:  event.preventDefault.bind(event),
-                    stopPropagation: event.stopPropagation.bind(event),
-
-                    target:        active_cell,
-                    currentTarget: active_cell,
-                };
-            }
-        }
-        this.#key_event_manager.inject_key_event(key_event);
-    }
-
-    /** return the initial key map bindings
-     *  @return {Object} mapping from command strings to arrays of triggering key sequences
-     */
-    static get_initial_key_map_bindings() {
-        return {
-            ...get_global_initial_key_map_bindings(),
-
-//!!! the following are "implemented" via setting the "editable" mechanism on the cell
-//!!!            'insert-line-break':   [ 'Enter' ],
-
-//!!!            'delete-forward':      [ 'Delete' ],
-//!!!            'delete-reverse':      [ 'Backspace' ],
-//!!!            'delete-text-forward': [ 'Alt-Delete' ],
-//!!!            'delete-text-reverse': [ 'Alt-Backspace' ],
-
-//!!!            'cut':                 [ 'CmdOrCtrl-X' ],
-//!!!            'copy':                [ 'CmdOrCtrl-C' ],
-//!!!            'paste':               [ 'CmdOrCtrl-V' ],
-        };
-    }
-
-    /** return command bindings for this cell
-     *  @return {Object} mapping from command strings to functions implementing that command
-     * The bindings are obtained by merging local command bindings with LogbookManager.singleton
-     * command bindings.
-     */
-    get_command_bindings() {
-        const command_bindings = {
-            ...get_global_command_bindings(),
-
-//!!! the following are "implemented" via setting the "editable" mechanism on the cell
-//!!!            'insert-self':         this.command_handler__insert_self.bind(this),
-//!!!            'insert-line-break':   this.command_handler__insert_line_break.bind(this),
-
-            'delete-text-forward': this.create_command_handler___delete({ element_too: false, reverse: false }),
-            'delete-text-reverse': this.create_command_handler___delete({ element_too: false, reverse: true  }),
-            'delete-forward':      this.create_command_handler___delete({ element_too: true,  reverse: false }),
-            'delete-reverse':      this.create_command_handler___delete({ element_too: true,  reverse: true  }),
-
-            'cut':                 this.command_handler__cut.bind(this),
-            'copy':                this.command_handler__copy.bind(this),
-            'paste':               this.command_handler__paste.bind(this),
-
-            'reset-cell':          this.command_handler__reset_cell.bind(this),
-        };
-
-        return command_bindings;
-    }
-
-    #command_observer(command_context) {
-        if (command_context.target instanceof HTMLTextAreaElement) {
-            // patch command_context.target to be the cell itself
-            // this is a kludge, but is necessary when key bindings
-            // are activated on the contained textarea
-            command_context = {
-                ...command_context,
-                target: command_context.target.parentElement,
-            };
-        }
-        try {
-            const success = this.perform_command(command_context);
-            if (!success) {
-                beep();
-            }
-        } catch (error) {
-            console.error('error processing command', command_context, error);
-            beep();
-        }
-    }
-
-    perform_command(command_context) {
-        if (!command_context) {
-            return false;  // indicate: command not handled
-        } else {
-            const target = command_context.target;
-            if (!target || !this.contains(target)) {
-                return false;  // indicate: command not handled
-            } else {
-                const bindings_fn = this.#command_bindings[command_context.command];
-                if (!bindings_fn) {
-                    return false;  // indicate: command not handled
-                } else {
-                    return bindings_fn(command_context);
-                }
-            }
-        }
-    }
-
-    // === COMMAND HANDLERS ===
-
-    /** @return {Boolean} true iff command successfully handled
-     */
-    command_handler__insert_self(command_context) {
-        const key_spec = command_context.key_spec;
-        const text = key_spec?.key ?? key_spec?.canonical ?? '';
-        if (!text) {
-            return false;
-        }
-        return manage_selection_for_insert(
-            (point) => insert_at(point, text)
-        );
-    }
-
-    command_handler__insert_line_break(command_context) {
-        return manage_selection_for_insert(
-//            (point) => insert_at(point, document.createElement('br'))
-            (point) => insert_at(point, '\n')
-        );
-    }
-
-    create_command_handler___delete(options) {
-        return (command_context) => {
-            return manage_selection_for_delete(
-                (point) => delete_nearest_leaf(point, options)
-            );
-        };
-    }
-
-    command_handler__cut(command_context) {
-        document.execCommand('cut');  // updates selection
-        return true;
-    }
-
-    command_handler__copy(command_context) {
-        document.execCommand('copy');  // updates selection
-        return true;
-    }
-
-    async command_handler__paste(command_context) {
-        //!!! THIS NO LONGER WORKS: return document.execCommand('paste');  // updates selection
-        //!!! Also, the following does not work on Firefox:
-        const text = await navigator.clipboard.readText();
-        if (!text) {
-            return false;
-        } else {
-            return manage_selection_for_insert(
-                (point) => insert_at(point, text)
-            );
-        }
-    }
-
-    command_handler__reset_cell(command_context) {
-        this.reset();
-        return true;
-    }
-
-
-
     // === FOCUS LISTENERS / ACTIVE ===
 
     #connect_focus_listeners() {
@@ -592,7 +381,6 @@ export class EditorCellElement extends HTMLElement {
 
     #update_for_connected() {
         this.#event_listener_manager.attach();
-        this.#key_event_manager.attach();
         this.removeAttribute('tabindex');  // focusable parent for textarea causes SHIFT-Tab not to work
         // trigger resize in case this could not be performed ebfore when "editable" was set,
         // probably because the element was not yet connected to the DOM at that time.
@@ -601,7 +389,6 @@ export class EditorCellElement extends HTMLElement {
     }
 
     #update_for_disconnected() {
-        this.#key_event_manager.detach();
         this.#event_listener_manager.detach();
     }
 

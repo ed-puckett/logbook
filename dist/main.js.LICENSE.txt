@@ -9,17 +9,7 @@
 
 //!!!
 
-//!!!            'insert-line-break':   this.command_handler__insert_line_break.bind(this),
-
-//!!!            'insert-self':         this.command_handler__insert_self.bind(this),
-
-//!!! Also, the following does not work on Firefox:
-
-//!!! THIS NO LONGER WORKS: return document.execCommand('paste');  // updates selection
-
 //!!! audit this !!!
-
-//!!! could be more careful not to create empty text nodes here
 
 //!!! could use structuredClone(), but would that prevent remove() from finding?
 
@@ -40,8 +30,6 @@
 //!!! should be configurable
 
 //!!! should other members of options be checked (e.g., "once")?
-
-//!!! the following are "implemented" via setting the "editable" mechanism on the cell
 
 //!!! this will reset the user's theme setting if not dark or light (the default)
 
