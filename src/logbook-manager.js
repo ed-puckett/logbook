@@ -1172,24 +1172,20 @@ ${contents}
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__collapse_inputs(command_context) {
-        const {
-            split_min_px,
-        } = this.get_resize_metrics();
-        this.set_input_output_split(split_min_px);
+        const resize_metrics = this.get_resize_metrics();
+        const new_split_px = resize_metrics.split_min_px;
+        this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         return true;
     }
 
     /** @return {Boolean} true iff command successfully handled
      */
     command_handler__expand_inputs(command_context) {
-        const {
-            split_neutral_px,
-            split_max_px,
-        } = this.get_resize_metrics();
-        const new_split_px = split_max_px;  // could instead be split_neutral_px
+        const resize_metrics = this.get_resize_metrics();
+        const new_split_px = resize_metrics.split_max_px;  // could instead be resize_metrics.split_neutral_px
         const current_split_px = this.get_current_split_px();
-        if (current_split_px < new_split_px) {
-            this.set_input_output_split(new_split_px);
+        if (current_split_px < new_split_px) {  // don't shrink if already currently larger
+            this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         }
         return true;
     }
