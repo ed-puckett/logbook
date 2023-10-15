@@ -123,6 +123,12 @@ export class LogbookManager {
     static input_output_split_css_variable    = '--input-output-split';
     static is_stacked_css_variable            = '--is-stacked';
 
+    // these ratios are with respect to the width of the main element
+    static max_split_ratio       = 0.85;   // always leave some room for output elements
+    static collapse_split_ratio  = 0.001;  // point at which cell contents collapses, leaving only output showing
+    static split_step_size_ratio = 0.05;   // amount to shrink or enlarge the current split
+    static split_neutral_ratio   = 0.50;   // "neutral" split position
+
     get editable (){ return this.#editable; }
     set_editable(editable) {
         editable = !!editable;  // ensure Boolean
@@ -140,11 +146,6 @@ export class LogbookManager {
         }
     }
 
-    get global_eval_context (){ return this.#global_eval_context; }
-    reset_global_eval_context() {
-        this.#global_eval_context = {};
-    }
-
     get header_element (){ return this.#header_element; }
     get main_element   (){ return this.#main_element; }
 
@@ -156,6 +157,11 @@ export class LogbookManager {
      */
     static get_cells() {
         return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
+    }
+
+    get global_eval_context (){ return this.#global_eval_context; }
+    reset_global_eval_context() {
+        this.#global_eval_context = {};
     }
 
     /** reset the document, meaning that all cells will be reset,
@@ -492,17 +498,16 @@ ${contents}
 
         const resize_metrics = this.get_resize_metrics();
         const {
-            left_limit_px,
-            right_limit_px,
-            collapse_point_px,
+            mouse_x_min,
+            mouse_x_max,
+            split_collapse_px,
         } = resize_metrics;
 
         let current_x = mousedown_event.x;
         const resize_handler = (event) => {
-            const dx = (current_x < left_limit_px || current_x > right_limit_px) ? 0 : (event.x - current_x);
+            const dx = (current_x < mouse_x_min || current_x > mouse_x_max) ? 0 : (event.x - current_x);
             current_x = event.x;
-            const active_cell_input_container = this.constructor.#cell_input_container_element(this.active_cell);
-            const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);  // = var(--input-output-split)
+            const current_split_px = this.get_current_split_px();
             const new_split_px = current_split_px + dx;
             this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         };
@@ -525,21 +530,55 @@ ${contents}
         return (var_value.trim().length > 0);
     }
 
+    get_current_split_px() {
+        if (!this.active_cell) {
+            throw new Error('no active cell');
+        }
+        const active_cell_input_container = this.constructor.#cell_input_container_element(this.active_cell);
+        const current_split_px = parseFloat(window.getComputedStyle(active_cell_input_container).width);  // = var(--input-output-split)
+        return current_split_px;
+    }
+
+    step_input_output_split_size(enlarge=false) {
+        const resize_metrics = this.get_resize_metrics();
+        const {
+            split_step_size_px,
+        } = resize_metrics;
+        const current_split_px = this.get_current_split_px();
+        const new_split_px = enlarge
+              ? current_split_px + split_step_size_px
+              : current_split_px - split_step_size_px;
+        this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
+    }
+
     set_input_output_split(new_split_px) {
-        return this.#set_input_output_split_given_resize_metrics(new_split_px, this.get_resize_metrics());
+        this.#set_input_output_split_given_resize_metrics(new_split_px, this.get_resize_metrics());
     }
 
     #set_input_output_split_given_resize_metrics(new_split_px, resize_metrics) {
         if (typeof new_split_px !== 'number') {
             throw new Error('new_split_px must be a number');
         }
-        if (typeof resize_metrics !== 'object' || typeof resize_metrics.collapse_point_px !== 'number') {
-            throw new Error('resize_metrics must be an object with a numeric-valued preoperty "collapse_point_px"');
+        if (typeof resize_metrics !== 'object') {
+            throw new Error('resize_metrics must be an object');
         }
-        const new_split = (new_split_px < 0) ? `0px` : `${new_split_px}px`;
+        const {
+            split_min_px,
+            split_max_px,
+            split_collapse_px,
+        } = resize_metrics;
+
+        const new_split =
+              ( (new_split_px < split_min_px)
+                ? `${split_min_px}px`
+                : ( (new_split_px > split_max_px)
+                    ? `${split_max_px}px`
+                    : `${new_split_px}px` ) );
+
         document.documentElement.style.setProperty(this.constructor.input_output_split_css_variable, new_split);
+
         // update collapsed state
-        if (new_split_px <= resize_metrics.collapse_point_px) {
+        if (new_split_px <= resize_metrics.split_collapse_px) {
             this.#main_element.classList.add(this.constructor.collapse_cells_state_class);
         } else {
             this.#main_element.classList.remove(this.constructor.collapse_cells_state_class);
@@ -547,23 +586,28 @@ ${contents}
     }
 
     get_resize_metrics() {
-        // these ratios are with respect to main_element_width_px (calculated below)
-        const max_split_ratio      = 0.85;   // always leave some room for output elements
-        const collapse_split_ratio = 0.001;  // point at which cell contents collapses, leaving only output showing
-
         // note: parseFloat() stops at the first non-number character, e.g., a trailing "px" as in "123px"
 
         const main_element_computed_style = window.getComputedStyle(this.#main_element);
         const main_element_margin_left_px = parseFloat(main_element_computed_style.marginLeft);
         const main_element_width_px       = parseFloat(main_element_computed_style.width);
-        const left_limit_px     = main_element_margin_left_px;
-        const right_limit_px    = left_limit_px + max_split_ratio*main_element_width_px;
-        const collapse_point_px = collapse_split_ratio*main_element_width_px;
+
+        const split_min_px       = 0;
+        const split_max_px       = main_element_width_px * this.constructor.max_split_ratio;
+        const split_collapse_px  = main_element_width_px * this.constructor.collapse_split_ratio;
+        const split_step_size_px = main_element_width_px * this.constructor.split_step_size_ratio;
+        const split_neutral_px   = main_element_width_px * this.constructor.split_neutral_ratio;
+        const mouse_x_min        = main_element_margin_left_px + split_min_px;
+        const mouse_x_max        = main_element_margin_left_px + split_max_px;
 
         return {
-            left_limit_px,      // mouse position
-            right_limit_px,     // mouse position
-            collapse_point_px,  // split value at which collapse occurs
+            split_min_px,        // minimum split
+            split_max_px,        // maximum split
+            split_collapse_px,   // split value at which collapse occurs
+            split_step_size_px,  // step size for shrink and expand
+            split_neutral_px,    // neutral split amount
+            mouse_x_min,         // mouse position
+            mouse_x_max,         // mouse position
         };
     }
 
@@ -922,45 +966,6 @@ ${contents}
         }
     }
 
-    /** set the active cell's input_type to "markdown".
-     *  @return {Boolean} true iff command successfully handled
-     */
-    command_handler__set_mode_markdown(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            cell.input_type = 'markdown';
-            return true;
-        }
-    }
-
-    /** set the active cell's input_type to "tex".
-     *  @return {Boolean} true iff command successfully handled
-     */
-    command_handler__set_mode_tex(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            cell.input_type = 'tex';
-            return true;
-        }
-    }
-
-    /** set the active cell's input_type to "javascript".
-     *  @return {Boolean} true iff command successfully handled
-     */
-    command_handler__set_mode_javascript(command_context) {
-        const cell = command_context.target;
-        if (!cell || !(cell instanceof EvalCellElement)) {
-            return false;
-        } else {
-            cell.input_type = 'javascript';
-            return true;
-        }
-    }
-
     /** stop evaluation for the active cell.
      *  @return {Boolean} true iff command successfully handled
      */
@@ -1110,6 +1115,85 @@ ${contents}
         next_cell.focus();
         return true;
     }
+
+    /** set the active cell's input_type to "markdown".
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_markdown(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'markdown';
+            return true;
+        }
+    }
+
+    /** set the active cell's input_type to "tex".
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_tex(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'tex';
+            return true;
+        }
+    }
+
+    /** set the active cell's input_type to "javascript".
+     *  @return {Boolean} true iff command successfully handled
+     */
+    command_handler__set_mode_javascript(command_context) {
+        const cell = command_context.target;
+        if (!cell || !(cell instanceof EvalCellElement)) {
+            return false;
+        } else {
+            cell.input_type = 'javascript';
+            return true;
+        }
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__shrink_inputs(command_context) {
+        this.step_input_output_split_size(false);
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__enlarge_inputs(command_context) {
+        this.step_input_output_split_size(true);
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__collapse_inputs(command_context) {
+        const {
+            split_min_px,
+        } = this.get_resize_metrics();
+        this.set_input_output_split(split_min_px);
+        return true;
+    }
+
+    /** @return {Boolean} true iff command successfully handled
+     */
+    command_handler__expand_inputs(command_context) {
+        const {
+            split_neutral_px,
+            split_max_px,
+        } = this.get_resize_metrics();
+        const new_split_px = split_max_px;  // could instead be split_neutral_px
+        const current_split_px = this.get_current_split_px();
+        if (current_split_px < new_split_px) {
+            this.set_input_output_split(new_split_px);
+        }
+        return true;
+    }
+
 
     /** @return {Boolean} true iff command successfully handled
      */

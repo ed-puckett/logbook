@@ -8,38 +8,43 @@ export function get_menubar_spec() {
                 // ...
             ] },
             '---',
-            { label: 'Reset cells',    item: { command: 'reset',            }, id: 'reset' },
-            { label: 'Clear document', item: { command: 'clear',            }, id: 'clear' },
+            { label: 'Reset cells',     item: { command: 'reset',            }, id: 'reset' },
+            { label: 'Clear document',  item: { command: 'clear',            }, id: 'clear' },
             '---',
-            { label: 'Save',           item: { command: 'save',             }, id: 'save' },
-            { label: 'Save as...',     item: { command: 'save-as',          } },
+            { label: 'Save',            item: { command: 'save',             }, id: 'save' },
+            { label: 'Save as...',      item: { command: 'save-as',          } },
             '---',
-            { label: 'Settings...',    item: { command: 'settings',         } },
+            { label: 'Settings...',     item: { command: 'settings',         } },
         ] },
 
         { label: 'Cell', collection: [
-            { label: 'Eval',           item: { command: 'eval-and-refocus', }, id: 'eval-and-refocus' },
-            { label: 'Eval and stay',  item: { command: 'eval',             }, id: 'eval' },
-            { label: 'Eval before',    item: { command: 'eval-before',      }, id: 'eval-before' },
-            { label: 'Eval all',       item: { command: 'eval-all',         }, id: 'eval-all' },
+            { label: 'Eval',            item: { command: 'eval-and-refocus', }, id: 'eval-and-refocus' },
+            { label: 'Eval and stay',   item: { command: 'eval',             }, id: 'eval' },
+            { label: 'Eval before',     item: { command: 'eval-before',      }, id: 'eval-before' },
+            { label: 'Eval all',        item: { command: 'eval-all',         }, id: 'eval-all' },
             '---',
-            { label: 'Stop cell',      item: { command: 'stop',             }, id: 'stop' },
-            { label: 'Stop all',       item: { command: 'stop-all',         }, id: 'stop-all' },
+            { label: 'Stop cell',       item: { command: 'stop',             }, id: 'stop' },
+            { label: 'Stop all',        item: { command: 'stop-all',         }, id: 'stop-all' },
             '---',
-            { label: 'Reset cell',     item: { command: 'reset-cell',       }, id: 'reset-cell' },
+            { label: 'Reset cell',      item: { command: 'reset-cell',       }, id: 'reset-cell' },
             '---',
-            { label: 'Focus up',       item: { command: 'focus-up',         }, id: 'focus-up' },
-            { label: 'Focus down',     item: { command: 'focus-down',       }, id: 'focus-down' },
+            { label: 'Focus up',        item: { command: 'focus-up',         }, id: 'focus-up' },
+            { label: 'Focus down',      item: { command: 'focus-down',       }, id: 'focus-down' },
             '---',
-            { label: 'Move up',        item: { command: 'move-up',          }, id: 'move-up' },
-            { label: 'Move down',      item: { command: 'move-down',        }, id: 'move-down' },
-            { label: 'Add before',     item: { command: 'add-before',       }, id: 'add-before' },
-            { label: 'Add after',      item: { command: 'add-after',        }, id: 'add-after' },
-            { label: 'Delete',         item: { command: 'delete',           }, id: 'delete' },
+            { label: 'Move up',         item: { command: 'move-up',          }, id: 'move-up' },
+            { label: 'Move down',       item: { command: 'move-down',        }, id: 'move-down' },
+            { label: 'Add before',      item: { command: 'add-before',       }, id: 'add-before' },
+            { label: 'Add after',       item: { command: 'add-after',        }, id: 'add-after' },
+            { label: 'Delete',          item: { command: 'delete',           }, id: 'delete' },
+            '---',
+            { label: 'Shrink inputs',   item: { command: 'shrink-inputs',    }, id: 'shrink-inputs' },
+            { label: 'Enlarge inputs',  item: { command: 'enlarge-inputs',   }, id: 'enlarge-inputs' },
+            { label: 'Collapse inputs', item: { command: 'collapse-inputs',  }, id: 'collapse-inputs' },
+            { label: 'Expand inputs',   item: { command: 'expand-inputs',    }, id: 'expand-inputs' },
         ] },
 
         { label: 'Help', collection: [
-            { label: 'Help...',        item: { command: 'help',             } },
+            { label: 'Help...',         item: { command: 'help',             } },
         ] },
     ];
 }
@@ -64,10 +69,6 @@ export function get_global_initial_key_map_bindings() {
         'eval-before':         [ 'CmdOrCtrl-Shift-Enter' ],
         'eval-all':            [ 'CmdOrCtrl-Shift-Alt-Enter' ],
 
-        'set-mode-markdown':   [ 'Alt-M m' ],
-        'set-mode-tex':        [ 'Alt-M t' ],
-        'set-mode-javascript': [ 'Alt-M j' ],
-
         'stop':                [ 'CmdOrCtrl-Alt-!' ],
         'stop-all':            [ 'CmdOrCtrl-Shift-Alt-!' ],
 
@@ -79,6 +80,15 @@ export function get_global_initial_key_map_bindings() {
         'add-before':          [ 'CmdOrCtrl-Alt-Shift-Up' ],
         'add-after':           [ 'CmdOrCtrl-Alt-Shift-Down' ],
         'delete':              [ 'CmdOrCtrl-Alt-Backspace' ],
+
+        'set-mode-markdown':   [ 'Alt-M m' ],
+        'set-mode-tex':        [ 'Alt-M t' ],
+        'set-mode-javascript': [ 'Alt-M j' ],
+
+        'shrink-inputs':       [ 'CmdOrCtrl-Alt-Left' ],
+        'enlarge-inputs':      [ 'CmdOrCtrl-Alt-Right' ],
+        'collapse-inputs':     [ 'CmdOrCtrl-Shift-Alt-Left' ],
+        'expand-inputs':       [ 'CmdOrCtrl-Shift-Alt-Right' ],
 
         'settings':            [ 'CmdOrCtrl-,' ],
         'help':                [ ],
@@ -106,10 +116,6 @@ export function get_global_command_bindings(implementor) {
         'eval-before':         implementor.command_handler__eval_before,
         'eval-all':            implementor.command_handler__eval_all,
 
-        'set-mode-markdown':   implementor.command_handler__set_mode_markdown,
-        'set-mode-tex':        implementor.command_handler__set_mode_tex,
-        'set-mode-javascript': implementor.command_handler__set_mode_javascript,
-
         'stop':                implementor.command_handler__stop,
         'stop-all':            implementor.command_handler__stop_all,
 
@@ -121,6 +127,15 @@ export function get_global_command_bindings(implementor) {
         'add-before':          implementor.command_handler__add_before,
         'add-after':           implementor.command_handler__add_after,
         'delete':              implementor.command_handler__delete,
+
+        'set-mode-markdown':   implementor.command_handler__set_mode_markdown,
+        'set-mode-tex':        implementor.command_handler__set_mode_tex,
+        'set-mode-javascript': implementor.command_handler__set_mode_javascript,
+
+        'shrink-inputs':       implementor.command_handler__shrink_inputs,
+        'enlarge-inputs':      implementor.command_handler__enlarge_inputs,
+        'collapse-inputs':     implementor.command_handler__collapse_inputs,
+        'expand-inputs':       implementor.command_handler__expand_inputs,
 
         'settings':            implementor.command_handler__show_settings_dialog,
         'help':                implementor.command_handler__show_help,
