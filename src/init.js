@@ -10,6 +10,10 @@ import {
 } from './logbook-manager.js';
 
 
+const view_search_param_name         = 'view';
+const view_search_param_value_edit   = 'edit';
+const view_search_param_value_output = 'output';
+
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
     trigger_document_initialization();
 } else {
@@ -22,5 +26,20 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
 
 function trigger_document_initialization() {
     LogbookManager.singleton;  // accessing this will trigger document initialization
-globalThis.logbook_manager = LogbookManager.singleton;//!!!
+
+    // update view according to parameter
+    const view_value = new URLSearchParams(document.location.search).get(view_search_param_name);
+    switch (view_value) {
+        case view_search_param_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
+        case view_search_param_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
+
+        default: {
+            if (view_value) {
+                console.warn(`ignored unknown "${view_search_param_name}" search parameter "${view_value}"`);
+            }
+        }
+        break;
+    }
+
+    globalThis.logbook_manager = LogbookManager.singleton;//!!!
 }

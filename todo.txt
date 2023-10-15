@@ -1,4 +1,3 @@
-add resize commands for key and menu: enlarge-inputs, shrink-inputs, collapse-inputs, expand-inputs
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
@@ -35,6 +34,7 @@ maybe use CodeMirror
 
 
 --- DONE ---
+add resize commands for key and menu: shrink-inputs, enlarge-inputs, collapse-inputs, expand-inputs
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
 update examples / convert old esbook examples
 ChangeManager does not work well with the textarea implementation in EditorCellElement
