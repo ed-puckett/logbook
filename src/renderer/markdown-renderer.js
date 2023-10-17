@@ -21,7 +21,7 @@ export class MarkdownRenderer extends Renderer {
     // options: { style?: Object }
 
     // may throw an error
-    async render(output_context, markdown, options=null) {
+    async render(ocx, markdown, options=null) {
 
         markdown ??= '';
 
@@ -29,7 +29,7 @@ export class MarkdownRenderer extends Renderer {
             style,
         } = (options ?? {});
 
-        const parent = output_context.create_child({
+        const parent = ocx.create_child({
             attrs: {
                 'data-type': this.type,
             },
@@ -124,19 +124,19 @@ marked.use({
     async walkTokens(token) {
         if (token.type === extension_name__eval_code) {
             const output_element = document.createElement('div');
-            const output_context = new OutputContext(output_element);
+            const ocx = new OutputContext(output_element);
             let renderer;
             try {
-                renderer = output_context.renderer_for_type(token.output_type);
+                renderer = ocx.renderer_for_type(token.output_type);
             } catch (error) {
-                await output_context.invoke_renderer_for_type('error', error);
+                await ocx.invoke_renderer_for_type('error', error);
             }
             if (renderer) {
                 const options = {
                     //!!!
                 };
-                await output_context.invoke_renderer(renderer, token.text, options)
-                    .catch(error => output_context.invoke_renderer_for_type('error', error));
+                await ocx.invoke_renderer(renderer, token.text, options)
+                    .catch(error => ocx.invoke_renderer_for_type('error', error));
                 renderer?.stop();  // stop background processing, if any
             }
             token.html = output_element.innerHTML;

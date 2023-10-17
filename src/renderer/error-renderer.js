@@ -9,7 +9,7 @@ export class ErrorRenderer extends Renderer {
     static error_element_class      = 'error';
     static error_element_text_color = 'red';//!!! should be configurable
 
-    async render(output_context, error_object, options) {
+    async render(ocx, error_object, options) {
         const style = options?.style;
 
         const text_segments = [];
@@ -20,7 +20,7 @@ export class ErrorRenderer extends Renderer {
         }
         const text = text_segments.join('\n');
 
-        const parent = output_context.create_child({
+        const parent = ocx.create_child({
             tag: 'pre',
             attrs: {
                 'data-type': this.type,

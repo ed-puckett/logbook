@@ -6,9 +6,9 @@ import {
 export class TextRenderer extends Renderer {
     static type = 'text';
 
-    async render(output_context, text, options) {
+    async render(ocx, text, options) {
         if (options?.style) {
-            const span = output_context.create_child({
+            const span = ocx.create_child({
                 tag: 'span',
                 attrs: {
                     'data-type': this.type,
@@ -18,7 +18,7 @@ export class TextRenderer extends Renderer {
             span.innerText = text;  // innerText sanitizes text
             return span;
         } else {
-            return output_context.create_child_text_node(text);  // inserted as pure text
+            return ocx.create_child_text_node(text);  // inserted as pure text
         }
     }
 }

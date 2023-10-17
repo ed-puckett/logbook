@@ -220,7 +220,7 @@ export class OutputContext {
         }
     }
 
-    /** run the given renderer with the given arguments and this output_context
+    /** run the given renderer with the given arguments and this ocx
      *  @param {Renderer} renderer instance
      *  @param {any} value
      *  @param {Object} options for renderer

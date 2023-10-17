@@ -31,7 +31,7 @@ export class Evaluator extends StoppableObjectsManager {
     static async eval(input_element, output_element, eval_context=null) {
         const instance = new this(input_element, output_element, eval_context);
         return instance._perform_eval()
-            .catch(error => instance.output_context.invoke_renderer_for_type('error', error));
+            .catch(error => instance.ocx.invoke_renderer_for_type('error', error));
     }
 
     // do not call the constructor via new, instead use the static async method Evaluator.eval()
@@ -49,7 +49,7 @@ export class Evaluator extends StoppableObjectsManager {
             throw new Error('eval_context must be undefined, null, or an object');
         }
 
-        const output_context = new OutputContext(output_element);
+        const ocx = new OutputContext(output_element);
 
         Object.defineProperties(this, {
             id: {
@@ -68,8 +68,8 @@ export class Evaluator extends StoppableObjectsManager {
                 value: eval_context,
                 enumerable: true,
             },
-            output_context: {
-                value: output_context,
+            ocx: {
+                value: ocx,
                 enumerable: true,
             },
         });

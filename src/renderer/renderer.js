@@ -22,7 +22,7 @@ export class Renderer extends StoppableObjectsManager {
 
     /** implementation of rendering, to be implemented by subclasses
      */
-    async render(output_context, value, options) {
+    async render(ocx, value, options) {
         throw new Error('NOT IMPLEMENTED');
     }
 

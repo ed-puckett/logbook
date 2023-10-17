@@ -123,10 +123,11 @@ Evaluators
 - Evaluator.handles(input_element, innerText=null)
 - Evaluator.content_recognizer(input_element, innerText=null)  // async
 - Evaluator.eval(input_element, output_element, eval_context=null) --> create instance --> evaluator._perform_eval()
-- create instance allocates an output_context
+- create instance allocates an ocx ("output context", an instance of OutputContext)
 
 OutputContext
-- output_context.invoke_renderer(type, value, options=null)
+- instances are typically named "ocx"
+- ocx.invoke_renderer(type, value, options=null)
 - manages output operations to output_element
 - (DOM manipulation methods for the output element)
 - etc...
@@ -137,10 +138,10 @@ OutputContext
 (command context)
 
 Renderers
-- render specific type of content with use of an output_context
+- render specific type of content with use of an ocx
 - main
 - various renderer classes represent various formats
-- renderer instances: main method: async render(output_context, value, options)
+- renderer instances: main method: async render(ocx, value, options)
 - Renderer class management:
   -- Renderer.class_from_type(type)
   -- Renderer.get_classes()

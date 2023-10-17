@@ -18,8 +18,8 @@ export class TeXEvaluator extends Evaluator {
             inline: false,//!!!
             rtl:    false,//!!!
         };
-        const renderer = this.output_context.renderer_for_type('tex');
+        const renderer = this.ocx.renderer_for_type('tex');
         this.add_stoppable(new Stoppable(renderer));
-        return this.output_context.invoke_renderer(renderer, this.input_element.get_text(), options);
+        return this.ocx.invoke_renderer(renderer, this.input_element.get_text(), options);
     }
 }

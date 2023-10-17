@@ -14,7 +14,7 @@ export class PlotlyRenderer extends Renderer {
     // (the sub-objects layout, config and frames are optional)
 
     // may throw an error
-    async render(output_context, config_, options) {
+    async render(ocx, config_, options) {
         if (typeof config_ !== 'object') {
             throw new Error('config_ must be an object');
         }
@@ -41,12 +41,12 @@ console.log('>>> LAYOUT', layout);//!!!
 
         const style = options?.style;
 
-        const parent = output_context.create_child({
+        const parent = ocx.create_child({
             attrs: {
                 'data-type': this.type,
             },
         });
-        const output_element = output_context.constructor.create_element_child(parent, {
+        const output_element = ocx.constructor.create_element_child(parent, {
             style,
         });
         const Plotly = await load_Plotly();

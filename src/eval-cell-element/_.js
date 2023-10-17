@@ -252,7 +252,7 @@ export class EvalCellElement extends EditorCellElement {
             })
             .catch(error => {
                 this.stop();  // stop anything that may have been started
-                return evaluator.output_context.invoke_renderer_for_type('error', error);
+                return evaluator.ocx.invoke_renderer_for_type('error', error);
             });
     }
     #evaluator_foreground;  // true iff evaluating and before return

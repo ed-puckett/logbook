@@ -13,7 +13,7 @@ export class TeXRenderer extends Renderer {
     // options: { style?: Object, inline?: Boolean, rtl?: Boolean }
 
     // may throw an error
-    async render(output_context, tex, options=null) {
+    async render(ocx, tex, options=null) {
         tex ??= '';
 
         const {
@@ -22,7 +22,7 @@ export class TeXRenderer extends Renderer {
             rtl,
         } = (options ?? {});
 
-        const parent = output_context.create_child({
+        const parent = ocx.create_child({
             attrs: {
                 'data-type': this.type,
             },

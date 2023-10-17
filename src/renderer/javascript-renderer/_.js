@@ -35,9 +35,9 @@ const dynamic_import = new Function('path', 'return import(path);');
 // During evaluation, a number of other values are available "globally",
 // though these values do not persist after the particular evaluation
 // (except for references from async code started during the evaluation).
-// These values include output_context (which provides utilities for
-// manipulation of the output of the cell), various graphics, etc functions.
-// Also included are:
+// These values include ocx (an instance of OutputContext which provides
+// utilities for manipulation of the output of the cell), various graphics,
+// etc functions.  Also included are:
 //
 //     println:        prints its argument followed by newline
 //     printf:         implementation of std C printf()
@@ -97,27 +97,27 @@ export class JavaScriptRenderer extends Renderer {
 
     // may throw an error
     // if eval_context is not given in options, then LogbookManager.singleton.global_eval_context is used
-    async render(output_context, code, options=null) {
+    async render(ocx, code, options=null) {
         const {
             style,
             eval_context = LogbookManager.singleton.global_eval_context,
             inline,
         } = (options ?? {});
 
-        // if !style && inline, then use the given output_context,
-        // otherwise, if style || !inline, create a new output_context
+        // if !style && inline, then use the given ocx,
+        // otherwise, if style || !inline, create a new ocx
         if (style || !inline) {
-            const parent = output_context.create_child({
+            const parent = ocx.create_child({
                 tag: inline ? 'span' : 'div',
                 attrs: {
                     'data-type': this.type,
                 },
                 style,
             });
-            output_context = new OutputContext(parent);
+            ocx = new OutputContext(parent);
         }
 
-        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, output_context, code);
+        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, ocx, code);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
         // create an async generator with the given code as the heart of its
@@ -164,7 +164,7 @@ export class JavaScriptRenderer extends Renderer {
         }
     }
 
-    async #create_ephemeral_eval_context(eval_context, output_context, source_code='') {
+    async #create_ephemeral_eval_context(eval_context, ocx, source_code='') {
         const self = this;
 
         const d3 = await load_d3();
@@ -204,10 +204,10 @@ export class JavaScriptRenderer extends Renderer {
             return util_delay_ms(1000*s);
         }
 
-        /** options may also include a substitute "output_context" which will override ocx
+        /** options may also include a substitute "ocx" which will override the ocx argument
          */
         async function orender(ocx, type, value, options=null) {
-            ocx = options?.output_context ?? ocx;
+            ocx = options?.ocx ?? ocx;
             const renderer = ocx.renderer_for_type(type);
             self.add_stoppable(new Stoppable(renderer));
             return ocx.invoke_renderer(renderer, value, options)
@@ -222,7 +222,7 @@ export class JavaScriptRenderer extends Renderer {
             return orender(ocx, 'text', text, options);
         }
 
-        const orender_error = orender.bind(null, output_context, 'error');
+        const orender_error = orender.bind(null, ocx, 'error');
 
         async function orender_value(ocx, value, options=null) {
             // transform value to text and then render as text
@@ -242,7 +242,7 @@ export class JavaScriptRenderer extends Renderer {
         }
 
         async function oprint__(ocx, options=null) {
-            ocx = options?.output_context ?? ocx;
+            ocx = options?.ocx ?? ocx;
             ocx.create_child({
                 tag: 'hr',
                 attrs: {
@@ -262,8 +262,23 @@ export class JavaScriptRenderer extends Renderer {
             }
         }
 
-        async function javascript(code, options) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
-            return orender(output_context, 'javascript', code, options);
+        async function ojavascript(ocx, code, options=null) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
+            return orender(ocx, 'javascript', code, options);
+        }
+        async function omarkdown(ocx, code, options=null) {
+            return orender(ocx, 'markdown', code, options);
+        }
+        async function otex(ocx, code, options=null) {
+            return orender(ocx, 'tex', code, options);
+        }
+        async function oimage_data(ocx, code, options=null) {
+            return orender(ocx, 'image_data', code, options);
+        }
+        async function ographviz(ocx, code, options=null) {
+            return orender(ocx, 'graphviz', code, options);
+        }
+        async function oplotly(ocx, code, options=null) {
+            return orender(ocx, 'plotly', code, options);
         }
 
         // wrapper to abort the given function if the renderer is stopped
@@ -292,8 +307,7 @@ export class JavaScriptRenderer extends Renderer {
         }
 
         const ephemeral_eval_context = {
-            output_context,
-            ocx: output_context,
+            ocx,
             // Renderer, etc classes
             Renderer,
             // external
@@ -309,28 +323,34 @@ export class JavaScriptRenderer extends Renderer {
             sleep:           AIS(sleep),
             // output functions defined above
             orender:         AIS(orender),
-            render:          AIS(orender.bind(null, output_context)),
+            render:          AIS(orender.bind(null, ocx)),
             orender_text:    AIS(orender_text),
-            render_text:     AIS(orender_text.bind(null, output_context)),
+            render_text:     AIS(orender_text.bind(null, ocx)),
             orender_error:   AIS(orender_error),
-            render_error:    AIS(orender_error.bind(null, output_context)),
+            render_error:    AIS(orender_error.bind(null, ocx)),
             orender_value:   AIS(orender_value),
-            render_value:    AIS(orender_value.bind(null, output_context)),
+            render_value:    AIS(orender_value.bind(null, ocx)),
             oprintln:        AIS(oprintln),
-            println:         AIS(oprintln.bind(null, output_context)),
+            println:         AIS(oprintln.bind(null, ocx)),
             oprint__:        AIS(oprint__),
-            print__:         AIS(oprint__.bind(null, output_context)),
+            print__:         AIS(oprint__.bind(null, ocx)),
             oprintf:         AIS(oprintf),
-            printf:          AIS(oprintf.bind(null, output_context)),
+            printf:          AIS(oprintf.bind(null, ocx)),
             // graphics, etc
-            markdown:        AIS(orender.bind(null, output_context, 'markdown')),
-            tex:             AIS(orender.bind(null, output_context, 'tex')),
-            image_data:      AIS(orender.bind(null, output_context, 'image-data')),
-            graphviz:        AIS(orender.bind(null, output_context, 'graphviz')),
-            plotly:          AIS(orender.bind(null, output_context, 'plotly')),
+            omarkdown:       AIS(omarkdown),
+            markdown:        AIS(omarkdown.bind(null, ocx)),
+            otex:            AIS(otex),
+            tex:             AIS(otex.bind(null, ocx)),
+            oimage_data:     AIS(oimage_data),
+            image_data:      AIS(oimage_data.bind(null, ocx)),
+            ographviz:       AIS(ographviz),
+            graphviz:        AIS(ographviz.bind(null, ocx)),
+            oplotly:         AIS(oplotly),
+            plotly:          AIS(oplotly.bind(null, ocx)),
             d3,  // for use with Plotly
             // code
-            javascript:      AIS(javascript),
+            ojavascript:     AIS(ojavascript),
+            javascript:      AIS(ojavascript.bind(null, ocx)),
             source_code,  // this evaluation's source code
         };
 

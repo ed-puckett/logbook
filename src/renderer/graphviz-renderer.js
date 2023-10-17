@@ -17,10 +17,10 @@ export class GraphvizRenderer extends Renderer {
     // }
 
     // may throw an error
-    async render(output_context, config, options) {
+    async render(ocx, config, options) {
         const style = options?.style;
 
-        const element = output_context.create_child({
+        const element = ocx.create_child({
             attrs: {
                 'data-type': this.type,
             },

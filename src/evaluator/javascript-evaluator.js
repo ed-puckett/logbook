@@ -17,9 +17,9 @@ export class JavaScriptEvaluator extends Evaluator {
             style:  undefined,//!!!
             eval_context: this.eval_context,
         };
-        const renderer = this.output_context.renderer_for_type('javascript');
+        const renderer = this.ocx.renderer_for_type('javascript');
         this.add_stoppable(new Stoppable(renderer));
         const code = this.input_element.get_text();
-        return this.output_context.invoke_renderer(renderer, code, options);
+        return this.ocx.invoke_renderer(renderer, code, options);
     }
 }

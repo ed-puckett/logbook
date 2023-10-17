@@ -14,15 +14,15 @@ export class ImageDataRenderer extends Renderer {
     // (or an array of these objects)
 
     // may throw an error
-    async render(output_context, config, options) {
+    async render(ocx, config, options) {
         const style = options?.style;
 
-        const parent = output_context.create_child({
+        const parent = ocx.create_child({
             attrs: {
                 'data-type': this.type,
             },
         });
-        const canvas = output_context.constructor.create_element_child(parent, {
+        const canvas = ocx.constructor.create_element_child(parent, {
             tag: 'canvas',
             style,
         });

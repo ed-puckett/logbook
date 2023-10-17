@@ -111,8 +111,8 @@ await plotly([ trace1, trace2 ]);</eval-cell>
 const bullet = '\u00b7';  // middle dot
 class ListItemRenderer extends Renderer {
     static type = 'list-item';
-    async render(output_context, value, options) {
-        return output_context.invoke_renderer_for_type('text', `${bullet} ${value?.trim()}\n`);
+    async render(ocx, value, options) {
+        return ocx.invoke_renderer_for_type('text', `${bullet} ${value?.trim()}\n`);
     }
 }
 Renderer.add_class(ListItemRenderer);
