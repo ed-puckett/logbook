@@ -7,14 +7,11 @@ replace beep() with LogbookManager.singleton.notify(message)
 notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
 create_element(): sending "attrs" option with a "class" property does not work as expected
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
-visible indicator shows "not visible" (may be only when visible is set initially on loaded element)
-f11, ctrl-alt-I, etc do not work when e.g., body is focused
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
 graphviz (and other?) formats do not respect dark mode
 when in dark mode, document flashes white momentarily when loading document
-filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination.
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
 fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for
 menu navigation with mouse is sluggish
@@ -34,6 +31,9 @@ maybe use CodeMirror
 
 
 --- DONE ---
+visible indicator shows "not visible" (may be only when visible is set initially on loaded element) (no longer used)
+f11, ctrl-alt-I, etc do not work when e.g., body is focused
+filter mutations in ChangeManager (e.g., tool-bar attributes, contenteditable, etc).  Still perform them, but do not count them in the "neutral" determination. (no longer used)
 add resize commands for key and menu: shrink-inputs, enlarge-inputs, collapse-inputs, expand-inputs
 key bindings do not work when tool-bar elements (e.g., type selector) are focused
 update examples / convert old esbook examples

@@ -174,6 +174,21 @@ export class OutputContext {
         return this.constructor.create_element_child(this.element, options);
     }
 
+    /** create a new OutputContext from a new child element of this.element created via this.constructor.create_element_child()
+     *  @return {OutputContext} the new child OutputContext
+     */
+    create_child_output_context(options=null) {
+        options ??= {};
+        const parent_style_attr = this.element.getAttribute('style');
+        if (parent_style_attr) {
+            options.attrs = {
+                ...(options.attrs ?? {}),
+                style: parent_style_attr,  // inherit parent's style
+            };
+        }
+        return new this.constructor(this.create_child(options));
+    }
+
     /** create or update a child text node of this.element via this.constructor.create_element_child_text_node()
      *  @return {Node|null} the new or modified text node, or null if the converted text is ''
      */

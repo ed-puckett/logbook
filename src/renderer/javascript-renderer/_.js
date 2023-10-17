@@ -204,24 +204,27 @@ export class JavaScriptRenderer extends Renderer {
             return util_delay_ms(1000*s);
         }
 
-        async function render(type, value, options=null) {
-            const renderer = output_context.renderer_for_type(type);
+        /** options may also include a substitute "output_context" which will override ocx
+         */
+        async function orender(ocx, type, value, options=null) {
+            ocx = options?.output_context ?? ocx;
+            const renderer = ocx.renderer_for_type(type);
             self.add_stoppable(new Stoppable(renderer));
-            return output_context.invoke_renderer(renderer, value, options)
-                  .catch(error => output_context.invoke_renderer_for_type('error', error));
+            return ocx.invoke_renderer(renderer, value, options)
+                  .catch(error => ocx.invoke_renderer_for_type('error', error));
         }
 
-        async function render_text(text, options=null) {
+        async function orender_text(ocx, text, options=null) {
             text ??= '';
             if (typeof text !== 'string') {
                 text = text?.toString() ?? '';
             }
-            return render('text', text, options);
+            return orender(ocx, 'text', text, options);
         }
 
-        const render_error = render.bind(null, 'error');
+        const orender_error = orender.bind(null, output_context, 'error');
 
-        async function render_value(value) {
+        async function orender_value(ocx, value, options=null) {
             // transform value to text and then render as text
             let text;
             if (typeof value === 'undefined') {
@@ -231,15 +234,16 @@ export class JavaScriptRenderer extends Renderer {
             } else {
                 text = '[unprintable value]';
             }
-            return render_text(text);
+            return orender_text(ocx, text, options);
         }
 
-        async function println(text) {
-            return render_text((text ?? '') + '\n');
+        async function oprintln(ocx, text, options=null) {
+            return orender_text(ocx, (text ?? '') + '\n', options);
         }
 
-        async function print__() {
-            output_context.create_child({
+        async function oprint__(ocx, options=null) {
+            ocx = options?.output_context ?? ocx;
+            ocx.create_child({
                 tag: 'hr',
                 attrs: {
                     id: undefined,  // prevent generation of id
@@ -247,19 +251,19 @@ export class JavaScriptRenderer extends Renderer {
             });
         }
 
-        async function printf(format, ...args) {
+        async function oprintf(ocx, format, ...args) {
             if (typeof format !== 'undefined' && format !== null) {
                 if (typeof format !== 'string') {
                     format = format.toString();
                 }
                 const text = sprintf(format, ...args);
-                return render_text(text).
-                    catch(error => output_context.invoke_renderer_for_type('error', error));
+                return orender_text(ocx, text).
+                    catch(error => ocx.invoke_renderer_for_type('error', error));
             }
         }
 
         async function javascript(code, options) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
-            return render('javascript', code, options);
+            return orender(output_context, 'javascript', code, options);
         }
 
         // wrapper to abort the given function if the renderer is stopped
@@ -288,11 +292,13 @@ export class JavaScriptRenderer extends Renderer {
         }
 
         const ephemeral_eval_context = {
+            output_context,
+            ocx: output_context,
             // Renderer, etc classes
             Renderer,
             // external
             sprintf:         AIS(sprintf),
-            // functions defined above
+            // utility functions defined above
             is_stopped,
             create_worker:   AIS(create_worker),
             import_lib:      AIS(import_lib),
@@ -301,19 +307,27 @@ export class JavaScriptRenderer extends Renderer {
             next_tick:       AIS(next_tick),
             next_micro_tick: AIS(next_micro_tick),
             sleep:           AIS(sleep),
-            render:          AIS(render),
-            render_text:     AIS(render_text),
-            render_error:    AIS(render_error),
-            render_value:    AIS(render_value),
-            println:         AIS(println),
-            print__:         AIS(print__),
-            printf:          AIS(printf),
+            // output functions defined above
+            orender:         AIS(orender),
+            render:          AIS(orender.bind(null, output_context)),
+            orender_text:    AIS(orender_text),
+            render_text:     AIS(orender_text.bind(null, output_context)),
+            orender_error:   AIS(orender_error),
+            render_error:    AIS(orender_error.bind(null, output_context)),
+            orender_value:   AIS(orender_value),
+            render_value:    AIS(orender_value.bind(null, output_context)),
+            oprintln:        AIS(oprintln),
+            println:         AIS(oprintln.bind(null, output_context)),
+            oprint__:        AIS(oprint__),
+            print__:         AIS(oprint__.bind(null, output_context)),
+            oprintf:         AIS(oprintf),
+            printf:          AIS(oprintf.bind(null, output_context)),
             // graphics, etc
-            markdown:        AIS(render.bind(null, 'markdown')),
-            tex:             AIS(render.bind(null, 'tex')),
-            image_data:      AIS(render.bind(null, 'image-data')),
-            graphviz:        AIS(render.bind(null, 'graphviz')),
-            plotly:          AIS(render.bind(null, 'plotly')),
+            markdown:        AIS(orender.bind(null, output_context, 'markdown')),
+            tex:             AIS(orender.bind(null, output_context, 'tex')),
+            image_data:      AIS(orender.bind(null, output_context, 'image-data')),
+            graphviz:        AIS(orender.bind(null, output_context, 'graphviz')),
+            plotly:          AIS(orender.bind(null, output_context, 'plotly')),
             d3,  // for use with Plotly
             // code
             javascript:      AIS(javascript),

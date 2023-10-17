@@ -88,8 +88,7 @@ export class LogbookManager {
 
         this.reset_global_eval_context();
 
-        this.#eval_states = new Subscribable();
-        //!!! this.#eval_states_subscription is never unsubscribed
+        this.#eval_states = new Subscribable();  //!!! this.#eval_states_subscription is never unsubscribed
         this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
 
         this.#command_bindings = get_global_command_bindings(this);
@@ -109,7 +108,7 @@ export class LogbookManager {
     #eval_states_subscription;
     #command_bindings;
     #key_event_manager;
-    #main_element;           // element wrapped around original body content by initialize()
+    #main_element;  // element wrapped around original body content by initialize()
     #tool_bar;
     #resize_handle_element;  // resize element; created in this.#initialize_document_structure()
     #menubar;
@@ -129,6 +128,9 @@ export class LogbookManager {
     static split_step_size_ratio = 0.05;   // amount to shrink or enlarge the current split
     static split_neutral_ratio   = 0.50;   // "neutral" split position
 
+    get header_element (){ return this.#header_element; }
+    get main_element   (){ return this.#main_element; }
+
     get editable (){ return this.#editable; }
     set_editable(editable) {
         editable = !!editable;  // ensure Boolean
@@ -145,9 +147,6 @@ export class LogbookManager {
             cell.set_active(cell === this.active_cell);
         }
     }
-
-    get header_element (){ return this.#header_element; }
-    get main_element   (){ return this.#main_element; }
 
     /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
      *  @return {Array} the cells in the document
@@ -695,8 +694,6 @@ ${contents}
     }
 
 
-    // === MENU AND COMMAND CONFIGURATION ===
-
     // === COMMAND HANDLER INTERFACE ===
 
     inject_key_event(key_event) {
@@ -766,10 +763,6 @@ ${contents}
         const active_index = cells.indexOf(active_cell);
         const editable     = this.editable;
 
-        /*
-          'save'  // directly handled in this.#neutral_changes_observer()
-        */
-
         this.#menubar.set_menu_state('clear',            { enabled: editable });
         this.#menubar.set_menu_state('reset',            { enabled: editable });
         this.#menubar.set_menu_state('reset-cell',       { enabled: editable });
@@ -790,20 +783,13 @@ ${contents}
         this.#menubar.set_menu_state('stop',             { enabled: active_cell?.can_stop });
         this.#menubar.set_menu_state('stop-all',         { enabled: cells.some(cell => cell.can_stop) });
 
+        const neutral = true;  //!!! until we figure out how to detect a changed document
+        this.#tool_bar.set_for('modified', !neutral);
+        this.#menubar.set_menu_state('save', { enabled: !neutral });
+
         /*
           recents
         */
-    }
-
-
-    // === NEUTRAL CHANGES OBSERVER ===
-
-    #neutral_changes_observer(data) {
-        const {
-            neutral,
-        } = data;
-        this.#tool_bar.set_for('modified', !neutral);
-        this.#menubar.set_menu_state('save', { enabled: !neutral });
     }
 
 
@@ -1174,6 +1160,7 @@ ${contents}
      */
     command_handler__shrink_inputs(command_context) {
         this.step_input_output_split_size(false);
+        this.active_cell.focus();
         return true;
     }
 
@@ -1181,6 +1168,7 @@ ${contents}
      */
     command_handler__enlarge_inputs(command_context) {
         this.step_input_output_split_size(true);
+        this.active_cell.focus();
         return true;
     }
 
@@ -1195,6 +1183,7 @@ ${contents}
      */
     command_handler__expand_inputs(command_context) {
         this.expand_input_output_split();
+        this.active_cell.focus();
         return true;
     }
 

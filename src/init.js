@@ -10,9 +10,9 @@ import {
 } from './logbook-manager.js';
 
 
-const view_search_param_name         = 'view';
-const view_search_param_value_edit   = 'edit';
-const view_search_param_value_output = 'output';
+const view_param_name         = 'view';
+const view_param_value_edit   = 'edit';
+const view_param_value_output = 'output';
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
     trigger_document_initialization();
@@ -25,17 +25,20 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
 }
 
 function trigger_document_initialization() {
-    LogbookManager.singleton;  // accessing this will trigger document initialization
+    LogbookManager.singleton;  // accessing this getter will trigger document initialization
 
     // update view according to parameter
-    const view_value = new URLSearchParams(document.location.search).get(view_search_param_name);
+    const view_value = new URLSearchParams(document.location.search).get(view_param_name)  // from URL search
+          ?? document.body?.getAttribute(view_param_name)                                  // from document.body
+          ?? document.documentElement.getAttribute(view_param_name);                       // from document.documentElement
+
     switch (view_value) {
-        case view_search_param_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
-        case view_search_param_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
+        case view_param_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
+        case view_param_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
 
         default: {
             if (view_value) {
-                console.warn(`ignored unknown "${view_search_param_name}" search parameter "${view_value}"`);
+                console.warn(`ignored unknown "${view_param_name}" parameter "${view_value}"`);
             }
         }
         break;

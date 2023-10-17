@@ -39,4 +39,6 @@
 
 //!!! this.#menubar_selects_subscription is never unsubscribed
 
+//!!! until we figure out how to detect a changed document
+
 //!!! what a kludge...
