@@ -117,6 +117,19 @@ export class JavaScriptRenderer extends Renderer {
             ocx = new OutputContext(parent);
         }
 
+        ocx.new_stoppables.subscribe((new_stoppable) => {
+            this.add_stoppable(new_stoppable);
+        });  //!!! never unsubscribed
+
+        this.stop_states.subscribe(({ stopped }) => {
+            if (stopped) {
+                // this will cause abort when calling methods of ocx.
+                // because we cannot control the JavaScript interpreter,
+                // we have to make do with this "polling" type of approach.
+                ocx.stop();
+            }
+        });  //!!! never unsubscribed
+
         const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, ocx, code);
         const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
 
@@ -204,154 +217,43 @@ export class JavaScriptRenderer extends Renderer {
             return util_delay_ms(1000*s);
         }
 
-        /** options may also include a substitute "ocx" which will override the ocx argument
-         */
-        async function orender(ocx, type, value, options=null) {
-            ocx = options?.ocx ?? ocx;
-            const renderer = ocx.renderer_for_type(type);
-            self.add_stoppable(new Stoppable(renderer));
-            return ocx.invoke_renderer(renderer, value, options)
-                  .catch(error => ocx.invoke_renderer_for_type('error', error));
-        }
-
-        async function orender_text(ocx, text, options=null) {
-            text ??= '';
-            if (typeof text !== 'string') {
-                text = text?.toString() ?? '';
-            }
-            return orender(ocx, 'text', text, options);
-        }
-
-        const orender_error = orender.bind(null, ocx, 'error');
-
-        async function orender_value(ocx, value, options=null) {
-            // transform value to text and then render as text
-            let text;
-            if (typeof value === 'undefined') {
-                text = '[undefined]';
-            } else if (typeof value?.toString === 'function') {
-                text = value.toString();
-            } else {
-                text = '[unprintable value]';
-            }
-            return orender_text(ocx, text, options);
-        }
-
-        async function oprintln(ocx, text, options=null) {
-            return orender_text(ocx, (text ?? '') + '\n', options);
-        }
-
-        async function oprint__(ocx, options=null) {
-            ocx = options?.ocx ?? ocx;
-            ocx.create_child({
-                tag: 'hr',
-                attrs: {
-                    id: undefined,  // prevent generation of id
-                },
-            });
-        }
-
-        async function oprintf(ocx, format, ...args) {
-            if (typeof format !== 'undefined' && format !== null) {
-                if (typeof format !== 'string') {
-                    format = format.toString();
-                }
-                const text = sprintf(format, ...args);
-                return orender_text(ocx, text).
-                    catch(error => ocx.invoke_renderer_for_type('error', error));
-            }
-        }
-
-        async function ojavascript(ocx, code, options=null) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
-            return orender(ocx, 'javascript', code, options);
-        }
-        async function omarkdown(ocx, code, options=null) {
-            return orender(ocx, 'markdown', code, options);
-        }
-        async function otex(ocx, code, options=null) {
-            return orender(ocx, 'tex', code, options);
-        }
-        async function oimage_data(ocx, code, options=null) {
-            return orender(ocx, 'image_data', code, options);
-        }
-        async function ographviz(ocx, code, options=null) {
-            return orender(ocx, 'graphviz', code, options);
-        }
-        async function oplotly(ocx, code, options=null) {
-            return orender(ocx, 'plotly', code, options);
-        }
-
-        // wrapper to abort the given function if the renderer is stopped
-        // this is the strategy for terminating a running evaluation...
-        function AIS(f) {
-            if (typeof f !== 'function') {
-                throw new Error('f must be a function');
-            }
-            const AsyncFunction = (async () => {}).constructor;
-            if (f instanceof AsyncFunction) {
-                return async (...args) => {
-                    abort_if_stopped(f.name ?? 'FUNCTION');
-                    return f.apply(this, args);
-                };
-            } else {
-                return (...args) => {
-                    abort_if_stopped(f.name ?? 'FUNCTION');
-                    return f.apply(this, args);
-                };
-            }
-        }
-        function abort_if_stopped(operation) {
-            if (self.stopped) {
-                throw new Error(`${operation} called after ${self.constructor.name} stopped`);
-            }
-        }
-
         const ephemeral_eval_context = {
             ocx,
+            source_code,  // this evaluation's source code
+
             // Renderer, etc classes
             Renderer,
+            d3,  // for use with Plotly
+
             // external
-            sprintf:         AIS(sprintf),
+            sprintf:         ocx.AIS(sprintf),
+
             // utility functions defined above
             is_stopped,
-            create_worker:   AIS(create_worker),
-            import_lib:      AIS(import_lib),
-            vars:            AIS(vars),
-            delay_ms:        AIS(delay_ms),
-            next_tick:       AIS(next_tick),
-            next_micro_tick: AIS(next_micro_tick),
-            sleep:           AIS(sleep),
-            // output functions defined above
-            orender:         AIS(orender),
-            render:          AIS(orender.bind(null, ocx)),
-            orender_text:    AIS(orender_text),
-            render_text:     AIS(orender_text.bind(null, ocx)),
-            orender_error:   AIS(orender_error),
-            render_error:    AIS(orender_error.bind(null, ocx)),
-            orender_value:   AIS(orender_value),
-            render_value:    AIS(orender_value.bind(null, ocx)),
-            oprintln:        AIS(oprintln),
-            println:         AIS(oprintln.bind(null, ocx)),
-            oprint__:        AIS(oprint__),
-            print__:         AIS(oprint__.bind(null, ocx)),
-            oprintf:         AIS(oprintf),
-            printf:          AIS(oprintf.bind(null, ocx)),
-            // graphics, etc
-            omarkdown:       AIS(omarkdown),
-            markdown:        AIS(omarkdown.bind(null, ocx)),
-            otex:            AIS(otex),
-            tex:             AIS(otex.bind(null, ocx)),
-            oimage_data:     AIS(oimage_data),
-            image_data:      AIS(oimage_data.bind(null, ocx)),
-            ographviz:       AIS(ographviz),
-            graphviz:        AIS(ographviz.bind(null, ocx)),
-            oplotly:         AIS(oplotly),
-            plotly:          AIS(oplotly.bind(null, ocx)),
-            d3,  // for use with Plotly
-            // code
-            ojavascript:     AIS(ojavascript),
-            javascript:      AIS(ojavascript.bind(null, ocx)),
-            source_code,  // this evaluation's source code
+            create_worker:   ocx.AIS(create_worker),
+            import_lib:      ocx.AIS(import_lib),
+            vars:            ocx.AIS(vars),
+            delay_ms:        ocx.AIS(delay_ms),
+            next_tick:       ocx.AIS(next_tick),
+            next_micro_tick: ocx.AIS(next_micro_tick),
+            sleep:           ocx.AIS(sleep),
+
+            // output functions defined by ocx
+            render:          ocx.render.bind(ocx),
+            render_text:     ocx.render_text.bind(ocx),
+            render_error:    ocx.render_error.bind(ocx),
+            render_value:    ocx.render_value.bind(ocx),
+            println:         ocx.println.bind(ocx),
+            printf:          ocx.printf.bind(ocx),
+            print__:         ocx.print__.bind(ocx),
+
+            // code and graphics rendering defined by ocx
+            javascript:      ocx.javascript.bind(ocx),
+            markdown:        ocx.markdown.bind(ocx),
+            tex:             ocx.tex.bind(ocx),
+            image_data:      ocx.image_data.bind(ocx),
+            graphviz:        ocx.graphviz.bind(ocx),
+            plotly:          ocx.plotly.bind(ocx),
         };
 
         return ephemeral_eval_context;

@@ -30,17 +30,17 @@ yield sprintf('result = %7f\n', Math.sqrt(s*6));
     padding:    '0.5em',
     overflow:   'hidden',
 });
-const cocx = ocx.create_child_output_context({
+const ccx = ocx.create_child_ocx({
     style: {
         color:      'red',
         background: 'yellow',
     },
 });
-await oprintln(ocx,  '1. xyzzy');
-await oprintln(cocx, '2. whir!');
-await oprintln(ocx,  '3. third');
-await oprintln(cocx, '4. buzz!');
-await oprintln(ocx,  '5. fifth');
+await ocx.println('1. xyzzy');
+await ccx.println('2. whir!');
+await ocx.println('3. third');
+await ccx.println('4. buzz!');
+await ocx.println('5. fifth');
 </eval-cell>
 <output id="id-a88eae2b-822b-4d58-8130-00c19e99edc0" class="eval-cell-output"><div data-type="javascript" style="color: purple; background: aliceblue; border: 1px solid black; padding: 0.5em; overflow: hidden;"><div style="color: red; background: yellow; border: 1px solid black; padding: 0.5em; overflow: hidden;">2. whir!
 4. buzz!

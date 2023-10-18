@@ -21,6 +21,8 @@
 
 //!!! incorrect comparison
 
+//!!! never unsubscribed
+
 //!!! no stats
 
 //!!! options is not copied, and yet is used later

@@ -9,8 +9,20 @@ import {
 } from '../lib/ui/dom-util.js';
 
 import {
+    Subscribable,
+} from '../lib/sys/subscribable.js';
+
+import {
+    Stoppable,
+} from '../lib/sys/stoppable.js';
+
+import {
     Renderer,
 } from './renderer/_.js';
+
+import {
+    sprintf,
+} from '../lib/sys/sprintf.js';
 
 
 export class OutputContext {
@@ -24,7 +36,19 @@ export class OutputContext {
                 enumerable: true,
             },
         });
+        this.#new_stoppables = new Subscribable();
+        this.#stopped = false;
     }
+    #new_stoppables;
+    #stopped;
+
+    get new_stoppables (){ return this.#new_stoppables; }
+
+    get stopped (){ return this.#stopped; }  // once stopped, always stopped
+    stop() {
+        this.#stopped = true;
+    }
+
 
     // === STATIC METHODS ===
 
@@ -133,12 +157,49 @@ export class OutputContext {
     }
 
 
-    // === INSTANCE METHODS ===
+    // === ABORT IF STOPPED ===
+
+    /** wrap the given function so that when it is called,
+     *  this.abort_if_stopped() will be called first to
+     *  terminate rendering.
+     */
+    AIS(f) {
+        if (typeof f !== 'function') {
+            throw new Error('f must be a function');
+        }
+        const name = f.name ?? 'FUNCTION';
+        const AsyncFunction = (async () => {}).constructor;
+        if (f instanceof AsyncFunction) {
+            return async (...args) => {
+                this.abort_if_stopped(name);
+                const result = await f.apply(null, args);
+                this.abort_if_stopped(name);
+                return result;
+            };
+        } else {
+            return (...args) => {
+                this.abort_if_stopped(name);
+                return f.apply(null, args);
+            };
+        }
+    }
+
+
+    // === BASIC OPERATIONS ===
+
+    /** abort by throwing an error if this.stopped, otherwise do nothing.
+     */
+    abort_if_stopped(operation) {
+        if (this.stopped) {
+            throw new Error(`${operation} called after ${this.constructor.name} stopped`);
+        }
+    }
 
     /** remove all child elements and nodes of this.element via this.constructor.clear_element()
      *  @return this
      */
     clear() {
+        this.abort_if_stopped();
         this.constructor.clear_element(this.element);
         return this;
     }
@@ -147,6 +208,7 @@ export class OutputContext {
      *  @return this
      */
     scroll_into_view() {
+        this.abort_if_stopped();
         this.constructor.scroll_element_into_view(this.element);
         return this;
     }
@@ -155,6 +217,7 @@ export class OutputContext {
      *  @return this
      */
     set_attrs(attrs) {
+        this.abort_if_stopped();
         this.constructor.set_element_attrs(this.element, attrs);
         return this;
     }
@@ -163,6 +226,7 @@ export class OutputContext {
      *  @return this
      */
     update_style(spec) {
+        this.abort_if_stopped();
         this.constructor.update_element_style(this.element, spec);
         return this;
     }
@@ -171,13 +235,15 @@ export class OutputContext {
      *  @return {HTMLElement} the new child element
      */
     create_child(options=null) {
+        this.abort_if_stopped();
         return this.constructor.create_element_child(this.element, options);
     }
 
     /** create a new OutputContext from a new child element of this.element created via this.constructor.create_element_child()
      *  @return {OutputContext} the new child OutputContext
      */
-    create_child_output_context(options=null) {
+    create_child_ocx(options=null) {
+        this.abort_if_stopped();
         options ??= {};
         const parent_style_attr = this.element.getAttribute('style');
         if (parent_style_attr) {
@@ -193,6 +259,7 @@ export class OutputContext {
      *  @return {Node|null} the new or modified text node, or null if the converted text is ''
      */
     create_child_text_node(text, options=null) {
+        this.abort_if_stopped();
         return this.constructor.create_element_child_text_node(this.element, text, options);
     }
 
@@ -200,9 +267,105 @@ export class OutputContext {
      *  @return this
      */
     normalize_text() {
+        this.abort_if_stopped();
         this.constuctor.normalize_element_text(this.element);
         return this;
     }
+
+
+    // === ADVANCED OPERATIONS ===
+
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
+    async render(type, value, options=null) {
+        const ocx = options?.ocx ?? this;
+        const renderer = ocx.renderer_for_type(type);
+        ocx.#new_stoppables.dispatch(new Stoppable(renderer));
+        return ocx.invoke_renderer(renderer, value, options)
+            .catch(error => ocx.invoke_renderer_for_type('error', error));
+    }
+
+    async render_text(text, options=null) {
+        const ocx = options?.ocx ?? this;
+        text ??= '';
+        if (typeof text !== 'string') {
+            text = text?.toString() ?? '';
+        }
+        return ocx.render('text', text, options);
+    }
+
+    async render_error(error, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('error', error, options);
+    }
+
+    async render_value(value, options=null) {
+        const ocx = options?.ocx ?? this;
+        // transform value to text and then render as text
+        let text;
+        if (typeof value === 'undefined') {
+            text = '[undefined]';
+        } else if (typeof value?.toString === 'function') {
+            text = value.toString();
+        } else {
+            text = '[unprintable value]';
+        }
+        return ocx.render_text(text, options);
+    }
+
+    async println(text, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render_text((text ?? '') + '\n', options);
+    }
+
+    async printf(format, ...args) {
+        const ocx = this;  // no options...
+        if (typeof format !== 'undefined' && format !== null) {
+            if (typeof format !== 'string') {
+                format = format.toString();
+            }
+            const text = sprintf(format, ...args);
+            return ocx.render_text(text).
+                catch(error => ocx.invoke_renderer_for_type('error', error));
+        }
+    }
+
+    async print__(options=null) {
+        const ocx = options?.ocx ?? this;
+        ocx.create_child({ tag: 'hr' });
+    }
+
+    async javascript(code, options=null) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
+        const ocx = options?.ocx ?? this;
+        return ocx.render('javascript', code, options);
+    }
+
+    async markdown(code, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('markdown', code, options);
+    }
+
+    async tex(code, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('tex', code, options);
+    }
+
+    async image_data(code, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('image_data', code, options);
+    }
+
+    async graphviz(code, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('graphviz', code, options);
+    }
+
+    async plotly(code, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('plotly', code, options);
+    }
+
+
 
 
     // === RENDERER INTERFACE ===
@@ -212,6 +375,7 @@ export class OutputContext {
      *  @return {Renderer} renderer_class
      */
     renderer_for_type(type) {
+        this.abort_if_stopped();
         const renderer_class = Renderer.class_from_type(type);
         if (!renderer_class) {
             throw new Error(`unknown output type "${type}"`);
@@ -227,11 +391,13 @@ export class OutputContext {
      *  @return {any} return value from renderer
      */
     async invoke_renderer(renderer, value, options=null) {
+        this.abort_if_stopped();
         return renderer.render(this, value, options)
             .catch(error => {
                 renderer.stop();  // stop anything that may have been started
                 throw error;      // propagate the error
-            });
+            })
+            .finally(() => this.abort_if_stopped());
     }
 
     /** find a renderer and invoke it for the given arguemnts
@@ -241,7 +407,9 @@ export class OutputContext {
      *  @return {any} return value from renderer
      */
     async invoke_renderer_for_type(type, value, options=null) {
+        this.abort_if_stopped();
         const renderer = this.renderer_for_type(type);
-        return this.invoke_renderer(renderer, value, options);
+        return this.invoke_renderer(renderer, value, options)
+            .finally(() => this.abort_if_stopped());
     }
 }
