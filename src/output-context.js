@@ -186,6 +186,15 @@ export class OutputContext {
 
     // === ABORT IF STOPPED ===
 
+    /** abort by throwing an error if this.stopped, otherwise do nothing.
+     */
+    abort_if_stopped(operation) {
+        if (this.stopped) {
+            operation ??= 'operation';
+            throw new Error(`${operation} invoked on stopped output context`);
+        }
+    }
+
     /** wrap the given function so that when it is called,
      *  this.abort_if_stopped() will be called first to
      *  terminate rendering.
@@ -194,28 +203,21 @@ export class OutputContext {
         if (typeof f !== 'function') {
             throw new Error('f must be a function');
         }
-        const name = f.name ?? 'FUNCTION';
         const AsyncFunction = (async () => {}).constructor;
         if (f instanceof AsyncFunction) {
             return async (...args) => {
-                this.abort_if_stopped(name);
+                this.abort_if_stopped(f.name);
                 const result = await f.apply(null, args);
-                this.abort_if_stopped(name);
+                this.abort_if_stopped(f.name);
                 return result;
             };
         } else {
             return (...args) => {
-                this.abort_if_stopped(name);
-                return f.apply(null, args);
+                this.abort_if_stopped(f.name);
+                const result = f.apply(null, args);
+                this.abort_if_stopped(f.name);
+                return result;
             };
-        }
-    }
-
-    /** abort by throwing an error if this.stopped, otherwise do nothing.
-     */
-    abort_if_stopped(operation) {
-        if (this.stopped) {
-            throw new Error(`${operation} called after ${this.constructor.name} stopped`);
         }
     }
 
@@ -351,7 +353,6 @@ export class OutputContext {
     async render(type, value, options=null) {
         const ocx = options?.ocx ?? this;
         const renderer = ocx.renderer_for_type(type);
-        ocx.#new_stoppables.dispatch(new Stoppable(renderer));
         return ocx.invoke_renderer(renderer, value, options)
             .catch(error => ocx.invoke_renderer_for_type('error', error));
     }
@@ -458,15 +459,18 @@ export class OutputContext {
      *  @param {any} value
      *  @param {Object} options for renderer
      *  @return {any} return value from renderer
+     * A new Stoppable created from renderer is dispatched through #new_stoppables
      */
     async invoke_renderer(renderer, value, options=null) {
-        this.abort_if_stopped();
-        return renderer.render(this, value, options)
+        const ocx = options?.ocx ?? this;
+        ocx.abort_if_stopped();
+        ocx.#new_stoppables.dispatch(new Stoppable(renderer));
+        return renderer.render(ocx, value, options)
             .catch(error => {
                 renderer.stop();  // stop anything that may have been started
                 throw error;      // propagate the error
             })
-            .finally(() => this.abort_if_stopped());
+            .finally(() => ocx.abort_if_stopped());
     }
 
     /** find a renderer and invoke it for the given arguemnts
@@ -476,9 +480,10 @@ export class OutputContext {
      *  @return {any} return value from renderer
      */
     async invoke_renderer_for_type(type, value, options=null) {
-        this.abort_if_stopped();
-        const renderer = this.renderer_for_type(type);
-        return this.invoke_renderer(renderer, value, options)
-            .finally(() => this.abort_if_stopped());
+        const ocx = options?.ocx ?? this;
+        ocx.abort_if_stopped();
+        const renderer = ocx.renderer_for_type(type);
+        return ocx.invoke_renderer(renderer, value, options)
+            .finally(() => ocx.abort_if_stopped());
     }
 }

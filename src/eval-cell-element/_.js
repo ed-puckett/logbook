@@ -229,7 +229,7 @@ export class EvalCellElement extends EditorCellElement {
 
         // stop current evaluator, if any
         this.stop();  // clears this.#evaluator_stoppable
-        
+
         const output_element = this.establish_output_element();  // return existing or create
         clear_element(output_element);
 

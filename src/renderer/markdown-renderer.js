@@ -14,6 +14,18 @@ import {
     OutputContext,
 } from '../output-context.js';
 
+import {
+    OpenPromise,
+} from '../../lib/sys/open-promise.js';
+
+
+// TeX handling adapted from: marked-katex-extension/index.js
+// https://github.com/UziTech/marked-katex-extension/blob/main/src/index.js
+// See also: https://marked.js.org/using_pro#async
+
+const extension_name__inline    = 'inline-tex';
+const extension_name__block     = 'block-tex';
+const extension_name__eval_code = 'eval-code';
 
 export class MarkdownRenderer extends Renderer {
     static type = 'markdown';
@@ -35,23 +47,57 @@ export class MarkdownRenderer extends Renderer {
             },
             style,
         });
-        const markup = await marked.parse(markdown);  // using extensions, see below
+
+        const main_renderer = this;  // used below in extensions code
+
+        // sequencer_promise is used to evaluate the async walkTokens one
+        // token at a time, in sequence.  Normally, marked runs the
+        // async walkTokens on all tokens in concurrently.
+        // This is important because our renderers may be stateful.
+        let sequencer_promise = Promise.resolve();
+
+        const marked_options = {
+            async: true,  // needed to tell the marked parser operate asynchronously, and to return a promise
+            async walkTokens(token) {
+                const prior_sequencer_promise = sequencer_promise;
+                const new_sequencer_promise = new OpenPromise();
+                sequencer_promise = new_sequencer_promise;
+                await prior_sequencer_promise;
+
+                if (token.type === extension_name__eval_code) {
+                    const output_element = document.createElement('div');
+                    const ocx = new OutputContext(output_element);
+                    let renderer;
+                    try {
+                        renderer = ocx.renderer_for_type(token.output_type);
+                    } catch (error) {
+                        await ocx.invoke_renderer_for_type('error', error);
+                    }
+                    if (renderer) {
+                        ocx.new_stoppables.subscribe((new_stoppable) => {
+                            main_renderer.add_stoppable(new_stoppable);
+                        });  //!!! never unsubscribed
+
+                        const options = {
+                            //!!!
+                        };
+                        await ocx.invoke_renderer(renderer, token.text, options)
+                            .catch(error => ocx.invoke_renderer_for_type('error', error));
+                        renderer?.stop();  // stop background processing, if any
+                    }
+                    token.html = output_element.innerHTML;
+                }
+
+                new_sequencer_promise.resolve();  // permit next token to be processed
+            }
+        };
+
+        const markup = await marked.parse(markdown, marked_options);  // using extensions, see below
         parent.innerHTML = markup;
 
         return parent;
     }
 }
-
-
-// === MARKED EXTENSIONS ===
-
-// TeX handling adapted from: marked-katex-extension/index.js
-// https://github.com/UziTech/marked-katex-extension/blob/main/src/index.js
-// See also: https://marked.js.org/using_pro#async
-
-const extension_name__inline    = 'inline-tex';
-const extension_name__block     = 'block-tex';
-const extension_name__eval_code = 'eval-code';
 
 marked.use({
     extensions: [
@@ -119,27 +165,4 @@ marked.use({
             },
         },
     ],
-
-    async: true,  // needed to tell the marked parser operate asynchronously, and to return a promise
-    async walkTokens(token) {
-        if (token.type === extension_name__eval_code) {
-            const output_element = document.createElement('div');
-            const ocx = new OutputContext(output_element);
-            let renderer;
-            try {
-                renderer = ocx.renderer_for_type(token.output_type);
-            } catch (error) {
-                await ocx.invoke_renderer_for_type('error', error);
-            }
-            if (renderer) {
-                const options = {
-                    //!!!
-                };
-                await ocx.invoke_renderer(renderer, token.text, options)
-                    .catch(error => ocx.invoke_renderer_for_type('error', error));
-                renderer?.stop();  // stop background processing, if any
-            }
-            token.html = output_element.innerHTML;
-        }
-    }
 });
