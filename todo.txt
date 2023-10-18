@@ -1,4 +1,4 @@
-Stoppable objects are not currently being removed from a StoppableObjectsManager, even if they have already been stopped
+import_lib (within evaluation by javascript renderer) does not work reliably (webpack-related?)
 ocx parent? (to detect if parent ocx is stopped even when child has not yet been stopped...)
 eval-all, etc, do not stop when stop is triggered, only the current evaluation is stopped
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
@@ -33,6 +33,7 @@ maybe use CodeMirror
 
 
 --- DONE ---
+Stoppable objects are not currently being removed from a StoppableObjectsManager, even if they have already been stopped; actually, StoppableObjectsManager.stop() clears
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
 MarkdownRenderer does not record sub-renderers (ocx is created in walkTokens, but there is no apparent way to get back to the main renderer to record the sub-renderer
 visible indicator shows "not visible" (may be only when visible is set initially on loaded element) (no longer used)

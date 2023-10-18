@@ -11,6 +11,10 @@ import {
 } from '../lib/sys/subscribable.js';
 
 import {
+    StoppableObjectsManager,
+} from '../lib/sys/stoppable.js';
+
+import {
     KeyEventManager,
     KeyMap,
 } from '../lib/ui/key/_.js';
@@ -98,6 +102,7 @@ export class LogbookManager {
         this.push_key_map(key_map);
         this.#key_event_manager.attach();
 
+        this.#multi_eval_manager = null;
     }
     #editable;
     #active_cell;
@@ -115,6 +120,7 @@ export class LogbookManager {
     #menubar_commands_subscription;
     #menubar_selects_subscription;
     #file_handle;
+    #multi_eval_manager;  // used by, e.g., command_handler__eval_all()
 
     static resize_handle_class                = 'resize-handle';
     static resize_handle_dragging_state_class = 'dragging';
@@ -186,8 +192,19 @@ export class LogbookManager {
     }
 
     stop() {
+        try {
+            this.#multi_eval_manager?.stop();
+            this.#multi_eval_manager = null;
+        } catch (error) {
+            console.warn('error while stopping this.#multi_eval_manager', this.#multi_eval_manager, error);
+        }
+
         for (const cell of this.constructor.get_cells()) {
-            cell.stop();
+            try {
+                cell.stop();
+            } catch (error) {
+                console.warn('error while stopping cell', cell, error);
+            }
         }
     }
 
@@ -932,15 +949,24 @@ ${contents}
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
-            this.reset_global_eval_context();
-            for (const iter_cell of this.constructor.get_cells()) {
-                iter_cell.focus();
-                if (iter_cell === cell) {
-                    break;
+            this.stop();  // also clears this.#multi_eval_manager
+            const em = this.#multi_eval_manager = new StoppableObjectsManager();
+            try {
+                this.reset_global_eval_context();
+                for (const iter_cell of this.constructor.get_cells()) {
+                    if (em.stopped) {
+                        break;
+                    }
+                    iter_cell.focus();
+                    if (iter_cell === cell) {
+                        break;
+                    }
+                    await iter_cell.eval({
+                        eval_context: this.global_eval_context,
+                    });
                 }
-                await iter_cell.eval({
-                    eval_context: this.global_eval_context,
-                });
+            } finally {
+                this.#multi_eval_manager = null;
             }
             return true;
         }
@@ -955,13 +981,21 @@ ${contents}
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
-            this.stop();
-            this.reset_global_eval_context();
-            for (const iter_cell of this.constructor.get_cells()) {
-                iter_cell.focus();
-                await iter_cell.eval({
-                    eval_context: this.global_eval_context,
-                });
+            this.stop();  // also clears this.#multi_eval_manager
+            const em = this.#multi_eval_manager = new StoppableObjectsManager();
+            try {
+                this.reset_global_eval_context();
+                for (const iter_cell of this.constructor.get_cells()) {
+                    if (em.stopped) {
+                        break;
+                    }
+                    iter_cell.focus();
+                    await iter_cell.eval({
+                        eval_context: this.global_eval_context,
+                    });
+                }
+            } finally {
+                this.#multi_eval_manager = null;
             }
             return true;
         }
