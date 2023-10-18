@@ -437,8 +437,6 @@ export class OutputContext {
     }
 
 
-
-
     // === RENDERER INTERFACE ===
 
     /** return a new instance of the appropriate Renderer class for the given type
