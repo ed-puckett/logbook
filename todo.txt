@@ -1,3 +1,4 @@
+Stoppable objects are not currently being removed from a StoppableObjectsManager, even if they have already been stopped
 ocx parent? (to detect if parent ocx is stopped even when child has not yet been stopped...)
 eval-all, etc, do not stop when stop is triggered, only the current evaluation is stopped
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)

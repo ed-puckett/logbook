@@ -354,9 +354,11 @@ export class OutputContext {
         const ocx = options?.ocx ?? this;
         const renderer = ocx.renderer_for_type(type);
         return ocx.invoke_renderer(renderer, value, options)
-            .catch(error => ocx.invoke_renderer_for_type('error', error));
+            .catch(error => ocx.render_error(error));
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async render_text(text, options=null) {
         const ocx = options?.ocx ?? this;
         text ??= '';
@@ -366,11 +368,15 @@ export class OutputContext {
         return ocx.render('text', text, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async render_error(error, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('error', error, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async render_value(value, options=null) {
         const ocx = options?.ocx ?? this;
         // transform value to text and then render as text
@@ -385,11 +391,15 @@ export class OutputContext {
         return ocx.render_text(text, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async println(text, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render_text((text ?? '') + '\n', options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async printf(format, ...args) {
         const ocx = this;  // no options...
         if (typeof format !== 'undefined' && format !== null) {
@@ -398,40 +408,55 @@ export class OutputContext {
             }
             const text = ocx.constructor.sprintf(format, ...args);
             return ocx.render_text(text).
-                catch(error => ocx.invoke_renderer_for_type('error', error));
+                catch(error => ocx.render_error(error));
         }
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async print__(options=null) {
         const ocx = options?.ocx ?? this;
         ocx.create_child({ tag: 'hr' });
     }
 
-    async javascript(code, options=null) {  // options: { style?: Object, eval_context?: Object, inline?: Boolean }
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     * options: { style?: Object, eval_context?: Object, inline?: Boolean }
+     */
+    async javascript(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('javascript', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async markdown(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('markdown', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async tex(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('tex', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async image_data(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('image_data', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async graphviz(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('graphviz', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
     async plotly(code, options=null) {
         const ocx = options?.ocx ?? this;
         return ocx.render('plotly', code, options);

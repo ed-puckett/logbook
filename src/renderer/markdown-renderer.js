@@ -71,7 +71,7 @@ export class MarkdownRenderer extends Renderer {
                     try {
                         renderer = ocx.renderer_for_type(token.output_type);
                     } catch (error) {
-                        await ocx.invoke_renderer_for_type('error', error);
+                        await ocx.render_error(error);
                     }
                     if (renderer) {
                         ocx.new_stoppables.subscribe((new_stoppable) => {
@@ -82,7 +82,7 @@ export class MarkdownRenderer extends Renderer {
                             //!!!
                         };
                         await ocx.invoke_renderer(renderer, token.text, options)
-                            .catch(error => ocx.invoke_renderer_for_type('error', error));
+                            .catch(error => ocx.render_error(error));
                         renderer?.stop();  // stop background processing, if any
                     }
                     token.html = output_element.innerHTML;

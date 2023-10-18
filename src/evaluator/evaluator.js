@@ -31,7 +31,7 @@ export class Evaluator extends StoppableObjectsManager {
     static async eval(input_element, output_element, eval_context=null) {
         const instance = new this(input_element, output_element, eval_context);
         return instance._perform_eval()
-            .catch(error => instance.ocx.invoke_renderer_for_type('error', error));
+            .catch(error => instance.ocx.render_error(error));
     }
 
     // do not call the constructor via new, instead use the static async method Evaluator.eval()
