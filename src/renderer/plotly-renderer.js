@@ -31,11 +31,9 @@ export class PlotlyRenderer extends Renderer {
             data = config_;
             config = {};
         }
-console.log('>>> LAYOUT BEFORE', layout, config_);//!!!
         layout ??= {};
         layout.plot_bgcolor  ??= 'rgba(0, 0, 0, 0)';
         layout.paper_bgcolor ??= 'rgba(0, 0, 0, 0)';
-console.log('>>> LAYOUT', layout);//!!!
 
         config.displayModeBar = false;  // remove icons/links from top-right of plot
 

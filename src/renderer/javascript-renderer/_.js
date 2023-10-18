@@ -76,18 +76,8 @@ import {
 } from '../../../lib/sys/stoppable.js';
 
 import {
-    sprintf,
-} from '../../../lib/sys/sprintf.js';
-
-import {
     load_d3,
 } from '../d3.js';
-
-import {
-    delay_ms        as util_delay_ms,
-    next_tick       as util_next_tick,
-    next_micro_tick as util_next_micro_tick,
-} from '../../../lib/ui/dom-util.js';
 
 
 export class JavaScriptRenderer extends Renderer {
@@ -201,22 +191,6 @@ export class JavaScriptRenderer extends Renderer {
             return undefined;
         }
 
-        async function delay_ms(ms) {
-            return util_delay_ms(ms);
-        }
-
-        async function next_tick() {
-            return util_next_tick();
-        }
-
-        async function next_micro_tick() {
-            return util_next_micro_tick();
-        }
-
-        async function sleep(s) {
-            return util_delay_ms(1000*s);
-        }
-
         const ephemeral_eval_context = {
             ocx,
             source_code,  // this evaluation's source code
@@ -225,18 +199,20 @@ export class JavaScriptRenderer extends Renderer {
             Renderer,
             d3,  // for use with Plotly
 
-            // external
-            sprintf:         ocx.AIS(sprintf),
-
             // utility functions defined above
             is_stopped,
             create_worker:   ocx.AIS(create_worker),
             import_lib:      ocx.AIS(import_lib),
             vars:            ocx.AIS(vars),
-            delay_ms:        ocx.AIS(delay_ms),
-            next_tick:       ocx.AIS(next_tick),
-            next_micro_tick: ocx.AIS(next_micro_tick),
-            sleep:           ocx.AIS(sleep),
+
+            // external
+            sprintf:         ocx.sprintf.bind(ocx),
+
+            // sprintf, sleep, etc
+            sleep:           ocx.sleep.bind(ocx),
+            delay_ms:        ocx.delay_ms.bind(ocx),
+            next_tick:       ocx.next_tick.bind(ocx),
+            next_micro_tick: ocx.next_micro_tick.bind(ocx),
 
             // output functions defined by ocx
             render:          ocx.render.bind(ocx),

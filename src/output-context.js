@@ -21,7 +21,13 @@ import {
 } from './renderer/_.js';
 
 import {
-    sprintf,
+    delay_ms        as util_delay_ms,
+    next_tick       as util_next_tick,
+    next_micro_tick as util_next_micro_tick,
+} from '../lib/ui/dom-util.js';
+
+import {
+    sprintf as lib_sprintf,
 } from '../lib/sys/sprintf.js';
 
 
@@ -50,7 +56,30 @@ export class OutputContext {
     }
 
 
-    // === STATIC METHODS ===
+    // === STATIC UTILITY ===
+
+    static sprintf(format, ...args) {
+        return lib_sprintf(format, ...args);
+    }
+
+    static async sleep(s) {
+        return util_delay_ms(1000*s);
+    }
+
+    static async delay_ms(ms) {
+        return util_delay_ms(ms);
+    }
+
+    static async next_tick() {
+        return util_next_tick();
+    }
+
+    static async next_micro_tick() {
+        return util_next_micro_tick();
+    }
+
+
+    // === STATIC OPERATIONS ===
 
     static get_svg_string(svg_node) {
         const serializer = new XMLSerializer();
@@ -111,8 +140,6 @@ export class OutputContext {
      *      style?:     object,     // style properties for new element
      *  }
      *  @return {HTMLElement} the new element
-     * A unique id will be assigned to the element unless that element already has an id attribute
-     * specified (in attrs).
      * The before node, if specified, must have a parent that must match parent if parent is specified.
      * If neither parent nor before is specified, the new element will have no parent.
      * Warning: '!important' in style specifications does not work!  (Should use priority method.)
@@ -184,9 +211,6 @@ export class OutputContext {
         }
     }
 
-
-    // === BASIC OPERATIONS ===
-
     /** abort by throwing an error if this.stopped, otherwise do nothing.
      */
     abort_if_stopped(operation) {
@@ -194,6 +218,53 @@ export class OutputContext {
             throw new Error(`${operation} called after ${this.constructor.name} stopped`);
         }
     }
+
+
+    // === UTILITY ===
+
+    /** @param {String} format
+     *  @param {any[]} args
+     *  @return {String} formatted string
+     */
+    sprintf(format, ...args) {
+        this.abort_if_stopped();
+        return this.constructor.sprintf(format, ...args);
+    }
+
+    /** @param {Number} s delay in seconds
+     *  @return {Promise} promise which will resolve after s seconds
+     */
+    async sleep(s) {
+        this.abort_if_stopped();
+        return this.constructor.delay_ms(1000*s);
+    }
+
+    /** @param {Number} ms delay in milliseconds
+     *  @return {Promise} promise which will resolve after ms milliseconds
+     */
+    async delay_ms(ms) {
+        this.abort_if_stopped();
+        return this.constructor.delay_ms(ms);
+    }
+
+    /** @return {Promise} promise which will resolve after next "tick"
+     * setTimeout() is used.
+     */
+    async next_tick() {
+        this.abort_if_stopped();
+        return this.constructor.next_tick();
+    }
+
+    /** @return {Promise} promise which will resolve after next "tick"
+     * queueMicrotask() is used.
+     */
+    async next_micro_tick() {
+        this.abort_if_stopped();
+        return this.constructor.next_micro_tick();
+    }
+
+
+    // === BASIC OPERATIONS ===
 
     /** remove all child elements and nodes of this.element via this.constructor.clear_element()
      *  @return this
@@ -239,7 +310,7 @@ export class OutputContext {
         return this.constructor.create_element_child(this.element, options);
     }
 
-    /** create a new OutputContext from a new child element of this.element created via this.constructor.create_element_child()
+    /** create a new OutputContext from a new child element of this.element created via this.create_child()
      *  @return {OutputContext} the new child OutputContext
      */
     create_child_ocx(options=null) {
@@ -249,7 +320,7 @@ export class OutputContext {
         if (parent_style_attr) {
             options.attrs = {
                 ...(options.attrs ?? {}),
-                style: parent_style_attr,  // inherit parent's style
+                style: parent_style_attr,  // inherit parent's style attribute (vs style)
             };
         }
         return new this.constructor(this.create_child(options));
@@ -324,7 +395,7 @@ export class OutputContext {
             if (typeof format !== 'string') {
                 format = format.toString();
             }
-            const text = sprintf(format, ...args);
+            const text = ocx.constructor.sprintf(format, ...args);
             return ocx.render_text(text).
                 catch(error => ocx.invoke_renderer_for_type('error', error));
         }
