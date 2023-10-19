@@ -357,8 +357,10 @@ export class LogbookManager {
         // create the this.#resize_handle_element element as the first child of this.#main_element
         this.#resize_handle_element = create_element({
             parent: this.#main_element,
+            attrs: {
+                class: [ this.constructor.resize_handle_class ],
+            },
         });
-        this.#resize_handle_element.classList.add(this.constructor.resize_handle_class);
         // move the cells and their associated output_elements (if any)
         for (const cell of document.querySelectorAll(EvalCellElement.custom_element_name)) {
             const {
@@ -667,10 +669,19 @@ ${contents}
             parent = this.main_element,
             before = null,
         } = (options ?? {});
-        const cell_container = create_element({ parent, before });
-        cell_container.classList.add(this.constructor.cell_container_class);
-        const cell_input_container = create_element({ parent: cell_container });
-        cell_input_container.classList.add(this.constructor.cell_input_container_class);
+        const cell_container = create_element({
+            parent,
+            before,
+            attrs: {
+                class: [ this.constructor.cell_container_class ],
+            },
+        });
+        const cell_input_container = create_element({
+            parent: cell_container,
+            attrs: {
+                class: [ this.constructor.cell_input_container_class ],
+            },
+        });
         const cell_parent = cell_input_container;
         const cell_before = null;  // i.e., append
         const output_element_parent = cell_container;

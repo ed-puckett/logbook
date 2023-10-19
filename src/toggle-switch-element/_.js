@@ -44,11 +44,9 @@ export class ToggleSwitchElement extends HTMLElement {
                 "aria-checked": false,
                 "tabindex": "0",
                 title: title_for_off,
+                class: (cls ?? ''),
             },
         });
-        if (cls) {
-            control.classList.add(cls);
-        }
         control.#event_listener_manager.add(control, 'change', (event) => {
             control.title = control.get_state() ? title_for_on : title_for_off;
         });

@@ -125,14 +125,15 @@ export class EvalCellElement extends EditorCellElement {
             parent,
             before,
         } = (options ?? {});
-        const output_element = create_element({
+        return create_element({
             parent,
             before,
             tag: 'output',
             set_id: true,  // output_element needs an id for reference by its eval-cell
+            attrs: {
+                class: [ this.output_element_class ],
+            },
         });
-        output_element.classList.add(this.output_element_class);
-        return output_element;
     }
 
     /** create an output element, if necessary, and set its standard attributes

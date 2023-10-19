@@ -7,7 +7,6 @@ provide way to reset themes in settings
 create dark mode colors for dialogs
 replace beep() with LogbookManager.singleton.notify(message)
 notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
-create_element(): sending "attrs" option with a "class" property does not work as expected
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
 graphviz graphics flash black when reloading examples/test.html

@@ -141,7 +141,7 @@ main > :not(:first-child) {
     background-color: var(--theme-ou-bgc);
 }
 .eval-cell-output:empty,
-.eval-cell-output:not(:has(> div:not(:empty))) {
+.eval-cell-output:not(:has(> *:not(:empty))) {
     display: none;
 }
 
