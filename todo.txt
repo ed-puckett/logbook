@@ -1,3 +1,5 @@
+replace beep() with LogbookManager.singleton.notify(message)
+notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
 import_lib (within evaluation by javascript renderer) does not work reliably (webpack-related?)
 ocx parent? (to detect if parent ocx is stopped even when child has not yet been stopped...)
 eval-all, etc, do not stop when stop is triggered, only the current evaluation is stopped
@@ -5,13 +7,11 @@ fs-interface.js: revist because fsaapi has broader support now (however Safari d
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
 create dark mode colors for dialogs
-replace beep() with LogbookManager.singleton.notify(message)
-notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
 favicon error (using default path /favicon.ico) before <link rel="icon"> is honored (intermittent, timing?)
 fix css overrides for graphviz, one problem being that arrowhead fill is wrong
-graphviz graphics flash black when reloading examples/test.html
 remove border from rendered graphviz objects
 graphviz (and other?) formats do not respect dark mode
+graphviz graphics flash black when reloading examples/test.html
 when in dark mode, document flashes white momentarily when loading document
 fix dialog and settings-dialog in the way they handle the header, main and #ui elements
 fix sbom -- packages loaded dynamically and loaded via load_script (which is true for most packages) are not accounted for

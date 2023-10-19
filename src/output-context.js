@@ -133,16 +133,53 @@ export class OutputContext {
 
     /** create a new child element of the given element with the given characteristics
      *  @param {Object|undefined|null} options: {
-     *      before?:    Node|null,  // sibling node before which to insert; append if null or undefined
-     *      tag?:       string,     // tag name for new element; default: 'div'
-     *      namespace?: string,     // namespace for new element creation
-     *      attrs?:     object,     // attributes to set on new element
-     *      style?:     object,     // style properties for new element
+     *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
+     *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
+     *      tag?:       string,            // tag name for new element; default: 'div'
+     *      namespace?: string,            // namespace for new element creation
+     *      attrs?:     object,            // attributes to set on new element
+     *      style?:     object,            // style properties for new element
+     *      set_id?:    Boolean            // if true, allocate and set an id for the element (if id not specified in attrs)
+     *      children?:  ELDEF[],           // array of children to create (recursive)
      *  }
-     *  @return {HTMLElement} the new element
+     *  @return {Element} the new element
+     * A unique id will be assigned to the element unless that element already has an id attribute
+     * specified (in attrs).
+     * Attributes specified in attrs with a value of either null or undefined are ignored.  This is
+     * how to prevent generation of an id: specify a value of null or undefined for id.
      * The before node, if specified, must have a parent that must match parent if parent is specified.
      * If neither parent nor before is specified, the new element will have no parent.
      * Warning: '!important' in style specifications does not work!  (Should use priority method.)
+     * The definitions in "children", if specified, should not contain "parent" or "before".
+     * attrs may contain a "class" property, and this should be a string or an array of strings,
+     * each of which must not contain whitespace.
+     */
+    static create_element(options=null) {
+        return create_element(options);  // from dom-util.js
+    }
+
+    /** create a new child element of the given element with the given characteristics
+     *  @param {Object|undefined|null} options: {
+     *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
+     *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
+     *      tag?:       string,            // tag name for new element; default: 'div'
+     *      namespace?: string,            // namespace for new element creation
+     *      attrs?:     object,            // attributes to set on new element
+     *      style?:     object,            // style properties for new element
+     *      set_id?:    Boolean            // if true, allocate and set an id for the element (if id not specified in attrs)
+     *      children?:  ELDEF[],           // array of children to create (recursive)
+     *  }
+     *  @return {Element} the new element
+     * A unique id will be assigned to the element unless that element already has an id attribute
+     * specified (in attrs).
+     * Attributes specified in attrs with a value of either null or undefined are ignored.  This is
+     * how to prevent generation of an id: specify a value of null or undefined for id.
+     * The before node, if specified, must have a parent that must match parent if parent is specified.
+     * If neither parent nor before is specified, the new element will have no parent.
+     * Warning: '!important' in style specifications does not work!  (Should use priority method.)
+     * The definitions in "children", if specified, should not contain "parent" or "before".
+     * attrs may contain a "class" property, and this should be a string or an array of strings,
+     * each of which must not contain whitespace.
      */
     static create_element_child(element, options=null) {
         return create_element({ parent: element, ...(options ?? {}) });  // from dom-util.js
