@@ -182,7 +182,10 @@ export class OutputContext {
      * each of which must not contain whitespace.
      */
     static create_element_child(element, options=null) {
-        return create_element({ parent: element, ...(options ?? {}) });  // from dom-util.js
+        return create_element({
+            parent: element,
+            ...(options ?? {}),
+        });  // from dom-util.js
     }
 
     /** create or update a child text node of the given element

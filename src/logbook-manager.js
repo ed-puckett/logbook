@@ -187,6 +187,7 @@ export class LogbookManager {
      */
     clear() {
         clear_element(this.main_element);
+        this.main_element.appendChild(this.#resize_handle_element);  // add resize handle back
         const first_cell = this.create_cell();
         first_cell.focus();
     }
