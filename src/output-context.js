@@ -135,6 +135,7 @@ export class OutputContext {
     /** create_element(options=null, return_mapping=false)
      *  create a new element with the given characteristics
      *  @param {Object|undefined|null} options: {
+     *      _key?:      String,            // if return_mapping, associate the created element with this value as the key
      *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
      *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
      *      tag?:       string,            // tag name for new element; default: 'div'
@@ -184,6 +185,8 @@ export class OutputContext {
         options = { ...(options ?? {}) };
         if (!options.parent && !options.before) {
             options.parent = element;
+        } else {
+            console.warn('options.parent and/or options.before override element argument');
         }
         return create_element(options, return_mapping);  // from dom-util.js
     }
