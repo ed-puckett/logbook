@@ -31,6 +31,10 @@ import {
 } from '../lib/ui/dom-util.js';
 
 import {
+    Renderer,
+} from './renderer/_.js';
+
+import {
     get_menubar_spec,
 } from './global-bindings.js';
 
@@ -175,6 +179,7 @@ export class LogbookManager {
      *  @return {LogbookManager} this
      */
     reset() {
+        Renderer.reset_classes();
         for (const cell of this.constructor.get_cells()) {
             cell.reset();
         }
@@ -190,6 +195,7 @@ export class LogbookManager {
         this.main_element.appendChild(this.#resize_handle_element);  // add resize handle back
         const first_cell = this.create_cell();
         first_cell.focus();
+        this.reset();
     }
 
     stop() {

@@ -58,7 +58,7 @@ export function get_renderer_classes() {
  * This is done so that, at the very least, an error renderer will be available
  * when evaluating.
  */
-export function set_renderer_classes(new_renderer_classes) {  // called in initialization below
+export function set_renderer_classes(new_renderer_classes) {
     if (!Array.isArray(new_renderer_classes)) {
         throw new Error('new_renderer_classes must be an Array');
     }
@@ -90,6 +90,10 @@ export function set_renderer_classes(new_renderer_classes) {  // called in initi
         );
 }
 
+export function reset_to_initial_renderer_classes() {  // called in initialization below
+    set_renderer_classes(initial_renderer_classes);
+}
+
 export function add_renderer_class(renderer_class) {
     if (!is_renderer_subclass(renderer_class)) {
         throw new Error('renderer_class must be a subclass of Renderer');
@@ -109,4 +113,4 @@ export function remove_renderer_class(renderer_class) {
 
 // === INITIALIZATION ===
 
-set_renderer_classes(initial_renderer_classes);
+reset_to_initial_renderer_classes();

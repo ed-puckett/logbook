@@ -4,6 +4,7 @@ import {
     set_element_attrs,
     update_element_style,
     create_element,
+    create_element_mapping,
     create_element_child_text_node,
     normalize_element_text,
 } from '../lib/ui/dom-util.js';
@@ -131,7 +132,8 @@ export class OutputContext {
         return update_element_style(element, spec);  // from dom-util.js
     }
 
-    /** create a new child element of the given element with the given characteristics
+    /** create_element(options=null, return_mapping=false)
+     *  create a new element with the given characteristics
      *  @param {Object|undefined|null} options: {
      *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
      *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
@@ -142,50 +144,55 @@ export class OutputContext {
      *      set_id?:    Boolean            // if true, allocate and set an id for the element (if id not specified in attrs)
      *      children?:  ELDEF[],           // array of children to create (recursive)
      *  }
-     *  @return {Element} the new element
-     * A unique id will be assigned to the element unless that element already has an id attribute
-     * specified (in attrs).
-     * Attributes specified in attrs with a value of either null or undefined are ignored.  This is
-     * how to prevent generation of an id: specify a value of null or undefined for id.
-     * The before node, if specified, must have a parent that must match parent if parent is specified.
+     *  @param {Boolean} return_mapping (default false)
+     *  @return {Element|Object} the new element or the element mapping object
+     *
+     * A unique id will be assigned to the element unless that element already has
+     * an id attribute specified (in attrs).
+     * Attributes specified in attrs with a value of either null or undefined are ignored.
+     * The before node, if specified, must have a parent that must match parent if
+     * parent is specified.
      * If neither parent nor before is specified, the new element will have no parent.
      * Warning: '!important' in style specifications does not work!  (Should use priority method.)
      * The definitions in "children", if specified, should not contain "parent" or "before".
      * attrs may contain a "class" property, and this should be a string or an array of strings,
      * each of which must not contain whitespace.
+     *
+     * If return_mapping, then return a mapping object from keys found in "_key" properties
+     * in the options.  Each of these keys will be mapped to the corresponding object, and
+     * mapping_default_key is mapped to the top-level object.  Note that duplicate keys or
+     * keys that specify the same value as mapping_default_key will overwrite earlier values.
+     * Elements specified in options are created in a post-order traversal of options.children.
+     * This means that a _key specified in options as mapping_default_key will not be returned
+     * because mapping_default_key is set after traversiing the children.
      */
-    static create_element(options=null) {
-        return create_element(options);  // from dom-util.js
+    static create_element(options=null, return_mapping=false) {
+        return create_element(options, return_mapping);  // from dom-util.js
+    }
+
+    /** create a element with the given characteristics and return a mapping.
+     *  See this.create_element() for a description of options.
+     */
+    static create_element_mapping(options=null) {
+        return this.create_element_mapping(options, true);
     }
 
     /** create a new child element of the given element with the given characteristics
-     *  @param {Object|undefined|null} options: {
-     *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
-     *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
-     *      tag?:       string,            // tag name for new element; default: 'div'
-     *      namespace?: string,            // namespace for new element creation
-     *      attrs?:     object,            // attributes to set on new element
-     *      style?:     object,            // style properties for new element
-     *      set_id?:    Boolean            // if true, allocate and set an id for the element (if id not specified in attrs)
-     *      children?:  ELDEF[],           // array of children to create (recursive)
-     *  }
-     *  @return {Element} the new element
-     * A unique id will be assigned to the element unless that element already has an id attribute
-     * specified (in attrs).
-     * Attributes specified in attrs with a value of either null or undefined are ignored.  This is
-     * how to prevent generation of an id: specify a value of null or undefined for id.
-     * The before node, if specified, must have a parent that must match parent if parent is specified.
-     * If neither parent nor before is specified, the new element will have no parent.
-     * Warning: '!important' in style specifications does not work!  (Should use priority method.)
-     * The definitions in "children", if specified, should not contain "parent" or "before".
-     * attrs may contain a "class" property, and this should be a string or an array of strings,
-     * each of which must not contain whitespace.
+     *  See this.create_element() for a description of options.
      */
-    static create_element_child(element, options=null) {
-        return create_element({
-            parent: element,
-            ...(options ?? {}),
-        });  // from dom-util.js
+    static create_element_child(element, options=null, return_mapping=false) {
+        options = { ...(options ?? {}) };
+        if (!options.parent && !options.before) {
+            options.parent = element;
+        }
+        return create_element(options, return_mapping);  // from dom-util.js
+    }
+
+    /** create a new child element of the given element with the given characteristics and return a mapping.
+     *  See this.create_element() for a description of options.
+     */
+    static create_element_child_mapping(element, options=null) {
+        return this.create_element_child(options, true);
     }
 
     /** create or update a child text node of the given element
@@ -345,11 +352,21 @@ export class OutputContext {
     }
 
     /** create a new child element of this.element via this.constructor.create_element_child()
-     *  @return {HTMLElement} the new child element
+     *  See this.constructor.create_element() for a description of options.
+     *  @return {HTMLElement} the new child element or a mapping if return_mapping.
      */
-    create_child(options=null) {
+    create_child(options=null, return_mapping=false) {
         this.abort_if_stopped();
-        return this.constructor.create_element_child(this.element, options);
+        return this.constructor.create_element_child(this.element, options, return_mapping);
+    }
+
+    /** create a new child element of this.element via this.constructor.create_element_child_mapping() and return a mapping.
+     *  See this.constructor.create_element() for a description of options.
+     *  @return {HTMLElement} the new child element or a mapping if return_mapping.
+     */
+    create_child_mapping(options=null) {
+        this.abort_if_stopped();
+        return this.create_child(options, true);
     }
 
     /** create a new OutputContext from a new child element of this.element created via this.create_child()

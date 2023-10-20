@@ -1,6 +1,3 @@
-Renderer reset / clear
-default / mapping_default_key / create_element_mapping / return_mapping=false
-vars() update
 beep() does not work on Firefox until the document is clicked (repro: load document, press Alt-UP; should beep() but errors in Firefox until document clicked)
 replace beep() with LogbookManager.singleton.notify(message)
 notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
@@ -36,6 +33,9 @@ maybe use CodeMirror
 
 
 --- DONE ---
+Renderer: method to reset classes to initial values / use in logbook reset/clear
+vars() update: return arguments instead of undefined
+default / mapping_default_key / create_element_mapping / return_mapping=false
 Stoppable objects are not currently being removed from a StoppableObjectsManager, even if they have already been stopped; actually, StoppableObjectsManager.stop() clears
 examples/test.html: Custom Renderer Example: fails during eval-all when document first loaded, but works a second time (cause: marked runs all extensions in parallel)
 MarkdownRenderer does not record sub-renderers (ocx is created in walkTokens, but there is no apparent way to get back to the main renderer to record the sub-renderer

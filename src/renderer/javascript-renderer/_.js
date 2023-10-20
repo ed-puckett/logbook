@@ -22,8 +22,7 @@ const dynamic_import = new Function('path', 'return import(path);');
 //
 // vars(...objects) assigns new properties to eval_context (i.e., "this"
 // within the code), and those properties persist across all cells.
-// The return value is undefined; this makes ${vars(...)} in a template
-// string literal or in markup not insert anything into the output.
+// The return value is a array of the arguments which will be unmodified.
 //
 // A return statement within a cell terminates the evaluation (except
 // for asynchronous parts that have already been evaluated), and the
@@ -188,7 +187,7 @@ export class JavaScriptRenderer extends Renderer {
 
         function vars(...objects) {
             Object.assign(eval_context, ...objects);
-            return undefined;
+            return objects;
         }
 
         const ephemeral_eval_context = {

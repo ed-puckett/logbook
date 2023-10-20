@@ -6,6 +6,7 @@ import {
     renderer_class_from_type,
     get_renderer_classes,
     set_renderer_classes,
+    reset_to_initial_renderer_classes,
     add_renderer_class,
     remove_renderer_class,
 } from './_.js';
@@ -25,6 +26,8 @@ export class Renderer extends StoppableObjectsManager {
     async render(ocx, value, options) {
         throw new Error('NOT IMPLEMENTED');
     }
+
+    static reset_classes()             { reset_to_initial_renderer_classes(); }
 
     static class_from_type(type)       { return renderer_class_from_type(type); }
     static get_classes()               { return get_renderer_classes(); }
