@@ -75,6 +75,10 @@ import {
 } from '../../../lib/sys/stoppable.js';
 
 import {
+    load_Plotly,
+} from '../plotly.js';
+
+import {
     load_d3,
 } from '../d3.js';
 
@@ -169,7 +173,8 @@ export class JavaScriptRenderer extends Renderer {
     async #create_ephemeral_eval_context(eval_context, ocx, source_code='') {
         const self = this;
 
-        const d3 = await load_d3();
+        const Plotly = await load_Plotly();
+        const d3     = await load_d3();
 
         function is_stopped() {
             return self.stopped;
@@ -196,6 +201,7 @@ export class JavaScriptRenderer extends Renderer {
 
             // Renderer, etc classes
             Renderer,
+            Plotly,
             d3,  // for use with Plotly
 
             // utility functions defined above

@@ -89,6 +89,14 @@ export class LogbookManager {
     }
     static #singleton;
 
+    // document variables
+    static view_var_name         = 'view';
+    static view_var_value_edit   = 'edit';
+    static view_var_value_output = 'output';
+
+    static autoeval_var_name     = 'autoeval';
+
+
     constructor() {
         this.#editable = true;
         this.#active_cell = null;
@@ -486,12 +494,27 @@ export class LogbookManager {
         if (!this.main_element) {
             throw new Error('bad format for document: this.main_element not set');
         }
+
+        const {
+            view_var_name,
+            autoeval_var_name,
+        } = this.constructor;
+        const view_value = new URLSearchParams(document.location.search).get(view_var_name)  // from URL search
+              ?? document.body?.getAttribute(view_var_name)                                  // from document.body
+              ?? document.documentElement.getAttribute(view_var_name);                       // from document.documentElement
+        const autoeval_value = new URLSearchParams(document.location.search).get(autoeval_var_name)  // from URL search
+              ?? document.body?.getAttribute(autoeval_var_name)                                      // from document.body
+              ?? document.documentElement.getAttribute(autoeval_var_name);                           // from document.documentElement
+        const html_additional_attributes = `\
+${typeof view_value     !== 'string' ? '' : ` ${view_var_name}${     !view_value     ? '' : `="${view_value.replaceAll(     '"', '&quot;' )}"` }`}\
+${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_value ? '' : `="${autoeval_value.replaceAll( '"', '&quot;' )}"` }`}\
+`;
         const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
               .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
               .join('\n');
         return `\
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"${html_additional_attributes}>
 <head>
     <meta charset="utf-8">
     <script type="module" src="../dist/main.js"></script>
@@ -768,6 +791,10 @@ ${contents}
         if (!success) {
             beep();
         }
+    }
+
+    inject_command(command) {
+        return this.#perform_command({ command, target: this.active_cell });
     }
 
     #perform_command(command_context) {

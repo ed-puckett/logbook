@@ -10,10 +10,6 @@ import {
 } from './logbook-manager.js';
 
 
-const view_param_name         = 'view';
-const view_param_value_edit   = 'edit';
-const view_param_value_output = 'output';
-
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
     trigger_document_initialization();
 } else {
@@ -27,21 +23,43 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
 function trigger_document_initialization() {
     LogbookManager.singleton;  // accessing this getter will trigger document initialization
 
+    const {
+        view_var_name,
+        view_var_value_edit,
+        view_var_value_output,
+        autoeval_var_name,
+    } = LogbookManager;
+
     // update view according to parameter
-    const view_value = new URLSearchParams(document.location.search).get(view_param_name)  // from URL search
-          ?? document.body?.getAttribute(view_param_name)                                  // from document.body
-          ?? document.documentElement.getAttribute(view_param_name);                       // from document.documentElement
+    const view_value = new URLSearchParams(document.location.search).get(view_var_name)  // from URL search
+          ?? document.body?.getAttribute(view_var_name)                                  // from document.body
+          ?? document.documentElement.getAttribute(view_var_name);                       // from document.documentElement
+
+    const autoeval_value = new URLSearchParams(document.location.search).get(autoeval_var_name)  // from URL search
+          ?? document.body?.getAttribute(autoeval_var_name)                                      // from document.body
+          ?? document.documentElement.getAttribute(autoeval_var_name);                           // from document.documentElement
 
     switch (view_value) {
-        case view_param_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
-        case view_param_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
+    case view_var_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
+    case view_var_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
 
-        default: {
-            if (view_value) {
-                console.warn(`ignored unknown "${view_param_name}" parameter "${view_value}"`);
-            }
+    default: {
+        if (view_value) {
+            console.warn(`ignored unknown "${view_var_name}" parameter "${view_value}"`);
         }
         break;
+    }
+    }
+
+    if (autoeval_value || autoeval_value === '') {
+        switch (autoeval_value) {
+        case false.toString(): break;
+
+        default: {
+            LogbookManager.singleton.inject_command('eval-all');
+            break;
+        }
+        }
     }
 
     globalThis.logbook_manager = LogbookManager.singleton;//!!!
