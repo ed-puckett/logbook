@@ -188,22 +188,25 @@ export class LogbookManager {
      */
     reset() {
         Renderer.reset_classes();
+        this.reset_global_eval_context();
+        this.#file_handle = undefined;
         for (const cell of this.constructor.get_cells()) {
             cell.reset();
         }
-        this.reset_global_eval_context();
-        this.#file_handle = undefined;
         return this;
     }
 
     /** clear the current document
      */
     clear() {
+        this.stop();
+        this.reset();
         clear_element(this.main_element);
         this.main_element.appendChild(this.#resize_handle_element);  // add resize handle back
         const first_cell = this.create_cell();
         first_cell.focus();
-        this.reset();
+        this.set_active_cell(first_cell);  // focus sets active_cell but asynchronously, so set active_cell explicitly
+        this.expand_input_output_split();  // ensure that new new empty cell is visible to the user
     }
 
     stop() {
@@ -885,6 +888,7 @@ ${contents}
             return false;
         } else {
             cell.focus();
+            this.set_active_cell(cell);  // focus sets active_cell but asynchronously, so set active_cell explicitly
             return true;
         }
     }
