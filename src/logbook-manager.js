@@ -187,6 +187,7 @@ export class LogbookManager {
      *  @return {LogbookManager} this
      */
     reset() {
+        this.stop();
         Renderer.reset_classes();
         this.reset_global_eval_context();
         this.#file_handle = undefined;
@@ -199,7 +200,6 @@ export class LogbookManager {
     /** clear the current document
      */
     clear() {
-        this.stop();
         this.reset();
         clear_element(this.main_element);
         this.main_element.appendChild(this.#resize_handle_element);  // add resize handle back
@@ -606,11 +606,13 @@ ${contents}
         this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
     }
 
-    expand_input_output_split() {
+    expand_input_output_split(max=false) {
         const resize_metrics = this.get_resize_metrics();
-        const new_split_px = resize_metrics.split_max_px;  // could instead be resize_metrics.split_neutral_px
         const current_split_px = this.get_current_split_px();
-        if (current_split_px < new_split_px) {  // don't shrink if already currently larger
+        const new_split_px = resize_metrics.split_max_px;  // could instead be resize_metrics.split_neutral_px
+        if ( (max || current_split_px <= 0) &&  // don't change if already visible and !max
+             current_split_px < new_split_px    // don't shrink if already currently larger
+           ) {
             this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         }
     }
@@ -1190,11 +1192,16 @@ ${contents}
         // in an element structure, just remove the entire structure instead
         // of using cell.remove_cell()
         this.constructor.#cell_container_element(cell).remove();
+        let new_cell_created = false;
         if (!next_cell) {
             next_cell = this.create_cell();
+            new_cell_created = true;
         }
-        // this will re-set this.active_cell
         next_cell.focus();
+        this.set_active_cell(next_cell);  // focus sets active_cell but asynchronously, so set active_cell explicitly
+        if (new_cell_created) {
+            this.expand_input_output_split();  // ensure that new new empty cell is visible to the user
+        }
         return true;
     }
 

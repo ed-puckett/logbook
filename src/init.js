@@ -40,8 +40,8 @@ function trigger_document_initialization() {
           ?? document.documentElement.getAttribute(autoeval_var_name);                           // from document.documentElement
 
     switch (view_value) {
-    case view_var_value_edit:   LogbookManager.singleton.expand_input_output_split();   break;
-    case view_var_value_output: LogbookManager.singleton.collapse_input_output_split(); break;
+    case view_var_value_edit:   LogbookManager.singleton.expand_input_output_split(true); break;
+    case view_var_value_output: LogbookManager.singleton.collapse_input_output_split();   break;
 
     default: {
         if (view_value) {
