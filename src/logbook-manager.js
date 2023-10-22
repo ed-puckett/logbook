@@ -499,12 +499,10 @@ export class LogbookManager {
             view_var_name,
             autoeval_var_name,
         } = this.constructor;
-        const view_value = new URLSearchParams(document.location.search).get(view_var_name)  // from URL search
-              ?? document.body?.getAttribute(view_var_name)                                  // from document.body
-              ?? document.documentElement.getAttribute(view_var_name);                       // from document.documentElement
-        const autoeval_value = new URLSearchParams(document.location.search).get(autoeval_var_name)  // from URL search
-              ?? document.body?.getAttribute(autoeval_var_name)                                      // from document.body
-              ?? document.documentElement.getAttribute(autoeval_var_name);                           // from document.documentElement
+        const view_value = document.body?.getAttribute(view_var_name)   // from document.body
+              ?? document.documentElement.getAttribute(view_var_name);  // from document.documentElement
+        const autoeval_value = document.body?.getAttribute(autoeval_var_name)  // from document.body
+              ?? document.documentElement.getAttribute(autoeval_var_name);     // from document.documentElement
         const html_additional_attributes = `\
 ${typeof view_value     !== 'string' ? '' : ` ${view_var_name}${     !view_value     ? '' : `="${view_value.replaceAll(     '"', '&quot;' )}"` }`}\
 ${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_value ? '' : `="${autoeval_value.replaceAll( '"', '&quot;' )}"` }`}\

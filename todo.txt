@@ -3,7 +3,7 @@ replace beep() with LogbookManager.singleton.notify(message)
 notify user of initialization warnings, not just to the console (e.g., ignored extraneous elements)
 import_lib (within evaluation by javascript renderer) does not work reliably (webpack-related?)
 ocx parent? (to detect if parent ocx is stopped even when child has not yet been stopped...)
-eval-all, etc, do not stop when stop is triggered, only the current evaluation is stopped
+document: view and autoeval variables (in: URL search, document.documentElement, document.body)
 fs-interface.js: revist because fsaapi has broader support now (however Safari does not support createWritable)
 ConfirmDialog does not always set default button focus
 provide way to reset themes in settings
@@ -33,6 +33,7 @@ maybe use CodeMirror
 
 
 --- DONE ---
+eval-all, etc, do not stop when stop is triggered, only the current evaluation is stopped
 Renderer: method to reset classes to initial values / use in logbook reset/clear
 vars() update: return arguments instead of undefined
 default / mapping_default_key / create_element_mapping / return_mapping=false
