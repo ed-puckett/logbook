@@ -135,7 +135,7 @@ export function get_standard_theme_names() {
 const standard_themes_spec = {
     //                                   === LIGHT ===                    === DARK ===
 
-    "--theme-by-bgc":                  [ '#fcfcfc',                       '#0e0e0e' ],
+    "--theme-by-bgc":                  [ '#f9f9f9',                       '#0e0e0e' ],
     "--theme-by-fgc-error":            [ 'hsl(  0deg   0% 100% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],
     "--theme-by-bgc-error":            [ 'hsl(  0deg  60%  50% / 100%)',  'hsl(  0deg  60%  50% / 100%)' ],
     "--theme-by-bdc-error":            [ 'hsl(  0deg   0%   0% / 100%)',  'hsl(  0deg   0%   0% / 100%)' ],

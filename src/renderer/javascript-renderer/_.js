@@ -104,7 +104,7 @@ export class JavaScriptRenderer extends Renderer {
         // if !style && inline, then use the given ocx,
         // otherwise, if style || !inline, create a new ocx
         if (style || !inline) {
-            const parent = ocx.create_child({
+            ocx = ocx.create_child_ocx({
                 tag: inline ? 'span' : 'div',
                 attrs: {
                     'data-type': this.type,
@@ -112,7 +112,6 @@ export class JavaScriptRenderer extends Renderer {
                 },
                 style,
             });
-            ocx = new OutputContext(parent);
         }
 
         ocx.new_stoppables.subscribe((new_stoppable) => {
