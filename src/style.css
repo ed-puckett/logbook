@@ -1,4 +1,4 @@
-/* all other stylesheets have been incorporated into this one (except editor-cell-element) */
+/* all other stylesheets have been incorporated into this one (except no editor-cell-element) */
 
 /* See settings/theme-settings.js for definition of --theme-* properties */
 
@@ -132,8 +132,6 @@ main > :not(:first-child) {
     display: block;
     overflow: auto;  /* enable h/v scrolling */
 
-    white-space: pre-wrap;  /* display white-space properly */
-    line-height: 140%;
     height: fit-content;
 
     padding: var(--theme-ou-p);
@@ -143,6 +141,11 @@ main > :not(:first-child) {
 .eval-cell-output:empty,
 .eval-cell-output:not(:has(> *:not(:empty))) {
     display: none;
+}
+
+.plain-text {
+    white-space: pre-wrap;  /* display white-space properly */
+    line-height: 140%;
 }
 
 tool-bar {

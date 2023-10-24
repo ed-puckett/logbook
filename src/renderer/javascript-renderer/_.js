@@ -63,6 +63,10 @@ import {
 } from '../renderer.js';
 
 import {
+    TextRenderer,
+} from '../text-renderer.js';
+
+import {
     EvalWorker,
 } from './eval-worker/_.js';
 
@@ -104,6 +108,7 @@ export class JavaScriptRenderer extends Renderer {
                 tag: inline ? 'span' : 'div',
                 attrs: {
                     'data-type': this.type,
+                    class: TextRenderer.plain_text_css_class,
                 },
                 style,
             });
