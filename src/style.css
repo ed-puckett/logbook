@@ -40,6 +40,7 @@ header > tool-bar {  /* next to menu */
 
 main {
     margin: 2px 0 0 1px;  /* prevent top and left borders from getting absorbed into surrounding element */
+
     /* enable scrolling for main element */
     overflow: auto;
     max-height: calc(100vh - var(--theme-hd-h));

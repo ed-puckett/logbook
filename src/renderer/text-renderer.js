@@ -3,7 +3,6 @@ import {
 } from './renderer.js';
 
 
-
 export class TextRenderer extends Renderer {
     static type = 'text';
 

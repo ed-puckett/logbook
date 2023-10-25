@@ -182,11 +182,14 @@ export class OutputContext {
      *  See this.create_element() for a description of options.
      */
     static create_element_child(element, options=null, return_mapping=false) {
-        options = { ...(options ?? {}) };
-        if (!options.parent && !options.before) {
-            options.parent = element;
-        } else {
+        if (typeof options?.parent !== 'undefined' || typeof options?.before !== 'undefined') {
             console.warn('options.parent and/or options.before override element argument');
+        } else {
+            options = {
+                ...(options ?? {}),
+                parent: element,
+                before: null,
+            };
         }
         return create_element(options, return_mapping);  // from dom-util.js
     }
