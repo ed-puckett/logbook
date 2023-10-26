@@ -525,6 +525,13 @@ export class OutputContext {
         return ocx.render('plotly', code, options);
     }
 
+    /** options may also include a substitute "ocx" which will override the ocx argument
+     */
+    async canvas_image(canvas_renderer, options=null) {
+        const ocx = options?.ocx ?? this;
+        return ocx.render('canvas-image', canvas_renderer, options);
+    }
+
 
     // === RENDERER INTERFACE ===
 

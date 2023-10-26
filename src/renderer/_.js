@@ -6,14 +6,15 @@ import {
 
 export const Renderer = imported_Renderer;  // re-export base class
 
-import { TextRenderer       } from './text-renderer.js';
-import { ErrorRenderer      } from './error-renderer.js';
-import { MarkdownRenderer   } from './markdown-renderer.js';
-import { TeXRenderer        } from './tex-renderer.js';
-import { JavaScriptRenderer } from './javascript-renderer/_.js';
-import { ImageDataRenderer  } from './image-data-renderer.js';
-import { GraphvizRenderer   } from './graphviz-renderer.js';
-import { PlotlyRenderer     } from './plotly-renderer.js';
+import { TextRenderer        } from './text-renderer.js';
+import { ErrorRenderer       } from './error-renderer.js';
+import { MarkdownRenderer    } from './markdown-renderer.js';
+import { TeXRenderer         } from './tex-renderer.js';
+import { JavaScriptRenderer  } from './javascript-renderer/_.js';
+import { ImageDataRenderer   } from './image-data-renderer.js';
+import { GraphvizRenderer    } from './graphviz-renderer.js';
+import { PlotlyRenderer      } from './plotly-renderer.js';
+import { CanvasImageRenderer } from './canvas-image-renderer.js';
 
 const initial_renderer_classes = [
     TextRenderer,
@@ -24,6 +25,7 @@ const initial_renderer_classes = [
     ImageDataRenderer,
     GraphvizRenderer,
     PlotlyRenderer,
+    CanvasImageRenderer,
 ];
 
 /**

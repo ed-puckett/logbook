@@ -239,6 +239,7 @@ export class JavaScriptRenderer extends Renderer {
             image_data:      ocx.image_data.bind(ocx),
             graphviz:        ocx.graphviz.bind(ocx),
             plotly:          ocx.plotly.bind(ocx),
+            canvas_image:    ocx.canvas_image.bind(ocx),
         };
 
         return ephemeral_eval_context;
