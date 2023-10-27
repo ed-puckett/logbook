@@ -86,6 +86,8 @@ import {
     load_d3,
 } from '../d3.js';
 
+import * as canvas_tools from '../../../lib/ui/canvas-tools.js';
+
 
 export class JavaScriptRenderer extends Renderer {
     static type = 'javascript';
@@ -240,6 +242,7 @@ export class JavaScriptRenderer extends Renderer {
             graphviz:        ocx.graphviz.bind(ocx),
             plotly:          ocx.plotly.bind(ocx),
             canvas_image:    ocx.canvas_image.bind(ocx),
+            canvas_tools,
         };
 
         return ephemeral_eval_context;
