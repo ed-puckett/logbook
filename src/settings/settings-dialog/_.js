@@ -2,7 +2,7 @@ const current_script_url = import.meta.url;  // save for later
 
 import {
     create_element,
-} from '../../../lib/ui/dom-util.js';
+} from '../../../lib/ui/dom-tools.js';
 
 import {
     Dialog,
@@ -42,7 +42,7 @@ import {
 
 // import {
 //     create_stylesheet_link,
-// } from '../../../lib/ui/dom-util.js';
+// } from '../../../lib/ui/dom-tools.js';
 export async function load_stylesheet() {
     // create_stylesheet_link(document.head, new URL('./settings-dialog.css', assets_server_url(current_script_url)));
     await import('./settings-dialog.css');  // webpack implementation

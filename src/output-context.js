@@ -7,7 +7,7 @@ import {
     create_element_mapping,
     create_element_child_text_node,
     normalize_element_text,
-} from '../lib/ui/dom-util.js';
+} from '../lib/ui/dom-tools.js';
 
 import {
     Subscribable,
@@ -25,7 +25,7 @@ import {
     delay_ms        as util_delay_ms,
     next_tick       as util_next_tick,
     next_micro_tick as util_next_micro_tick,
-} from '../lib/ui/dom-util.js';
+} from '../lib/ui/dom-tools.js';
 
 import {
     sprintf as lib_sprintf,
@@ -103,7 +103,7 @@ export class OutputContext {
      *  @return {Element} element
      */
     static scroll_element_into_view(element) {
-        return scroll_element_into_view(element);  // from dom-util.js
+        return scroll_element_into_view(element);  // from dom-tools.js
     }
 
     /** set attributes on an element which are taken from an object.
@@ -114,7 +114,7 @@ export class OutputContext {
      *  except that values which are undefined are translated to ''.
      */
     static set_element_attrs(element, attrs) {
-        return set_element_attrs(element, attrs);  // from dom-util.js
+        return set_element_attrs(element, attrs);  // from dom-tools.js
     }
 
     /** add/remove style properties on element
@@ -129,7 +129,7 @@ export class OutputContext {
      *  @return {HTMLElement} element
      */
     static update_element_style(element, spec) {
-        return update_element_style(element, spec);  // from dom-util.js
+        return update_element_style(element, spec);  // from dom-tools.js
     }
 
     /** create_element(options=null, return_mapping=false)
@@ -168,7 +168,7 @@ export class OutputContext {
      * because mapping_default_key is set after traversiing the children.
      */
     static create_element(options=null, return_mapping=false) {
-        return create_element(options, return_mapping);  // from dom-util.js
+        return create_element(options, return_mapping);  // from dom-tools.js
     }
 
     /** create a element with the given characteristics and return a mapping.
@@ -191,7 +191,7 @@ export class OutputContext {
                 before: null,
             };
         }
-        return create_element(options, return_mapping);  // from dom-util.js
+        return create_element(options, return_mapping);  // from dom-tools.js
     }
 
     /** create a new child element of the given element with the given characteristics and return a mapping.
@@ -224,7 +224,7 @@ export class OutputContext {
      * already was).
      */
     static create_element_child_text_node(element, text, options=null) {
-        return create_element_child_text_node(element, text, options);  // from dom-util.js
+        return create_element_child_text_node(element, text, options);  // from dom-tools.js
     }
 
     /** normalize the text node children of element, meaning that text nodes
@@ -233,7 +233,7 @@ export class OutputContext {
      *  @return {Element} element
      */
     static normalize_element_text(element) {
-        return normalize_element_text(element);  // from dom-util.js
+        return normalize_element_text(element);  // from dom-tools.js
     }
 
 

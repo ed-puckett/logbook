@@ -330,7 +330,7 @@ have witnessed stray text in buffers after copying/pasting/evaluating (accidenta
 * dialogs: don't let keyboard focus "fall off the edge" down to the underlying notebook
 * #dialog_event_blocker is not deflecting focus (no longer used)
 * indent does not work correctly (at least in "default" editor mode)
-* evaluate: does exposing the src/build directory represent a risk (because its contained scripts write files)? (moved to ./build-util/)
+* evaluate: does exposing the src/build directory represent a risk (because its contained scripts write files)? (moved to ./build-tools/)
 * build demos from examples when building
 * test autoeval (and also from embedded content in exported html files)
 * make autoeval evaulate entire notebook

@@ -4,7 +4,7 @@ import {
 
 import {
     load_script,
-} from '../../lib/ui/dom-util.js';
+} from '../../lib/ui/dom-tools.js';
 
 import {
     assets_server_url,

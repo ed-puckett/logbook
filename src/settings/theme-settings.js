@@ -14,7 +14,7 @@ import {
 import {
     create_element,
     clear_element,
-} from '../../lib/ui/dom-util.js';
+} from '../../lib/ui/dom-tools.js';
 
 import {
     get_settings,

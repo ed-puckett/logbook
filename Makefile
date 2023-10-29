@@ -37,7 +37,7 @@ lint: ./node_modules
 	./node_modules/.bin/eslint --config .eslintrc.cjs src lib
 
 $(DIST_DIR): ./src ./src/* ./src/*/* ./src/*/*/* ./src/*/*/*/* ./lib ./lib/* ./lib/*/* ./lib/*/*/* ./lib/*/*/* ./node_modules README.md
-	make lint && ./build-util/build-dist.sh
+	make lint && ./build-tools/build-dist.sh
 
 .PHONY: test
 test:
@@ -48,16 +48,16 @@ test:
 # server uses python (version 3)
 .PHONY: server
 server: $(DIST_DIR)
-	( python ./build-util/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
+	( python ./build-tools/server.py $(SERVER_ADDRESS) $(SERVER_PORT) 2>&1 | tee >(grep -q -m1 '"GET /QUIT'; echo QUITTING; sleep 0.1; kill $$(lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN -Fp | grep ^p | cut -c2-)) )
 
 # uses curl
 .PHONY: kill-server
 kill-server:
-	@if lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN >/dev/null 2>&1; then echo 'sending QUIT to server'; curl -s http://$(SERVER_ADDRESS):$(SERVER_PORT)/QUIT >/dev/null 2>&1; fi
+	@if lsof -itcp:$(SERVER_PORT) -sTCP:LISTEN >/dev/null 2>&1; then echo 'sending QUIT to server'; curl -s http://$(SERVER_ADDRESS):$(SERVER_PORT)/QUIT >/dev/null 2>&1; true; fi
 
 .PHONY: dev-server
 dev-server:
-	npx nodemon --watch src --watch lib --watch package.json --watch Makefile --watch .eslintrc.cjs --watch webpack.config.js --watch build-util --watch node_modules  --ext js,cjs,mjs,html,css,ico,svg,py,sh  --exec "bash -c 'make server' || exit 1"
+	npx nodemon --watch src --watch lib --watch package.json --watch Makefile --watch .eslintrc.cjs --watch webpack.config.js --watch build-tools --watch node_modules  --ext js,cjs,mjs,html,css,ico,svg,py,sh  --exec "bash -c 'make server' || exit 1"
 
 .PHONY: client
 client:

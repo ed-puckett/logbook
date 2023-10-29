@@ -11,7 +11,7 @@ import {
     insert_at,
     delete_nearest_leaf,
     validate_parent_and_before_from_options,
-} from '../../lib/ui/dom-util.js';
+} from '../../lib/ui/dom-tools.js';
 
 import {
     LogbookManager,
@@ -34,7 +34,7 @@ import {
 // } from '../assets-server-url.js';
 // import {
 //     create_stylesheet_link,
-// } from '../../lib/ui/dom-util.js';
+// } from '../../lib/ui/dom-tools.js';
 export async function load_stylesheet() {
     // create_stylesheet_link(document.head, new URL('./style.css', assets_server_url(current_script_url)));
     await import('./style.css');  // webpack implementation

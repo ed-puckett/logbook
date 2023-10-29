@@ -28,7 +28,7 @@ import {
     create_element,
     clear_element,
     move_node,
-} from '../lib/ui/dom-util.js';
+} from '../lib/ui/dom-tools.js';
 
 import {
     Renderer,
@@ -69,7 +69,7 @@ import {
 
 // import {
 //     create_stylesheet_link,
-// } from '../lib/ui/dom-util.js';
+// } from '../lib/ui/dom-tools.js';
 // {
 //     const server_url = assets_server_url(current_script_url);  // current_script_url is from initial import.meta.url
 //     create_stylesheet_link(document.head, new URL('./style.css',       server_url));
