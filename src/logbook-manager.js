@@ -507,6 +507,7 @@ export class LogbookManager {
 ${typeof view_value     !== 'string' ? '' : ` ${view_var_name}${     !view_value     ? '' : `="${view_value.replaceAll(     '"', '&quot;' )}"` }`}\
 ${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_value ? '' : `="${autoeval_value.replaceAll( '"', '&quot;' )}"` }`}\
 `;
+        const main_js_script_code = document.querySelector('head script').outerHTML;
         const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
               .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
               .join('\n');
@@ -515,7 +516,7 @@ ${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_v
 <html lang="en"${html_additional_attributes}>
 <head>
     <meta charset="utf-8">
-    <script type="module" src="../dist/main.js"></script>
+    ${main_js_script_code}
 </head>
 <body>
 ${contents}
