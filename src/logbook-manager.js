@@ -22,6 +22,7 @@ import {
 import {
     get_global_command_bindings,
     get_global_initial_key_map_bindings,
+    get_menubar_spec,
 } from './global-bindings.js';
 
 import {
@@ -33,10 +34,6 @@ import {
 import {
     Renderer,
 } from './renderer/_.js';
-
-import {
-    get_menubar_spec,
-} from './global-bindings.js';
 
 import {
     MenuBar,
