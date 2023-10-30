@@ -113,6 +113,7 @@ export class LogbookManager {
 
         this.#multi_eval_manager = null;
     }
+    #bootstrap_script_markup;
     #editable;
     #active_cell;
     #initialize_called;
@@ -230,6 +231,11 @@ export class LogbookManager {
         this.#initialize_called = true;
 
         try {
+
+            // Grab the first script (for use when saving).
+            // The first script is expected to the be bootstrap for all else.
+            // The bootstrap script determines the server from which code is loaded.
+            this.#bootstrap_script_markup = document.querySelector('head script').outerHTML;
 
             // establish this.#main_element / this.main_element
             this.#initialize_document_structure();
@@ -507,7 +513,6 @@ export class LogbookManager {
 ${typeof view_value     !== 'string' ? '' : ` ${view_var_name}${     !view_value     ? '' : `="${view_value.replaceAll(     '"', '&quot;' )}"` }`}\
 ${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_value ? '' : `="${autoeval_value.replaceAll( '"', '&quot;' )}"` }`}\
 `;
-        const main_js_script_code = document.querySelector('head script').outerHTML;
         const contents = [ ...this.main_element.querySelectorAll(this.constructor.#essential_elements_selector) ]
               .map(e => (e instanceof EvalCellElement) ? e.get_outer_html() : e.outerHTML)
               .join('\n');
@@ -516,7 +521,7 @@ ${typeof autoeval_value !== 'string' ? '' : ` ${autoeval_var_name}${ !autoeval_v
 <html lang="en"${html_additional_attributes}>
 <head>
     <meta charset="utf-8">
-    ${main_js_script_code}
+    ${this.#bootstrap_script_markup}
 </head>
 <body>
 ${contents}
@@ -608,9 +613,7 @@ ${contents}
         const resize_metrics = this.get_resize_metrics();
         const current_split_px = this.get_current_split_px();
         const new_split_px = resize_metrics.split_max_px;  // could instead be resize_metrics.split_neutral_px
-        if ( (max || current_split_px <= 0) &&  // don't change if already visible and !max
-             current_split_px < new_split_px    // don't shrink if already currently larger
-           ) {
+        if (max || current_split_px < new_split_px) {  // don't shrink if already currently larger
             this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         }
     }

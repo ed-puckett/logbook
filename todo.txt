@@ -1,3 +1,6 @@
+automatic textarea resize acts wonky when the textarea gets too large.
+eval-cell textarea should not grow beyond the viewport, and should scroll if too large (behavior when viewport size changes?)
+document: bootstrap script must be first script in head
 set up css class for handling white-space (white-space: pre-wrap, which is set on .eval-cell-output, causes display problems in other output html)
 set "for" attribute for output_element <output> elements?
 beep() does not work on Firefox until the document is clicked (repro: load document, press Alt-UP; should beep() but errors in Firefox until document clicked)
