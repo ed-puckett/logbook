@@ -3,8 +3,8 @@ import {
 } from './renderer.js';
 
 import {
-    TeXZilla,
-} from './texzilla.js';
+    katex,
+} from './katex.js';
 
 
 export class TeXRenderer extends Renderer {
@@ -28,8 +28,10 @@ export class TeXRenderer extends Renderer {
             },
             style,
         });
-        const exc_on_err = false;
-        const mathml = TeXZilla.toMathMLString(tex, !inline, rtl, exc_on_err);
+        const mathml = katex.renderToString(tex, {
+            displayMode:  true,
+            throwOnError: false,
+        });
         parent.innerHTML = mathml;
 
         return parent;

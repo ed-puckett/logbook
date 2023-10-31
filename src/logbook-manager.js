@@ -612,7 +612,10 @@ ${contents}
     expand_input_output_split(max=false) {
         const resize_metrics = this.get_resize_metrics();
         const current_split_px = this.get_current_split_px();
-        const new_split_px = resize_metrics.split_max_px;  // could instead be resize_metrics.split_neutral_px
+        let new_split_px = resize_metrics.split_neutral_px;
+        if (current_split_px >= new_split_px) {
+            new_split_px = resize_metrics.split_max_px;
+        }
         if (max || current_split_px < new_split_px) {  // don't shrink if already currently larger
             this.#set_input_output_split_given_resize_metrics(new_split_px, resize_metrics);
         }

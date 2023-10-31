@@ -7,8 +7,8 @@ import {
 } from './marked.js';
 
 import {
-    TeXZilla,
-} from './texzilla.js';
+    katex,
+} from './katex.js';
 
 import {
     OutputContext,
@@ -116,10 +116,10 @@ marked.use({
                 }
             },
             renderer(token) {
-                const inline = true;
-                const rtl = false;//!!!
-                const exc_on_err = false;
-                return TeXZilla.toMathMLString(token.text, !inline, rtl, exc_on_err);
+                return katex.renderToString(token.text, {
+                    displayMode:  false,
+                    throwOnError: false,
+                });
             },
         },
         {
@@ -137,10 +137,11 @@ marked.use({
                 }
             },
             renderer(token) {
-                const inline = false;
-                const rtl = false;//!!!
-                const exc_on_err = false;
-                return `<p>${TeXZilla.toMathMLString(token.text, !inline, rtl, exc_on_err)}</p>`;
+                const mathml = katex.renderToString(token.text, {
+                    displayMode:  true,
+                    throwOnError: false,
+                });
+                return `<p>${mathml}</p>`;
             },
         },
         {

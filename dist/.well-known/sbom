@@ -103,6 +103,38 @@
     },
     {
       "type": "library",
+      "name": "katex",
+      "version": "0.16.9",
+      "bom-ref": "pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git",
+      "description": "Fast math typesetting for the web.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git",
+      "externalReferences": [
+        {
+          "url": "https://github.com/KaTeX/KaTeX/issues",
+          "type": "issue-tracker",
+          "comment": "as detected from PackageJson property \"bugs.url\""
+        },
+        {
+          "url": "git+https://github.com/KaTeX/KaTeX.git",
+          "type": "vcs",
+          "comment": "as detected from PackageJson property \"repository.url\""
+        },
+        {
+          "url": "https://katex.org",
+          "type": "website",
+          "comment": "as detected from PackageJson property \"homepage\""
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "style-loader",
       "version": "3.3.3",
       "bom-ref": "pkg:npm/style-loader@3.3.3?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/style-loader.git",
@@ -172,9 +204,17 @@
       "ref": "pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git"
     },
     {
+      "ref": "pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git",
+      "dependsOn": [
+        "pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git",
+        "pkg:npm/style-loader@3.3.3?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/style-loader.git"
+      ]
+    },
+    {
       "ref": "pkg:npm/logbook@0.1.0",
       "dependsOn": [
         "pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git",
+        "pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git",
         "pkg:npm/style-loader@3.3.3?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/style-loader.git",
         "pkg:npm/uuid@9.0.0?vcs_url=git%2Bhttps%3A//github.com/uuidjs/uuid.git"
       ]

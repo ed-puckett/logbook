@@ -15,7 +15,7 @@ declare -a FILES_TO_COPY=(
     'node_modules/sprintf-js/dist/sprintf.min.js'
     'node_modules/sprintf-js/dist/sprintf.min.js.map'
     'node_modules/marked/marked.min.js'
-    'node_modules/texzilla/TeXZilla.js'
+    'node_modules/katex'
     'node_modules/rxjs/dist/bundles/rxjs.umd.min.js'
     'node_modules/rxjs/dist/bundles/rxjs.umd.min.js.map'
     'node_modules/d3/dist/d3.min.js'
@@ -30,14 +30,15 @@ cd "${ROOT_DIR}"
 \rm -fr "dist"
 mkdir -p "dist"
 
-npx webpack --config ./webpack.config.js
-
 #!!!/usr/bin/env node -e 'require("fs/promises").readFile("README.md").then(t => console.log(`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n$${require("marked").marked(t.toString())}\n</body>\n</html>`))' > "${DIST_DIR}/help.html"
 
+# copy files before running webpack so that the dist directory is already available to code
 echo "copying files...."
 for file_index in "${!FILES_TO_COPY[@]}"; do
     declare file="${FILES_TO_COPY[file_index]}"
-    cp "${file}" "${DIST_DIR}"
+    cp -a "${file}" "${DIST_DIR}"
 done
+
+npx webpack --config ./webpack.config.js
 
 echo "done"
