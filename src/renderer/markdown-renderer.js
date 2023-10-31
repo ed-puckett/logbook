@@ -8,7 +8,7 @@ import {
 
 import {
     katex,
-} from './katex.js';
+} from './katex/_.js';
 
 import {
     OutputContext,
