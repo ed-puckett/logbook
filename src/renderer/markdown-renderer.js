@@ -23,9 +23,9 @@ import {
 // https://github.com/UziTech/marked-katex-extension/blob/main/src/index.js
 // See also: https://marked.js.org/using_pro#async
 
-const extension_name__inline    = 'inline-tex';
-const extension_name__block     = 'block-tex';
-const extension_name__eval_code = 'eval-code';
+const extension_name__inline_tex = 'inline-tex';
+const extension_name__block_tex  = 'block-tex';
+const extension_name__eval_code  = 'eval-code';
 
 export class MarkdownRenderer extends Renderer {
     static type = 'markdown';
@@ -50,6 +50,8 @@ export class MarkdownRenderer extends Renderer {
 
         const main_renderer = this;  // used below in extensions code
 
+        const katex_macros = {};
+
         // sequencer_promise is used to evaluate the async walkTokens one
         // token at a time, in sequence.  Normally, marked runs the
         // async walkTokens on all tokens in concurrently.
@@ -64,7 +66,14 @@ export class MarkdownRenderer extends Renderer {
                 sequencer_promise = new_sequencer_promise;
                 await prior_sequencer_promise;
 
-                if (token.type === extension_name__eval_code) {
+                switch (token.type) {
+                case extension_name__inline_tex:
+                case extension_name__block_tex: {
+                    token.katex_macros = katex_macros;  // for persistent \gdef macros across evaluations in this markdown
+                    break;
+                }
+
+                case extension_name__eval_code: {
                     const output_element = document.createElement('div');
                     const ocx = new OutputContext(output_element);
                     let renderer;
@@ -86,6 +95,8 @@ export class MarkdownRenderer extends Renderer {
                         renderer?.stop();  // stop background processing, if any
                     }
                     token.html = output_element.innerHTML;
+                    break;
+                }
                 }
 
                 new_sequencer_promise.resolve();  // permit next token to be processed
@@ -102,16 +113,17 @@ export class MarkdownRenderer extends Renderer {
 marked.use({
     extensions: [
         {
-            name: extension_name__inline,
+            name: extension_name__inline_tex,
             level: 'inline',
             start(src) { return src.indexOf('$'); },
             tokenizer(src, tokens) {
                 const match = src.match(/^\$+([^$]+?)\$+/);
                 if (match) {
                     return {
-                        type: extension_name__inline,
+                        type: extension_name__inline_tex,
                         raw:  match[0],
                         text: match[1].trim(),
+                        katex_macros: undefined,  // filled in later by walkTokens
                     };
                 }
             },
@@ -119,20 +131,22 @@ marked.use({
                 return katex.renderToString(token.text, {
                     displayMode:  false,
                     throwOnError: false,
+                    macros: token.katex_macros,
                 });
             },
         },
         {
-            name: extension_name__block,
+            name: extension_name__block_tex,
             level: 'block',
             start(src) { return src.indexOf('$$'); },
             tokenizer(src, tokens) {
                 const match = src.match(/^\$\$([^$]+?)\$\$/);
                 if (match) {
                     return {
-                        type: extension_name__block,
+                        type: extension_name__block_tex,
                         raw:  match[0],
                         text: match[1].trim(),
+                        katex_macros: undefined,  // filled in later by walkTokens
                     };
                 }
             },
@@ -140,6 +154,7 @@ marked.use({
                 const mathml = katex.renderToString(token.text, {
                     displayMode:  true,
                     throwOnError: false,
+                    macros: token.katex_macros,
                 });
                 return `<p>${mathml}</p>`;
             },
