@@ -30,16 +30,22 @@ const extension_name__eval_code  = 'eval-code';
 export class MarkdownRenderer extends Renderer {
     static type = 'markdown';
 
-    // options: { style?: Object }
-
-    // may throw an error
+    /** Render by evaluating the given markdown and outputting to ocx.
+     * @param {OutputContext} ocx,
+     * @param {String} markdown,
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
     async render(ocx, markdown, options=null) {
-
         markdown ??= '';
 
-        const {
-            style,
-        } = (options ?? {});
+        const style = options?.style;
+        // options.inline and options.eval_context ignored...
 
         const parent = ocx.create_child({
             attrs: {
@@ -82,15 +88,15 @@ export class MarkdownRenderer extends Renderer {
                     } catch (error) {
                         await ocx.render_error(error);
                     }
-                    if (renderer) {
+                    if (renderer) {  // i.e., no error
                         ocx.new_stoppables.subscribe((new_stoppable) => {
                             main_renderer.add_stoppable(new_stoppable);
                         });  //!!! never unsubscribed
 
-                        const options = {
+                        const renderer_options = {
                             //!!!
                         };
-                        await ocx.invoke_renderer(renderer, token.text, options)
+                        await ocx.invoke_renderer(renderer, token.text, renderer_options)
                             .catch(error => ocx.render_error(error));
                         renderer?.stop();  // stop background processing, if any
                     }

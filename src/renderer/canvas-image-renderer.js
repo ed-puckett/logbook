@@ -6,12 +6,24 @@ import {
 export class CanvasImageRenderer extends Renderer {
     static type = 'canvas-image';
 
-    async render(ocx, canvas_renderer, options) {
+    /** Render by evaluating the given canvas_renderer on a new HTMLCanvasElement created from ocx.
+     * @param {OutputContext} ocx,
+     * @param {async (HTMLCanvasElement) => undefined} canvas_renderer,  // function to render into canvas
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
+    async render(ocx, canvas_renderer, options=null) {
         if (typeof canvas_renderer !== 'function') {
             throw new Error('canvas_renderer must be a function');
         }
 
         options ??= {};
+        // options.eval_context ignored...
 
         if (typeof options.tag !== 'undefined') {
             console.warn('overriding options.tag value', options.tag);
@@ -44,6 +56,7 @@ export class CanvasImageRenderer extends Renderer {
                 width:  options.attrs?.width,
                 height: options.attrs?.height,
             },
+            style: options.style,
         });
         await canvas_renderer(canvas);
         image_options.attrs.src = canvas.toDataURL();

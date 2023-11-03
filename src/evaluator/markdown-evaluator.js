@@ -14,7 +14,9 @@ export class MarkdownEvaluator extends Evaluator {
 
     async _perform_eval() {
         const options = {
-            //!!!
+            style:  undefined,//!!!
+            eval_context: this.eval_context,
+            inline: undefined,//!!!
         };
         const renderer = this.ocx.renderer_for_type('markdown');
         this.add_stoppable(new Stoppable(renderer));

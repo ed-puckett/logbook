@@ -10,25 +10,35 @@ import {
 export class PlotlyRenderer extends Renderer {
     static type = 'plotly';
 
-    // Format of config object: { data, layout?, config?, frames? } or simply data
-    // (the sub-objects layout, config and frames are optional)
-
-    // may throw an error
-    async render(ocx, config_, options) {
-        if (typeof config_ !== 'object') {
-            throw new Error('config_ must be an object');
+    /** Render the given Plotly configuration to ocx.
+     * @param {OutputContext} ocx,
+     * @param {Object} plotly_config,  // data or { data, layout?, config?, frames? }
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
+    async render(ocx, plotly_config, options=null) {
+        if (typeof plotly_config !== 'object') {
+            throw new Error('plotly_config must be an object');
         }
 
+        const style = options?.style;
+        // options.inline and options.eval_context ignored...
+
         let data, layout, config, frames;
-        if ('data' in config_ && Array.isArray(config_.data)) {
+        if ('data' in plotly_config && Array.isArray(plotly_config.data)) {
             ({
                 data,
                 layout = {},
                 config = {},
                 frames = [],
-            } = config_);
+            } = plotly_config);
         } else {
-            data = config_;
+            data = plotly_config;
             config = {};
         }
         layout ??= {};
@@ -36,8 +46,6 @@ export class PlotlyRenderer extends Renderer {
         layout.paper_bgcolor ??= 'rgba(0, 0, 0, 0)';
 
         config.displayModeBar = false;  // remove icons/links from top-right of plot
-
-        const style = options?.style;
 
         const parent = ocx.create_child({
             attrs: {

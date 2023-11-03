@@ -46,10 +46,12 @@ export async function load_stylesheet() {
 export class EvalCellElement extends EditorCellElement {
     static custom_element_name = 'eval-cell';
 
+    static default_input_type = 'markdown';
+
     static #attribute__input_type        = 'data-input-type';
     static #attribute__output_element_id = 'data-output-element-id';
 
-    get input_type (){ return this.getAttribute(this.constructor.#attribute__input_type); }
+    get input_type (){ return this.getAttribute(this.constructor.#attribute__input_type) ?? this.constructor.default_input_type; }
     set input_type (input_type){
         this.setAttribute(this.constructor.#attribute__input_type, input_type);
         this._tool_bar?.set_type(input_type);
@@ -210,23 +212,19 @@ export class EvalCellElement extends EditorCellElement {
 
     /** evaluate the contents of this element
      *  @param {null|undefined|Object} options: {
-     *      evaluator_class?: Evaluator,  // evaluator class to use
-     *      eval_context?:    Object,     // default: a new {}; will be "this" during expression evaluation.
+     *      // no options currently defined
      *  }
-     *  @return {Promise} promise returned by evaluator_class eval method
-     * If evaluator_class is not given, then Evaluator.class_for_content() is called to get one.
+     *  @return {Promise} promise returned by evaluator eval method
      */
-    async eval(options=null) {  // options: { evaluator_class?, output_element?, eval_context? }
-        const {
-            evaluator_class: evaluator_class_from_options,
-            eval_context,
-        } = (options ?? {});
+    async eval(options=null) {
+        // options ignored for now...
 
-        const evaluator_class = evaluator_class_from_options ?? Evaluator.class_for_content(this);
-
+        const evaluator_class = Evaluator.class_for_content(this);
         if (!(evaluator_class === Evaluator || evaluator_class.prototype instanceof Evaluator)) {
-            throw new Error('evaluator_class must be an instance of Evaluator');
+            throw new Error('unable to get a proper evaluator_class');
         }
+
+        const eval_context = LogbookManager.singleton.global_state_for_type(this.input_type);
 
         // stop current evaluator, if any
         this.stop();  // clears this.#evaluator_stoppable

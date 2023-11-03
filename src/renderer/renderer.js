@@ -22,8 +22,17 @@ export class Renderer extends StoppableObjectsManager {
     get type (){ return this.constructor.type; }
 
     /** implementation of rendering, to be implemented by subclasses
+     * @param {OutputContext} ocx,
+     * @param {any} value,  // value appropriate to type (determined by subclass)
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
      */
-    async render(ocx, value, options) {
+    async render(ocx, value, options=null) {
         throw new Error('NOT IMPLEMENTED');
     }
 

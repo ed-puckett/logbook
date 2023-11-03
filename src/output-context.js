@@ -411,37 +411,36 @@ export class OutputContext {
 
     // === ADVANCED OPERATIONS ===
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
+    /** Render the given value with the given type to this ocx.
+     * @param {String} type,
+     * @param {any}    value,  // value appropriate to type (determined by subclass)
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
      */
     async render(type, value, options=null) {
-        const ocx = options?.ocx ?? this;
-        const renderer = ocx.renderer_for_type(type);
-        return ocx.invoke_renderer(renderer, value, options)
-            .catch(error => ocx.render_error(error));
+        const renderer = this.renderer_for_type(type);
+        return this.invoke_renderer(renderer, value, options)
+            .catch(error => this.render_error(error));
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async render_text(text, options=null) {
-        const ocx = options?.ocx ?? this;
         text ??= '';
         if (typeof text !== 'string') {
             text = text?.toString() ?? '';
         }
-        return ocx.render('text', text, options);
+        return this.render('text', text, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async render_error(error, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('error', error, options);
+        return this.render('error', error, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async render_value(value, options=null) {
-        const ocx = options?.ocx ?? this;
         // transform value to text and then render as text
         let text;
         if (typeof value === 'undefined') {
@@ -451,91 +450,68 @@ export class OutputContext {
         } else {
             text = '[unprintable value]';
         }
-        return ocx.render_text(text, options);
+        return this.render_text(text, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async println(text, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render_text((text ?? '') + '\n', options);
+        return this.render_text((text ?? '') + '\n', options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async printf(format, ...args) {
-        const ocx = this;  // no options...
         if (typeof format !== 'undefined' && format !== null) {
             if (typeof format !== 'string') {
                 format = format.toString();
             }
-            const text = ocx.constructor.sprintf(format, ...args);
-            return ocx.render_text(text).
-                catch(error => ocx.render_error(error));
+            const text = this.constructor.sprintf(format, ...args);
+            return this.render_text(text).
+                catch(error => this.render_error(error));
         }
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async print__(options=null) {
-        const ocx = options?.ocx ?? this;
-        ocx.create_child({ tag: 'hr' });
+        this.create_child({ tag: 'hr' });
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     * options: { style?: Object, eval_context?: Object, inline?: Boolean }
+    /** Evaluate the given code
+     * @param {String} code,
+     * @param {Object|undefined|null} options: {
+     *     style?: Object,
+     *     inline?: Boolean,
+     *     eval_context?: Object,
+     * }
      */
     async javascript(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('javascript', code, options);
+        return this.render('javascript', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async markdown(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('markdown', code, options);
+        return this.render('markdown', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async tex(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('tex', code, options);
+        return this.render('tex', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async image_data(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('image_data', code, options);
+        return this.render('image_data', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async graphviz(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('graphviz', code, options);
+        return this.render('graphviz', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async plotly(code, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('plotly', code, options);
+        return this.render('plotly', code, options);
     }
 
-    /** options may also include a substitute "ocx" which will override the ocx argument
-     */
     async canvas_image(canvas_renderer, options=null) {
-        const ocx = options?.ocx ?? this;
-        return ocx.render('canvas-image', canvas_renderer, options);
+        return this.render('canvas-image', canvas_renderer, options);
     }
 
 
     // === RENDERER INTERFACE ===
 
-    /** return a new instance of the appropriate Renderer class for the given type
+    /** Return a new instance of the appropriate Renderer class for the given type.
      *  @param {String} type
      *  @return {Renderer} renderer_class
      */
@@ -549,7 +525,7 @@ export class OutputContext {
         }
     }
 
-    /** run the given renderer with the given arguments and this ocx
+    /** Run the given renderer with the given arguments in this ocx.
      *  @param {Renderer} renderer instance
      *  @param {any} value
      *  @param {Object} options for renderer
@@ -557,28 +533,26 @@ export class OutputContext {
      * A new Stoppable created from renderer is dispatched through #new_stoppables
      */
     async invoke_renderer(renderer, value, options=null) {
-        const ocx = options?.ocx ?? this;
-        ocx.abort_if_stopped();
-        ocx.#new_stoppables.dispatch(new Stoppable(renderer));
-        return renderer.render(ocx, value, options)
+        this.abort_if_stopped();
+        this.#new_stoppables.dispatch(new Stoppable(renderer));
+        return renderer.render(this, value, options)
             .catch(error => {
                 renderer.stop();  // stop anything that may have been started
                 throw error;      // propagate the error
             })
-            .finally(() => ocx.abort_if_stopped());
+            .finally(() => this.abort_if_stopped());
     }
 
-    /** find a renderer and invoke it for the given arguemnts
+    /** Find a renderer and invoke it for the given arguemnts.
      *  @param {String} type
      *  @param {any} value
      *  @param {Object} options for renderer
      *  @return {any} return value from renderer
      */
     async invoke_renderer_for_type(type, value, options=null) {
-        const ocx = options?.ocx ?? this;
-        ocx.abort_if_stopped();
-        const renderer = ocx.renderer_for_type(type);
-        return ocx.invoke_renderer(renderer, value, options)
-            .finally(() => ocx.abort_if_stopped());
+        this.abort_if_stopped();
+        const renderer = this.renderer_for_type(type);
+        return this.invoke_renderer(renderer, value, options)
+            .finally(() => this.abort_if_stopped());
     }
 }

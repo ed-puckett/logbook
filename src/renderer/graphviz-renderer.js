@@ -10,15 +10,24 @@ import {
 export class GraphvizRenderer extends Renderer {
     static type = 'graphviz';
 
-    // Format of config object: {
-    //     node_config?: string,
-    //     nodes[]?: (string | [ string/*name*/, string/*node_options*/ ])[],
-    //     edges[]?: [ string/*from*/, string/*to*/, { label?: string, ... }? ][],
-    // }
-
-    // may throw an error
-    async render(ocx, config, options) {
+    /** Render the given graphviz configuration to ocx.
+     * @param {OutputContext} ocx,
+     * @param {Object} graphviz_config: {
+     *     node_config?: string,
+     *     nodes[]?: (string | [ string, string ])[],  // name and node_options
+     *     edges[]?: [ string, string, { label?: string, ... }? ][],  // from and to
+     * }
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
+    async render(ocx, graphviz_config, options=null) {
         const style = options?.style;
+        // options.inline and options.eval_context ignored...
 
         const element = ocx.create_child({
             attrs: {
@@ -30,10 +39,10 @@ export class GraphvizRenderer extends Renderer {
         const element_selector = `#${element.id}`;
 
         const dot_stmts = [];
-        if (config?.node_config) {
-            dot_stmts.push(`node ${config.node_config}`);
+        if (graphviz_config?.node_config) {
+            dot_stmts.push(`node ${graphviz_config.node_config}`);
         }
-        for (const node_spec of (config?.nodes ?? [])) {
+        for (const node_spec of (graphviz_config?.nodes ?? [])) {
             if (typeof node_spec === 'string') {
                 const name = node_spec;
                 dot_stmts.push(name);
@@ -42,7 +51,7 @@ export class GraphvizRenderer extends Renderer {
                 dot_stmts.push(`${name} [${node_options}]`);
             }
         }
-        for (const [ from, to, edge_options ] of (config?.edges ?? [])) {
+        for (const [ from, to, edge_options ] of (graphviz_config?.edges ?? [])) {
             dot_stmts.push(`${from}->${to}${edge_options ? `[${edge_options}]` : ''}`);
         }
         const dot = `digraph { ${dot_stmts.join(';')} }`;

@@ -14,8 +14,24 @@ export class ImageDataRenderer extends Renderer {
     // (or an array of these objects)
 
     // may throw an error
-    async render(ocx, config, options) {
+    /** Render the given image data configuration to ocx.
+     * @param {OutputContext} ocx,
+     * @param {Object} config: {
+     *     x?:         number,  // default: 0
+     *     y?:         number,  // default: 0
+     *     image_data: ImageData,
+     * }
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
+    async render(ocx, config, options=null) {
         const style = options?.style;
+        // options.inline and options.eval_context ignored...
 
         const parent = ocx.create_child({
             attrs: {

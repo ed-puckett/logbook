@@ -92,15 +92,22 @@ import * as canvas_tools from '../../../lib/ui/canvas-tools.js';
 export class JavaScriptRenderer extends Renderer {
     static type = 'javascript';
 
-    // options: { style?: Object, eval_context?: Object, inline?: Boolean }
-
-    // may throw an error
-    // if eval_context is not given in options, then LogbookManager.singleton.global_eval_context is used
+    /** Render by evaluating the given code and outputting to ocx.
+     * @param {OutputContext} ocx,
+     * @param {String} code,
+     * @param {Object|undefined|null} options: {
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     * }
+     * @return {Element} element to which output was rendered
+     * @throws {Error} if error occurs
+     */
     async render(ocx, code, options=null) {
         const {
             style,
-            eval_context = LogbookManager.singleton.global_eval_context,
             inline,
+            eval_context = LogbookManager.singleton.global_state_for_type(this.type),
         } = (options ?? {});
 
         // if !style && inline, then use the given ocx,

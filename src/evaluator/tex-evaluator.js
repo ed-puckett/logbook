@@ -15,8 +15,8 @@ export class TeXEvaluator extends Evaluator {
     async _perform_eval() {
         const options = {
             style:  undefined,//!!!
-            inline: false,//!!!
-            rtl:    false,//!!!
+            eval_context: this.eval_context,
+            inline: undefined,//!!!
         };
         const renderer = this.ocx.renderer_for_type('tex');
         this.add_stoppable(new Stoppable(renderer));
