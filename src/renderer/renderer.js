@@ -25,15 +25,15 @@ export class Renderer extends StoppableObjectsManager {
      * @param {OutputContext} ocx,
      * @param {any} value,  // value appropriate to type (determined by subclass)
      * @param {Object|undefined|null} options: {
-     *     style?:        Object,   // css style to be applied to output element
-     *     inline?:       Boolean,  // render inline vs block?
-     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     *     style?:          Object,   // css style to be applied to output element
+     *     inline?:         Boolean,  // render inline vs block?
+     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
      */
     async render(ocx, value, options=null) {
-        throw new Error('NOT IMPLEMENTED');
+        throw new Error('MUST BE IMPLEMENTED IN SUBCLASS');
     }
 
     static reset_classes()             { reset_to_initial_renderer_classes(); }

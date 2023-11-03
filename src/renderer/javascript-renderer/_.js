@@ -15,13 +15,11 @@ const dynamic_import = new Function('path', 'return import(path);');
 //!!!
 // CODE EVALUATION
 // ---------------
-// Within the code given for evaluation, "this" references the eval_context
-// passed to the eval() method.  This object will be obtained from the
-// logbook, and will persist until the logbook is opened to a new file or
-// is cleared.
+// Within the code given for evaluation, "this" references the context
+// derived from the global_context property of the options passed to the
+// eval() method.
 //
-// vars(...objects) assigns new properties to eval_context (i.e., "this"
-// within the code), and those properties persist across all cells.
+// vars(...objects) assigns new properties to "this" within the code),
 // The return value is a array of the arguments which will be unmodified.
 //
 // A return statement within a cell terminates the evaluation (except
@@ -96,9 +94,9 @@ export class JavaScriptRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} code,
      * @param {Object|undefined|null} options: {
-     *     style?:        Object,   // css style to be applied to output element
-     *     inline?:       Boolean,  // render inline vs block?
-     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     *     style?:          Object,   // css style to be applied to output element
+     *     inline?:         Boolean,  // render inline vs block?
+     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -107,8 +105,10 @@ export class JavaScriptRenderer extends Renderer {
         const {
             style,
             inline,
-            eval_context = LogbookManager.singleton.global_state_for_type(this.type),
+            global_context = LogbookManager.singleton.global_context,
         } = (options ?? {});
+
+        const eval_context = (global_context[this.type] ??= {});
 
         // if !style && inline, then use the given ocx,
         // otherwise, if style || !inline, create a new ocx

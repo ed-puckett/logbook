@@ -212,19 +212,19 @@ export class EvalCellElement extends EditorCellElement {
 
     /** evaluate the contents of this element
      *  @param {null|undefined|Object} options: {
-     *      // no options currently defined
+     *      global_context?: {Object} global context object; default: LogbookManager.singleton.global_context
      *  }
      *  @return {Promise} promise returned by evaluator eval method
      */
     async eval(options=null) {
-        // options ignored for now...
+        const {
+            global_context = LogbookManager.singleton.global_context,
+        } = (options ?? {});
 
         const evaluator_class = Evaluator.class_for_content(this);
         if (!(evaluator_class === Evaluator || evaluator_class.prototype instanceof Evaluator)) {
             throw new Error('unable to get a proper evaluator_class');
         }
-
-        const eval_context = LogbookManager.singleton.global_state_for_type(this.input_type);
 
         // stop current evaluator, if any
         this.stop();  // clears this.#evaluator_stoppable
@@ -233,7 +233,7 @@ export class EvalCellElement extends EditorCellElement {
         clear_element(output_element);
 
         // allocate the evaluator, store it, then eval
-        const evaluator = new evaluator_class(this, output_element, eval_context);
+        const evaluator = new evaluator_class(this, output_element, global_context);
 
         this.#evaluator_stoppable = new Stoppable(evaluator);  // already cleared by this.stop() above
         this.#evaluator_foreground = true;

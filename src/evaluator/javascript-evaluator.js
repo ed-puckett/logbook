@@ -15,8 +15,8 @@ export class JavaScriptEvaluator extends Evaluator {
     async _perform_eval() {
         const options = {
             style:  undefined,//!!!
-            eval_context: this.eval_context,
             inline: undefined,//!!!
+            global_context: this.global_context,
         };
         const renderer = this.ocx.renderer_for_type('javascript');
         this.add_stoppable(new Stoppable(renderer));

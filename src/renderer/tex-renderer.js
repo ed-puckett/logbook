@@ -18,9 +18,8 @@ export class TeXRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} tex,
      * @param {Object|undefined|null} options: {
-     *     style?:        Object,   // css style to be applied to output element
-     *     inline?:       Boolean,  // render inline vs block?
-     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     *     style?:          Object,  // css style to be applied to output element
+     *     global_context?: Object,  // global_context for evaluation; default: LogbookManager.singleton.global_context
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -30,9 +29,13 @@ export class TeXRenderer extends Renderer {
 
         const {
             style,
-            inline,
-            eval_context = LogbookManager.global_state_for_type(this.type),
+            global_context = LogbookManager.singleton.global_context,
         } = (options ?? {});
+
+        const markup = this.constructor.render_to_string(tex, global_context, {
+            displayMode:  true,
+            throwOnError: false,
+        });
 
         const parent = ocx.create_child({
             attrs: {
@@ -40,13 +43,15 @@ export class TeXRenderer extends Renderer {
             },
             style,
         });
-        const mathml = katex.renderToString(tex, {
-            displayMode:  true,
-            throwOnError: false,
-            macros: eval_context,  // for persistent \gdef macros
-        });
-        parent.innerHTML = mathml;
+        parent.innerHTML = markup;
 
         return parent;
+    }
+
+    static render_to_string(tex, global_context, katex_options=null) {
+        // this function encapsulates how the "macros" options is gotten from global_context
+        katex_options ??= {};
+        katex_options.macros ??= (global_context[this.type] ??= {});  // for persistent \gdef macros
+        return katex.renderToString(tex, katex_options);
     }
 }

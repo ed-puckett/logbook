@@ -99,7 +99,7 @@ export class LogbookManager {
         this.#active_cell = null;
         this.#initialize_called = false;
 
-        this.reset_global_state();
+        this.reset_global_context();
 
         this.#eval_states = new Subscribable();  //!!! this.#eval_states_subscription is never unsubscribed
         this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
@@ -117,7 +117,7 @@ export class LogbookManager {
     #editable;
     #active_cell;
     #initialize_called;
-    #global_state;  // persistent state for evaluators/renderers
+    #global_context;  // persistent state for evaluators/renderers
     #header_element;  // element inserted into document by initialize() to hold menus, etc
     #eval_states;
     #eval_states_subscription;
@@ -174,30 +174,20 @@ export class LogbookManager {
         return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
     }
 
-    reset_global_state() {
-        this.#global_state = {};
-    }
-
-    /** return a persistent state object for the given type
-     * @param {String} type
-     * @return {Object} persistent state object for type
-     */
-    global_state_for_type(type) {
-        if (typeof type !== 'string') {
-            throw new Error('type must be a string');
-        }
-        return (this.#global_state[type] ??= {});
+    get global_context (){ return this.#global_context; }
+    reset_global_context() {
+        this.#global_context = {};
     }
 
     /** reset the document, meaning that all cells will be reset,
-     *  and this.#global_state will be reset.  Also, the saved file
+     *  and this.#global_context will be reset.  Also, the saved file
      *  handle this.#file_handle set to undefined.
      *  @return {LogbookManager} this
      */
     reset() {
         this.stop();
         Renderer.reset_classes();
-        this.reset_global_state();
+        this.reset_global_context();
         this.#file_handle = undefined;
         for (const cell of this.constructor.get_cells()) {
             cell.reset();
@@ -979,7 +969,9 @@ ${contents}
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
-            await cell.eval();
+            await cell.eval({
+                global_context: this.global_context,
+            });
             return true;
         }
     }
@@ -992,7 +984,9 @@ ${contents}
         if (!cell || !(cell instanceof EvalCellElement)) {
             return false;
         } else {
-            await cell.eval();
+            await cell.eval({
+                global_context: this.global_context,
+            });
             const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
             next_cell.focus();
             return true;
@@ -1011,7 +1005,7 @@ ${contents}
             this.stop();  // also clears this.#multi_eval_manager
             const em = this.#multi_eval_manager = new StoppableObjectsManager();
             try {
-                this.reset_global_state();
+                this.reset_global_context();
                 for (const iter_cell of this.constructor.get_cells()) {
                     if (em.stopped) {
                         break;
@@ -1020,7 +1014,9 @@ ${contents}
                     if (iter_cell === cell) {
                         break;
                     }
-                    await iter_cell.eval();
+                    await iter_cell.eval({
+                        global_context: this.global_context,
+                    });
                 }
             } finally {
                 this.#multi_eval_manager = null;
@@ -1041,13 +1037,15 @@ ${contents}
             this.stop();  // also clears this.#multi_eval_manager
             const em = this.#multi_eval_manager = new StoppableObjectsManager();
             try {
-                this.reset_global_state();
+                this.reset_global_context();
                 for (const iter_cell of this.constructor.get_cells()) {
                     if (em.stopped) {
                         break;
                     }
                     iter_cell.focus();
-                    await iter_cell.eval();
+                    await iter_cell.eval({
+                        global_context: this.global_context,
+                    });
                 }
             } finally {
                 this.#multi_eval_manager = null;

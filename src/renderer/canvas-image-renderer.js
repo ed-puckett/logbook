@@ -10,9 +10,7 @@ export class CanvasImageRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {async (HTMLCanvasElement) => undefined} canvas_renderer,  // function to render into canvas
      * @param {Object|undefined|null} options: {
-     *     style?:        Object,   // css style to be applied to output element
-     *     inline?:       Boolean,  // render inline vs block?
-     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     *     style?: Object,  // css style to be applied to output element
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -23,7 +21,6 @@ export class CanvasImageRenderer extends Renderer {
         }
 
         options ??= {};
-        // options.eval_context ignored...
 
         if (typeof options.tag !== 'undefined') {
             console.warn('overriding options.tag value', options.tag);

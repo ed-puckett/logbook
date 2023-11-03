@@ -3,12 +3,16 @@ import {
 } from './renderer.js';
 
 import {
-    marked,
-} from './marked.js';
+    LogbookManager,
+} from '../logbook-manager.js';
 
 import {
-    katex,
-} from './katex/_.js';
+    TeXRenderer,
+} from './tex-renderer.js';
+
+import {
+    marked,
+} from './marked.js';
 
 import {
     OutputContext,
@@ -34,9 +38,8 @@ export class MarkdownRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} markdown,
      * @param {Object|undefined|null} options: {
-     *     style?:        Object,   // css style to be applied to output element
-     *     inline?:       Boolean,  // render inline vs block?
-     *     eval_context?: Object,   // eval_context for evaluation; default: from LogbookManager global state
+     *     style?:          Object,   // css style to be applied to output element
+     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -44,8 +47,10 @@ export class MarkdownRenderer extends Renderer {
     async render(ocx, markdown, options=null) {
         markdown ??= '';
 
-        const style = options?.style;
-        // options.inline and options.eval_context ignored...
+        const {
+            style,
+            global_context = LogbookManager.singleton.global_context,
+        } = (options ?? {});
 
         const parent = ocx.create_child({
             attrs: {
@@ -55,8 +60,6 @@ export class MarkdownRenderer extends Renderer {
         });
 
         const main_renderer = this;  // used below in extensions code
-
-        const katex_macros = {};
 
         // sequencer_promise is used to evaluate the async walkTokens one
         // token at a time, in sequence.  Normally, marked runs the
@@ -75,7 +78,7 @@ export class MarkdownRenderer extends Renderer {
                 switch (token.type) {
                 case extension_name__inline_tex:
                 case extension_name__block_tex: {
-                    token.katex_macros = katex_macros;  // for persistent \gdef macros across evaluations in this markdown
+                    token.global_context = global_context;
                     break;
                 }
 
@@ -94,13 +97,13 @@ export class MarkdownRenderer extends Renderer {
                         });  //!!! never unsubscribed
 
                         const renderer_options = {
-                            //!!!
+                            global_context,
                         };
                         await ocx.invoke_renderer(renderer, token.text, renderer_options)
                             .catch(error => ocx.render_error(error));
                         renderer?.stop();  // stop background processing, if any
                     }
-                    token.html = output_element.innerHTML;
+                    token.markup = output_element.innerHTML;
                     break;
                 }
                 }
@@ -129,15 +132,14 @@ marked.use({
                         type: extension_name__inline_tex,
                         raw:  match[0],
                         text: match[1].trim(),
-                        katex_macros: undefined,  // filled in later by walkTokens
+                        global_context: undefined,  // filled in later by walkTokens
                     };
                 }
             },
             renderer(token) {
-                return katex.renderToString(token.text, {
+                return TeXRenderer.render_to_string(token.text, token.global_context, {
                     displayMode:  false,
                     throwOnError: false,
-                    macros: token.katex_macros,
                 });
             },
         },
@@ -152,17 +154,16 @@ marked.use({
                         type: extension_name__block_tex,
                         raw:  match[0],
                         text: match[1].trim(),
-                        katex_macros: undefined,  // filled in later by walkTokens
+                        global_context: undefined,  // filled in later by walkTokens
                     };
                 }
             },
             renderer(token) {
-                const mathml = katex.renderToString(token.text, {
+                const markup = TeXRenderer.render_to_string(token.text, token.global_context, {
                     displayMode:  true,
                     throwOnError: false,
-                    macros: token.katex_macros,
                 });
-                return `<p>${mathml}</p>`;
+                return `<p>${markup}</p>`;
             },
         },
         {
@@ -178,12 +179,12 @@ marked.use({
                         output_type,
                         raw:  match[0],
                         text: match[2],
-                        html: '',  // filled in later by walkTokens
+                        markup: undefined,  // filled in later by walkTokens
                     };
                 }
             },
             renderer(token) {
-                return token.html;
+                return token.markup;
             },
         },
     ],
