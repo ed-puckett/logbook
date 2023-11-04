@@ -77,14 +77,24 @@ import './style-hacks.css';  // webpack implementation
 
 
 export class LogbookManager {
-    static get singleton() {
+    static get singleton (){
         if (!this.#singleton) {
-            this.#singleton = new this();
-            this.#singleton.initialize();
+            // this._initialize_singleton() is async and will run after this function exits (not ideal)
+            // this can be prevented by having init call this._initialize_singleton() first;
+            this._initialize_singleton();
         }
         return this.#singleton;
     }
     static #singleton;
+
+    // to be called by init
+    static async _initialize_singleton() {
+        if (!this.#singleton) {
+            this.#singleton = new this();
+            await this.#singleton.initialize();
+        }
+        return this.#singleton;
+    }
 
     // document variables
     static view_var_name         = 'view';
@@ -224,7 +234,7 @@ export class LogbookManager {
         }
     }
 
-    initialize() {
+    async initialize() {
         if (this.#initialize_called) {
             throw new Error('initialize() called more than once');
         }
@@ -238,7 +248,7 @@ export class LogbookManager {
             this.#bootstrap_script_markup = document.querySelector('head script').outerHTML;
 
             // establish this.#main_element / this.main_element
-            this.#initialize_document_structure();
+            await this.#initialize_document_structure();
 
             this.#setup_csp();
             this.#setup_header();
@@ -344,7 +354,7 @@ export class LogbookManager {
     }
 
     // put everything in the body into a new top-level main element
-    #initialize_document_structure() {
+    async #initialize_document_structure() {
         if (document.querySelector(this.constructor.header_element_tag)) {
             throw new Error(`bad format for document: element with id ${this.constructor.header_element_tag} already exists`);
         }
@@ -382,6 +392,11 @@ export class LogbookManager {
                 class: [ this.constructor.resize_handle_class ],
             },
         });
+        // deferred_output_element_assignments holds thunks that will be called after
+        // the entrire structure is added back into the DOM.  It is necessary to wait
+        // because the setter for output_element in cell validates the output_element
+        // and that requires that it already exist in the DOM.
+        const deferred_output_element_assignments = [];
         // move the cells and their associated output_elements (if any)
         for (const cell of document.querySelectorAll(EvalCellElement.custom_element_name)) {
             const {
@@ -396,9 +411,15 @@ export class LogbookManager {
                 output_element_parent.insertBefore(output_element, output_element_before);  // moves output_element
             } else {
                 // create output_element if none exists
-                cell.output_element = EvalCellElement.create_output_element({
+                const new_output_element = EvalCellElement.create_output_element({
                     parent: output_element_parent,
                     before: output_element_before,
+                });
+                // we must delay before assigning the output_element so that the DOM
+                // updates will be realized.  The setter for output_element checks
+                // that the output element is valid and part of the DOM.
+                deferred_output_element_assignments.push(() => {
+                    cell.output_element = new_output_element;
                 });
             }
             // don't call cell.set_active_element_mapper() before the cell's structure is established
@@ -417,6 +438,9 @@ export class LogbookManager {
         // add header and main elements
         document.body.appendChild(this.#header_element);
         document.body.appendChild(this.#main_element);
+
+        // now we can do the deferred output_element assignments
+        deferred_output_element_assignments.forEach(t => t());
 
         // add a tool-bar element to each pre-existing cell
         for (const cell of this.constructor.get_cells()) {

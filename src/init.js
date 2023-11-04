@@ -11,17 +11,17 @@ import {
 
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    trigger_document_initialization();
+    await trigger_document_initialization();
 } else {
-    window.addEventListener('load', (load_event) => {
-        trigger_document_initialization();
+    window.addEventListener('load', async (load_event) => {
+        await trigger_document_initialization();
     }, {
         once: true,
     });
 }
 
-function trigger_document_initialization() {
-    LogbookManager.singleton;  // accessing this getter will trigger document initialization
+async function trigger_document_initialization() {
+    await LogbookManager._initialize_singleton();
 
     const {
         view_var_name,

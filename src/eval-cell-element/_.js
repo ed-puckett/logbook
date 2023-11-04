@@ -92,7 +92,7 @@ export class EvalCellElement extends EditorCellElement {
         } else {
             const element = document.getElementById(oid);
             if (!element || !(element instanceof HTMLElement)) {
-                console.warn('bad configuration for EvalCellElement: id does not specify an HTMLElement');
+                console.warn('bad configuration for EvalCellElement: id not found or does not specify an HTMLElement');
                 return null;
             } else {
                 return element;
@@ -108,7 +108,7 @@ export class EvalCellElement extends EditorCellElement {
         }
         if (element) {
             const element_with_element_id = document.getElementById(element.id);
-            if (element_with_element_id !== element) {
+            if (element_with_element_id && element_with_element_id !== element) {
                 throw new Error('another element already exists with the same id as element');
             }
         }
@@ -187,10 +187,13 @@ export class EvalCellElement extends EditorCellElement {
     }
 
     /** override of EditorCellElement.remove_cell().
-     *  remove this cell and its output_element, if any, from the DOM
+     *  remove this cell and associated elements, e.g., tool-bar.
+     * @param {Boolean} also_remove_output_element  // also remove output_element, if any
      */
-    remove_cell() {
-        this.remove_output_element();
+    remove_cell(also_remove_output_element=false) {
+        if (also_remove_output_element) {
+            this.remove_output_element();
+        }
         super.remove_cell();
     }
 
