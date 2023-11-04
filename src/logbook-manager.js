@@ -255,17 +255,7 @@ export class LogbookManager {
 
             this.set_editable(this.editable);  // update all cells consistently
 
-            // validate structure of document
             const cells = this.constructor.get_cells();
-            if (cells.length > 0) {
-//!!! improve this or eliminate !!!
-            }
-
-            // ensure all incoming cells have output elements (for layout coherence)
-            for (const cell of cells) {
-//!!! review this !!!
-                cell.establish_output_element();
-            }
 
             // set up active cell
             // ... find the first incoming "active" cell, or the first cell, or create a new cell
@@ -1135,8 +1125,7 @@ ${contents}
                 return false;
             } else {
                 // beacause we are storing the cell, toolbar and output element
-                // in an element structure, just move the entire structure instead
-                // of using cell.move_cell()
+                // in an element structure, just move the entire structure
                 const cell_container = this.constructor.#cell_container_element(cell);
                 const parent = cell_container.parentElement;
                 const before = this.constructor.#cell_container_element(previous);
@@ -1159,8 +1148,7 @@ ${contents}
                 return false;
             } else {
                 // beacause we are storing the cell, toolbar and output element
-                // in an element structure, just move the entire structure instead
-                // of using cell.move_cell()
+                // in an element structure, just move the entire structure
                 const cell_container = this.constructor.#cell_container_element(cell);
                 const parent = cell_container.parentElement;
                 const before = this.constructor.#cell_container_element(next).nextSibling;

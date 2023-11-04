@@ -27,8 +27,6 @@
 
 //!!! options is not copied, and yet is used later
 
-//!!! review this !!!
-
 //!!! should be configurable
 
 //!!! should other members of options be checked (e.g., "once")?

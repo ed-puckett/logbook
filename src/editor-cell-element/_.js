@@ -231,29 +231,6 @@ export class EditorCellElement extends HTMLElement {
 
     // === DOM ===
 
-    /** return the first and last elements in the DOM that are associated with this editor-cell
-     *  @return {Object|null} null if this is not in the DOM body, otherwise { first: Element, last: Element }
-     * This is useful if the cell and associated elements like a tool-bar are just "loose"
-     * in the document without any enclosing structure.
-     */
-    get_dom_extent() {
-        if (document.body === this || !document.body?.contains(this)) {
-            return null;  // indicate: not in DOM body
-        } else {
-            let first = this,
-                last  = this;
-            if (this._tool_bar) {
-                if (first.compareDocumentPosition(this._tool_bar) & Node.DOCUMENT_POSITION_PRECEDING) {
-                    first = this._tool_bar;
-                }
-                if (last.compareDocumentPosition(this._tool_bar) & Node.DOCUMENT_POSITION_FOLLOWING) {
-                    last = this._tool_bar;
-                }
-            }
-            return { first, last };
-        }
-    }
-
     /** create a new element instance for tag this.custom_element_name with standard settings
      *  @param {null|undefined|Object} options: {
      *      parent?:                Node,                   // default: document.body
@@ -317,28 +294,6 @@ export class EditorCellElement extends HTMLElement {
                 } else {
                     return cells[index-1];
                 }
-            }
-        }
-    }
-
-    /** move (or remove) this cell within the DOM
-     *  @param {null|undefined|Object} options: {
-     *      parent?: Node,  // default: null  // new parent, or null/undefined to remove
-     *      before?: Node,  // default: null  // new before node
-     *  }
-     */
-    move_cell(options=null) {
-        const { parent, before } = validate_parent_and_before_from_options(options);
-        if (!parent) {
-            if (this.parentNode) {
-                this.remove_cell();
-            }
-        } else {
-            const had_tool_bar = !!this._tool_bar;
-            this.remove_tool_bar();
-            parent.insertBefore(this, before);
-            if (had_tool_bar) {
-                this.establish_tool_bar();
             }
         }
     }

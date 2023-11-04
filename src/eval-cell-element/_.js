@@ -111,6 +111,7 @@ export class EvalCellElement extends EditorCellElement {
             if (element_with_element_id && element_with_element_id !== element) {
                 throw new Error('another element already exists with the same id as element');
             }
+            element.classList.add(this.constructor.output_element_class);  // ensure that required class is set
         }
         this.output_element_id = element ? element.id : null;
     }
@@ -138,21 +139,6 @@ export class EvalCellElement extends EditorCellElement {
         });
     }
 
-    /** create an output element, if necessary, and set its standard attributes
-     *  @return {HTMLElement} output element;
-     */
-    establish_output_element() {
-        let output_element = this.output_element;
-        if (!output_element) {
-            const dom_extent = this.get_dom_extent();
-            const before = dom_extent ? dom_extent.last.nextSibling : this.nextSibling;
-            const parent = before?.parentElement ?? this.parentElement;
-            this.output_element = this.constructor.create_output_element({ parent, before });
-        }
-        output_element.classList.add(this.constructor.output_element_class);  // ensure that required class is set
-        return output_element;
-    }
-
     /** remove the output_element, if any, from this eval-cell and from the DOM
      *  @return {EvalCellElement} this
      */
@@ -167,24 +153,6 @@ export class EvalCellElement extends EditorCellElement {
 
 
     // === OUTPUT ELEMENT AWARE OVERRIDES ===
-
-    /** move (or remove) this cell within the DOM
-     *  @param {null|undefined|Object} options: {
-     *      parent?: Node,  // default: null  // new parent, or null/undefined to remove
-     *      before?: Node,  // default: null  // new before node
-     *  }
-     */
-    move_cell(options=null) {
-        const { parent, before } = validate_parent_and_before_from_options(options);
-        const output_element = this.output_element;
-        const output_element_precedes = output_element && !!(this.compareDocumentPosition(output_element) & Node.DOCUMENT_POSITION_PRECEDING);
-        super.move_cell(options);
-        // if !parent, then cell and output_element will have  been removed
-        if (parent && output_element) {
-            const element_after_output = output_element_precedes ? this : before;
-            parent.insertBefore(output_element, element_after_output);
-        }
-    }
 
     /** override of EditorCellElement.remove_cell().
      *  remove this cell and associated elements, e.g., tool-bar.
@@ -203,9 +171,7 @@ export class EvalCellElement extends EditorCellElement {
     reset() {
         super.reset();
         const output_element = this.output_element;
-        if (!output_element) {
-            this.establish_output_element();
-        } else {
+        if (output_element) {
             clear_element(output_element);
         }
         return this;
@@ -232,7 +198,10 @@ export class EvalCellElement extends EditorCellElement {
         // stop current evaluator, if any
         this.stop();  // clears this.#evaluator_stoppable
 
-        const output_element = this.establish_output_element();  // return existing or create
+        const output_element = this.output_element;
+        if (!output_element) {
+            throw new Error('cell.eval() called on cell with no output element');
+        }
         clear_element(output_element);
 
         // allocate the evaluator, store it, then eval
@@ -323,33 +292,10 @@ export class EvalCellElement extends EditorCellElement {
         } = (options ?? {});
         const cell = super.create_cell(options);
         // all cells are ensured to have output elements (for layout coherence)
-        if (output_element) {
+        if (output_element) {  // otherwise, no output_element
             cell.output_element = output_element;
-        } else {
-            cell.establish_output_element();
         }
         return cell;
-    }
-
-    /** return the first and last elements in the DOM that are associated with this eval-cell
-     *  @return {Object|null} null if this is not in the DOM body, otherwise { first: Element, last: Element }
-     */
-    get_dom_extent() {
-        if (document.body === this || !document.body?.contains(this)) {
-            return null;  // indicate: not in DOM body
-        } else {
-            let { first, last } = super.get_dom_extent();
-            const output_element = this.output_element;
-            if (output_element) {
-                if (first.compareDocumentPosition(output_element) & Node.DOCUMENT_POSITION_PRECEDING) {
-                    first = output_element;
-                }
-                if (last.compareDocumentPosition(output_element) & Node.DOCUMENT_POSITION_FOLLOWING) {
-                    last = output_element;
-                }
-            }
-            return { first, last };
-        }
     }
 
 
