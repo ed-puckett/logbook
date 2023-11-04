@@ -60,7 +60,7 @@ export class EvalCellElement extends EditorCellElement {
 
     // === OUTPUT ELEMENT ===
 
-    // CSS class for output elements created by establish_output_element()
+    // CSS class for output elements created by this.create_output_element()
     static get output_element_class (){ return 'eval-cell-output'; }
 
     get output_element_id (){

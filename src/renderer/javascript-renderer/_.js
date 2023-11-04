@@ -27,8 +27,8 @@ const dynamic_import = new Function('path', 'return import(path);');
 // value passed to the return statement becomes the synchronous result
 // of the evaluation.
 //
-// ephemeral_eval_context
-// ----------------------
+// eval_environment
+// -----------------
 // During evaluation, a number of other values are available "globally",
 // though these values do not persist after the particular evaluation
 // (except for references from async code started during the evaluation).
@@ -47,7 +47,7 @@ const dynamic_import = new Function('path', 'return import(path);');
 //
 // These all continue to be available even after the evaluation has
 // returned if there are any async operations still active.
-// See the method #create_ephemeral_eval_context().
+// See the method #create_eval_environment().
 // ======================================================================
 
 const AsyncGeneratorFunction = Object.getPrototypeOf(async function* () {}).constructor;
@@ -135,16 +135,17 @@ export class JavaScriptRenderer extends Renderer {
             }
         });  //!!! never unsubscribed
 
-        const ephemeral_eval_context = await this.#create_ephemeral_eval_context(eval_context, ocx, code);
-        const ephemeral_eval_context_entries = Object.entries(ephemeral_eval_context);
+        const eval_environment = await this.#create_eval_environment(eval_context, ocx, code);
+        const eval_environment_entries = Object.entries(eval_environment);
 
         // create an async generator with the given code as the heart of its
-        // body, and with parameters being the keys of ephemeral_eval_context.
+        // body, and with parameters being the keys of eval_environment.
         // Then, the code will be evaluated by applying the function to the
-        // corresponding values from ephemeral_eval_context.  Note that
-        // evaluation will be performed in the JavaScript global environment.
-        const eval_fn_params = ephemeral_eval_context_entries.map(([k, _]) => k);
-        const eval_fn_args   = ephemeral_eval_context_entries.map(([_, v]) => v);
+        // corresponding values from eval_environment.  Note that evaluation
+        // will be performed in the JavaScript global environment and that
+        // eval_environment is effected via the function parameters/arguments.
+        const eval_fn_params = eval_environment_entries.map(([k, _]) => k);
+        const eval_fn_args   = eval_environment_entries.map(([_, v]) => v);
 
         // evaluate the code:
         const eval_fn_this = eval_context;
@@ -158,7 +159,7 @@ export class JavaScriptRenderer extends Renderer {
         //
         // for await (const result of result_stream) {
         //     if (typeof result !== 'undefined') {
-        //         await ephemeral_eval_context.render_value(result);
+        //         await eval_environment.render_value(result);
         //     }
         // }
 
@@ -170,10 +171,10 @@ export class JavaScriptRenderer extends Renderer {
             if (typeof value !== 'undefined') {
                 if (done) {
                     // this was the return value, so precede with a special demarcation
-                    await ephemeral_eval_context.render_text('\n>>> ');
+                    await eval_environment.render_text('\n>>> ');
                 }
 
-                await ephemeral_eval_context.render_value(value);
+                await eval_environment.render_value(value);
             }
 
             if (done) {
@@ -182,7 +183,7 @@ export class JavaScriptRenderer extends Renderer {
         }
     }
 
-    async #create_ephemeral_eval_context(eval_context, ocx, source_code='') {
+    async #create_eval_environment(eval_context, ocx, source_code='') {
         const self = this;
 
         const Plotly = await load_Plotly();
@@ -207,7 +208,7 @@ export class JavaScriptRenderer extends Renderer {
             return objects;
         }
 
-        const ephemeral_eval_context = {
+        const eval_environment = {
             ocx,
             source_code,  // this evaluation's source code
 
@@ -251,6 +252,6 @@ export class JavaScriptRenderer extends Renderer {
             canvas_tools,
         };
 
-        return ephemeral_eval_context;
+        return eval_environment;
     }
 }
