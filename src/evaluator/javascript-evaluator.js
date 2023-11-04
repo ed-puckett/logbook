@@ -16,7 +16,7 @@ export class JavaScriptEvaluator extends Evaluator {
         const options = {
             style:  undefined,//!!!
             inline: undefined,//!!!
-            global_context: this.global_context,
+            global_state: this.global_state,
         };
         const renderer = this.ocx.renderer_for_type('javascript');
         this.add_stoppable(new Stoppable(renderer));

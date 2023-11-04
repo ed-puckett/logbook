@@ -415,9 +415,9 @@ export class OutputContext {
      * @param {String} type,
      * @param {any}    value,  // value appropriate to type (determined by subclass)
      * @param {Object|undefined|null} options: {
-     *     style?:          Object,   // css style to be applied to output element
-     *     inline?:         Boolean,  // render inline vs block?
-     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     global_state?: Object,   // global_state for evaluation; default: LogbookManager.singleton.global_state
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs

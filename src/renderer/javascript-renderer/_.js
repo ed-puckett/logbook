@@ -16,7 +16,7 @@ const dynamic_import = new Function('path', 'return import(path);');
 // CODE EVALUATION
 // ---------------
 // Within the code given for evaluation, "this" references the context
-// derived from the global_context property of the options passed to the
+// derived from the global_state property of the options passed to the
 // eval() method.
 //
 // vars(...objects) assigns new properties to "this" within the code),
@@ -94,9 +94,9 @@ export class JavaScriptRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} code,
      * @param {Object|undefined|null} options: {
-     *     style?:          Object,   // css style to be applied to output element
-     *     inline?:         Boolean,  // render inline vs block?
-     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
+     *     style?:        Object,   // css style to be applied to output element
+     *     inline?:       Boolean,  // render inline vs block?
+     *     global_state?: Object,   // global_state for evaluation; default: LogbookManager.singleton.global_state
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -105,10 +105,10 @@ export class JavaScriptRenderer extends Renderer {
         const {
             style,
             inline,
-            global_context = LogbookManager.singleton.global_context,
+            global_state = LogbookManager.singleton.global_state,
         } = (options ?? {});
 
-        const eval_context = (global_context[this.type] ??= {});
+        const eval_context = (global_state[this.type] ??= {});
 
         // if !style && inline, then use the given ocx,
         // otherwise, if style || !inline, create a new ocx

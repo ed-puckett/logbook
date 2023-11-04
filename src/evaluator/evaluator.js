@@ -19,23 +19,23 @@ export class Evaluator extends StoppableObjectsManager {
     /** Call this function instead of constructing an instance with new.
      *  @param {HTMLElement} input_element the source element
      *  @param {HTMLElement} output_element the destination element
-     *  @param {undefined|null|Object} global_context, default {}
+     *  @param {undefined|null|Object} global_state, default {}
      *  @return {Promise} resolves to the new instance after its
      *          _perform_eval method resolves.  Note that the return
      *          of the _perform_eval method does not necessarily mean
      *          that the evaluation is "done".
-     * If an object is passed as global_context, then that object may be modified
+     * If an object is passed as global_state, then that object may be modified
      * as a result of the evaluation.  This is the basis for persistence of
      * state across evaluations.
      */
-    static async eval(input_element, output_element, global_context=null) {
-        const instance = new this(input_element, output_element, global_context);
+    static async eval(input_element, output_element, global_state=null) {
+        const instance = new this(input_element, output_element, global_state);
         return instance._perform_eval()
             .catch(error => instance.ocx.render_error(error));
     }
 
     // do not call the constructor via new, instead use the static async method Evaluator.eval()
-    constructor(input_element, output_element, global_context) {
+    constructor(input_element, output_element, global_state) {
         super();
         if (!(input_element instanceof HTMLElement)) {
             throw new Error('input_element must be an instance of HTMLElement');
@@ -44,9 +44,9 @@ export class Evaluator extends StoppableObjectsManager {
             throw new Error('output_element must be an instance of HTMLElement');
         }
 
-        global_context ??= {};
-        if (typeof global_context !== 'object') {
-            throw new Error('global_context must be undefined, null, or an object');
+        global_state ??= {};
+        if (typeof global_state !== 'object') {
+            throw new Error('global_state must be undefined, null, or an object');
         }
 
         const ocx = new OutputContext(output_element);
@@ -64,8 +64,8 @@ export class Evaluator extends StoppableObjectsManager {
                 value: output_element,
                 enumerable: true,
             },
-            global_context: {
-                value: global_context,
+            global_state: {
+                value: global_state,
                 enumerable: true,
             },
             ocx: {

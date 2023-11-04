@@ -38,8 +38,8 @@ export class MarkdownRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} markdown,
      * @param {Object|undefined|null} options: {
-     *     style?:          Object,   // css style to be applied to output element
-     *     global_context?: Object,   // global_context for evaluation; default: LogbookManager.singleton.global_context
+     *     style?:        Object,   // css style to be applied to output element
+     *     global_state?: Object,   // global_state for evaluation; default: LogbookManager.singleton.global_state
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -49,7 +49,7 @@ export class MarkdownRenderer extends Renderer {
 
         const {
             style,
-            global_context = LogbookManager.singleton.global_context,
+            global_state = LogbookManager.singleton.global_state,
         } = (options ?? {});
 
         const parent = ocx.create_child({
@@ -78,7 +78,7 @@ export class MarkdownRenderer extends Renderer {
                 switch (token.type) {
                 case extension_name__inline_tex:
                 case extension_name__block_tex: {
-                    token.global_context = global_context;
+                    token.global_state = global_state;
                     break;
                 }
 
@@ -97,7 +97,7 @@ export class MarkdownRenderer extends Renderer {
                         });  //!!! never unsubscribed
 
                         const renderer_options = {
-                            global_context,
+                            global_state,
                         };
                         await ocx.invoke_renderer(renderer, token.text, renderer_options)
                             .catch(error => ocx.render_error(error));
@@ -132,12 +132,12 @@ marked.use({
                         type: extension_name__inline_tex,
                         raw:  match[0],
                         text: match[1].trim(),
-                        global_context: undefined,  // filled in later by walkTokens
+                        global_state: undefined,  // filled in later by walkTokens
                     };
                 }
             },
             renderer(token) {
-                return TeXRenderer.render_to_string(token.text, token.global_context, {
+                return TeXRenderer.render_to_string(token.text, token.global_state, {
                     displayMode:  false,
                     throwOnError: false,
                 });
@@ -154,12 +154,12 @@ marked.use({
                         type: extension_name__block_tex,
                         raw:  match[0],
                         text: match[1].trim(),
-                        global_context: undefined,  // filled in later by walkTokens
+                        global_state: undefined,  // filled in later by walkTokens
                     };
                 }
             },
             renderer(token) {
-                const markup = TeXRenderer.render_to_string(token.text, token.global_context, {
+                const markup = TeXRenderer.render_to_string(token.text, token.global_state, {
                     displayMode:  true,
                     throwOnError: false,
                 });

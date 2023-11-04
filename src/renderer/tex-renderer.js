@@ -18,8 +18,8 @@ export class TeXRenderer extends Renderer {
      * @param {OutputContext} ocx,
      * @param {String} tex,
      * @param {Object|undefined|null} options: {
-     *     style?:          Object,  // css style to be applied to output element
-     *     global_context?: Object,  // global_context for evaluation; default: LogbookManager.singleton.global_context
+     *     style?:        Object,  // css style to be applied to output element
+     *     global_state?: Object,  // global_state for evaluation; default: LogbookManager.singleton.global_state
      * }
      * @return {Element} element to which output was rendered
      * @throws {Error} if error occurs
@@ -29,10 +29,10 @@ export class TeXRenderer extends Renderer {
 
         const {
             style,
-            global_context = LogbookManager.singleton.global_context,
+            global_state = LogbookManager.singleton.global_state,
         } = (options ?? {});
 
-        const markup = this.constructor.render_to_string(tex, global_context, {
+        const markup = this.constructor.render_to_string(tex, global_state, {
             displayMode:  true,
             throwOnError: false,
         });
@@ -48,10 +48,10 @@ export class TeXRenderer extends Renderer {
         return parent;
     }
 
-    static render_to_string(tex, global_context, katex_options=null) {
-        // this function encapsulates how the "macros" options is gotten from global_context
+    static render_to_string(tex, global_state, katex_options=null) {
+        // this function encapsulates how the "macros" options is gotten from global_state
         katex_options ??= {};
-        katex_options.macros ??= (global_context[this.type] ??= {});  // for persistent \gdef macros
+        katex_options.macros ??= (global_state[this.type] ??= {});  // for persistent \gdef macros
         return katex.renderToString(tex, katex_options);
     }
 }
