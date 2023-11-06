@@ -154,6 +154,16 @@ export class LogbookManager {
     static split_step_size_ratio = 0.05;   // amount to shrink or enlarge the current split
     static split_neutral_ratio   = 0.50;   // "neutral" split position
 
+    /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
+     * @return {Array} the cells in the document
+     * Note that EditorCellElement elements are not returned even though
+     * EditorCellElement is a base class of EvalCellElement.  This is not ambiguous
+     * because they have different tag names (editor-cell vs eval-cell).
+     */
+    static get_cells() {
+        return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
+    }
+
     get header_element (){ return this.#header_element; }
     get main_element   (){ return this.#main_element; }
 
@@ -172,16 +182,6 @@ export class LogbookManager {
         for (const cell of this.constructor.get_cells()) {
             cell.set_active(cell === this.active_cell);
         }
-    }
-
-    /** return an ordered list of the EvalCellElement (eval-cell) cells in the document
-     *  @return {Array} the cells in the document
-     * Note that EditorCellElement elements are not returned even though
-     * EditorCellElement is a base class of EvalCellElement.  This is not ambiguous
-     * because they have different tag names (editor-cell vs eval-cell).
-     */
-    static get_cells() {
-        return [ ...document.getElementsByTagName(EvalCellElement.custom_element_name) ];
     }
 
     get global_state (){ return this.#global_state; }
