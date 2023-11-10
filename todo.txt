@@ -1,3 +1,4 @@
+header/menu glitch when loading very large document: height is too small, can be fixed by display:none and then back to display:flex on header element
 automatic textarea resize acts wonky when the textarea gets too large.
 eval-cell textarea should not grow beyond the viewport, and should scroll if too large (behavior when viewport size changes?)
 document: bootstrap script must be first script in head

@@ -198,7 +198,7 @@ export class OutputContext {
      *  See this.create_element() for a description of options.
      */
     static create_element_child_mapping(element, options=null) {
-        return this.create_element_child(options, true);
+        return this.create_element_child(element, options, true);
     }
 
     /** create or update a child text node of the given element
