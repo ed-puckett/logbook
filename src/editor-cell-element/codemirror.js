@@ -28,6 +28,11 @@ import {
 } from '../../lib/ui/dom-tools.js';
 
 
+export {
+    undoDepth,
+} from "@codemirror/commands";
+
+
 export function create_codemirror_view(cell) {
     if (!(cell instanceof EditorCellElement)) {
         throw new Error('cell must be an instance of EditorCellElement');
@@ -40,16 +45,14 @@ export function create_codemirror_view(cell) {
         doc: text,
         extensions: [
             keymap.of(defaultKeymap),
+            basicSetup,
+            javascript(),
         ],
     });
 
     const view = new EditorView({
         state,
         parent: cell,
-        extensions: [
-            basicSetup,
-            javascript(),
-        ],
     });
 
     return view;

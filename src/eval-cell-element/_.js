@@ -46,16 +46,7 @@ export async function load_stylesheet() {
 export class EvalCellElement extends EditorCellElement {
     static custom_element_name = 'eval-cell';
 
-    static default_input_type = 'markdown';
-
-    static #attribute__input_type        = 'data-input-type';
     static #attribute__output_element_id = 'data-output-element-id';
-
-    get input_type (){ return this.getAttribute(this.constructor.#attribute__input_type) ?? this.constructor.default_input_type; }
-    set input_type (input_type){
-        this.setAttribute(this.constructor.#attribute__input_type, input_type);
-        this._tool_bar?.set_type(input_type);
-    }
 
 
     // === OUTPUT ELEMENT ===

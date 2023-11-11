@@ -25,6 +25,7 @@ import {
 
 import {
     create_codemirror_view,
+    undoDepth,
 } from './codemirror.js';
 
 import {
@@ -46,7 +47,11 @@ export async function load_stylesheet() {
 export class EditorCellElement extends HTMLElement {
     static custom_element_name = 'editor-cell';
 
-    static attribute__active  = 'data-active';
+    static attribute__active      = 'data-active';
+    static #attribute__input_type = 'data-input-type';
+
+    static default_input_type = 'markdown';
+
 
     constructor() {
         super();
@@ -102,6 +107,7 @@ export class EditorCellElement extends HTMLElement {
     #establish_editable_text_container() {
         if (!this.#has_text_container()) {
             this.#codemirror_view = create_codemirror_view(this);
+console.log(this.#codemirror_view, undoDepth);//!!!
         }
     }
 
@@ -179,6 +185,16 @@ export class EditorCellElement extends HTMLElement {
         this.set_active(current_active_state);  // set current state on newly-mapped element
     }
     #active_element_mapper;  // initially undefined
+
+
+    // === INPUT TYPE ===
+
+    get input_type (){ return this.getAttribute(EditorCellElement.#attribute__input_type) ?? this.constructor.default_input_type; }
+
+    set input_type (input_type){
+        this.setAttribute(EditorCellElement.#attribute__input_type, input_type);
+        this._tool_bar?.set_type(input_type);
+    }
 
 
     // === TOOL BAR ===
@@ -293,6 +309,7 @@ export class EditorCellElement extends HTMLElement {
             LogbookManager.singleton.set_active_cell(this);
             if (this.#has_text_container()) {
                 this.#codemirror_view.focus();
+                this.#codemirror_view.dispatch({ scrollIntoView: true });
             }
         }
         const listener_specs = [
