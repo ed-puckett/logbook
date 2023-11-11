@@ -25,6 +25,10 @@ declare -a FILES_TO_COPY=(
     'node_modules/d3-graphviz/build/d3-graphviz.min.js'
 )
 
+declare -a DIRECTORIES_TO_COPY=(
+#   ---directory---                --- destination--- <<< (pairs of entries)
+)
+
 cd "${ROOT_DIR}"
 
 \rm -fr "dist"
@@ -37,6 +41,11 @@ echo "copying files...."
 for file_index in "${!FILES_TO_COPY[@]}"; do
     declare file="${FILES_TO_COPY[file_index]}"
     cp -a "${file}" "${DIST_DIR}"
+done
+for (( i = 0; i < ${#DIRECTORIES_TO_COPY[@]}; i += 2 )); do
+    declare directory="${DIRECTORIES_TO_COPY[i]}"
+    declare destination="${DIRECTORIES_TO_COPY[i+1]}"
+    cp -a "${directory}" "${DIST_DIR}/${destination}"
 done
 
 npx webpack --config ./webpack.config.js

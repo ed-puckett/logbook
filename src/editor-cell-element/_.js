@@ -26,6 +26,10 @@ import {
 } from '../tool-bar-element/_.js';
 
 import {
+    codemirror,
+} from './codemirror.js';
+
+import {
     beep,
 } from '../../lib/ui/beep.js';
 
