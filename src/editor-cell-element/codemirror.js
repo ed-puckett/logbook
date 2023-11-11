@@ -1,24 +1,56 @@
 import {
-    load_script,
-} from '../../lib/ui/dom-tools.js';
+    basicSetup,
+} from 'codemirror';
 
 import {
-    assets_server_url,
-} from '../assets-server-url.js';
+    EditorState,
+} from "@codemirror/state";
 
-export * as codemirror from 'codemirror';
+import {
+    EditorView,
+    keymap,
+} from "@codemirror/view";
 
-//let codemirror = CodeMirror;  // loaded on demand
+import {
+    defaultKeymap,
+} from "@codemirror/commands";
 
-/** return the codemirror object which will be lazily loaded because codemirror is large
- */
-/*
-export async function load_codemirror() {
-    if (!codemirror) {
-        await load_script(document.head, assets_server_url('dist/codemirror-dist/index.js'), { type: 'module' });  // defines globalThis.codemirror
-        codemirror = globalThis.codemirror;
-console.log('>>>', codemirror);//!!!
+import {
+    javascript,
+} from "@codemirror/lang-javascript";
+
+import {
+    EditorCellElement,
+} from './_.js';
+
+import {
+    clear_element,
+} from '../../lib/ui/dom-tools.js';
+
+
+export function create_codemirror_view(cell) {
+    if (!(cell instanceof EditorCellElement)) {
+        throw new Error('cell must be an instance of EditorCellElement');
     }
-    return codemirror;
+
+    const text = cell.get_text();
+    clear_element(cell);
+
+    const state = EditorState.create({
+        doc: text,
+        extensions: [
+            keymap.of(defaultKeymap),
+        ],
+    });
+
+    const view = new EditorView({
+        state,
+        parent: cell,
+        extensions: [
+            basicSetup,
+            javascript(),
+        ],
+    });
+
+    return view;
 }
-*/

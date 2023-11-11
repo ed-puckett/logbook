@@ -4,8 +4,6 @@ import {
     create_element,
     clear_element,
     escape_for_html,
-    setup_textarea_auto_resize,
-    trigger_textarea_auto_resize,
     manage_selection_for_insert,
     manage_selection_for_delete,
     insert_at,
@@ -26,7 +24,7 @@ import {
 } from '../tool-bar-element/_.js';
 
 import {
-    codemirror,
+    create_codemirror_view,
 } from './codemirror.js';
 
 import {
@@ -58,26 +56,23 @@ export class EditorCellElement extends HTMLElement {
 
         // _tool_bar is used instead of #tool_bar so that subclasses have access (see establish_tool_bar())
         this._tool_bar = null;
-
-        this.#resize_observer = new ResizeObserver(this.#resize_observer_handler.bind(this));
-        this.#resize_observer.observe(this);
     }
     #event_listener_manager;
-    #resize_observer;
+    #codemirror_view;
 
 
     // === TEXT CONTENT ===
 
     get_text() {
         return this.#has_text_container()
-            ? this.#get_text_container().value
+            ? this.#codemirror_view.state.doc.toString()
             : this.textContent;
     }
 
     // this works even if the cell is not editable
     set_text(text) {
         if (this.#has_text_container()) {
-            this.#get_text_container().value = text;
+            this.#codemirror_view.dispatch({ from: 0, to: this.#codemirror_view.state.doc.length, insert: text });
         } else {
             this.textContent = text;
         }
@@ -102,38 +97,19 @@ export class EditorCellElement extends HTMLElement {
         return `<${tag} ${attr_segments.join(' ')}>${text_content}</${tag}>`;
     }
 
-    #get_text_container() {
-        return this.#has_text_container() ? this.firstChild : this;
-    }
-
-    #has_text_container() {
-        const first_child = this.firstChild;
-        return (first_child instanceof HTMLTextAreaElement) && !first_child.nextSibling;
-    }
+    #has_text_container() { return !!this.#codemirror_view; }
 
     #establish_editable_text_container() {
         if (!this.#has_text_container()) {
-            const text = this.get_text();
-            clear_element(this);
-            const editable_element = create_element({
-                parent: this,
-                tag: 'textarea',
-                set_id: true,  // prevent warning: "A form field element should have an id or name attribute"
-                attrs: {
-                    spellcheck: false,
-                },
-            });
-            setup_textarea_auto_resize(editable_element);
-            this.set_text(text);  // will be added to the new editable_element textarea
-            editable_element.setSelectionRange(0, 0);  // move cursor to beginning of text
-            this.#trigger_text_container_resize();
+            this.#codemirror_view = create_codemirror_view(this);
         }
     }
 
     #remove_text_container() {
         if (this.#has_text_container()) {
             const text = this.get_text();
-            clear_element(this);  // remove text_container element
+            this.#codemirror_view = undefined;
+            clear_element(this);  // remove text_container element, etc
             this.set_text(text);  // will be added directly to this because no text_container
         }
     }
@@ -147,23 +123,15 @@ export class EditorCellElement extends HTMLElement {
         if (!this.#has_text_container()) {
             super.focus();  // will most likely fail, but that would be appropriate
         } else {
-            const text_container = this.#get_text_container();
+            this.#codemirror_view.focus();
+            /* old handling of selection when using textarea
+            const text_container = this.#get_text_container();  // textarea
             const ss = text_container.selectionStart ?? 0;
             const se = text_container.selectionEnd   ?? 0;
             text_container.focus();
             text_container.setSelectionRange(ss, se);
+            */
         }
-    }
-
-    #trigger_text_container_resize() {
-        if (this.#has_text_container()) {
-            const editable_element = this.#get_text_container();
-            trigger_textarea_auto_resize(editable_element);
-        }
-    }
-
-    #resize_observer_handler() {
-        this.#trigger_text_container_resize();
     }
 
 
@@ -324,7 +292,7 @@ export class EditorCellElement extends HTMLElement {
             // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
             LogbookManager.singleton.set_active_cell(this);
             if (this.#has_text_container()) {
-                this.#get_text_container().focus();
+                this.#codemirror_view.focus();
             }
         }
         const listener_specs = [
@@ -341,10 +309,6 @@ export class EditorCellElement extends HTMLElement {
     #update_for_connected() {
         this.#event_listener_manager.attach();
         this.removeAttribute('tabindex');  // focusable parent for textarea causes SHIFT-Tab not to work
-        // trigger resize in case this could not be performed ebfore when "editable" was set,
-        // probably because the element was not yet connected to the DOM at that time.
-        // setTimeout() is used to make sure the computed styles are available (at this point they are not).
-        setTimeout(() => this.#trigger_text_container_resize());
     }
 
     #update_for_disconnected() {
