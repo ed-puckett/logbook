@@ -151,7 +151,7 @@ const standard_themes_spec = {
     "--theme-tl-bgc":                  [ '#f8f8f8',                       '#1e1e1e' ],
     "--theme-tl-bgc-mix":              [ '10%',                           '25%' ],
 
-    "--theme-cl-p":                    [ '0.5em',                         '0.5em' ],
+    "--theme-cl-p":                    [ '0em',                           '0em' ],
     "--theme-cl-lh":                   [ '140%',                          '140%' ],
     "--theme-cl-ff":                   [ 'monospace',                     'monospace' ],
     "--theme-cl-bdw":                  [ '1px',                           '1px' ],
