@@ -1003,6 +1003,7 @@ ${contents}
             });
             const next_cell = cell.adjacent_cell(true) ?? this.create_cell();
             next_cell.focus();
+            next_cell.scroll_into_view();
             return true;
         }
     }
@@ -1057,6 +1058,7 @@ ${contents}
                         break;
                     }
                     iter_cell.focus();
+                    iter_cell.scroll_into_view();
                     await iter_cell.eval({
                         global_state: this.global_state,
                     });
@@ -1133,6 +1135,7 @@ ${contents}
                 const before = this.constructor.#cell_container_element(previous);
                 move_node(cell_container, { parent, before });
                 cell.focus();
+                cell.scroll_into_view();
                 return true;
             }
         }
@@ -1156,6 +1159,7 @@ ${contents}
                 const before = this.constructor.#cell_container_element(next).nextSibling;
                 move_node(cell_container, { parent, before });
                 cell.focus();
+                cell.scroll_into_view();
                 return true;
             }
         }
@@ -1173,6 +1177,7 @@ ${contents}
             before: cell_container,
         });
         new_cell.focus();
+        new_cell.scroll_into_view();
         return true;
     }
 
@@ -1189,6 +1194,7 @@ ${contents}
             parent: cell_container.parentElement,  // necessary if before is null
         });
         new_cell.focus();
+        new_cell.scroll_into_view();
         return true;
     }
 
@@ -1216,6 +1222,7 @@ ${contents}
             new_cell_created = true;
         }
         next_cell.focus();
+        next_cell.scroll_into_view();
         this.set_active_cell(next_cell);  // focus sets active_cell but asynchronously, so set active_cell explicitly
         if (new_cell_created) {
             this.expand_input_output_split();  // ensure that new new empty cell is visible to the user
@@ -1267,6 +1274,7 @@ ${contents}
     command_handler__shrink_inputs(command_context) {
         this.step_input_output_split_size(false);
         this.active_cell.focus();
+        this.active_cell.scroll_into_view();
         return true;
     }
 
@@ -1275,6 +1283,7 @@ ${contents}
     command_handler__enlarge_inputs(command_context) {
         this.step_input_output_split_size(true);
         this.active_cell.focus();
+        this.active_cell.scroll_into_view();
         return true;
     }
 
@@ -1290,6 +1299,7 @@ ${contents}
     command_handler__expand_inputs(command_context) {
         this.expand_input_output_split();
         this.active_cell.focus();
+        this.active_cell.scroll_into_view();
         return true;
     }
 

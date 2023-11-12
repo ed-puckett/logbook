@@ -25,7 +25,6 @@ import {
 
 import {
     create_codemirror_view,
-    undoDepth,
 } from './codemirror.js';
 
 import {

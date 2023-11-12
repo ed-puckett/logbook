@@ -4,6 +4,7 @@ import {
 
 import {
     EditorState,
+    Compartment,
 } from "@codemirror/state";
 
 import {
@@ -13,6 +14,11 @@ import {
 
 import {
     defaultKeymap,
+    undoDepth,
+    redoDepth,
+    indentUnit,
+    getIndentUnit,
+    indentString,
 } from "@codemirror/commands";
 
 import {
@@ -27,10 +33,10 @@ import {
     clear_element,
 } from '../../lib/ui/dom-tools.js';
 
-
-export {
-    undoDepth,
-} from "@codemirror/commands";
+import {
+    settings_updated_events,
+    get_settings,
+} from '../settings/_.js';
 
 
 export function create_codemirror_view(cell) {
@@ -57,3 +63,8 @@ export function create_codemirror_view(cell) {
 
     return view;
 }
+
+settings_updated_events.subscribe(() => {
+    const settings = get_settings();
+    
+});
