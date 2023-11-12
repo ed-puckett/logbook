@@ -19,7 +19,7 @@ export class ErrorRenderer extends Renderer {
      * @throws {Error} if error occurs
      */
     async render(ocx, error_object, options=null) {
-console.log(error_object);//!!!
+console.log(error_object);//!!! for debugging from console
         const style = options?.style;
 
         const text_segments = [];

@@ -107,7 +107,6 @@ export class EditorCellElement extends HTMLElement {
     #establish_editable_text_container() {
         if (!this.#has_text_container()) {
             this.#codemirror_view = create_codemirror_view(this);
-console.log(this.#codemirror_view, undoDepth);//!!!
         }
     }
 
@@ -307,10 +306,6 @@ console.log(this.#codemirror_view, undoDepth);//!!!
         function focus_handler(event) {
             // LogbookManager.singleton.set_active_cell() clears/sets the "active" attributes of cells
             LogbookManager.singleton.set_active_cell(this);
-            if (this.#has_text_container()) {
-                this.#codemirror_view.focus();
-                this.#codemirror_view.dispatch({ scrollIntoView: true });
-            }
         }
         const listener_specs = [
             [ this, 'focus', focus_handler, { capture: true } ],
@@ -318,6 +313,10 @@ console.log(this.#codemirror_view, undoDepth);//!!!
         for (const [ target, type, listener, options ] of listener_specs) {
             this.#event_listener_manager.add(target, type, listener, options);
         }
+    }
+
+    scroll_into_view() {
+        this.#codemirror_view.dispatch({ scrollIntoView: true });
     }
 
 

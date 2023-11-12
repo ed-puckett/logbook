@@ -1097,6 +1097,7 @@ ${contents}
             return false;
         } else {
             focus_cell.focus();
+            focus_cell.scroll_into_view();
             return true;
         }
     }
@@ -1109,6 +1110,7 @@ ${contents}
             return false;
         } else {
             focus_cell.focus();
+            focus_cell.scroll_into_view();
             return true;
         }
     }
