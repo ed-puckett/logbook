@@ -19,11 +19,11 @@ import {
 import {
     get_settings,
     update_settings,
-    analyze_editor_options_indentUnit,
-    analyze_editor_options_tabSize,
-    analyze_editor_options_indentWithTabs,
-    valid_editor_options_keyMap_values,
-    analyze_editor_options_keyMap,
+    analyze_editor_options_indent,
+    analyze_editor_options_tab_size,
+    analyze_editor_options_indent_with_tabs,
+    valid_editor_options_mode_values,
+    analyze_editor_options_mode,
     valid_formatting_options_align_values,
     analyze_formatting_options_align,
     analyze_formatting_options_indent,
@@ -65,32 +65,32 @@ const sections = [
     }, {
         name: 'Editor',
         settings: [{
-            id: 'editor_options_indentUnit',
+            id: 'editor_options_indent',
             label: 'Indent',
             type: 'text',
-            settings_path: [ 'editor_options', 'indentUnit' ],
-            analyze: analyze_editor_options_indentUnit,  // (value, label) => complaint
+            settings_path: [ 'editor_options', 'indent' ],
+            analyze: analyze_editor_options_indent,  // (value, label) => complaint
             convert_to_number: true,
         }, {
-            id: 'editor_options_tabSize',
+            id: 'editor_options_tab_size',
             label: 'Tab size',
             type: 'text',
-            settings_path: [ 'editor_options', 'tabSize' ],
-            analyze: analyze_editor_options_tabSize,  // (value, label) => complaint
+            settings_path: [ 'editor_options', 'tab_size' ],
+            analyze: analyze_editor_options_tab_size,  // (value, label) => complaint
             convert_to_number: true,
         }, {
-            id: 'editor_options_indentWithTabs',
+            id: 'editor_options_indent_with_tabs',
             label: 'Indent with tabs',
             type: 'checkbox',
-            settings_path: [ 'editor_options', 'indentWithTabs' ],
-            analyze: analyze_editor_options_indentWithTabs,  // (value, label) => complaint
+            settings_path: [ 'editor_options', 'indent_with_tabs' ],
+            analyze: analyze_editor_options_indent_with_tabs,  // (value, label) => complaint
         }, {
-            id: 'editor_options_keyMap',
+            id: 'editor_options_mode',
             label: 'Key map',
             type: 'select',
-            options: valid_editor_options_keyMap_values.map(value => ({ value, label: value })),
-            settings_path: [ 'editor_options', 'keyMap' ],
-            analyze: analyze_editor_options_keyMap,  // (value, label) => complaint
+            options: valid_editor_options_mode_values.map(value => ({ value, label: value })),
+            settings_path: [ 'editor_options', 'mode' ],
+            analyze: analyze_editor_options_mode,  // (value, label) => complaint
         }],
     }, {
         name: 'TeX Formatting',

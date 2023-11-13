@@ -41,11 +41,11 @@ export class CanvasImageRenderer extends Renderer {
                 // "src" set below
             },
         };
-        
+
         // note: "width" and "height" attributes, if specified in options, will be
         // applied to both the canvas element and the img element.  This is ok because
         // these attributes represent size in px in both element types.
-        
+
         const canvas = ocx.constructor.create_element({
             tag: 'canvas',
             attrs: {

@@ -28,6 +28,10 @@ import {
 } from './codemirror.js';
 
 import {
+    EditorView,
+} from "@codemirror/view";
+
+import {
     beep,
 } from '../../lib/ui/beep.js';
 
@@ -62,21 +66,30 @@ export class EditorCellElement extends HTMLElement {
         this._tool_bar = null;
     }
     #event_listener_manager;
-    #codemirror_view;
+    #codemirror;
+
+
+    // === UPDATE FROM SETTINGS ===
+
+    update_from_settings() {
+        if (this.#has_text_container) {
+            this.#codemirror.update_from_settings();
+        }
+    }
 
 
     // === TEXT CONTENT ===
 
     get_text() {
         return this.#has_text_container()
-            ? this.#codemirror_view.state.doc.toString()
+            ? this.#codemirror.get_text()
             : this.textContent;
     }
 
     // this works even if the cell is not editable
     set_text(text) {
         if (this.#has_text_container()) {
-            this.#codemirror_view.dispatch({ from: 0, to: this.#codemirror_view.state.doc.length, insert: text });
+            this.#codemirror.set_text(text);
         } else {
             this.textContent = text;
         }
@@ -101,18 +114,18 @@ export class EditorCellElement extends HTMLElement {
         return `<${tag} ${attr_segments.join(' ')}>${text_content}</${tag}>`;
     }
 
-    #has_text_container() { return !!this.#codemirror_view; }
+    #has_text_container() { return !!this.#codemirror; }
 
     #establish_editable_text_container() {
         if (!this.#has_text_container()) {
-            this.#codemirror_view = create_codemirror_view(this);
+            this.#codemirror = create_codemirror_view(this);
         }
     }
 
     #remove_text_container() {
         if (this.#has_text_container()) {
             const text = this.get_text();
-            this.#codemirror_view = undefined;
+            this.#codemirror = undefined;
             clear_element(this);  // remove text_container element, etc
             this.set_text(text);  // will be added directly to this because no text_container
         }
@@ -124,17 +137,10 @@ export class EditorCellElement extends HTMLElement {
      *  tabindex="0" parent fails.  So we just have to do it the hard way.
      */
     focus() {
-        if (!this.#has_text_container()) {
-            super.focus();  // will most likely fail, but that would be appropriate
+        if (this.#has_text_container()) {
+            this.#codemirror.focus();
         } else {
-            this.#codemirror_view.focus();
-            /* old handling of selection when using textarea
-            const text_container = this.#get_text_container();  // textarea
-            const ss = text_container.selectionStart ?? 0;
-            const se = text_container.selectionEnd   ?? 0;
-            text_container.focus();
-            text_container.setSelectionRange(ss, se);
-            */
+            super.focus();  // will most likely fail, but that would be appropriate
         }
     }
 
@@ -298,6 +304,17 @@ export class EditorCellElement extends HTMLElement {
         return this;
     }
 
+    scroll_into_view() {
+        //!!! this needs improvement
+        //!!! when repositioning the viewport, try to ensure that the entire cell-container, especially the tool-bar, is visible and not just the editor portion
+        if (this.#has_text_container) {
+            this.#codemirror.scroll_into_view();
+        } else {
+            //!!! this is too eager...
+            this.scrollIntoView();
+        }
+    }
+
 
     // === FOCUS LISTENERS / ACTIVE ===
 
@@ -312,10 +329,6 @@ export class EditorCellElement extends HTMLElement {
         for (const [ target, type, listener, options ] of listener_specs) {
             this.#event_listener_manager.add(target, type, listener, options);
         }
-    }
-
-    scroll_into_view() {
-        this.#codemirror_view.dispatch({ scrollIntoView: true });
     }
 
 

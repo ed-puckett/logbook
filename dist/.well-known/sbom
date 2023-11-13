@@ -857,6 +857,7 @@
       "dependsOn": [
         "pkg:npm/%40codemirror/commands@6.3.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/commands.git",
         "pkg:npm/%40codemirror/lang-javascript@6.2.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/lang-javascript.git",
+        "pkg:npm/%40codemirror/language@6.9.2?vcs_url=git%2Bhttps%3A//github.com/codemirror/language.git",
         "pkg:npm/%40codemirror/state@6.3.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/state.git",
         "pkg:npm/%40codemirror/view@6.22.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/view.git",
         "pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git",

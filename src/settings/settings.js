@@ -18,10 +18,10 @@ export const theme_dark   = 'dark';
 const initial_settings = {
     theme: theme_system,
     editor_options: {
-        indentUnit:     2,
-        tabSize:        4,
-        indentWithTabs: false,
-        keyMap:         'default',
+        indent:           4,
+        tab_size:         8,
+        indent_with_tabs: false,
+        mode:             'default',
     },
     formatting_options: {
         align:  'left',
@@ -99,27 +99,27 @@ export function analyze_contained(test_value, collection, name) {
 
 // === SETTINGS VALIDATION ===
 
-export function analyze_editor_options_indentUnit(value, name) {
+export function analyze_editor_options_indent(value, name) {
     if (!validate_numeric(value, { require_integer: true, reject_negative: true })) {
-        return `${name ?? 'indentUnit'} must be a non-negative integer`;
+        return `${name ?? 'indent'} must be a non-negative integer`;
     }
     return undefined;
 }
-export function analyze_editor_options_tabSize(value, name) {
+export function analyze_editor_options_tab_size(value, name) {
     if (!validate_numeric(value, { require_integer: true, reject_negative: true })) {
-        return `${name ?? 'tabSize'} must be a non-negative integer`;
+        return `${name ?? 'tab_size'} must be a non-negative integer`;
     }
     return undefined;
 }
-export function analyze_editor_options_indentWithTabs(value, name) {
+export function analyze_editor_options_indent_with_tabs(value, name) {
     if (typeof value !== 'boolean') {
-        return `${name ?? 'indentWithTabs'} must be a boolean value`;
+        return `${name ?? 'indent_with_tabs'} must be a boolean value`;
     }
     return undefined;
 }
-export const valid_editor_options_keyMap_values = ['default', 'emacs', 'sublime', 'vim'];
-export function analyze_editor_options_keyMap(value, name) {
-    return analyze_contained(value, valid_editor_options_keyMap_values, (name ?? 'keyMap'));
+export const valid_editor_options_mode_values = ['default', 'emacs', 'sublime', 'vim'];//!!!
+export function analyze_editor_options_mode(value, name) {
+    return analyze_contained(value, valid_editor_options_mode_values, (name ?? 'mode'));
 }
 
 export function analyze_editor_options(editor_options, name) {
@@ -127,29 +127,29 @@ export function analyze_editor_options(editor_options, name) {
         return `${name ?? 'editor_options'} must be an object`;
     }
     const keys = Object.keys(editor_options);
-    if (!keys.every(k => ['indentUnit', 'tabSize', 'indentWithTabs', 'keyMap'].includes(k))) {
-        return `${name ?? 'editor_options'} may only have the keys "indentUnit", "tabSize", "indentWithTabs" and "keyMap"`;
+    if (!keys.every(k => ['indent', 'tab_size', 'indent_with_tabs', 'mode'].includes(k))) {
+        return `${name ?? 'editor_options'} may only have the keys "indent", "tab_size", "indent_with_tabs" and "mode"`;
     }
-    if ('indentUnit' in editor_options) {
-        const complaint = analyze_editor_options_indentUnit(editor_options.indentUnit);
+    if ('indent' in editor_options) {
+        const complaint = analyze_editor_options_indent(editor_options.indent);
         if (complaint) {
             return complaint;
         }
     }
-    if ('tabSize' in editor_options) {
-        const complaint = analyze_editor_options_tabSize(editor_options.tabSize);
+    if ('tab_size' in editor_options) {
+        const complaint = analyze_editor_options_tab_size(editor_options.tab_size);
         if (complaint) {
             return complaint;
         }
     }
-    if ('indentWithTabs' in editor_options) {
-        const complaint = analyze_editor_options_indentWithTabs(editor_options.indentWithTabs);
+    if ('indent_with_tabs' in editor_options) {
+        const complaint = analyze_editor_options_indent_with_tabs(editor_options.indent_with_tabs);
         if (complaint) {
             return complaint;
         }
     }
-    if ('keyMap' in editor_options) {
-        const complaint = analyze_editor_options_keyMap(editor_options.keyMap);
+    if ('mode' in editor_options) {
+        const complaint = analyze_editor_options_mode(editor_options.mode);
         if (complaint) {
             return complaint;
         }

@@ -41,6 +41,7 @@ import {
 
 import {
     SettingsDialog,
+    settings_updated_events,
 } from './settings/_.js';
 
 import {
@@ -111,8 +112,15 @@ export class LogbookManager {
 
         this.reset_global_state();
 
-        this.#eval_states = new Subscribable();  //!!! this.#eval_states_subscription is never unsubscribed
-        this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));
+        this.#eval_states = new Subscribable();
+        this.#eval_states_subscription = this.#eval_states.subscribe(this.#eval_states_observer.bind(this));  //!!! this.#eval_states_subscription is never unsubscribed
+
+        // listen for settings changed events and trigger update in cells
+        settings_updated_events.subscribe(() => {
+            for (const cell of this.constructor.get_cells()) {
+                cell.update_from_settings();
+            }
+        });  //!!! never unsubscribed
 
         this.#command_bindings = get_global_command_bindings(this);
 
