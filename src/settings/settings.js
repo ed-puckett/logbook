@@ -22,6 +22,7 @@ const initial_settings = {
         tab_size:         8,
         indent_with_tabs: false,
         mode:             'default',
+        line_numbers:     true,
     },
     formatting_options: {
         align:  'left',
@@ -121,14 +122,20 @@ export const valid_editor_options_mode_values = ['default', 'emacs', 'sublime', 
 export function analyze_editor_options_mode(value, name) {
     return analyze_contained(value, valid_editor_options_mode_values, (name ?? 'mode'));
 }
+export function analyze_editor_options_line_numbers(value, name) {
+    if (typeof value !== 'boolean') {
+        return `${name ?? 'line_numbers'} must be true or false`;
+    }
+    return undefined;
+}
 
 export function analyze_editor_options(editor_options, name) {
     if (typeof editor_options !== 'object') {
         return `${name ?? 'editor_options'} must be an object`;
     }
     const keys = Object.keys(editor_options);
-    if (!keys.every(k => ['indent', 'tab_size', 'indent_with_tabs', 'mode'].includes(k))) {
-        return `${name ?? 'editor_options'} may only have the keys "indent", "tab_size", "indent_with_tabs" and "mode"`;
+    if (!keys.every(k => ['indent', 'tab_size', 'indent_with_tabs', 'mode', 'line_numbers'].includes(k))) {
+        return `${name ?? 'editor_options'} may only have the keys "indent", "tab_size", "indent_with_tabs", "mode" and "line_numbers"`;
     }
     if ('indent' in editor_options) {
         const complaint = analyze_editor_options_indent(editor_options.indent);
@@ -150,6 +157,12 @@ export function analyze_editor_options(editor_options, name) {
     }
     if ('mode' in editor_options) {
         const complaint = analyze_editor_options_mode(editor_options.mode);
+        if (complaint) {
+            return complaint;
+        }
+    }
+    if ('line_numbers' in editor_options) {
+        const complaint = analyze_editor_options_line_numbers(editor_options.line_numbers);
         if (complaint) {
             return complaint;
         }

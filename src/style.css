@@ -520,6 +520,13 @@ dialog .dialog_accept {
 }
 
 
+/* === codemirror === */
+
+.codemirror-hide-line-numbers .cm-lineNumbers {
+    display: none !important;  /* must use !important to override codemirror's !important setting */
+}
+
+
 /* === global error messages === */
 
 body > .error-message {

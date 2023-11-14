@@ -24,6 +24,7 @@ import {
     analyze_editor_options_indent_with_tabs,
     valid_editor_options_mode_values,
     analyze_editor_options_mode,
+    analyze_editor_options_line_numbers,
     valid_formatting_options_align_values,
     analyze_formatting_options_align,
     analyze_formatting_options_indent,
@@ -86,11 +87,17 @@ const sections = [
             analyze: analyze_editor_options_indent_with_tabs,  // (value, label) => complaint
         }, {
             id: 'editor_options_mode',
-            label: 'Key map',
+            label: 'Mode',
             type: 'select',
             options: valid_editor_options_mode_values.map(value => ({ value, label: value })),
             settings_path: [ 'editor_options', 'mode' ],
             analyze: analyze_editor_options_mode,  // (value, label) => complaint
+        }, {
+            id: 'editor_options_line_numbers',
+            label: 'Line numbers',
+            type: 'checkbox',
+            settings_path: [ 'editor_options', 'line_numbers' ],
+            analyze: analyze_editor_options_line_numbers,  // (value, label) => complaint
         }],
     }, {
         name: 'TeX Formatting',

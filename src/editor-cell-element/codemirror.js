@@ -10,6 +10,7 @@ import {
 import {
     EditorView,
     keymap,
+    lineNumbers,
 } from "@codemirror/view";
 
 import {
@@ -47,17 +48,20 @@ class CodemirrorInterface {
 
         const text = cell.get_text();
 
-        this.#tab_size_compartment    = new Compartment();
-        this.#indent_unit_compartment = new Compartment();
+        this.#tab_size_compartment     = new Compartment();
+        this.#indent_unit_compartment  = new Compartment();
+        this.#line_numbers_compartment = new Compartment();
 
         const state = EditorState.create({
             doc: text,
             extensions: [
-                this.#tab_size_compartment.of(EditorState.tabSize.of(8)),
-                this.#indent_unit_compartment.of(indentUnit.of(' '.repeat(2))),
                 keymap.of(defaultKeymap),
                 basicSetup,
                 javascript(),
+
+                this.#tab_size_compartment.of(EditorState.tabSize.of(8)),
+                this.#indent_unit_compartment.of(indentUnit.of(' '.repeat(2))),
+                this.#line_numbers_compartment.of(lineNumbers()),
             ],
         });
 
@@ -75,10 +79,13 @@ class CodemirrorInterface {
             }
         });
 
-        this.update_from_settings();
+        setTimeout(() => {  // must defer so that classList setting happens
+            this.update_from_settings();
+        });
     }
     #tab_size_compartment;
     #indent_unit_compartment;
+    #line_numbers_compartment;
 
     get_text() {
         return this.view.state.doc.toString();
@@ -100,13 +107,21 @@ class CodemirrorInterface {
         const {
             tab_size,
             indent,
+            line_numbers,
         } = get_settings().editor_options;
         const indent_unit_string = ' '.repeat(indent);
         this.view.dispatch({ effects: [
             this.#tab_size_compartment.reconfigure(EditorState.tabSize.of(tab_size)),
             this.#indent_unit_compartment.reconfigure(indentUnit.of(indent_unit_string)),
+            this.#line_numbers_compartment.reconfigure(line_numbers ? lineNumbers() : []),
         ]});
-        //!!!
+        // Note: the line_numbers setting above does not work, so we resort to this:
+        const css_class_hide_line_numbers = 'codemirror-hide-line-numbers';
+        if (line_numbers) {
+            this.view.dom.classList.remove(css_class_hide_line_numbers);
+        } else {
+            this.view.dom.classList.add(css_class_hide_line_numbers);
+        }
     }
 }
 
