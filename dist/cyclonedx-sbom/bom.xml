@@ -379,6 +379,32 @@
         </reference>
       </externalReferences>
     </component>
+    <component type="library" bom-ref="pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git">
+      <group>@replit</group>
+      <name>codemirror-vim</name>
+      <version>6.1.0</version>
+      <description>Vim keybindings for CodeMirror 6</description>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>https://github.com/replit/codemirror-vim/issues</url>
+          <comment>as detected from PackageJson property "bugs.url"</comment>
+        </reference>
+        <reference type="vcs">
+          <url>git+https://github.com/replit/codemirror-vim.git</url>
+          <comment>as detected from PackageJson property "repository.url"</comment>
+        </reference>
+        <reference type="website">
+          <url>https://github.com/replit/codemirror-vim#readme</url>
+          <comment>as detected from PackageJson property "homepage"</comment>
+        </reference>
+      </externalReferences>
+    </component>
     <component type="library" bom-ref="pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git">
       <author>Marijn Haverbeke</author>
       <name>codemirror</name>
@@ -640,6 +666,13 @@
     <dependency ref="pkg:npm/%40lezer/lr@1.3.14?vcs_url=git%2Bhttps%3A//github.com/lezer-parser/lr.git">
       <dependency ref="pkg:npm/%40lezer/common@1.1.1?vcs_url=git%2Bhttps%3A//github.com/lezer-parser/common.git"/>
     </dependency>
+    <dependency ref="pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git">
+      <dependency ref="pkg:npm/%40codemirror/commands@6.3.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/commands.git"/>
+      <dependency ref="pkg:npm/%40codemirror/language@6.9.2?vcs_url=git%2Bhttps%3A//github.com/codemirror/language.git"/>
+      <dependency ref="pkg:npm/%40codemirror/search@6.5.4?vcs_url=git%2Bhttps%3A//github.com/codemirror/search.git"/>
+      <dependency ref="pkg:npm/%40codemirror/state@6.3.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/state.git"/>
+      <dependency ref="pkg:npm/%40codemirror/view@6.22.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/view.git"/>
+    </dependency>
     <dependency ref="pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git">
       <dependency ref="pkg:npm/%40codemirror/autocomplete@6.11.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/autocomplete.git"/>
       <dependency ref="pkg:npm/%40codemirror/commands@6.3.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/commands.git"/>
@@ -661,6 +694,7 @@
       <dependency ref="pkg:npm/%40codemirror/language@6.9.2?vcs_url=git%2Bhttps%3A//github.com/codemirror/language.git"/>
       <dependency ref="pkg:npm/%40codemirror/state@6.3.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/state.git"/>
       <dependency ref="pkg:npm/%40codemirror/view@6.22.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/view.git"/>
+      <dependency ref="pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git"/>
       <dependency ref="pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git"/>
       <dependency ref="pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git"/>
       <dependency ref="pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git"/>

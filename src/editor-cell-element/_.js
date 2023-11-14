@@ -28,10 +28,6 @@ import {
 } from './codemirror.js';
 
 import {
-    EditorView,
-} from "@codemirror/view";
-
-import {
     beep,
 } from '../../lib/ui/beep.js';
 

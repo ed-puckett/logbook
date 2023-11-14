@@ -118,7 +118,7 @@ export function analyze_editor_options_indent_with_tabs(value, name) {
     }
     return undefined;
 }
-export const valid_editor_options_mode_values = ['default', 'emacs', 'sublime', 'vim'];//!!!
+export const valid_editor_options_mode_values = ['default', 'emacs', /*'sublime',*/ 'vim'];//!!!
 export function analyze_editor_options_mode(value, name) {
     return analyze_contained(value, valid_editor_options_mode_values, (name ?? 'mode'));
 }

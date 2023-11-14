@@ -478,6 +478,39 @@
     },
     {
       "type": "library",
+      "name": "codemirror-vim",
+      "group": "@replit",
+      "version": "6.1.0",
+      "bom-ref": "pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git",
+      "description": "Vim keybindings for CodeMirror 6",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git",
+      "externalReferences": [
+        {
+          "url": "https://github.com/replit/codemirror-vim/issues",
+          "type": "issue-tracker",
+          "comment": "as detected from PackageJson property \"bugs.url\""
+        },
+        {
+          "url": "git+https://github.com/replit/codemirror-vim.git",
+          "type": "vcs",
+          "comment": "as detected from PackageJson property \"repository.url\""
+        },
+        {
+          "url": "https://github.com/replit/codemirror-vim#readme",
+          "type": "website",
+          "comment": "as detected from PackageJson property \"homepage\""
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "codemirror",
       "version": "6.0.1",
       "bom-ref": "pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git",
@@ -828,6 +861,16 @@
       ]
     },
     {
+      "ref": "pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git",
+      "dependsOn": [
+        "pkg:npm/%40codemirror/commands@6.3.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/commands.git",
+        "pkg:npm/%40codemirror/language@6.9.2?vcs_url=git%2Bhttps%3A//github.com/codemirror/language.git",
+        "pkg:npm/%40codemirror/search@6.5.4?vcs_url=git%2Bhttps%3A//github.com/codemirror/search.git",
+        "pkg:npm/%40codemirror/state@6.3.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/state.git",
+        "pkg:npm/%40codemirror/view@6.22.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/view.git"
+      ]
+    },
+    {
       "ref": "pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git",
       "dependsOn": [
         "pkg:npm/%40codemirror/autocomplete@6.11.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/autocomplete.git",
@@ -860,6 +903,7 @@
         "pkg:npm/%40codemirror/language@6.9.2?vcs_url=git%2Bhttps%3A//github.com/codemirror/language.git",
         "pkg:npm/%40codemirror/state@6.3.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/state.git",
         "pkg:npm/%40codemirror/view@6.22.0?vcs_url=git%2Bhttps%3A//github.com/codemirror/view.git",
+        "pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git",
         "pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git",
         "pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git",
         "pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git",
