@@ -54,11 +54,11 @@ class CodemirrorInterface {
 
         const text = cell.get_text();
 
-        this.#keymap_compartment           = new Compartment();
-        this.#tab_size_compartment         = new Compartment();
-        this.#indent_unit_compartment      = new Compartment();
-        this.#indent_with_tabs_compartment = new Compartment();
-        this.#line_numbers_compartment     = new Compartment();
+        this.#keymap_compartment          = new Compartment();
+        this.#tab_size_compartment        = new Compartment();
+        this.#indent_unit_compartment     = new Compartment();
+        this.#tab_key_indents_compartment = new Compartment();
+        this.#line_numbers_compartment    = new Compartment();
 
         const state = EditorState.create({
             doc: text,
@@ -66,7 +66,7 @@ class CodemirrorInterface {
                 this.#keymap_compartment.of([]),
                 this.#tab_size_compartment.of(EditorState.tabSize.of(8)),
                 this.#indent_unit_compartment.of(indentUnit.of(' '.repeat(2))),
-                this.#indent_with_tabs_compartment.of(keymap.of(indentWithTab)),
+                this.#tab_key_indents_compartment.of(keymap.of(indentWithTab)),
                 this.#line_numbers_compartment.of(lineNumbers()),
 
                 keymap.of(defaultKeymap),
@@ -96,7 +96,7 @@ class CodemirrorInterface {
     #keymap_compartment;
     #tab_size_compartment;
     #indent_unit_compartment;
-    #indent_with_tabs_compartment;
+    #tab_key_indents_compartment;
     #line_numbers_compartment;
 
     get_text() {
@@ -127,7 +127,7 @@ class CodemirrorInterface {
             mode,
             tab_size,
             indent,
-            indent_with_tabs,
+            tab_key_indents,
             line_numbers,
         } = get_settings().editor_options;
 
@@ -144,7 +144,7 @@ class CodemirrorInterface {
             this.#keymap_compartment.reconfigure(keymap_config),
             this.#tab_size_compartment.reconfigure(EditorState.tabSize.of(tab_size)),
             this.#indent_unit_compartment.reconfigure(indentUnit.of(indent_unit_string)),
-            this.#indent_with_tabs_compartment.reconfigure(indent_with_tabs ? keymap.of(indentWithTab) : []),
+            this.#tab_key_indents_compartment.reconfigure(tab_key_indents ? keymap.of(indentWithTab) : []),
             this.#line_numbers_compartment.reconfigure(line_numbers ? lineNumbers() : []),
         ]});
 

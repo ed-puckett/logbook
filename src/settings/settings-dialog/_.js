@@ -22,6 +22,7 @@ import {
     analyze_editor_options_indent,
     analyze_editor_options_tab_size,
     analyze_editor_options_indent_with_tabs,
+    analyze_editor_options_tab_key_indents,
     valid_editor_options_mode_values,
     analyze_editor_options_mode,
     analyze_editor_options_line_numbers,
@@ -85,6 +86,12 @@ const sections = [
             type: 'checkbox',
             settings_path: [ 'editor_options', 'indent_with_tabs' ],
             analyze: analyze_editor_options_indent_with_tabs,  // (value, label) => complaint
+        }, {
+            id: 'editor_options_tab_key_indents',
+            label: 'TAB key indents',
+            type: 'checkbox',
+            settings_path: [ 'editor_options', 'tab_key_indents' ],
+            analyze: analyze_editor_options_tab_key_indents,  // (value, label) => complaint
         }, {
             id: 'editor_options_mode',
             label: 'Mode',

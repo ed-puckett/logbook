@@ -21,6 +21,7 @@ const initial_settings = {
         indent:           4,
         tab_size:         8,
         indent_with_tabs: false,
+        tab_key_indents:  false,
         mode:             'default',
         line_numbers:     true,
     },
@@ -118,6 +119,12 @@ export function analyze_editor_options_indent_with_tabs(value, name) {
     }
     return undefined;
 }
+export function analyze_editor_options_tab_key_indents(value, name) {
+    if (typeof value !== 'boolean') {
+        return `${name ?? 'tab_key_indents'} must be a boolean value`;
+    }
+    return undefined;
+}
 export const valid_editor_options_mode_values = ['default', 'emacs', /*'sublime',*/ 'vim'];//!!!
 export function analyze_editor_options_mode(value, name) {
     return analyze_contained(value, valid_editor_options_mode_values, (name ?? 'mode'));
@@ -134,8 +141,8 @@ export function analyze_editor_options(editor_options, name) {
         return `${name ?? 'editor_options'} must be an object`;
     }
     const keys = Object.keys(editor_options);
-    if (!keys.every(k => ['indent', 'tab_size', 'indent_with_tabs', 'mode', 'line_numbers'].includes(k))) {
-        return `${name ?? 'editor_options'} may only have the keys "indent", "tab_size", "indent_with_tabs", "mode" and "line_numbers"`;
+    if (!keys.every(k => ['indent', 'tab_size', 'indent_with_tabs', 'tab_key_indents', 'mode', 'line_numbers'].includes(k))) {
+        return `${name ?? 'editor_options'} may only have the keys "indent", "tab_size", "indent_with_tabs", "tab_key_indents", "mode" and "line_numbers"`;
     }
     if ('indent' in editor_options) {
         const complaint = analyze_editor_options_indent(editor_options.indent);
@@ -151,6 +158,12 @@ export function analyze_editor_options(editor_options, name) {
     }
     if ('indent_with_tabs' in editor_options) {
         const complaint = analyze_editor_options_indent_with_tabs(editor_options.indent_with_tabs);
+        if (complaint) {
+            return complaint;
+        }
+    }
+    if ('tab_key_indents' in editor_options) {
+        const complaint = analyze_editor_options_tab_key_indents(editor_options.tab_key_indents);
         if (complaint) {
             return complaint;
         }
