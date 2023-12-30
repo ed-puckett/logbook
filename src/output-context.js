@@ -138,12 +138,14 @@ export class OutputContext {
      *      _key?:      String,            // if return_mapping, associate the created element with this value as the key
      *      parent?:    HTMLElement|null,  // parent element, null or undefined for none; may be simply an Element if style not specified
      *      before?:    Node|null,         // sibling node before which to insert; append if null or undefined
-     *      tag?:       string,            // tag name for new element; default: 'div'
+     *      tag?:       string,            // tag name for new element; default: 'div' (invalid if "text" specified)
      *      namespace?: string,            // namespace for new element creation
      *      attrs?:     object,            // attributes to set on new element
      *      style?:     object,            // style properties for new element
      *      set_id?:    Boolean            // if true, allocate and set an id for the element (if id not specified in attrs)
      *      children?:  ELDEF[],           // array of children to create (recursive)
+     *      innerText?: string,            // innerText to set on element (invalid if "children" or "innerHTML" specified)
+     *      innerHTML?: string,            // innerHTML to set on element (invalid if "children" or "innerText" specified)
      *  }
      *  @param {Boolean} return_mapping (default false)
      *  @return {Element|Object} the new element or the element mapping object
