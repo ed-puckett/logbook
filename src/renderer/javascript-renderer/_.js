@@ -4,8 +4,10 @@ import {
     assets_server_url,
 } from '../../assets-server-url.js';
 
-const lib_dir_path = '../../../lib/';//!!!
-const lib_dir_url = new URL(lib_dir_path, assets_server_url(current_script_url));
+const lib_dir_path  = '../../../lib/';
+const src_dir_path  = '../../../src/';
+const lib_dir_url  = new URL(lib_dir_path, assets_server_url(current_script_url));
+const src_dir_url  = new URL(src_dir_path, assets_server_url(current_script_url));
 
 // provide an implementation of dynamic import that is safe from modification by webpack
 const dynamic_import = new Function('path', 'return import(path);');
@@ -202,6 +204,12 @@ export class JavaScriptRenderer extends Renderer {
         async function import_lib(lib_path) {
             return dynamic_import(new URL(lib_path, lib_dir_url));
         }
+        async function import_src(src_path) {
+            return dynamic_import(new URL(src_path, src_dir_url));
+        }
+        async function import_location(location_relative_path) {
+            return dynamic_import(new URL(location_relative_path, document.location));
+        }
 
         function vars(...objects) {
             Object.assign(eval_context, ...objects);
@@ -221,6 +229,8 @@ export class JavaScriptRenderer extends Renderer {
             is_stopped,
             create_worker:   ocx.AIS(create_worker),
             import_lib:      ocx.AIS(import_lib),
+            import_src:      ocx.AIS(import_src),
+            import_location: ocx.AIS(import_location),
             vars:            ocx.AIS(vars),
 
             // external
