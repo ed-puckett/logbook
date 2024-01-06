@@ -128,7 +128,7 @@ export function run(ocx) {
                     min:   10,
                     max:   2000,
                     value: 100,
-                    step:  0,
+                    step:  10,
                 },
             }],
         }],
