@@ -134,19 +134,13 @@ export function run(ocx) {
         }],
     });
 
-    let canvas_select = false;  // true->canvas1, false->canvas2
-    function get_visible_canvas() {
-        return canvas_select ? canvas1 : canvas2;
+    const canvases = [ canvas2, canvas1 ];  // [ selected, hidden ]
+    function switch_canvases() {
+        canvases.reverse();
+        canvases[0].style.display = 'initial';
+        canvases[1].style.display = 'none';
     }
-    function get_hidden_canvas() {
-        return canvas_select ? canvas2 : canvas1;
-    }
-    function switch_visible_canvas() {
-        canvas_select = !canvas_select;
-        get_visible_canvas().style.display = 'initial';
-        get_hidden_canvas().style.display = 'none';
-    }
-    switch_visible_canvas();  // set inital display properties on canvas1 and canvas2
+    switch_canvases();  // set inital display properties on canvas1 and canvas2
 
     const k1 = new Uint8ClampedArray([
         1, 1, 1,
@@ -168,8 +162,7 @@ export function run(ocx) {
     let width, height;
 
     function render_to_hidden_canvas() {
-        const output_canvas  = get_hidden_canvas();
-        const visible_canvas = get_visible_canvas();
+        const [ selected_canvas, output_canvas ] = canvases;
 
         const context = output_canvas.getContext('2d');
 
@@ -180,7 +173,7 @@ export function run(ocx) {
 
         const image = new OffscreenCanvas(width, height);
         {
-            const image_data = visible_canvas.getContext('2d').getImageData(0, 0, width, height);
+            const image_data = selected_canvas.getContext('2d').getImageData(0, 0, width, height);
             image.getContext('2d').putImageData(image_data, 0, 0);
         }
 
@@ -227,7 +220,7 @@ export function run(ocx) {
         function schedule_render() {
             setTimeout(() => {
                 render_to_hidden_canvas();
-                switch_visible_canvas();
+                switch_canvases();
                 schedule_render();
             }, +frame_delay.value);
         }
