@@ -35,9 +35,9 @@ export function run(ocx) {
                 attrs: {
                     id:    'angle',
                     type:  'number',
+                    value: Math.PI/3,
                     min:   0,
                     max:   2*Math.PI - 1e-14,
-                    value: Math.PI/3,
                     step:  Math.PI/24,
                 },
             }, {
@@ -50,9 +50,9 @@ export function run(ocx) {
                 attrs: {
                     id:    'scale',
                     type:  'number',
+                    value: 1,
                     min:   0.5,
                     max:   2,
-                    value: 1,
                     step:  0.1,
                 },
             }, {
@@ -65,9 +65,9 @@ export function run(ocx) {
                 attrs: {
                     id:    'alpha0',
                     type:  'number',
+                    value: 1,
                     min:   0,
                     max:   1,
-                    value: 1,
                     step:  0.1,
                 },
             }, {
@@ -80,9 +80,9 @@ export function run(ocx) {
                 attrs: {
                     id:    'alpha1',
                     type:  'number',
+                    value: 0.3,
                     min:   0,
                     max:   1,
-                    value: 0.3,
                     step:  0.1,
                 },
             }, {
@@ -125,9 +125,9 @@ export function run(ocx) {
                 attrs: {
                     id:    'frame_delay',
                     type:  'number',
+                    value: 100,
                     min:   10,
                     max:   2000,
-                    value: 100,
                     step:  10,
                 },
             }],
