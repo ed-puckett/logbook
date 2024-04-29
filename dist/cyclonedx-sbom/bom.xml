@@ -483,16 +483,16 @@
         </reference>
       </externalReferences>
     </component>
-    <component type="library" bom-ref="pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git">
+    <component type="library" bom-ref="pkg:npm/katex@0.16.10?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git">
       <name>katex</name>
-      <version>0.16.9</version>
+      <version>0.16.10</version>
       <description>Fast math typesetting for the web.</description>
       <licenses>
         <license>
           <id>MIT</id>
         </license>
       </licenses>
-      <purl>pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git</purl>
+      <purl>pkg:npm/katex@0.16.10?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git</purl>
       <externalReferences>
         <reference type="issue-tracker">
           <url>https://github.com/KaTeX/KaTeX/issues</url>
@@ -684,7 +684,7 @@
     </dependency>
     <dependency ref="pkg:npm/crelt@1.0.6?vcs_url=git%2Bhttps%3A//github.com/marijnh/crelt.git"/>
     <dependency ref="pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git"/>
-    <dependency ref="pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git">
+    <dependency ref="pkg:npm/katex@0.16.10?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git">
       <dependency ref="pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git"/>
       <dependency ref="pkg:npm/style-loader@3.3.3?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/style-loader.git"/>
     </dependency>
@@ -697,7 +697,7 @@
       <dependency ref="pkg:npm/%40replit/codemirror-vim@6.1.0?vcs_url=git%2Bhttps%3A//github.com/replit/codemirror-vim.git"/>
       <dependency ref="pkg:npm/codemirror@6.0.1?vcs_url=git%2Bhttps%3A//github.com/codemirror/basic-setup.git"/>
       <dependency ref="pkg:npm/css-loader@6.8.1?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/css-loader.git"/>
-      <dependency ref="pkg:npm/katex@0.16.9?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git"/>
+      <dependency ref="pkg:npm/katex@0.16.10?vcs_url=git%2Bhttps%3A//github.com/KaTeX/KaTeX.git"/>
       <dependency ref="pkg:npm/style-loader@3.3.3?vcs_url=git%2Bhttps%3A//github.com/webpack-contrib/style-loader.git"/>
       <dependency ref="pkg:npm/uuid@9.0.0?vcs_url=git%2Bhttps%3A//github.com/uuidjs/uuid.git"/>
     </dependency>
