@@ -9,9 +9,9 @@ you will be excuting JavaScript code from that source.  Beware.
 
 # Availability
 
-* [Try it here](https://blackguard.github.io/logbook/build/src/index.html)
-* [Demos here](https://blackguard.github.io/logbook/demos/index.html)
-* [Code repository](https://github.com/blackguard/logbook)
+* [Try it here](https://ed-puckett.github.io/logbook/build/src/index.html)
+* [Demos here](https://ed-puckett.github.io/logbook/demos/index.html)
+* [Code repository](https://github.com/ed-puckett/logbook)
 
 ---
 
